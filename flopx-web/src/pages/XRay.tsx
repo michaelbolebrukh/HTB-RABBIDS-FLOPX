@@ -19,7 +19,7 @@ const LAYERS: { id: XLayer; label: string; truth: 'obs' | 'inf' | 'dec'; desc: s
   { id: 'power', label: 'Power constraints', truth: 'obs', desc: 'Meter in each label: day-ahead $/MWh, red above $90' },
   { id: 'pipeline', label: 'Infrastructure pipeline', truth: 'obs', desc: 'Facilities by reported stage' },
   { id: 'effective', label: 'Effective capacity', truth: 'inf', desc: 'Announced (dotted) vs usable (hatched)' },
-  { id: 'exposure', label: 'Financial exposure', truth: 'dec', desc: 'Documented company ties' },
+  { id: 'exposure', label: 'Financial exposure', truth: 'dec', desc: 'Company ties: filings and facility records first, then company profiles' },
 ]
 
 /** Region-list column header for each perspective; the list reads the most recently switched-on layer. */
