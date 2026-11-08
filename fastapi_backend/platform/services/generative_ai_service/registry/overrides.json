@@ -1,0 +1,135 @@
+{
+ "_doc": "Hand-pinned registry entries; per-field merge over synced data, always wins (D6). Keys starting with _ are ignored by the loader.",
+ "_p6_doc": "P6 flags (capabilities.realtime / capabilities.image_generation) and audio rates are override-set until a feed reports them (same policy as the D34 web_fetch/code_execution flags). Audio rates are USD per Mtok from provider pricing pages, July 2026 — reconcile against invoices (O13).",
+ "_p7_doc": "P7 (D42/D44) media entries: per_million_characters (USD/1M chars), per_image (USD/image ~1MP standard), per_audio_minute (USD/min) from MEDIA_PROVIDERS.md (verified July 2026). fal:* ids route through the fal adapter; their name part is the fal endpoint path — endpoint names marked confirm: are unverified against the live catalog and fail loudly at call time if wrong.",
+
+ "openai:gpt-realtime": {
+  "capabilities": {"realtime": true},
+  "cost": {"input_audio": 32.0, "output_audio": 64.0}
+ },
+ "openai:gpt-realtime-2.1": {
+  "capabilities": {"realtime": true},
+  "cost": {"input_audio": 32.0, "output_audio": 64.0}
+ },
+ "openai:gpt-realtime-2.1-mini": {
+  "capabilities": {"realtime": true},
+  "cost": {"input_audio": 10.0, "output_audio": 20.0}
+ },
+ "openai:gpt-realtime-mini": {
+  "capabilities": {"realtime": true},
+  "cost": {"input_audio": 10.0, "output_audio": 20.0}
+ },
+ "openai:gpt-4o-realtime-preview": {
+  "capabilities": {"realtime": true},
+  "cost": {"input_audio": 40.0, "output_audio": 80.0}
+ },
+ "google:gemini-3.1-flash-live-preview": {
+  "capabilities": {"realtime": true},
+  "cost": {"per_audio_minute": 0.005}
+ },
+
+ "openai:gpt-4o-mini-transcribe": {
+  "provider": "openai",
+  "tokenizer_family": "openai",
+  "cost": {"input": 1.25, "output": 5.0, "input_audio": 3.0, "per_audio_minute": 0.003},
+  "modalities": {"input": ["audio"], "output": ["text"]}
+ },
+ "openai:gpt-4o-transcribe": {
+  "provider": "openai",
+  "tokenizer_family": "openai",
+  "cost": {"input": 2.5, "output": 10.0, "per_audio_minute": 0.006},
+  "modalities": {"input": ["audio"], "output": ["text"]}
+ },
+ "openai:whisper-1": {
+  "provider": "openai",
+  "tokenizer_family": "openai",
+  "cost": {"per_audio_minute": 0.006},
+  "modalities": {"input": ["audio"], "output": ["text"]}
+ },
+ "openai:gpt-4o-mini-tts": {
+  "provider": "openai",
+  "tokenizer_family": "openai",
+  "cost": {"input": 0.6, "output": 12.0, "output_audio": 12.0, "per_million_characters": 20.0},
+  "modalities": {"input": ["text"], "output": ["audio"]}
+ },
+ "openai:tts-1": {
+  "provider": "openai",
+  "tokenizer_family": "openai",
+  "cost": {"per_million_characters": 15.0},
+  "modalities": {"input": ["text"], "output": ["audio"]}
+ },
+ "openai:tts-1-hd": {
+  "provider": "openai",
+  "tokenizer_family": "openai",
+  "cost": {"per_million_characters": 30.0},
+  "modalities": {"input": ["text"], "output": ["audio"]}
+ },
+
+ "google:gemini-2.5-flash-preview-tts": {
+  "cost": {"per_million_characters": 20.0},
+  "modalities": {"input": ["text"], "output": ["audio"]}
+ },
+ "google:gemini-2.5-pro-preview-tts": {
+  "cost": {"per_million_characters": 40.0},
+  "modalities": {"input": ["text"], "output": ["audio"]}
+ },
+
+ "elevenlabs:eleven_v3": {
+  "provider": "elevenlabs",
+  "cost": {"per_million_characters": 100.0},
+  "modalities": {"input": ["text"], "output": ["audio"]}
+ },
+ "elevenlabs:eleven_flash_v2_5": {
+  "provider": "elevenlabs",
+  "cost": {"per_million_characters": 50.0},
+  "modalities": {"input": ["text"], "output": ["audio"]}
+ },
+
+ "openai:gpt-5.2": {
+  "capabilities": {"image_generation": true}
+ },
+ "openai:gpt-image-1": {
+  "cost": {"per_image": 0.04},
+  "modalities": {"input": ["text", "image"], "output": ["image"]}
+ },
+ "openai:gpt-image-1.5": {
+  "cost": {"per_image": 0.034},
+  "modalities": {"input": ["text", "image"], "output": ["image"]}
+ },
+ "openai:gpt-image-2": {
+  "cost": {"per_image": 0.053},
+  "modalities": {"input": ["text", "image"], "output": ["image"]}
+ },
+ "google:gemini-3.1-flash-image": {
+  "capabilities": {"image_generation": true},
+  "cost": {"per_image": 0.05},
+  "modalities": {"input": ["text", "image"], "output": ["text", "image"]}
+ },
+ "google:gemini-2.5-flash-image": {
+  "capabilities": {"image_generation": true},
+  "cost": {"per_image": 0.039},
+  "modalities": {"input": ["text", "image"], "output": ["text", "image"]}
+ },
+ "xai:grok-imagine-image": {
+  "cost": {"per_image": 0.02},
+  "modalities": {"input": ["text"], "output": ["image"]}
+ },
+
+ "fal:fal-ai/nano-banana": {
+  "provider": "fal",
+  "cost": {"per_image": 0.0398},
+  "modalities": {"input": ["text"], "output": ["image"]}
+ },
+ "fal:fal-ai/ideogram/v4": {
+  "provider": "fal",
+  "cost": {"per_image": 0.06},
+  "modalities": {"input": ["text"], "output": ["image"]},
+  "_confirm": "endpoint path unverified against live fal catalog"
+ },
+ "fal:fal-ai/recraft/v4": {
+  "provider": "fal",
+  "cost": {"per_image": 0.04},
+  "modalities": {"input": ["text"], "output": ["image"]},
+  "_confirm": "endpoint path unverified against live fal catalog"
+ }
+}

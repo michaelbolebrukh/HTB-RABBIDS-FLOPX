@@ -1,0 +1,26 @@
+Thanks for your order. Here is your receipt.
+
+FLOPX
+
+Thank you for your order
+
+Hi {{name}}, thanks for your purchase. Your order is confirmed and your payment
+went through. Here is a summary for your records.
+
+{{item_name}}{{amount}}Quantity: {{quantity}}
+
+Date: {{date}}
+
+Order reference: {{reference}}
+
+Questions about your order? Contact us [https://flopx.vercel.app/contact].
+
+You're receiving this email because you made a purchase at flopx.vercel.app.
+This is a transactional receipt for your order, not a marketing message.
+
+flopx.vercel.app [https://flopx.vercel.app/]
+
+© FLOPX. All rights reserved.
+
+Privacy Policy [https://flopx.vercel.app/privacy-policy] Terms of Service
+[https://flopx.vercel.app/terms-of-service]

@@ -1,0 +1,389 @@
+{
+ "query": "How is CoreWeave doing?",
+ "intent": "brief",
+ "route": "/ask?q=How+is+CoreWeave+doing%3F",
+ "filters": {
+  "t": "CRWV",
+  "target": "ticker:CRWV"
+ },
+ "explanation": {
+  "matched": {
+   "tickers": [
+    "coreweave"
+   ],
+   "actions": [
+    "show"
+   ]
+  },
+  "unmatchedTokens": [
+   "is",
+   "doing"
+  ],
+  "numbers": [],
+  "periodDays": null
+ },
+ "actions": [
+  {
+   "kind": "open",
+   "route": "/ask?q=How+is+CoreWeave+doing%3F",
+   "requiresConfirmation": false
+  }
+ ],
+ "engine": "grammar",
+ "brief": {
+  "targetKind": "ticker",
+  "targetId": "CRWV",
+  "headline": "CoreWeave, Inc. (CRWV): inferred pressure 44/100, 0 open anomalies, 3 recent items",
+  "sentences": [
+   {
+    "text": "CRWV close was last observed at 96.1 USD on 2026-11-06 (sample data from flopx-sample-v1).",
+    "statementClass": "observation",
+    "evidenceIds": [
+     "equity:CRWV:close"
+    ]
+   },
+   {
+    "text": "Inferred compute pressure for rtx-4090-24gb in us-tx is 44 of 100 (balanced), driven mainly by availability (-1.00) and capacity-pipeline (-1.00); this is an estimate from 5 of 6 factors over 3 asks and is labelled exploratory, not measured utilisation.",
+    "statementClass": "inference",
+    "evidenceIds": [
+     "pressure:us-tx:rtx-4090-24gb"
+    ]
+   },
+   {
+    "text": "Arguing against that reading: price-premium (+0.75), demand-signals (+0.32).",
+    "statementClass": "inference",
+    "evidenceIds": [
+     "pressure:us-tx:rtx-4090-24gb"
+    ]
+   },
+   {
+    "text": "The slackest cell in view is a100-sxm-80gb in us-tx at 26 (balanced).",
+    "statementClass": "inference",
+    "evidenceIds": [
+     "pressure:us-tx:a100-sxm-80gb"
+    ]
+   },
+   {
+    "text": "2026-10-27, earnings (verified, severity 3): CoreWeave Announces Date of Third Quarter 2026 Financial Results and Conference Call",
+    "statementClass": "observation",
+    "evidenceIds": [
+     "rss:coreweave:es-date-of-third-quarter-2026-financial-results-and-conference-call-default-aspx"
+    ]
+   },
+   {
+    "text": "2026-10-27, announcement (verified, severity 2): CoreWeave Expands Global AI Cloud Platform With New Capacity in Denmark and First Global AI Network Backbone",
+    "statementClass": "observation",
+    "evidenceIds": [
+     "rss:coreweave:m-with-new-capacity-in-denmark-and-first-global-ai-network-backbone-default-aspx"
+    ]
+   },
+   {
+    "text": "2026-10-21, launch (verified, severity 3): CoreWeave Launches the CoreWeave Zero Trust AI Framework, Keeping Customers in Control of Access to Their Models, Data, and Runtime Environments",
+    "statementClass": "observation",
+    "evidenceIds": [
+     "rss:coreweave:-in-control-of-access-to-their-models-data-and-runtime-environments-default-aspx"
+    ]
+   },
+   {
+    "text": "The market \"H100 on-demand median price above $3.00/GPU-hour at end of December 2026?\" prices Yes at 41% (sample-prediction-venue); a quote, not a forecast of record.",
+    "statementClass": "observation",
+    "evidenceIds": [
+     "mkt-001"
+    ]
+   },
+   {
+    "text": "The market \"A top-5 neocloud announces 1 GW of contracted capacity before March 2027?\" prices Yes at 34% (sample-prediction-venue); a quote, not a forecast of record.",
+    "statementClass": "observation",
+    "evidenceIds": [
+     "mkt-007"
+    ]
+   },
+   {
+    "text": "Out of sample at 1 days for CRWV, the compute-augmented model's verdict against the price baseline is insufficient-sample (n = 131, skill n/a); on archived/sample closes this tests the method, not the market.",
+    "statementClass": "inference",
+    "evidenceIds": [
+     "evaluation:CRWV:1d"
+    ]
+   },
+   {
+    "text": "Out of sample at 5 days for CRWV, the compute-augmented model's verdict against the price baseline is insufficient-sample (n = 127, skill n/a); on archived/sample closes this tests the method, not the market.",
+    "statementClass": "inference",
+    "evidenceIds": [
+     "evaluation:CRWV:5d"
+    ]
+   }
+  ],
+  "evidence": [
+   {
+    "id": "equity:CRWV:close",
+    "kind": "series",
+    "href": "/research?tab=lab&series=equity%3ACRWV%3Aclose",
+    "statementClass": "observation",
+    "observedAt": "2026-11-06T21:00:00Z",
+    "provenanceKind": "sample",
+    "provenance": {
+     "kind": "sample",
+     "source": "flopx-sample-v1",
+     "observedAt": "2026-11-06T21:00:00Z",
+     "sourceUrl": null,
+     "fetchedAt": null,
+     "licence": null,
+     "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+     "inputKinds": []
+    },
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   {
+    "id": "pressure:us-tx:rtx-4090-24gb",
+    "kind": "pressure-cell",
+    "href": "/xray?r=us-tx&g=rtx-4090-24gb",
+    "statementClass": "inference",
+    "observedAt": "2026-11-08T02:10:58Z",
+    "provenanceKind": "derived",
+    "provenance": {
+     "kind": "derived",
+     "source": "cpx-v1",
+     "observedAt": "2026-11-08T02:10:58Z",
+     "sourceUrl": null,
+     "fetchedAt": "2026-11-08T02:11:47.838123Z",
+     "licence": null,
+     "note": "inferred pressure on usable supply; not a measurement of utilisation",
+     "inputKinds": [
+      "derived",
+      "live",
+      "sample"
+     ]
+    },
+    "inputKinds": [
+     "derived",
+     "live",
+     "sample"
+    ]
+   },
+   {
+    "id": "pressure:us-tx:a100-sxm-80gb",
+    "kind": "pressure-cell",
+    "href": "/xray?r=us-tx&g=a100-sxm-80gb",
+    "statementClass": "inference",
+    "observedAt": "2026-11-08T02:10:58Z",
+    "provenanceKind": "derived",
+    "provenance": {
+     "kind": "derived",
+     "source": "cpx-v1",
+     "observedAt": "2026-11-08T02:10:58Z",
+     "sourceUrl": null,
+     "fetchedAt": "2026-11-08T02:11:47.835942Z",
+     "licence": null,
+     "note": "inferred pressure on usable supply; not a measurement of utilisation",
+     "inputKinds": [
+      "derived",
+      "live",
+      "sample"
+     ]
+    },
+    "inputKinds": [
+     "derived",
+     "live",
+     "sample"
+    ]
+   },
+   {
+    "id": "rss:coreweave:es-date-of-third-quarter-2026-financial-results-and-conference-call-default-aspx",
+    "kind": "feed",
+    "href": "/feed/rss:coreweave:es-date-of-third-quarter-2026-financial-results-and-conference-call-default-aspx",
+    "statementClass": "observation",
+    "observedAt": "2026-10-27T20:05:00Z",
+    "provenanceKind": "live",
+    "provenance": {
+     "kind": "live",
+     "source": "rss:coreweave",
+     "observedAt": "2026-10-27T20:05:00Z",
+     "sourceUrl": "https://investors.coreweave.com/news/news-details/2026/CoreWeave-Announces-Date-of-Third-Quarter-2026-Financial-Results-and-Conference-Call/default.aspx",
+     "fetchedAt": "2026-11-08T02:06:49.999453Z",
+     "licence": "Company press-release feeds; headline shown with a link to the original (terms asserted, not verified)",
+     "note": "CoreWeave investor relations RSS; primary source",
+     "inputKinds": []
+    },
+    "inputKinds": [
+     "live"
+    ]
+   },
+   {
+    "id": "rss:coreweave:m-with-new-capacity-in-denmark-and-first-global-ai-network-backbone-default-aspx",
+    "kind": "feed",
+    "href": "/feed/rss:coreweave:m-with-new-capacity-in-denmark-and-first-global-ai-network-backbone-default-aspx",
+    "statementClass": "observation",
+    "observedAt": "2026-10-27T07:00:00Z",
+    "provenanceKind": "live",
+    "provenance": {
+     "kind": "live",
+     "source": "rss:coreweave",
+     "observedAt": "2026-10-27T07:00:00Z",
+     "sourceUrl": "https://investors.coreweave.com/news/news-details/2026/CoreWeave-Expands-Global-AI-Cloud-Platform-With-New-Capacity-in-Denmark-and-First-Global-AI-Network-Backbone/default.aspx",
+     "fetchedAt": "2026-11-08T02:06:49.999453Z",
+     "licence": "Company press-release feeds; headline shown with a link to the original (terms asserted, not verified)",
+     "note": "CoreWeave investor relations RSS; primary source",
+     "inputKinds": []
+    },
+    "inputKinds": [
+     "live"
+    ]
+   },
+   {
+    "id": "rss:coreweave:-in-control-of-access-to-their-models-data-and-runtime-environments-default-aspx",
+    "kind": "feed",
+    "href": "/feed/rss:coreweave:-in-control-of-access-to-their-models-data-and-runtime-environments-default-aspx",
+    "statementClass": "observation",
+    "observedAt": "2026-10-21T11:30:00Z",
+    "provenanceKind": "live",
+    "provenance": {
+     "kind": "live",
+     "source": "rss:coreweave",
+     "observedAt": "2026-10-21T11:30:00Z",
+     "sourceUrl": "https://investors.coreweave.com/news/news-details/2026/CoreWeave-Launches-the-CoreWeave-Zero-Trust-AI-Framework-Keeping-Customers-in-Control-of-Access-to-Their-Models-Data-and-Runtime-Environments/default.aspx",
+     "fetchedAt": "2026-11-08T02:06:49.999453Z",
+     "licence": "Company press-release feeds; headline shown with a link to the original (terms asserted, not verified)",
+     "note": "CoreWeave investor relations RSS; primary source",
+     "inputKinds": []
+    },
+    "inputKinds": [
+     "live"
+    ]
+   },
+   {
+    "id": "mkt-001",
+    "kind": "market",
+    "href": "/markets/mkt-001",
+    "statementClass": "observation",
+    "observedAt": "2026-11-06T21:00:00Z",
+    "provenanceKind": "sample",
+    "provenance": {
+     "kind": "sample",
+     "source": "flopx-sample-v1",
+     "observedAt": "2026-11-06T21:00:00Z",
+     "sourceUrl": null,
+     "fetchedAt": null,
+     "licence": null,
+     "note": "authored sample market; a quote is a price, never a calibrated probability",
+     "inputKinds": []
+    },
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   {
+    "id": "mkt-007",
+    "kind": "market",
+    "href": "/markets/mkt-007",
+    "statementClass": "observation",
+    "observedAt": "2026-11-06T21:00:00Z",
+    "provenanceKind": "sample",
+    "provenance": {
+     "kind": "sample",
+     "source": "flopx-sample-v1",
+     "observedAt": "2026-11-06T21:00:00Z",
+     "sourceUrl": null,
+     "fetchedAt": null,
+     "licence": null,
+     "note": "authored sample market; a quote is a price, never a calibrated probability",
+     "inputKinds": []
+    },
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   {
+    "id": "evaluation:CRWV:1d",
+    "kind": "evaluation",
+    "href": "/research?tab=evaluation&target=CRWV&horizon=1d",
+    "statementClass": "inference",
+    "observedAt": null,
+    "provenanceKind": null,
+    "provenance": null,
+    "inputKinds": [
+     "archived",
+     "sample"
+    ]
+   },
+   {
+    "id": "evaluation:CRWV:5d",
+    "kind": "evaluation",
+    "href": "/research?tab=evaluation&target=CRWV&horizon=5d",
+    "statementClass": "inference",
+    "observedAt": null,
+    "provenanceKind": null,
+    "provenance": null,
+    "inputKinds": [
+     "archived",
+     "sample"
+    ]
+   }
+  ],
+  "followThrough": [
+   {
+    "kind": "open",
+    "route": "/research?tab=lab&series=equity%3ACRWV%3Aclose",
+    "label": "series"
+   },
+   {
+    "kind": "open",
+    "route": "/xray?r=us-tx&g=rtx-4090-24gb",
+    "label": "pressure-cell"
+   },
+   {
+    "kind": "open",
+    "route": "/xray?r=us-tx&g=a100-sxm-80gb",
+    "label": "pressure-cell"
+   },
+   {
+    "kind": "open",
+    "route": "/feed/rss:coreweave:es-date-of-third-quarter-2026-financial-results-and-conference-call-default-aspx",
+    "label": "feed"
+   },
+   {
+    "kind": "open",
+    "route": "/feed/rss:coreweave:m-with-new-capacity-in-denmark-and-first-global-ai-network-backbone-default-aspx",
+    "label": "feed"
+   },
+   {
+    "kind": "open",
+    "route": "/feed/rss:coreweave:-in-control-of-access-to-their-models-data-and-runtime-environments-default-aspx",
+    "label": "feed"
+   }
+  ],
+  "caveats": [
+   "composed from the product's own evidence; sentences are templates, not reasoning",
+   "sample inputs: the sample set is authored and observed nowhere"
+  ],
+  "method": "composed-from-evidence-v1",
+  "statementClass": "inference",
+  "notLanguageModel": true,
+  "engine": "composed",
+  "languageModelNote": "no language model was used; a drafting mode exists behind ANTHROPIC_API_KEY and no key is configured",
+  "freshness": {
+   "generatedAt": "2026-11-08T02:11:54.843660Z",
+   "oldestObservedAt": "2026-06-27T20:30:00.785653Z",
+   "sources": [
+    "akash",
+    "flopx-sample-v1",
+    "hacker-news",
+    "kalshi",
+    "polymarket-gamma",
+    "rss:corescientific",
+    "rss:coreweave",
+    "rss:nvidia",
+    "runpod",
+    "vast-ai",
+    "wikidata"
+   ],
+   "unavailable": [
+    {
+     "source": "kalshi:KXUTILITYPJMWEST",
+     "reason": "no-open-markets"
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,2757 @@
+{
+ "company": {
+  "ticker": "NVDA",
+  "name": "NVIDIA Corporation",
+  "exchange": "NASDAQ",
+  "segments": [
+   "Data Center",
+   "Gaming",
+   "Professional Visualization",
+   "Automotive"
+  ],
+  "computeExposure": {
+   "text": "Designs the accelerators (Hopper, Blackwell) most rental offers are priced on; data-centre revenue is the bulk of the business.",
+   "tags": [
+    "accelerator-vendor",
+    "pricing-power",
+    "supply-side"
+   ]
+  },
+  "relatedFacilityIds": [],
+  "peers": [
+   "SMCI",
+   "VRT"
+  ],
+  "provenance": {
+   "kind": "sample",
+   "source": "flopx-sample-v1",
+   "observedAt": "2026-11-06T21:00:00Z",
+   "sourceUrl": null,
+   "fetchedAt": null,
+   "licence": null,
+   "note": "profile text is general public knowledge; reference close and fundamentals are authored sample values",
+   "inputKinds": []
+  },
+  "cik": "1045810",
+  "fundamentals": [
+   {
+    "ticker": "NVDA",
+    "concept": "revenue",
+    "value": 53791400000.0,
+    "unit": "USD",
+    "periodEnd": "2026-07-20",
+    "filedAt": "2026-08-27",
+    "provenance": {
+     "kind": "sample",
+     "source": "flopx-sample-v1",
+     "observedAt": "2026-11-06T21:00:00Z",
+     "sourceUrl": null,
+     "fetchedAt": null,
+     "licence": null,
+     "note": "authored sample fundamental",
+     "inputKinds": []
+    }
+   },
+   {
+    "ticker": "NVDA",
+    "concept": "capex",
+    "value": 30347800000.0,
+    "unit": "USD",
+    "periodEnd": "2026-07-20",
+    "filedAt": "2026-08-27",
+    "provenance": {
+     "kind": "sample",
+     "source": "flopx-sample-v1",
+     "observedAt": "2026-11-06T21:00:00Z",
+     "sourceUrl": null,
+     "fetchedAt": null,
+     "licence": null,
+     "note": "authored sample fundamental",
+     "inputKinds": []
+    }
+   },
+   {
+    "ticker": "NVDA",
+    "concept": "revenue",
+    "value": 49152000000.0,
+    "unit": "USD",
+    "periodEnd": "2026-04-21",
+    "filedAt": "2026-05-29",
+    "provenance": {
+     "kind": "sample",
+     "source": "flopx-sample-v1",
+     "observedAt": "2026-11-06T21:00:00Z",
+     "sourceUrl": null,
+     "fetchedAt": null,
+     "licence": null,
+     "note": "authored sample fundamental",
+     "inputKinds": []
+    }
+   },
+   {
+    "ticker": "NVDA",
+    "concept": "capex",
+    "value": 8054500000.0,
+    "unit": "USD",
+    "periodEnd": "2026-04-21",
+    "filedAt": "2026-05-29",
+    "provenance": {
+     "kind": "sample",
+     "source": "flopx-sample-v1",
+     "observedAt": "2026-11-06T21:00:00Z",
+     "sourceUrl": null,
+     "fetchedAt": null,
+     "licence": null,
+     "note": "authored sample fundamental",
+     "inputKinds": []
+    }
+   },
+   {
+    "ticker": "NVDA",
+    "concept": "revenue",
+    "value": 45938500000.0,
+    "unit": "USD",
+    "periodEnd": "2026-01-21",
+    "filedAt": "2026-02-28",
+    "provenance": {
+     "kind": "sample",
+     "source": "flopx-sample-v1",
+     "observedAt": "2026-11-06T21:00:00Z",
+     "sourceUrl": null,
+     "fetchedAt": null,
+     "licence": null,
+     "note": "authored sample fundamental",
+     "inputKinds": []
+    }
+   },
+   {
+    "ticker": "NVDA",
+    "concept": "capex",
+    "value": 24136000000.0,
+    "unit": "USD",
+    "periodEnd": "2026-01-21",
+    "filedAt": "2026-02-28",
+    "provenance": {
+     "kind": "sample",
+     "source": "flopx-sample-v1",
+     "observedAt": "2026-11-06T21:00:00Z",
+     "sourceUrl": null,
+     "fetchedAt": null,
+     "licence": null,
+     "note": "authored sample fundamental",
+     "inputKinds": []
+    }
+   },
+   {
+    "ticker": "NVDA",
+    "concept": "revenue",
+    "value": 41079500000.0,
+    "unit": "USD",
+    "periodEnd": "2025-10-23",
+    "filedAt": "2025-11-30",
+    "provenance": {
+     "kind": "sample",
+     "source": "flopx-sample-v1",
+     "observedAt": "2026-11-06T21:00:00Z",
+     "sourceUrl": null,
+     "fetchedAt": null,
+     "licence": null,
+     "note": "authored sample fundamental",
+     "inputKinds": []
+    }
+   },
+   {
+    "ticker": "NVDA",
+    "concept": "capex",
+    "value": 7922300000.0,
+    "unit": "USD",
+    "periodEnd": "2025-10-23",
+    "filedAt": "2025-11-30",
+    "provenance": {
+     "kind": "sample",
+     "source": "flopx-sample-v1",
+     "observedAt": "2026-11-06T21:00:00Z",
+     "sourceUrl": null,
+     "fetchedAt": null,
+     "licence": null,
+     "note": "authored sample fundamental",
+     "inputKinds": []
+    }
+   }
+  ],
+  "sampleLastCloseUsd": 182.4
+ },
+ "latestBar": {
+  "ticker": "NVDA",
+  "t": "2026-11-06T21:00:00Z",
+  "open": 191.10000610351562,
+  "high": 194.89999389648438,
+  "low": 185.22000122070312,
+  "close": 186.63999938964844,
+  "volume": 179722400.0,
+  "provenance": {
+   "kind": "live",
+   "source": "yahoo-finance",
+   "observedAt": "2026-11-06T21:00:00Z",
+   "sourceUrl": "https://finance.yahoo.com/quote/NVDA",
+   "fetchedAt": "2026-11-08T08:28:22.424812Z",
+   "licence": "Unofficial endpoint; the provider's terms restrict redistribution. Shown pending a licensed price feed.",
+   "note": "unofficial chart endpoint, delayed; display only, never archived; stamped at the session close (or the last trade for a session in progress)",
+   "inputKinds": []
+  }
+ },
+ "latestClose": {
+  "seriesId": "equity:NVDA:close",
+  "t": "2026-11-06T21:00:00Z",
+  "value": 186.63999938964844,
+  "unit": "USD",
+  "provenance": {
+   "kind": "live",
+   "source": "yahoo-finance",
+   "observedAt": "2026-11-06T21:00:00Z",
+   "sourceUrl": "https://finance.yahoo.com/quote/NVDA",
+   "fetchedAt": "2026-11-08T08:28:22.424812Z",
+   "licence": "Unofficial endpoint; the provider's terms restrict redistribution. Shown pending a licensed price feed.",
+   "note": "unofficial chart endpoint, delayed; display only, never archived; stamped at the session close (or the last trade for a session in progress)",
+   "inputKinds": []
+  }
+ },
+ "fundamentals": [
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 118000000.0,
+   "unit": "USD",
+   "periodEnd": "2018-04-29",
+   "filedAt": "2018-05-22",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2018-05-22T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:PaymentsToAcquirePropertyPlantAndEquipment from 10-Q (Q1 FY2019), period 2018-01-29 to 2018-04-29; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 247000000.0,
+   "unit": "USD",
+   "periodEnd": "2018-07-29",
+   "filedAt": "2018-08-16",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2018-08-16T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:PaymentsToAcquirePropertyPlantAndEquipment from 10-Q (Q2 FY2019), period 2018-01-29 to 2018-07-29; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 129000000.0,
+   "unit": "USD",
+   "periodEnd": "2018-07-31",
+   "filedAt": "2018-08-16",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2018-08-16T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat capxy: quarterly capital expenditure, derived from the fiscal year-to-date figure, fiscal quarter 2, period 2018-05-01 to 2018-07-31, reported 2018-08-16; millions in the extract, stored in USD; derived as this quarter's year-to-date capex minus the previous quarter's (247 less the prior quarter's); extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 397000000.0,
+   "unit": "USD",
+   "periodEnd": "2018-10-28",
+   "filedAt": "2018-11-15",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2018-11-15T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:PaymentsToAcquirePropertyPlantAndEquipment from 10-Q (Q3 FY2019), period 2018-01-29 to 2018-10-28; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 150000000.0,
+   "unit": "USD",
+   "periodEnd": "2018-10-31",
+   "filedAt": "2018-11-15",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2018-11-15T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat capxy: quarterly capital expenditure, derived from the fiscal year-to-date figure, fiscal quarter 3, period 2018-08-01 to 2018-10-31, reported 2018-11-15; millions in the extract, stored in USD; derived as this quarter's year-to-date capex minus the previous quarter's (397 less the prior quarter's); extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 203000000.0,
+   "unit": "USD",
+   "periodEnd": "2019-01-31",
+   "filedAt": "2019-02-14",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2019-02-14T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat capxy: quarterly capital expenditure, derived from the fiscal year-to-date figure, fiscal quarter 4, period 2018-11-01 to 2019-01-31, reported 2019-02-14; millions in the extract, stored in USD; derived as this quarter's year-to-date capex minus the previous quarter's (600 less the prior quarter's); extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 128000000.0,
+   "unit": "USD",
+   "periodEnd": "2019-04-28",
+   "filedAt": "2019-05-16",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2019-05-16T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:PaymentsToAcquirePropertyPlantAndEquipment from 10-Q (Q1 FY2020), period 2019-01-28 to 2019-04-28; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 241000000.0,
+   "unit": "USD",
+   "periodEnd": "2019-07-28",
+   "filedAt": "2019-08-15",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2019-08-15T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:PaymentsToAcquirePropertyPlantAndEquipment from 10-Q (Q2 FY2020), period 2019-01-28 to 2019-07-28; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 113000000.0,
+   "unit": "USD",
+   "periodEnd": "2019-07-31",
+   "filedAt": "2019-08-15",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2019-08-15T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat capxy: quarterly capital expenditure, derived from the fiscal year-to-date figure, fiscal quarter 2, period 2019-05-01 to 2019-07-31, reported 2019-08-15; millions in the extract, stored in USD; derived as this quarter's year-to-date capex minus the previous quarter's (241 less the prior quarter's); extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 344000000.0,
+   "unit": "USD",
+   "periodEnd": "2019-10-27",
+   "filedAt": "2019-11-14",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2019-11-14T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:PaymentsToAcquirePropertyPlantAndEquipment from 10-Q (Q3 FY2020), period 2019-01-28 to 2019-10-27; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 103000000.0,
+   "unit": "USD",
+   "periodEnd": "2019-10-31",
+   "filedAt": "2019-11-14",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2019-11-14T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat capxy: quarterly capital expenditure, derived from the fiscal year-to-date figure, fiscal quarter 3, period 2019-08-01 to 2019-10-31, reported 2019-11-14; millions in the extract, stored in USD; derived as this quarter's year-to-date capex minus the previous quarter's (344 less the prior quarter's); extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 145000000.0,
+   "unit": "USD",
+   "periodEnd": "2020-01-31",
+   "filedAt": "2020-02-13",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2020-02-13T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat capxy: quarterly capital expenditure, derived from the fiscal year-to-date figure, fiscal quarter 4, period 2019-11-01 to 2020-01-31, reported 2020-02-13; millions in the extract, stored in USD; derived as this quarter's year-to-date capex minus the previous quarter's (489 less the prior quarter's); extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 155000000.0,
+   "unit": "USD",
+   "periodEnd": "2020-04-26",
+   "filedAt": "2020-05-21",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2020-05-21T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:PaymentsToAcquirePropertyPlantAndEquipment from 10-Q (Q1 FY2020), period 2020-01-27 to 2020-04-26; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 372000000.0,
+   "unit": "USD",
+   "periodEnd": "2020-07-26",
+   "filedAt": "2020-08-19",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2020-08-19T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:PaymentsToAcquirePropertyPlantAndEquipment from 10-Q (Q2 FY2020), period 2020-01-27 to 2020-07-26; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 217000000.0,
+   "unit": "USD",
+   "periodEnd": "2020-07-31",
+   "filedAt": "2020-08-19",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2020-08-19T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat capxy: quarterly capital expenditure, derived from the fiscal year-to-date figure, fiscal quarter 2, period 2020-05-01 to 2020-07-31, reported 2020-08-19; millions in the extract, stored in USD; derived as this quarter's year-to-date capex minus the previous quarter's (372 less the prior quarter's); extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 473000000.0,
+   "unit": "USD",
+   "periodEnd": "2020-10-31",
+   "filedAt": "2020-11-18",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2020-11-18T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat capxy: quarterly capital expenditure, derived from the fiscal year-to-date figure, fiscal quarter 3, period 2020-08-01 to 2020-10-31, reported 2020-11-18; millions in the extract, stored in USD; derived as this quarter's year-to-date capex minus the previous quarter's (845 less the prior quarter's); extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 283000000.0,
+   "unit": "USD",
+   "periodEnd": "2021-01-31",
+   "filedAt": "2021-02-24",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2021-02-24T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat capxy: quarterly capital expenditure, derived from the fiscal year-to-date figure, fiscal quarter 4, period 2020-11-01 to 2021-01-31, reported 2021-02-24; millions in the extract, stored in USD; derived as this quarter's year-to-date capex minus the previous quarter's (1128 less the prior quarter's); extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 298000000.0,
+   "unit": "USD",
+   "periodEnd": "2021-04-30",
+   "filedAt": "2021-05-26",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2021-05-26T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat capxy: quarterly capital expenditure, derived from the fiscal year-to-date figure, fiscal quarter 1, period 2021-02-01 to 2021-04-30, reported 2021-05-26; millions in the extract, stored in USD; the fiscal year-to-date figure itself (quarter 1); extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 183000000.0,
+   "unit": "USD",
+   "periodEnd": "2021-07-31",
+   "filedAt": "2021-08-18",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2021-08-18T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat capxy: quarterly capital expenditure, derived from the fiscal year-to-date figure, fiscal quarter 2, period 2021-05-01 to 2021-07-31, reported 2021-08-18; millions in the extract, stored in USD; derived as this quarter's year-to-date capex minus the previous quarter's (481 less the prior quarter's); extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 222000000.0,
+   "unit": "USD",
+   "periodEnd": "2021-10-31",
+   "filedAt": "2021-11-17",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2021-11-17T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat capxy: quarterly capital expenditure, derived from the fiscal year-to-date figure, fiscal quarter 3, period 2021-08-01 to 2021-10-31, reported 2021-11-17; millions in the extract, stored in USD; derived as this quarter's year-to-date capex minus the previous quarter's (703 less the prior quarter's); extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 273000000.0,
+   "unit": "USD",
+   "periodEnd": "2022-01-31",
+   "filedAt": "2022-02-16",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2022-02-16T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat capxy: quarterly capital expenditure, derived from the fiscal year-to-date figure, fiscal quarter 4, period 2021-11-01 to 2022-01-31, reported 2022-02-16; millions in the extract, stored in USD; derived as this quarter's year-to-date capex minus the previous quarter's (976 less the prior quarter's); extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 361000000.0,
+   "unit": "USD",
+   "periodEnd": "2022-04-30",
+   "filedAt": "2022-05-25",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2022-05-25T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat capxy: quarterly capital expenditure, derived from the fiscal year-to-date figure, fiscal quarter 1, period 2022-02-01 to 2022-04-30, reported 2022-05-25; millions in the extract, stored in USD; the fiscal year-to-date figure itself (quarter 1); extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 433000000.0,
+   "unit": "USD",
+   "periodEnd": "2022-07-31",
+   "filedAt": "2022-08-24",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2022-08-24T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat capxy: quarterly capital expenditure, derived from the fiscal year-to-date figure, fiscal quarter 2, period 2022-05-01 to 2022-07-31, reported 2022-08-24; millions in the extract, stored in USD; derived as this quarter's year-to-date capex minus the previous quarter's (794 less the prior quarter's); extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 530000000.0,
+   "unit": "USD",
+   "periodEnd": "2022-10-31",
+   "filedAt": "2022-11-16",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2022-11-16T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat capxy: quarterly capital expenditure, derived from the fiscal year-to-date figure, fiscal quarter 3, period 2022-08-01 to 2022-10-31, reported 2022-11-16; millions in the extract, stored in USD; derived as this quarter's year-to-date capex minus the previous quarter's (1324 less the prior quarter's); extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 509000000.0,
+   "unit": "USD",
+   "periodEnd": "2023-01-31",
+   "filedAt": "2023-02-22",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2023-02-22T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat capxy: quarterly capital expenditure, derived from the fiscal year-to-date figure, fiscal quarter 4, period 2022-11-01 to 2023-01-31, reported 2023-02-22; millions in the extract, stored in USD; derived as this quarter's year-to-date capex minus the previous quarter's (1833 less the prior quarter's); extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 248000000.0,
+   "unit": "USD",
+   "periodEnd": "2023-04-30",
+   "filedAt": "2023-05-24",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2023-05-24T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat capxy: quarterly capital expenditure, derived from the fiscal year-to-date figure, fiscal quarter 1, period 2023-02-01 to 2023-04-30, reported 2023-05-24; millions in the extract, stored in USD; the fiscal year-to-date figure itself (quarter 1); extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 289000000.0,
+   "unit": "USD",
+   "periodEnd": "2023-07-31",
+   "filedAt": "2023-08-23",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2023-08-23T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat capxy: quarterly capital expenditure, derived from the fiscal year-to-date figure, fiscal quarter 2, period 2023-05-01 to 2023-07-31, reported 2023-08-23; millions in the extract, stored in USD; derived as this quarter's year-to-date capex minus the previous quarter's (537 less the prior quarter's); extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 278000000.0,
+   "unit": "USD",
+   "periodEnd": "2023-10-31",
+   "filedAt": "2023-11-21",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2023-11-21T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat capxy: quarterly capital expenditure, derived from the fiscal year-to-date figure, fiscal quarter 3, period 2023-08-01 to 2023-10-31, reported 2023-11-21; millions in the extract, stored in USD; derived as this quarter's year-to-date capex minus the previous quarter's (815 less the prior quarter's); extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 254000000.0,
+   "unit": "USD",
+   "periodEnd": "2024-01-31",
+   "filedAt": "2024-02-21",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2024-02-21T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat capxy: quarterly capital expenditure, derived from the fiscal year-to-date figure, fiscal quarter 4, period 2023-11-01 to 2024-01-31, reported 2024-02-21; millions in the extract, stored in USD; derived as this quarter's year-to-date capex minus the previous quarter's (1069 less the prior quarter's); extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 369000000.0,
+   "unit": "USD",
+   "periodEnd": "2024-04-30",
+   "filedAt": "2024-05-22",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2024-05-22T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat capxy: quarterly capital expenditure, derived from the fiscal year-to-date figure, fiscal quarter 1, period 2024-02-01 to 2024-04-30, reported 2024-05-22; millions in the extract, stored in USD; the fiscal year-to-date figure itself (quarter 1); extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 977000000.0,
+   "unit": "USD",
+   "periodEnd": "2024-07-31",
+   "filedAt": "2024-08-28",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2024-08-28T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat capxy: quarterly capital expenditure, derived from the fiscal year-to-date figure, fiscal quarter 2, period 2024-05-01 to 2024-07-31, reported 2024-08-28; millions in the extract, stored in USD; derived as this quarter's year-to-date capex minus the previous quarter's (1346 less the prior quarter's); extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 813000000.0,
+   "unit": "USD",
+   "periodEnd": "2024-10-31",
+   "filedAt": "2024-11-20",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2024-11-20T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat capxy: quarterly capital expenditure, derived from the fiscal year-to-date figure, fiscal quarter 3, period 2024-08-01 to 2024-10-31, reported 2024-11-20; millions in the extract, stored in USD; derived as this quarter's year-to-date capex minus the previous quarter's (2159 less the prior quarter's); extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 1077000000.0,
+   "unit": "USD",
+   "periodEnd": "2025-01-31",
+   "filedAt": "2025-02-26",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2025-02-26T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat capxy: quarterly capital expenditure, derived from the fiscal year-to-date figure, fiscal quarter 4, period 2024-11-01 to 2025-01-31, reported 2025-02-26; millions in the extract, stored in USD; derived as this quarter's year-to-date capex minus the previous quarter's (3236 less the prior quarter's); extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 1227000000.0,
+   "unit": "USD",
+   "periodEnd": "2025-04-30",
+   "filedAt": "2025-05-28",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2025-05-28T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat capxy: quarterly capital expenditure, derived from the fiscal year-to-date figure, fiscal quarter 1, period 2025-02-01 to 2025-04-30, reported 2025-05-28; millions in the extract, stored in USD; the fiscal year-to-date figure itself (quarter 1); extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 1895000000.0,
+   "unit": "USD",
+   "periodEnd": "2025-07-31",
+   "filedAt": "2025-08-27",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2025-08-27T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat capxy: quarterly capital expenditure, derived from the fiscal year-to-date figure, fiscal quarter 2, period 2025-05-01 to 2025-07-31, reported 2025-08-27; millions in the extract, stored in USD; derived as this quarter's year-to-date capex minus the previous quarter's (3122 less the prior quarter's); extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 1636000000.0,
+   "unit": "USD",
+   "periodEnd": "2025-10-31",
+   "filedAt": "2025-11-19",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2025-11-19T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat capxy: quarterly capital expenditure, derived from the fiscal year-to-date figure, fiscal quarter 3, period 2025-08-01 to 2025-10-31, reported 2025-11-19; millions in the extract, stored in USD; derived as this quarter's year-to-date capex minus the previous quarter's (4758 less the prior quarter's); extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 1284000000.0,
+   "unit": "USD",
+   "periodEnd": "2026-01-31",
+   "filedAt": "2026-02-25",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2026-02-25T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat capxy: quarterly capital expenditure, derived from the fiscal year-to-date figure, fiscal quarter 4, period 2025-11-01 to 2026-01-31, reported 2026-02-25; millions in the extract, stored in USD; derived as this quarter's year-to-date capex minus the previous quarter's (6042 less the prior quarter's); extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 1757000000.0,
+   "unit": "USD",
+   "periodEnd": "2026-04-30",
+   "filedAt": "2026-05-20",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2026-05-20T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat capxy: quarterly capital expenditure, derived from the fiscal year-to-date figure, fiscal quarter 1, period 2026-02-01 to 2026-04-30, reported 2026-05-20; millions in the extract, stored in USD; the fiscal year-to-date figure itself (quarter 1); extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "capex",
+   "value": 2677000000.0,
+   "unit": "USD",
+   "periodEnd": "2026-07-31",
+   "filedAt": "2026-08-26",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2026-08-26T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat capxy: quarterly capital expenditure, derived from the fiscal year-to-date figure, fiscal quarter 2, period 2026-05-01 to 2026-07-31, reported 2026-08-26; millions in the extract, stored in USD; derived as this quarter's year-to-date capex minus the previous quarter's (4434 less the prior quarter's); extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "netIncome",
+   "value": 50789000000.0,
+   "unit": "USD",
+   "periodEnd": "2024-10-27",
+   "filedAt": "2024-11-20",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2024-11-20T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:NetIncomeLoss from 10-Q (Q3 FY2025), period 2024-01-29 to 2024-10-27; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "netIncome",
+   "value": 72880000000.0,
+   "unit": "USD",
+   "periodEnd": "2025-01-26",
+   "filedAt": "2025-02-26",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2025-02-26T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-K",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:NetIncomeLoss from 10-K (FY FY2025), period 2024-01-29 to 2025-01-26; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "netIncome",
+   "value": 18775000000.0,
+   "unit": "USD",
+   "periodEnd": "2025-04-27",
+   "filedAt": "2025-05-28",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2025-05-28T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:NetIncomeLoss from 10-Q (Q1 FY2026), period 2025-01-27 to 2025-04-27; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "netIncome",
+   "value": 45197000000.0,
+   "unit": "USD",
+   "periodEnd": "2025-07-27",
+   "filedAt": "2025-08-27",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2025-08-27T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:NetIncomeLoss from 10-Q (Q2 FY2026), period 2025-01-27 to 2025-07-27; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "netIncome",
+   "value": 77107000000.0,
+   "unit": "USD",
+   "periodEnd": "2025-10-26",
+   "filedAt": "2025-11-19",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2025-11-19T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:NetIncomeLoss from 10-Q (Q3 FY2026), period 2025-01-27 to 2025-10-26; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "netIncome",
+   "value": 120067000000.0,
+   "unit": "USD",
+   "periodEnd": "2026-01-25",
+   "filedAt": "2026-02-25",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2026-02-25T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-K",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:NetIncomeLoss from 10-K (FY FY2026), period 2025-01-27 to 2026-01-25; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "netIncome",
+   "value": 58321000000.0,
+   "unit": "USD",
+   "periodEnd": "2026-04-26",
+   "filedAt": "2026-05-20",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2026-05-20T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:NetIncomeLoss from 10-Q (Q1 FY2027), period 2026-01-26 to 2026-04-26; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "netIncome",
+   "value": 118010000000.0,
+   "unit": "USD",
+   "periodEnd": "2026-07-26",
+   "filedAt": "2026-08-26",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2026-08-26T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:NetIncomeLoss from 10-Q (Q2 FY2027), period 2026-01-26 to 2026-07-26; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "ppe",
+   "value": 5343000000.0,
+   "unit": "USD",
+   "periodEnd": "2024-10-27",
+   "filedAt": "2024-11-20",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2024-11-20T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:PropertyPlantAndEquipmentNet from 10-Q (Q3 FY2025), period instant to 2024-10-27; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "ppe",
+   "value": 6283000000.0,
+   "unit": "USD",
+   "periodEnd": "2025-01-26",
+   "filedAt": "2025-02-26",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2025-02-26T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-K",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:PropertyPlantAndEquipmentNet from 10-K (FY FY2025), period instant to 2025-01-26; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "ppe",
+   "value": 7136000000.0,
+   "unit": "USD",
+   "periodEnd": "2025-04-27",
+   "filedAt": "2025-05-28",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2025-05-28T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:PropertyPlantAndEquipmentNet from 10-Q (Q1 FY2026), period instant to 2025-04-27; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "ppe",
+   "value": 9141000000.0,
+   "unit": "USD",
+   "periodEnd": "2025-07-27",
+   "filedAt": "2025-08-27",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2025-08-27T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:PropertyPlantAndEquipmentNet from 10-Q (Q2 FY2026), period instant to 2025-07-27; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "ppe",
+   "value": 9780000000.0,
+   "unit": "USD",
+   "periodEnd": "2025-10-26",
+   "filedAt": "2025-11-19",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2025-11-19T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:PropertyPlantAndEquipmentNet from 10-Q (Q3 FY2026), period instant to 2025-10-26; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "ppe",
+   "value": 10383000000.0,
+   "unit": "USD",
+   "periodEnd": "2026-01-25",
+   "filedAt": "2026-02-25",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2026-02-25T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-K",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:PropertyPlantAndEquipmentNet from 10-K (FY FY2026), period instant to 2026-01-25; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "ppe",
+   "value": 12403000000.0,
+   "unit": "USD",
+   "periodEnd": "2026-04-26",
+   "filedAt": "2026-05-20",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2026-05-20T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:PropertyPlantAndEquipmentNet from 10-Q (Q1 FY2027), period instant to 2026-04-26; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "ppe",
+   "value": 14285000000.0,
+   "unit": "USD",
+   "periodEnd": "2026-07-26",
+   "filedAt": "2026-08-26",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2026-08-26T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:PropertyPlantAndEquipmentNet from 10-Q (Q2 FY2027), period instant to 2026-07-26; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 2911000000.0,
+   "unit": "USD",
+   "periodEnd": "2018-01-31",
+   "filedAt": "2018-02-08",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2018-02-08T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 4, period 2017-11-01 to 2018-01-31, reported 2018-02-08; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 3207000000.0,
+   "unit": "USD",
+   "periodEnd": "2018-04-30",
+   "filedAt": "2018-05-10",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2018-05-10T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 1, period 2018-02-01 to 2018-04-30, reported 2018-05-10; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 3123000000.0,
+   "unit": "USD",
+   "periodEnd": "2018-07-31",
+   "filedAt": "2018-08-16",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2018-08-16T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 2, period 2018-05-01 to 2018-07-31, reported 2018-08-16; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 3181000000.0,
+   "unit": "USD",
+   "periodEnd": "2018-10-31",
+   "filedAt": "2018-11-15",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2018-11-15T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 3, period 2018-08-01 to 2018-10-31, reported 2018-11-15; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 2205000000.0,
+   "unit": "USD",
+   "periodEnd": "2019-01-31",
+   "filedAt": "2019-02-14",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2019-02-14T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 4, period 2018-11-01 to 2019-01-31, reported 2019-02-14; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 2220000000.0,
+   "unit": "USD",
+   "periodEnd": "2019-04-30",
+   "filedAt": "2019-05-16",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2019-05-16T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 1, period 2019-02-01 to 2019-04-30, reported 2019-05-16; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 2579000000.0,
+   "unit": "USD",
+   "periodEnd": "2019-07-31",
+   "filedAt": "2019-08-15",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2019-08-15T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 2, period 2019-05-01 to 2019-07-31, reported 2019-08-15; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 3014000000.0,
+   "unit": "USD",
+   "periodEnd": "2019-10-31",
+   "filedAt": "2019-11-14",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2019-11-14T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 3, period 2019-08-01 to 2019-10-31, reported 2019-11-14; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 3105000000.0,
+   "unit": "USD",
+   "periodEnd": "2020-01-31",
+   "filedAt": "2020-02-13",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2020-02-13T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 4, period 2019-11-01 to 2020-01-31, reported 2020-02-13; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 3080000000.0,
+   "unit": "USD",
+   "periodEnd": "2020-04-30",
+   "filedAt": "2020-05-21",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2020-05-21T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 1, period 2020-02-01 to 2020-04-30, reported 2020-05-21; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 3866000000.0,
+   "unit": "USD",
+   "periodEnd": "2020-07-31",
+   "filedAt": "2020-08-19",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2020-08-19T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 2, period 2020-05-01 to 2020-07-31, reported 2020-08-19; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 4726000000.0,
+   "unit": "USD",
+   "periodEnd": "2020-10-31",
+   "filedAt": "2020-11-18",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2020-11-18T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 3, period 2020-08-01 to 2020-10-31, reported 2020-11-18; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 5003000000.0,
+   "unit": "USD",
+   "periodEnd": "2021-01-31",
+   "filedAt": "2021-02-24",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2021-02-24T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 4, period 2020-11-01 to 2021-01-31, reported 2021-02-24; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 5661000000.0,
+   "unit": "USD",
+   "periodEnd": "2021-04-30",
+   "filedAt": "2021-05-26",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2021-05-26T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 1, period 2021-02-01 to 2021-04-30, reported 2021-05-26; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 6507000000.0,
+   "unit": "USD",
+   "periodEnd": "2021-07-31",
+   "filedAt": "2021-08-18",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2021-08-18T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 2, period 2021-05-01 to 2021-07-31, reported 2021-08-18; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 7103000000.0,
+   "unit": "USD",
+   "periodEnd": "2021-10-31",
+   "filedAt": "2021-11-17",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2021-11-17T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 3, period 2021-08-01 to 2021-10-31, reported 2021-11-17; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 7643000000.0,
+   "unit": "USD",
+   "periodEnd": "2022-01-31",
+   "filedAt": "2022-02-16",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2022-02-16T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 4, period 2021-11-01 to 2022-01-31, reported 2022-02-16; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 8288000000.0,
+   "unit": "USD",
+   "periodEnd": "2022-04-30",
+   "filedAt": "2022-05-25",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2022-05-25T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 1, period 2022-02-01 to 2022-04-30, reported 2022-05-25; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 6704000000.0,
+   "unit": "USD",
+   "periodEnd": "2022-07-31",
+   "filedAt": "2022-08-24",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2022-08-24T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 2, period 2022-05-01 to 2022-07-31, reported 2022-08-24; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 5931000000.0,
+   "unit": "USD",
+   "periodEnd": "2022-10-31",
+   "filedAt": "2022-11-16",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2022-11-16T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 3, period 2022-08-01 to 2022-10-31, reported 2022-11-16; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 6051000000.0,
+   "unit": "USD",
+   "periodEnd": "2023-01-31",
+   "filedAt": "2023-02-22",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2023-02-22T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 4, period 2022-11-01 to 2023-01-31, reported 2023-02-22; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 7192000000.0,
+   "unit": "USD",
+   "periodEnd": "2023-04-30",
+   "filedAt": "2023-05-24",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2023-05-24T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 1, period 2023-02-01 to 2023-04-30, reported 2023-05-24; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 13507000000.0,
+   "unit": "USD",
+   "periodEnd": "2023-07-31",
+   "filedAt": "2023-08-23",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2023-08-23T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 2, period 2023-05-01 to 2023-07-31, reported 2023-08-23; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 18120000000.0,
+   "unit": "USD",
+   "periodEnd": "2023-10-31",
+   "filedAt": "2023-11-21",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2023-11-21T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 3, period 2023-08-01 to 2023-10-31, reported 2023-11-21; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 22103000000.0,
+   "unit": "USD",
+   "periodEnd": "2024-01-31",
+   "filedAt": "2024-02-21",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2024-02-21T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 4, period 2023-11-01 to 2024-01-31, reported 2024-02-21; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 26044000000.0,
+   "unit": "USD",
+   "periodEnd": "2024-04-30",
+   "filedAt": "2024-05-22",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2024-05-22T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 1, period 2024-02-01 to 2024-04-30, reported 2024-05-22; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 30040000000.0,
+   "unit": "USD",
+   "periodEnd": "2024-07-31",
+   "filedAt": "2024-08-28",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2024-08-28T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 2, period 2024-05-01 to 2024-07-31, reported 2024-08-28; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 91166000000.0,
+   "unit": "USD",
+   "periodEnd": "2024-10-27",
+   "filedAt": "2024-11-20",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2024-11-20T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:Revenues from 10-Q (Q3 FY2025), period 2024-01-29 to 2024-10-27; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 35082000000.0,
+   "unit": "USD",
+   "periodEnd": "2024-10-31",
+   "filedAt": "2024-11-20",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2024-11-20T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 3, period 2024-08-01 to 2024-10-31, reported 2024-11-20; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 130497000000.0,
+   "unit": "USD",
+   "periodEnd": "2025-01-26",
+   "filedAt": "2025-02-26",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2025-02-26T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-K",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:Revenues from 10-K (FY FY2025), period 2024-01-29 to 2025-01-26; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 39331000000.0,
+   "unit": "USD",
+   "periodEnd": "2025-01-31",
+   "filedAt": "2025-02-26",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2025-02-26T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 4, period 2024-11-01 to 2025-01-31, reported 2025-02-26; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 44062000000.0,
+   "unit": "USD",
+   "periodEnd": "2025-04-27",
+   "filedAt": "2025-05-28",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2025-05-28T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:Revenues from 10-Q (Q1 FY2026), period 2025-01-27 to 2025-04-27; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 90805000000.0,
+   "unit": "USD",
+   "periodEnd": "2025-07-27",
+   "filedAt": "2025-08-27",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2025-08-27T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:Revenues from 10-Q (Q2 FY2026), period 2025-01-27 to 2025-07-27; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 46743000000.0,
+   "unit": "USD",
+   "periodEnd": "2025-07-31",
+   "filedAt": "2025-08-27",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2025-08-27T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 2, period 2025-05-01 to 2025-07-31, reported 2025-08-27; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 147811000000.0,
+   "unit": "USD",
+   "periodEnd": "2025-10-26",
+   "filedAt": "2025-11-19",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2025-11-19T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:Revenues from 10-Q (Q3 FY2026), period 2025-01-27 to 2025-10-26; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 57006000000.0,
+   "unit": "USD",
+   "periodEnd": "2025-10-31",
+   "filedAt": "2025-11-19",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2025-11-19T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 3, period 2025-08-01 to 2025-10-31, reported 2025-11-19; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 215938000000.0,
+   "unit": "USD",
+   "periodEnd": "2026-01-25",
+   "filedAt": "2026-02-25",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2026-02-25T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-K",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:Revenues from 10-K (FY FY2026), period 2025-01-27 to 2026-01-25; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 68127000000.0,
+   "unit": "USD",
+   "periodEnd": "2026-01-31",
+   "filedAt": "2026-02-25",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2026-02-25T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 4, period 2025-11-01 to 2026-01-31, reported 2026-02-25; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 81615000000.0,
+   "unit": "USD",
+   "periodEnd": "2026-04-26",
+   "filedAt": "2026-05-20",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2026-05-20T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:Revenues from 10-Q (Q1 FY2027), period 2026-01-26 to 2026-04-26; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 177837000000.0,
+   "unit": "USD",
+   "periodEnd": "2026-07-26",
+   "filedAt": "2026-08-26",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2026-08-26T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:Revenues from 10-Q (Q2 FY2027), period 2026-01-26 to 2026-07-26; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "revenue",
+   "value": 96222000000.0,
+   "unit": "USD",
+   "periodEnd": "2026-07-31",
+   "filedAt": "2026-08-26",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2026-08-26T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat revtq: quarterly revenue, fiscal quarter 2, period 2026-05-01 to 2026-07-31, reported 2026-08-26; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "rpo",
+   "value": 1600000000.0,
+   "unit": "USD",
+   "periodEnd": "2024-10-27",
+   "filedAt": "2024-11-20",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2024-11-20T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:RevenueRemainingPerformanceObligation from 10-Q (Q3 FY2025), period instant to 2024-10-27; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "rpo",
+   "value": 1700000000.0,
+   "unit": "USD",
+   "periodEnd": "2025-01-26",
+   "filedAt": "2025-02-26",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2025-02-26T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-K",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:RevenueRemainingPerformanceObligation from 10-K (FY FY2025), period instant to 2025-01-26; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "rpo",
+   "value": 1800000000.0,
+   "unit": "USD",
+   "periodEnd": "2025-04-27",
+   "filedAt": "2025-05-28",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2025-05-28T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:RevenueRemainingPerformanceObligation from 10-Q (Q1 FY2026), period instant to 2025-04-27; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "rpo",
+   "value": 1900000000.0,
+   "unit": "USD",
+   "periodEnd": "2025-07-27",
+   "filedAt": "2025-08-27",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2025-08-27T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:RevenueRemainingPerformanceObligation from 10-Q (Q2 FY2026), period instant to 2025-07-27; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "rpo",
+   "value": 2500000000.0,
+   "unit": "USD",
+   "periodEnd": "2025-10-26",
+   "filedAt": "2025-11-19",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2025-11-19T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:RevenueRemainingPerformanceObligation from 10-Q (Q3 FY2026), period instant to 2025-10-26; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "rpo",
+   "value": 2300000000.0,
+   "unit": "USD",
+   "periodEnd": "2026-01-25",
+   "filedAt": "2026-02-25",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2026-02-25T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-K",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:RevenueRemainingPerformanceObligation from 10-K (FY FY2026), period instant to 2026-01-25; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "rpo",
+   "value": 2600000000.0,
+   "unit": "USD",
+   "periodEnd": "2026-04-26",
+   "filedAt": "2026-05-20",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2026-05-20T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:RevenueRemainingPerformanceObligation from 10-Q (Q1 FY2027), period instant to 2026-04-26; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "rpo",
+   "value": 3200000000.0,
+   "unit": "USD",
+   "periodEnd": "2026-07-26",
+   "filedAt": "2026-08-26",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2026-08-26T00:00:00Z",
+    "sourceUrl": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810&type=10-Q",
+    "fetchedAt": "2026-11-08T08:54:38.469388Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "us-gaap:RevenueRemainingPerformanceObligation from 10-Q (Q2 FY2027), period instant to 2026-07-26; filed date is the availability date",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 11241000000.0,
+   "unit": "USD",
+   "periodEnd": "2018-01-31",
+   "filedAt": "2018-02-08",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2018-02-08T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 4, period instant to 2018-01-31, reported 2018-02-08; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 11460000000.0,
+   "unit": "USD",
+   "periodEnd": "2018-04-30",
+   "filedAt": "2018-05-10",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2018-05-10T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 1, period instant to 2018-04-30, reported 2018-05-10; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 12882000000.0,
+   "unit": "USD",
+   "periodEnd": "2018-07-31",
+   "filedAt": "2018-08-16",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2018-08-16T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 2, period instant to 2018-07-31, reported 2018-08-16; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 13657000000.0,
+   "unit": "USD",
+   "periodEnd": "2018-10-31",
+   "filedAt": "2018-11-15",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2018-11-15T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 3, period instant to 2018-10-31, reported 2018-11-15; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 13292000000.0,
+   "unit": "USD",
+   "periodEnd": "2019-01-31",
+   "filedAt": "2019-02-14",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2019-02-14T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 4, period instant to 2019-01-31, reported 2019-02-14; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 14021000000.0,
+   "unit": "USD",
+   "periodEnd": "2019-04-30",
+   "filedAt": "2019-05-16",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2019-05-16T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 1, period instant to 2019-04-30, reported 2019-05-16; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 14775000000.0,
+   "unit": "USD",
+   "periodEnd": "2019-07-31",
+   "filedAt": "2019-08-15",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2019-08-15T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 2, period instant to 2019-07-31, reported 2019-08-15; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 15810000000.0,
+   "unit": "USD",
+   "periodEnd": "2019-10-31",
+   "filedAt": "2019-11-14",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2019-11-14T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 3, period instant to 2019-10-31, reported 2019-11-14; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 17315000000.0,
+   "unit": "USD",
+   "periodEnd": "2020-01-31",
+   "filedAt": "2020-02-13",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2020-02-13T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 4, period instant to 2020-01-31, reported 2020-02-13; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 23254000000.0,
+   "unit": "USD",
+   "periodEnd": "2020-04-30",
+   "filedAt": "2020-05-21",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2020-05-21T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 1, period instant to 2020-04-30, reported 2020-05-21; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 25180000000.0,
+   "unit": "USD",
+   "periodEnd": "2020-07-31",
+   "filedAt": "2020-08-19",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2020-08-19T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 2, period instant to 2020-07-31, reported 2020-08-19; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 26881000000.0,
+   "unit": "USD",
+   "periodEnd": "2020-10-31",
+   "filedAt": "2020-11-18",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2020-11-18T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 3, period instant to 2020-10-31, reported 2020-11-18; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 28791000000.0,
+   "unit": "USD",
+   "periodEnd": "2021-01-31",
+   "filedAt": "2021-02-24",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2021-02-24T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 4, period instant to 2021-01-31, reported 2021-02-24; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 30796000000.0,
+   "unit": "USD",
+   "periodEnd": "2021-04-30",
+   "filedAt": "2021-05-26",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2021-05-26T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 1, period instant to 2021-04-30, reported 2021-05-26; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 38650000000.0,
+   "unit": "USD",
+   "periodEnd": "2021-07-31",
+   "filedAt": "2021-08-18",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2021-08-18T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 2, period instant to 2021-07-31, reported 2021-08-18; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 40632000000.0,
+   "unit": "USD",
+   "periodEnd": "2021-10-31",
+   "filedAt": "2021-11-17",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2021-11-17T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 3, period instant to 2021-10-31, reported 2021-11-17; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 44187000000.0,
+   "unit": "USD",
+   "periodEnd": "2022-01-31",
+   "filedAt": "2022-02-16",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2022-02-16T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 4, period instant to 2022-01-31, reported 2022-02-16; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 45212000000.0,
+   "unit": "USD",
+   "periodEnd": "2022-04-30",
+   "filedAt": "2022-05-25",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2022-05-25T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 1, period instant to 2022-04-30, reported 2022-05-25; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 43476000000.0,
+   "unit": "USD",
+   "periodEnd": "2022-07-31",
+   "filedAt": "2022-08-24",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2022-08-24T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 2, period instant to 2022-07-31, reported 2022-08-24; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 40488000000.0,
+   "unit": "USD",
+   "periodEnd": "2022-10-31",
+   "filedAt": "2022-11-16",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2022-11-16T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 3, period instant to 2022-10-31, reported 2022-11-16; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 41182000000.0,
+   "unit": "USD",
+   "periodEnd": "2023-01-31",
+   "filedAt": "2023-02-22",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2023-02-22T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 4, period instant to 2023-01-31, reported 2023-02-22; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 44460000000.0,
+   "unit": "USD",
+   "periodEnd": "2023-04-30",
+   "filedAt": "2023-05-24",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2023-05-24T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 1, period instant to 2023-04-30, reported 2023-05-24; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 49555000000.0,
+   "unit": "USD",
+   "periodEnd": "2023-07-31",
+   "filedAt": "2023-08-23",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2023-08-23T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 2, period instant to 2023-07-31, reported 2023-08-23; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 54148000000.0,
+   "unit": "USD",
+   "periodEnd": "2023-10-31",
+   "filedAt": "2023-11-21",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2023-11-21T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 3, period instant to 2023-10-31, reported 2023-11-21; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 65728000000.0,
+   "unit": "USD",
+   "periodEnd": "2024-01-31",
+   "filedAt": "2024-02-21",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2024-02-21T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 4, period instant to 2024-01-31, reported 2024-02-21; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 77072000000.0,
+   "unit": "USD",
+   "periodEnd": "2024-04-30",
+   "filedAt": "2024-05-22",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2024-05-22T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 1, period instant to 2024-04-30, reported 2024-05-22; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 85227000000.0,
+   "unit": "USD",
+   "periodEnd": "2024-07-31",
+   "filedAt": "2024-08-28",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2024-08-28T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 2, period instant to 2024-07-31, reported 2024-08-28; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 96013000000.0,
+   "unit": "USD",
+   "periodEnd": "2024-10-31",
+   "filedAt": "2024-11-20",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2024-11-20T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 3, period instant to 2024-10-31, reported 2024-11-20; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 111601000000.0,
+   "unit": "USD",
+   "periodEnd": "2025-01-31",
+   "filedAt": "2025-02-26",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2025-02-26T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 4, period instant to 2025-01-31, reported 2025-02-26; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 125254000000.0,
+   "unit": "USD",
+   "periodEnd": "2025-04-30",
+   "filedAt": "2025-05-28",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2025-05-28T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 1, period instant to 2025-04-30, reported 2025-05-28; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 140740000000.0,
+   "unit": "USD",
+   "periodEnd": "2025-07-31",
+   "filedAt": "2025-08-27",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2025-08-27T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 2, period instant to 2025-07-31, reported 2025-08-27; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 161148000000.0,
+   "unit": "USD",
+   "periodEnd": "2025-10-31",
+   "filedAt": "2025-11-19",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2025-11-19T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 3, period instant to 2025-10-31, reported 2025-11-19; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 206803000000.0,
+   "unit": "USD",
+   "periodEnd": "2026-01-31",
+   "filedAt": "2026-02-25",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2026-02-25T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 4, period instant to 2026-01-31, reported 2026-02-25; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 259474000000.0,
+   "unit": "USD",
+   "periodEnd": "2026-04-30",
+   "filedAt": "2026-05-20",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2026-05-20T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 1, period instant to 2026-04-30, reported 2026-05-20; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "concept": "totalAssets",
+   "value": 320272000000.0,
+   "unit": "USD",
+   "periodEnd": "2026-07-31",
+   "filedAt": "2026-08-26",
+   "provenance": {
+    "kind": "archived",
+    "source": "wrds-compustat",
+    "observedAt": "2026-08-26T00:00:00Z",
+    "sourceUrl": "https://wrds-www.wharton.upenn.edu/",
+    "fetchedAt": "2026-11-08T02:36:30.855576Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+    "note": "Compustat atq: total assets at the period end, fiscal quarter 2, period instant to 2026-07-31, reported 2026-08-26; millions in the extract, stored in USD; extracted by the founder under the institutional WRDS licence",
+    "inputKinds": []
+   }
+  }
+ ],
+ "unavailable": null,
+ "freshness": {
+  "generatedAt": "2026-11-08T08:57:11.721558Z",
+  "oldestObservedAt": "2018-02-08T00:00:00Z",
+  "sources": [
+   "flopx-sample-v1",
+   "sec-edgar",
+   "wrds-compustat",
+   "yahoo-finance"
+  ],
+  "sourceDetails": [
+   {
+    "source": "sec-edgar",
+    "kind": "live",
+    "observedAt": "2026-09-03T12:03:56Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)"
+   },
+   {
+    "source": "wrds-compustat",
+    "kind": "archived",
+    "observedAt": "2026-08-26T00:00:00Z",
+    "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon"
+   },
+   {
+    "source": "yahoo-finance",
+    "kind": "live",
+    "observedAt": "2026-11-06T21:00:00Z",
+    "licence": "Unofficial endpoint; the provider's terms restrict redistribution. Shown pending a licensed price feed."
+   }
+  ],
+  "unavailable": []
+ },
+ "relatedItems": [],
+ "relatedFacilities": []
+}

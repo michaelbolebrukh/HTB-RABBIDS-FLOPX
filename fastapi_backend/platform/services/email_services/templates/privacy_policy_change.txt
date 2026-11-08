@@ -1,0 +1,33 @@
+Review the changes to our privacy policy and Terms, and when they take effect.
+
+FLOPX
+
+Our privacy policy and Terms are changing
+
+Hi {{name}},
+
+We're updating the FLOPX privacy policy and Terms. The changes take effect on
+{{effective_date}}.
+
+What's changing
+
+{{change_summary}}
+
+Read the updated privacy policy and Terms for the full details and your rights.
+
+Read the privacy policy [{{policy_url}}]
+
+Read the Terms of Service [https://flopx.vercel.app/terms-of-service]
+
+You can close your account free of charge if you disagree.
+
+Questions? Contact hello@flopx.vercel.app.
+
+You're receiving this notice because you have an account with FLOPX.
+
+flopx.vercel.app [https://flopx.vercel.app/]
+
+© FLOPX. All rights reserved.
+
+Privacy Policy [https://flopx.vercel.app/privacy-policy] Terms of Service
+[https://flopx.vercel.app/terms-of-service]

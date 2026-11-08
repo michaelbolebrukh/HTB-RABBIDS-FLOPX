@@ -1,0 +1,205 @@
+{
+ "regions": [
+  {
+   "region": {
+    "id": "us-tx",
+    "name": "US Central (Dallas hub)",
+    "countryCode": "US",
+    "lat": 32.78,
+    "lon": -96.8,
+    "gridZone": "ERCOT"
+   },
+   "offers": 9,
+   "medianRawPrice": 1.76,
+   "medianAdjustedPrice": 2.1333,
+   "facilitiesByStatus": {
+    "reported": 3,
+    "under-construction": 2,
+    "planned": 1,
+    "operating": 2,
+    "announced": 1
+   },
+   "energyIndicator": {
+    "seriesId": "energy:ERCOT:day-ahead",
+    "t": "2026-11-06T21:00:00Z",
+    "value": 34.71,
+    "unit": "USD/MWh",
+    "provenance": {
+     "kind": "sample",
+     "source": "flopx-sample-v1",
+     "observedAt": "2026-11-06T21:00:00Z",
+     "sourceUrl": null,
+     "fetchedAt": null,
+     "licence": null,
+     "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+     "inputKinds": []
+    }
+   }
+  },
+  {
+   "region": {
+    "id": "us-va",
+    "name": "US East and Midwest (Ashburn hub)",
+    "countryCode": "US",
+    "lat": 39.04,
+    "lon": -77.49,
+    "gridZone": "PJM"
+   },
+   "offers": 6,
+   "medianRawPrice": 2.66,
+   "medianAdjustedPrice": 2.66,
+   "facilitiesByStatus": {
+    "announced": 1,
+    "operating": 2,
+    "planned": 3,
+    "under-construction": 1
+   },
+   "energyIndicator": null
+  },
+  {
+   "region": {
+    "id": "us-or",
+    "name": "US West (Hillsboro hub)",
+    "countryCode": "US",
+    "lat": 45.52,
+    "lon": -122.99,
+    "gridZone": "BPA"
+   },
+   "offers": 7,
+   "medianRawPrice": 0.82,
+   "medianAdjustedPrice": 0.82,
+   "facilitiesByStatus": {
+    "operating": 2,
+    "planned": 2,
+    "announced": 1,
+    "reported": 1
+   },
+   "energyIndicator": null
+  },
+  {
+   "region": {
+    "id": "eu-ie",
+    "name": "Ireland and UK (Dublin hub)",
+    "countryCode": "IE",
+    "lat": 53.35,
+    "lon": -6.26,
+    "gridZone": "EirGrid"
+   },
+   "offers": 5,
+   "medianRawPrice": 0.8,
+   "medianAdjustedPrice": 1.0159,
+   "facilitiesByStatus": {
+    "planned": 1,
+    "under-construction": 1
+   },
+   "energyIndicator": null
+  },
+  {
+   "region": {
+    "id": "eu-de",
+    "name": "Western Europe (Frankfurt hub)",
+    "countryCode": "DE",
+    "lat": 50.11,
+    "lon": 8.68,
+    "gridZone": "DE-LU"
+   },
+   "offers": 9,
+   "medianRawPrice": 1.4,
+   "medianAdjustedPrice": 1.8889,
+   "facilitiesByStatus": {
+    "under-construction": 1,
+    "announced": 1,
+    "planned": 1
+   },
+   "energyIndicator": {
+    "seriesId": "energy:DE-LU:day-ahead",
+    "t": "2026-11-08T00:30:00Z",
+    "value": 223.12,
+    "unit": "EUR/MWh",
+    "provenance": {
+     "kind": "live",
+     "source": "energy-charts",
+     "observedAt": "2026-11-08T00:30:00Z",
+     "sourceUrl": "https://www.energy-charts.info/charts/price_spot_market/chart.htm?l=en&c=DE",
+     "fetchedAt": "2026-11-08T00:33:25.000838Z",
+     "licence": "CC BY 4.0",
+     "note": "day-ahead price DE-LU for the delivery slot starting at t; CC BY 4.0 (creativecommons.org/licenses/by/4.0) from Bundesnetzagentur | SMARD.de; via Energy-Charts (Fraunhofer ISE)",
+     "inputKinds": []
+    }
+   }
+  },
+  {
+   "region": {
+    "id": "eu-no",
+    "name": "Nordics (Oslo hub)",
+    "countryCode": "NO",
+    "lat": 59.91,
+    "lon": 10.75,
+    "gridZone": "NO1"
+   },
+   "offers": 9,
+   "medianRawPrice": 1.69,
+   "medianAdjustedPrice": 2.386,
+   "facilitiesByStatus": {
+    "operating": 3,
+    "reported": 1,
+    "planned": 2
+   },
+   "energyIndicator": null
+  },
+  {
+   "region": {
+    "id": "ap-sg",
+    "name": "Asia-Pacific South (Singapore hub)",
+    "countryCode": "SG",
+    "lat": 1.35,
+    "lon": 103.82,
+    "gridZone": "EMA"
+   },
+   "offers": 10,
+   "medianRawPrice": 0.875,
+   "medianAdjustedPrice": 0.8526,
+   "facilitiesByStatus": {
+    "announced": 1,
+    "operating": 3,
+    "planned": 1
+   },
+   "energyIndicator": null
+  },
+  {
+   "region": {
+    "id": "ap-jp",
+    "name": "Japan (Tokyo hub)",
+    "countryCode": "JP",
+    "lat": 35.68,
+    "lon": 139.69,
+    "gridZone": "TEPCO"
+   },
+   "offers": 5,
+   "medianRawPrice": 1.38,
+   "medianAdjustedPrice": 2.7879,
+   "facilitiesByStatus": {
+    "reported": 1,
+    "under-construction": 1
+   },
+   "energyIndicator": null
+  }
+ ],
+ "freshness": {
+  "generatedAt": "2026-11-08T00:39:50.774701Z",
+  "oldestObservedAt": "2026-11-06T21:00:00Z",
+  "sources": [
+   "energy-charts",
+   "flopx-sample-v1"
+  ],
+  "sourceDetails": [
+   {
+    "source": "energy-charts",
+    "kind": "live",
+    "observedAt": "2026-11-08T00:30:00Z",
+    "licence": "CC BY 4.0"
+   }
+  ],
+  "unavailable": []
+ }
+}

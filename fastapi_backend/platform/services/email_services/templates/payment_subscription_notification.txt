@@ -1,0 +1,20 @@
+A new subscription started.
+
+FLOPX
+
+New subscription
+
+Plan: {{item_key}}
+
+Amount: {{amount}}
+
+User ID: {{user_id}}
+
+Checkout session: {{session_id}}
+
+flopx.vercel.app [https://flopx.vercel.app/]
+
+© FLOPX. All rights reserved.
+
+Privacy Policy [https://flopx.vercel.app/privacy-policy] Terms of Service
+[https://flopx.vercel.app/terms-of-service]

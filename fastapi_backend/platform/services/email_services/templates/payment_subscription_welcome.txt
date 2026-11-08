@@ -1,0 +1,25 @@
+Your {{plan_name}} subscription is active.
+
+FLOPX
+
+Welcome to {{plan_name}}, {{name}}
+
+Thank you for subscribing to {{plan_name}}. Here are your exclusive benefits.
+
+Manage account [https://flopx.vercel.app/desk]
+
+Billed: {{amount}}
+
+Reference: {{reference}}
+
+Any questions about your account? Contact us [https://flopx.vercel.app/contact].
+
+You're receiving this email because you subscribed at flopx.vercel.app. This is
+a transactional message about your subscription, not a marketing message.
+
+flopx.vercel.app [https://flopx.vercel.app/]
+
+© FLOPX. All rights reserved.
+
+Privacy Policy [https://flopx.vercel.app/privacy-policy] Terms of Service
+[https://flopx.vercel.app/terms-of-service]

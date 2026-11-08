@@ -1,0 +1,1 @@
+{"query":"Why are H100 quotes higher here?","intent":"gpu","route":"/gpu/h100-sxm-80gb","filters":{"g":"h100-sxm-80gb"},"explanation":{"matched":{"gpuModels":["h100"]},"unmatchedTokens":["why","are","quotes","higher","here"],"numbers":[],"periodDays":null},"actions":[{"kind":"open","route":"/gpu/h100-sxm-80gb","requiresConfirmation":false}],"engine":"grammar","brief":null}

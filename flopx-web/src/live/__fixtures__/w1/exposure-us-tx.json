@@ -1,0 +1,223 @@
+{
+ "regionId": "us-tx",
+ "gpuModelId": null,
+ "exposures": [
+  {
+   "ticker": "CORZ",
+   "basis": [
+    "facility-owner",
+    "sample-profile"
+   ],
+   "documented": false,
+   "sensitivity": 0.4125,
+   "sensitivityBasis": "authored sensitivity 0.55 for the profile role data-centre-developer, x0.75 because the profile says miner-pivot (part of the business is not compute); percent equity move per percent compute-demand move, an estimate, not a measured beta",
+   "facilityIds": [
+    "fac-003",
+    "fac-004",
+    "fac-005"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "exposure-v1",
+    "observedAt": "2026-11-06T21:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:41:57.032438Z",
+    "licence": null,
+    "note": "links from facility ownership and operator records, filings and the authored profile",
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   "statementClass": "inference"
+  },
+  {
+   "ticker": "CRWV",
+   "basis": [
+    "facility-owner",
+    "sample-profile"
+   ],
+   "documented": false,
+   "sensitivity": 0.8,
+   "sensitivityBasis": "authored sensitivity 0.80 for the profile role gpu-cloud; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+   "facilityIds": [
+    "fac-001",
+    "fac-002",
+    "fac-016"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "exposure-v1",
+    "observedAt": "2026-11-06T21:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:41:57.032484Z",
+    "licence": null,
+    "note": "links from facility ownership and operator records, filings and the authored profile",
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   "statementClass": "inference"
+  },
+  {
+   "ticker": "IREN",
+   "basis": [
+    "facility-owner",
+    "sample-profile"
+   ],
+   "documented": false,
+   "sensitivity": 0.6,
+   "sensitivityBasis": "authored sensitivity 0.80 for the profile role gpu-cloud, x0.75 because the profile says miner-pivot (part of the business is not compute); percent equity move per percent compute-demand move, an estimate, not a measured beta",
+   "facilityIds": [
+    "fac-002",
+    "fac-006",
+    "fac-016"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "exposure-v1",
+    "observedAt": "2026-11-06T21:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:41:57.032583Z",
+    "licence": null,
+    "note": "links from facility ownership and operator records, filings and the authored profile",
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   "statementClass": "inference"
+  },
+  {
+   "ticker": "APLD",
+   "basis": [
+    "facility-owner",
+    "sample-profile"
+   ],
+   "documented": false,
+   "sensitivity": 0.55,
+   "sensitivityBasis": "authored sensitivity 0.55 for the profile role data-centre-developer; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+   "facilityIds": [
+    "fac-003",
+    "fac-015"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "exposure-v1",
+    "observedAt": "2026-11-06T21:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:41:57.032328Z",
+    "licence": null,
+    "note": "links from facility ownership and operator records, filings and the authored profile",
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   "statementClass": "inference"
+  },
+  {
+   "ticker": "NBIS",
+   "basis": [
+    "facility-owner",
+    "sample-profile"
+   ],
+   "documented": false,
+   "sensitivity": 0.8,
+   "sensitivityBasis": "authored sensitivity 0.80 for the profile role gpu-cloud; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+   "facilityIds": [
+    "fac-022"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "exposure-v1",
+    "observedAt": "2026-11-06T21:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:41:57.032661Z",
+    "licence": null,
+    "note": "links from facility ownership and operator records, filings and the authored profile",
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   "statementClass": "inference"
+  },
+  {
+   "ticker": "NVDA",
+   "basis": [
+    "sample-profile"
+   ],
+   "documented": false,
+   "sensitivity": 0.35,
+   "sensitivityBasis": "authored sensitivity 0.35 for the profile role accelerator-vendor; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+   "facilityIds": [],
+   "provenance": {
+    "kind": "derived",
+    "source": "exposure-v1",
+    "observedAt": "2026-11-06T21:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:41:57.032693Z",
+    "licence": null,
+    "note": "links from facility ownership and operator records, filings and the authored profile",
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   "statementClass": "inference"
+  },
+  {
+   "ticker": "SMCI",
+   "basis": [
+    "sample-profile"
+   ],
+   "documented": false,
+   "sensitivity": 0.3,
+   "sensitivityBasis": "authored sensitivity 0.30 for the profile role picks-and-shovels; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+   "facilityIds": [],
+   "provenance": {
+    "kind": "derived",
+    "source": "exposure-v1",
+    "observedAt": "2026-11-06T21:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:41:57.032719Z",
+    "licence": null,
+    "note": "links from facility ownership and operator records, filings and the authored profile",
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   "statementClass": "inference"
+  },
+  {
+   "ticker": "VRT",
+   "basis": [
+    "sample-profile"
+   ],
+   "documented": false,
+   "sensitivity": 0.3,
+   "sensitivityBasis": "authored sensitivity 0.30 for the profile role picks-and-shovels; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+   "facilityIds": [],
+   "provenance": {
+    "kind": "derived",
+    "source": "exposure-v1",
+    "observedAt": "2026-11-06T21:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:41:57.032744Z",
+    "licence": null,
+    "note": "links from facility ownership and operator records, filings and the authored profile",
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   "statementClass": "inference"
+  }
+ ],
+ "statementClass": "inference",
+ "freshness": {
+  "generatedAt": "2026-11-08T00:41:57.032809Z",
+  "oldestObservedAt": "2026-11-06T21:00:00Z",
+  "sources": [
+   "exposure-v1",
+   "flopx-sample-v1"
+  ],
+  "sourceDetails": [],
+  "unavailable": []
+ }
+}

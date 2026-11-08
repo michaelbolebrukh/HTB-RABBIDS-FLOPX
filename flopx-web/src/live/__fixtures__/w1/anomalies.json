@@ -1,0 +1,2778 @@
+{
+ "anomalies": [
+  {
+   "id": "anomaly:overhang:eu-de:rtx-4090-24gb",
+   "type": "overhang",
+   "regionId": "eu-de",
+   "gpuModelId": "rtx-4090-24gb",
+   "severity": 2,
+   "headline": "rtx-4090-24gb in Western Europe (Frankfurt hub): slack inferred pressure (15) while a capacity pipeline of 1,800 MW, with no operating capacity in the data, is still coming",
+   "rule": "score <= 25 with capacity-pipeline normalised <= -0.5 (a pipeline of 1.0x operating MW, or 250 MW where nothing operates)",
+   "measures": {
+    "score": 15.16,
+    "pipelineRaw": 1800.0,
+    "pipelineUnit": "MW"
+   },
+   "supporting": [
+    {
+     "factor": "capacity-pipeline",
+     "raw": 1800.0,
+     "unit": "MW",
+     "normalised": -1.0,
+     "weight": 0.1,
+     "contribution": -0.1,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "1800 MW announced, planned or under construction against no operating capacity in the data, so there is no ratio: scored on an absolute scale where 500 MW reads as full relief (3 facility records); a large pipeline is relief ahead, so the sign is inverted; reported-only facilities are not counted on either side; computed over the region's sample facility records only, 18 observed records for the region listed apart and not mixed in",
+     "scope": null
+    },
+    {
+     "factor": "price-premium",
+     "raw": -0.2751,
+     "unit": "ratio",
+     "normalised": -0.9169,
+     "weight": 0.3,
+     "contribution": -0.2751,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:13Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=RTX 4090",
+       "fetchedAt": "2026-11-08T00:39:13.162974Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Germany, DE), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      },
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:13Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=RTX 4090",
+       "fetchedAt": "2026-11-08T00:39:13.162974Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 2-GPU bundle (Germany, DE), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:13Z",
+     "note": "cell median comparable ask 0.3591 vs model global median 0.4954 USD/GPU-hour over 3 of 52 advertised asks; asks, not transactions",
+     "scope": null
+    },
+    {
+     "factor": "availability",
+     "raw": 0.0,
+     "unit": "share",
+     "normalised": -1.0,
+     "weight": 0.2,
+     "contribution": -0.2,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:13Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=RTX 4090",
+       "fetchedAt": "2026-11-08T00:39:13.162974Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Germany, DE), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      },
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:13Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=RTX 4090",
+       "fetchedAt": "2026-11-08T00:39:13.162974Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 2-GPU bundle (Germany, DE), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:13Z",
+     "note": "3 asks: 0% unavailable, 0% limited; advertised availability, not utilisation",
+     "scope": null
+    }
+   ],
+   "contradicting": [
+    {
+     "factor": "demand-signals",
+     "raw": 0.12,
+     "unit": "score",
+     "normalised": 0.12,
+     "weight": 0.1,
+     "contribution": 0.012,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-10-11T09:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample intelligence item; the headline describes no real event",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-10-11T09:00:00Z",
+     "note": "1 feed items touching the region or model in 30 days (severity-weighted 0.60)",
+     "scope": null
+    }
+   ],
+   "uncertainty": {
+    "coverage": 3,
+    "factorsWithData": 5,
+    "factorsTotal": 6,
+    "sampleShare": 0.3333,
+    "oldestInput": "2026-10-11T09:00:00Z",
+    "label": "indicative"
+   },
+   "firstSeen": "2026-11-08T00:09:31.896041Z",
+   "firstSeenBasis": "first detected at this time; no earlier snapshot on record shows the rule holding",
+   "status": "open",
+   "lastSeen": null,
+   "history": [
+    {
+     "t": "2026-11-07T23:59:59Z",
+     "score": 33.5,
+     "band": "balanced",
+     "coverage": 0,
+     "factorsWithData": 3,
+     "label": "exploratory",
+     "inputKinds": [
+      "archived"
+     ]
+    },
+    {
+     "t": "2026-11-08T00:39:52.044476Z",
+     "score": 15.16,
+     "band": "slack",
+     "coverage": 3,
+     "factorsWithData": 5,
+     "label": "indicative",
+     "inputKinds": [
+      "live"
+     ]
+    }
+   ],
+   "linkedCompanies": [
+    {
+     "ticker": "APLD",
+     "basis": [
+      "facility-owner",
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.55,
+     "sensitivityBasis": "authored sensitivity 0.55 for the profile role data-centre-developer; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [
+      "fac-026"
+     ],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991508Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "CORZ",
+     "basis": [
+      "facility-owner",
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.4125,
+     "sensitivityBasis": "authored sensitivity 0.55 for the profile role data-centre-developer, x0.75 because the profile says miner-pivot (part of the business is not compute); percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [
+      "fac-024"
+     ],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991540Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "IREN",
+     "basis": [
+      "facility-owner",
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.6,
+     "sensitivityBasis": "authored sensitivity 0.80 for the profile role gpu-cloud, x0.75 because the profile says miner-pivot (part of the business is not compute); percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [
+      "fac-025"
+     ],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991594Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "CRWV",
+     "basis": [
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.8,
+     "sensitivityBasis": "authored sensitivity 0.80 for the profile role gpu-cloud; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991572Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "NBIS",
+     "basis": [
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.8,
+     "sensitivityBasis": "authored sensitivity 0.80 for the profile role gpu-cloud; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991611Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "NVDA",
+     "basis": [
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.35,
+     "sensitivityBasis": "authored sensitivity 0.35 for the profile role accelerator-vendor; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991624Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "SMCI",
+     "basis": [
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.3,
+     "sensitivityBasis": "authored sensitivity 0.30 for the profile role picks-and-shovels; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991638Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "VRT",
+     "basis": [
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.3,
+     "sensitivityBasis": "authored sensitivity 0.30 for the profile role picks-and-shovels; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991653Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    }
+   ],
+   "scenarioSeeds": [
+    "delay-facility:fac-024",
+    "complete-facility:fac-024",
+    "energy-shock",
+    "demand-shock",
+    "utilisation"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "anomaly:overhang",
+    "observedAt": "2026-11-08T00:39:13Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:40:03.994253Z",
+    "licence": null,
+    "note": "score <= 25 with capacity-pipeline normalised <= -0.5 (a pipeline of 1.0x operating MW, or 250 MW where nothing operates)",
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   "severityBasis": "1 + band distance 1 + 0 (contradicted)",
+   "statementClass": "inference"
+  },
+  {
+   "id": "anomaly:overhang:us-or:a100-sxm-80gb",
+   "type": "overhang",
+   "regionId": "us-or",
+   "gpuModelId": "a100-sxm-80gb",
+   "severity": 2,
+   "headline": "a100-sxm-80gb in US West (Hillsboro hub): slack inferred pressure (21) while a capacity pipeline of 5.56x operating capacity is still coming",
+   "rule": "score <= 25 with capacity-pipeline normalised <= -0.5 (a pipeline of 1.0x operating MW, or 250 MW where nothing operates)",
+   "measures": {
+    "score": 21.31,
+    "pipelineRaw": 5.5556,
+    "pipelineUnit": "ratio"
+   },
+   "supporting": [
+    {
+     "factor": "capacity-pipeline",
+     "raw": 5.5556,
+     "unit": "ratio",
+     "normalised": -1.0,
+     "weight": 0.1,
+     "contribution": -0.1,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "1250 MW announced, planned or under construction against 225 MW operating (6 facility records); a large pipeline is relief ahead, so the sign is inverted; reported-only facilities are not counted on either side",
+     "scope": null
+    },
+    {
+     "factor": "price-premium",
+     "raw": -0.1311,
+     "unit": "ratio",
+     "normalised": -0.437,
+     "weight": 0.3,
+     "contribution": -0.1311,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:12Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=A100 SXM4",
+       "fetchedAt": "2026-11-08T00:39:12.299564Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Oregon, US), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:12Z",
+     "note": "cell median comparable ask 1.0844 vs model global median 1.2480 USD/GPU-hour over 1 of 22 advertised asks; asks, not transactions",
+     "scope": null
+    },
+    {
+     "factor": "availability",
+     "raw": 0.0,
+     "unit": "share",
+     "normalised": -1.0,
+     "weight": 0.2,
+     "contribution": -0.2,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:12Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=A100 SXM4",
+       "fetchedAt": "2026-11-08T00:39:12.299564Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Oregon, US), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:12Z",
+     "note": "1 asks: 0% unavailable, 0% limited; advertised availability, not utilisation",
+     "scope": null
+    }
+   ],
+   "contradicting": [
+    {
+     "factor": "demand-signals",
+     "raw": 0.295,
+     "unit": "score",
+     "normalised": 0.295,
+     "weight": 0.1,
+     "contribution": 0.0295,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample market; a quote is a price, never a calibrated probability",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-10-31T19:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample intelligence item; the headline describes no real event",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "mkt-004 implies 0.475 price-up probability; 5 feed items touching the region or model in 30 days (severity-weighted 3.20)",
+     "scope": null
+    }
+   ],
+   "uncertainty": {
+    "coverage": 1,
+    "factorsWithData": 4,
+    "factorsTotal": 6,
+    "sampleShare": 0.8,
+    "oldestInput": "2026-10-10T07:00:00Z",
+    "label": "exploratory"
+   },
+   "firstSeen": "2026-11-08T00:33:36.708305Z",
+   "firstSeenBasis": "first detected at this time; no earlier snapshot on record shows the rule holding",
+   "status": "open",
+   "lastSeen": null,
+   "history": [
+    {
+     "t": "2026-11-07T23:59:59Z",
+     "score": 32.38,
+     "band": "balanced",
+     "coverage": 0,
+     "factorsWithData": 2,
+     "label": "exploratory",
+     "inputKinds": [
+      "archived"
+     ]
+    },
+    {
+     "t": "2026-11-08T00:39:52.044476Z",
+     "score": 21.31,
+     "band": "slack",
+     "coverage": 1,
+     "factorsWithData": 4,
+     "label": "exploratory",
+     "inputKinds": [
+      "live"
+     ]
+    }
+   ],
+   "linkedCompanies": [
+    {
+     "ticker": "APLD",
+     "basis": [
+      "facility-owner",
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.55,
+     "sensitivityBasis": "authored sensitivity 0.55 for the profile role data-centre-developer; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [
+      "fac-010",
+      "fac-011",
+      "fac-013"
+     ],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991092Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "CORZ",
+     "basis": [
+      "facility-owner",
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.4125,
+     "sensitivityBasis": "authored sensitivity 0.55 for the profile role data-centre-developer, x0.75 because the profile says miner-pivot (part of the business is not compute); percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [
+      "fac-012",
+      "fac-018",
+      "fac-019"
+     ],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991124Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "CRWV",
+     "basis": [
+      "facility-owner",
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.8,
+     "sensitivityBasis": "authored sensitivity 0.80 for the profile role gpu-cloud; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [
+      "fac-012",
+      "fac-019"
+     ],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991157Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "IREN",
+     "basis": [
+      "facility-owner",
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.6,
+     "sensitivityBasis": "authored sensitivity 0.80 for the profile role gpu-cloud, x0.75 because the profile says miner-pivot (part of the business is not compute); percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [
+      "fac-011",
+      "fac-018"
+     ],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991176Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "NBIS",
+     "basis": [
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.8,
+     "sensitivityBasis": "authored sensitivity 0.80 for the profile role gpu-cloud; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991193Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "NVDA",
+     "basis": [
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.35,
+     "sensitivityBasis": "authored sensitivity 0.35 for the profile role accelerator-vendor; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991218Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "SMCI",
+     "basis": [
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.3,
+     "sensitivityBasis": "authored sensitivity 0.30 for the profile role picks-and-shovels; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991239Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "VRT",
+     "basis": [
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.3,
+     "sensitivityBasis": "authored sensitivity 0.30 for the profile role picks-and-shovels; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991261Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    }
+   ],
+   "scenarioSeeds": [
+    "energy-shock",
+    "demand-shock",
+    "utilisation"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "anomaly:overhang",
+    "observedAt": "2026-11-08T00:39:12Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:40:03.994461Z",
+    "licence": null,
+    "note": "score <= 25 with capacity-pipeline normalised <= -0.5 (a pipeline of 1.0x operating MW, or 250 MW where nothing operates)",
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   "severityBasis": "1 + band distance 1 + 0 (contradicted)",
+   "statementClass": "inference"
+  },
+  {
+   "id": "anomaly:overhang:us-or:b200-sxm-192gb",
+   "type": "overhang",
+   "regionId": "us-or",
+   "gpuModelId": "b200-sxm-192gb",
+   "severity": 2,
+   "headline": "b200-sxm-192gb in US West (Hillsboro hub): slack inferred pressure (10) while a capacity pipeline of 5.56x operating capacity is still coming",
+   "rule": "score <= 25 with capacity-pipeline normalised <= -0.5 (a pipeline of 1.0x operating MW, or 250 MW where nothing operates)",
+   "measures": {
+    "score": 9.55,
+    "pipelineRaw": 5.5556,
+    "pipelineUnit": "ratio"
+   },
+   "supporting": [
+    {
+     "factor": "capacity-pipeline",
+     "raw": 5.5556,
+     "unit": "ratio",
+     "normalised": -1.0,
+     "weight": 0.1,
+     "contribution": -0.1,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "1250 MW announced, planned or under construction against 225 MW operating (6 facility records); a large pipeline is relief ahead, so the sign is inverted; reported-only facilities are not counted on either side",
+     "scope": null
+    },
+    {
+     "factor": "price-premium",
+     "raw": -0.3332,
+     "unit": "ratio",
+     "normalised": -1.0,
+     "weight": 0.3,
+     "contribution": -0.3,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:12Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=B200",
+       "fetchedAt": "2026-11-08T00:39:12.299564Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Oregon, US), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:12Z",
+     "note": "cell median comparable ask 6.2521 vs model global median 9.3757 USD/GPU-hour over 1 of 10 advertised asks; asks, not transactions",
+     "scope": null
+    },
+    {
+     "factor": "availability",
+     "raw": 0.0,
+     "unit": "share",
+     "normalised": -1.0,
+     "weight": 0.2,
+     "contribution": -0.2,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:12Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=B200",
+       "fetchedAt": "2026-11-08T00:39:12.299564Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Oregon, US), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:12Z",
+     "note": "1 asks: 0% unavailable, 0% limited; advertised availability, not utilisation",
+     "scope": null
+    }
+   ],
+   "contradicting": [
+    {
+     "factor": "demand-signals",
+     "raw": 0.337,
+     "unit": "score",
+     "normalised": 0.337,
+     "weight": 0.1,
+     "contribution": 0.0337,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample market; a quote is a price, never a calibrated probability",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T05:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample intelligence item; the headline describes no real event",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "mkt-003 implies 0.337 price-up probability; 8 feed items touching the region or model in 30 days (severity-weighted 5.00)",
+     "scope": null
+    }
+   ],
+   "uncertainty": {
+    "coverage": 1,
+    "factorsWithData": 4,
+    "factorsTotal": 6,
+    "sampleShare": 0.8333,
+    "oldestInput": "2026-10-10T07:00:00Z",
+    "label": "exploratory"
+   },
+   "firstSeen": "2026-11-08T00:09:31.896041Z",
+   "firstSeenBasis": "first detected at this time; no earlier snapshot on record shows the rule holding",
+   "status": "open",
+   "lastSeen": null,
+   "history": [
+    {
+     "t": "2026-11-07T23:59:59Z",
+     "score": 33.42,
+     "band": "balanced",
+     "coverage": 0,
+     "factorsWithData": 2,
+     "label": "exploratory",
+     "inputKinds": [
+      "archived"
+     ]
+    },
+    {
+     "t": "2026-11-08T00:39:52.044476Z",
+     "score": 9.55,
+     "band": "slack",
+     "coverage": 1,
+     "factorsWithData": 4,
+     "label": "exploratory",
+     "inputKinds": [
+      "live"
+     ]
+    }
+   ],
+   "linkedCompanies": [
+    {
+     "ticker": "APLD",
+     "basis": [
+      "facility-owner",
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.55,
+     "sensitivityBasis": "authored sensitivity 0.55 for the profile role data-centre-developer; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [
+      "fac-010",
+      "fac-011",
+      "fac-013"
+     ],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991092Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "CORZ",
+     "basis": [
+      "facility-owner",
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.4125,
+     "sensitivityBasis": "authored sensitivity 0.55 for the profile role data-centre-developer, x0.75 because the profile says miner-pivot (part of the business is not compute); percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [
+      "fac-012",
+      "fac-018",
+      "fac-019"
+     ],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991124Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "CRWV",
+     "basis": [
+      "facility-owner",
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.8,
+     "sensitivityBasis": "authored sensitivity 0.80 for the profile role gpu-cloud; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [
+      "fac-012",
+      "fac-019"
+     ],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991157Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "IREN",
+     "basis": [
+      "facility-owner",
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.6,
+     "sensitivityBasis": "authored sensitivity 0.80 for the profile role gpu-cloud, x0.75 because the profile says miner-pivot (part of the business is not compute); percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [
+      "fac-011",
+      "fac-018"
+     ],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991176Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "NBIS",
+     "basis": [
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.8,
+     "sensitivityBasis": "authored sensitivity 0.80 for the profile role gpu-cloud; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991193Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "NVDA",
+     "basis": [
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.35,
+     "sensitivityBasis": "authored sensitivity 0.35 for the profile role accelerator-vendor; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991218Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "SMCI",
+     "basis": [
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.3,
+     "sensitivityBasis": "authored sensitivity 0.30 for the profile role picks-and-shovels; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991239Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "VRT",
+     "basis": [
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.3,
+     "sensitivityBasis": "authored sensitivity 0.30 for the profile role picks-and-shovels; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991261Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    }
+   ],
+   "scenarioSeeds": [
+    "energy-shock",
+    "demand-shock",
+    "utilisation"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "anomaly:overhang",
+    "observedAt": "2026-11-08T00:39:12Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:40:03.994402Z",
+    "licence": null,
+    "note": "score <= 25 with capacity-pipeline normalised <= -0.5 (a pipeline of 1.0x operating MW, or 250 MW where nothing operates)",
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   "severityBasis": "1 + band distance 1 + 0 (contradicted)",
+   "statementClass": "inference"
+  },
+  {
+   "id": "anomaly:price-dispersion:us-tx:rtx-4090-24gb",
+   "type": "price-dispersion",
+   "regionId": "us-tx",
+   "gpuModelId": "rtx-4090-24gb",
+   "severity": 2,
+   "headline": "rtx-4090-24gb in US Central (Dallas hub): comparable asks spread 94% of the median across 4 offers",
+   "rule": "(p90 - p10) / median of comparable asks >= 0.6 with at least 4 asks in the cell",
+   "measures": {
+    "spread": 0.9438,
+    "p10": 0.2233,
+    "p90": 0.8029,
+    "median": 0.614,
+    "offers": 4
+   },
+   "supporting": [
+    {
+     "factor": "price-premium",
+     "raw": 0.2396,
+     "unit": "ratio",
+     "normalised": 0.7988,
+     "weight": 0.3,
+     "contribution": 0.2396,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:13Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=RTX 4090",
+       "fetchedAt": "2026-11-08T00:39:13.162974Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Texas, US), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      },
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:13Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=RTX 4090",
+       "fetchedAt": "2026-11-08T00:39:13.162974Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Texas, US), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:13Z",
+     "note": "cell median comparable ask 0.6140 vs model global median 0.4954 USD/GPU-hour over 4 of 52 advertised asks; asks, not transactions",
+     "scope": null
+    },
+    {
+     "factor": "availability",
+     "raw": 0.0,
+     "unit": "share",
+     "normalised": -1.0,
+     "weight": 0.2,
+     "contribution": -0.2,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:13Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=RTX 4090",
+       "fetchedAt": "2026-11-08T00:39:13.162974Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Texas, US), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      },
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:13Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=RTX 4090",
+       "fetchedAt": "2026-11-08T00:39:13.162974Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Texas, US), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:13Z",
+     "note": "4 asks: 0% unavailable, 0% limited; advertised availability, not utilisation",
+     "scope": null
+    }
+   ],
+   "contradicting": [
+    {
+     "factor": "demand-signals",
+     "raw": 0.32,
+     "unit": "score",
+     "normalised": 0.32,
+     "weight": 0.1,
+     "contribution": 0.032,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-10-20T20:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample intelligence item; the headline describes no real event",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-10-19T08:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample intelligence item; the headline describes no real event",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-10-20T20:00:00Z",
+     "note": "3 feed items touching the region or model in 30 days (severity-weighted 1.60)",
+     "scope": null
+    }
+   ],
+   "uncertainty": {
+    "coverage": 4,
+    "factorsWithData": 5,
+    "factorsTotal": 6,
+    "sampleShare": 0.5909,
+    "oldestInput": "2026-10-14T19:00:00Z",
+    "label": "exploratory"
+   },
+   "firstSeen": "2026-11-08T00:09:31.896041Z",
+   "firstSeenBasis": "first detected at this time; no earlier snapshot on record shows the rule holding",
+   "status": "open",
+   "lastSeen": null,
+   "history": [
+    {
+     "t": "2026-11-07T23:59:59Z",
+     "score": 31.11,
+     "band": "balanced",
+     "coverage": 0,
+     "factorsWithData": 3,
+     "label": "exploratory",
+     "inputKinds": [
+      "archived"
+     ]
+    },
+    {
+     "t": "2026-11-08T00:39:52.044476Z",
+     "score": 44.55,
+     "band": "balanced",
+     "coverage": 4,
+     "factorsWithData": 5,
+     "label": "exploratory",
+     "inputKinds": [
+      "live"
+     ]
+    }
+   ],
+   "linkedCompanies": [
+    {
+     "ticker": "CORZ",
+     "basis": [
+      "facility-owner",
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.4125,
+     "sensitivityBasis": "authored sensitivity 0.55 for the profile role data-centre-developer, x0.75 because the profile says miner-pivot (part of the business is not compute); percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [
+      "fac-003",
+      "fac-004",
+      "fac-005"
+     ],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.990624Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "CRWV",
+     "basis": [
+      "facility-owner",
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.8,
+     "sensitivityBasis": "authored sensitivity 0.80 for the profile role gpu-cloud; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [
+      "fac-001",
+      "fac-002",
+      "fac-016"
+     ],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.990659Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "IREN",
+     "basis": [
+      "facility-owner",
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.6,
+     "sensitivityBasis": "authored sensitivity 0.80 for the profile role gpu-cloud, x0.75 because the profile says miner-pivot (part of the business is not compute); percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [
+      "fac-002",
+      "fac-006",
+      "fac-016"
+     ],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.990688Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "APLD",
+     "basis": [
+      "facility-owner",
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.55,
+     "sensitivityBasis": "authored sensitivity 0.55 for the profile role data-centre-developer; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [
+      "fac-003",
+      "fac-015"
+     ],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.990575Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "NBIS",
+     "basis": [
+      "facility-owner",
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.8,
+     "sensitivityBasis": "authored sensitivity 0.80 for the profile role gpu-cloud; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [
+      "fac-022"
+     ],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.990715Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "NVDA",
+     "basis": [
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.35,
+     "sensitivityBasis": "authored sensitivity 0.35 for the profile role accelerator-vendor; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.990736Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "SMCI",
+     "basis": [
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.3,
+     "sensitivityBasis": "authored sensitivity 0.30 for the profile role picks-and-shovels; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.990758Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "VRT",
+     "basis": [
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.3,
+     "sensitivityBasis": "authored sensitivity 0.30 for the profile role picks-and-shovels; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.990778Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    }
+   ],
+   "scenarioSeeds": [
+    "delay-facility:fac-002",
+    "delay-facility:fac-015",
+    "complete-facility:fac-002",
+    "complete-facility:fac-015",
+    "energy-shock",
+    "demand-shock",
+    "utilisation"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "anomaly:price-dispersion",
+    "observedAt": "2026-11-08T00:39:13Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:40:03.994595Z",
+    "licence": null,
+    "note": "(p90 - p10) / median of comparable asks >= 0.6 with at least 4 asks in the cell",
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   "severityBasis": "1 + band distance 1 + 0 (contradicted)",
+   "statementClass": "inference"
+  },
+  {
+   "id": "anomaly:announcement-mismatch:eu-no:rtx-4090-24gb",
+   "type": "announcement-mismatch",
+   "regionId": "eu-no",
+   "gpuModelId": "rtx-4090-24gb",
+   "severity": 1,
+   "headline": "rtx-4090-24gb in Nordics (Oslo hub): substantial operating capacity while asks carry a premium (a capacity pipeline of 0.50x operating capacity; premium +71%)",
+   "rule": "capacity-pipeline normalised <= -0.75 (a pipeline of 1.5x operating MW, or 375 MW where nothing operates) while score >= 60, or operating MW >= 200 while price-premium raw >= 0.2",
+   "measures": {
+    "score": 58.5,
+    "pipelineRaw": 0.5,
+    "pipelineUnit": "ratio",
+    "operatingMw": 400.0,
+    "premiumRaw": 0.7079
+   },
+   "supporting": [
+    {
+     "factor": "capacity-pipeline",
+     "raw": 0.5,
+     "unit": "ratio",
+     "normalised": -0.25,
+     "weight": 0.1,
+     "contribution": -0.025,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "200 MW announced, planned or under construction against 400 MW operating (6 facility records); a large pipeline is relief ahead, so the sign is inverted; reported-only facilities are not counted on either side",
+     "scope": null
+    },
+    {
+     "factor": "price-premium",
+     "raw": 0.7079,
+     "unit": "ratio",
+     "normalised": 1.0,
+     "weight": 0.3,
+     "contribution": 0.3,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:13Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=RTX 4090",
+       "fetchedAt": "2026-11-08T00:39:13.162974Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Norway, NO), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:13Z",
+     "note": "cell median comparable ask 0.8460 vs model global median 0.4954 USD/GPU-hour over 1 of 52 advertised asks; asks, not transactions",
+     "scope": null
+    }
+   ],
+   "contradicting": [
+    {
+     "factor": "availability",
+     "raw": 0.0,
+     "unit": "share",
+     "normalised": -1.0,
+     "weight": 0.2,
+     "contribution": -0.2,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:13Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=RTX 4090",
+       "fetchedAt": "2026-11-08T00:39:13.162974Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Norway, NO), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:13Z",
+     "note": "1 asks: 0% unavailable, 0% limited; advertised availability, not utilisation",
+     "scope": null
+    }
+   ],
+   "uncertainty": {
+    "coverage": 1,
+    "factorsWithData": 4,
+    "factorsTotal": 6,
+    "sampleShare": 0.7857,
+    "oldestInput": "2026-10-14T06:00:00Z",
+    "label": "exploratory"
+   },
+   "firstSeen": "2026-11-08T00:21:30.468109Z",
+   "firstSeenBasis": "first detected at this time; no earlier snapshot on record shows the rule holding",
+   "status": "open",
+   "lastSeen": null,
+   "history": [
+    {
+     "t": "2026-11-07T23:59:59Z",
+     "score": 54.75,
+     "band": "tight",
+     "coverage": 0,
+     "factorsWithData": 2,
+     "label": "exploratory",
+     "inputKinds": [
+      "archived"
+     ]
+    },
+    {
+     "t": "2026-11-08T00:39:52.044476Z",
+     "score": 58.5,
+     "band": "tight",
+     "coverage": 1,
+     "factorsWithData": 4,
+     "label": "exploratory",
+     "inputKinds": [
+      "live"
+     ]
+    }
+   ],
+   "linkedCompanies": [
+    {
+     "ticker": "CORZ",
+     "basis": [
+      "facility-owner",
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.4125,
+     "sensitivityBasis": "authored sensitivity 0.55 for the profile role data-centre-developer, x0.75 because the profile says miner-pivot (part of the business is not compute); percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [
+      "fac-028",
+      "fac-033"
+     ],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991715Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "NBIS",
+     "basis": [
+      "facility-owner",
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.8,
+     "sensitivityBasis": "authored sensitivity 0.80 for the profile role gpu-cloud; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [
+      "fac-029",
+      "fac-032"
+     ],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991790Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "CRWV",
+     "basis": [
+      "facility-owner",
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.8,
+     "sensitivityBasis": "authored sensitivity 0.80 for the profile role gpu-cloud; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [
+      "fac-030"
+     ],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991746Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "IREN",
+     "basis": [
+      "facility-owner",
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.6,
+     "sensitivityBasis": "authored sensitivity 0.80 for the profile role gpu-cloud, x0.75 because the profile says miner-pivot (part of the business is not compute); percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [
+      "fac-031"
+     ],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991771Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "APLD",
+     "basis": [
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.55,
+     "sensitivityBasis": "authored sensitivity 0.55 for the profile role data-centre-developer; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991683Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "NVDA",
+     "basis": [
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.35,
+     "sensitivityBasis": "authored sensitivity 0.35 for the profile role accelerator-vendor; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991803Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "SMCI",
+     "basis": [
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.3,
+     "sensitivityBasis": "authored sensitivity 0.30 for the profile role picks-and-shovels; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991815Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "VRT",
+     "basis": [
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.3,
+     "sensitivityBasis": "authored sensitivity 0.30 for the profile role picks-and-shovels; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991827Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    }
+   ],
+   "scenarioSeeds": [
+    "energy-shock",
+    "demand-shock",
+    "utilisation"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "anomaly:announcement-mismatch",
+    "observedAt": "2026-11-08T00:39:13Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:40:03.994329Z",
+    "licence": null,
+    "note": "capacity-pipeline normalised <= -0.75 (a pipeline of 1.5x operating MW, or 375 MW where nothing operates) while score >= 60, or operating MW >= 200 while price-premium raw >= 0.2",
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   "severityBasis": "1 + band distance 0 + 0 (contradicted)",
+   "statementClass": "inference"
+  },
+  {
+   "id": "anomaly:announcement-mismatch:us-tx:rtx-4090-24gb",
+   "type": "announcement-mismatch",
+   "regionId": "us-tx",
+   "gpuModelId": "rtx-4090-24gb",
+   "severity": 1,
+   "headline": "rtx-4090-24gb in US Central (Dallas hub): substantial operating capacity while asks carry a premium (a capacity pipeline of 3.00x operating capacity; premium +24%)",
+   "rule": "capacity-pipeline normalised <= -0.75 (a pipeline of 1.5x operating MW, or 375 MW where nothing operates) while score >= 60, or operating MW >= 200 while price-premium raw >= 0.2",
+   "measures": {
+    "score": 44.55,
+    "pipelineRaw": 3.0,
+    "pipelineUnit": "ratio",
+    "operatingMw": 500.0,
+    "premiumRaw": 0.2396
+   },
+   "supporting": [
+    {
+     "factor": "capacity-pipeline",
+     "raw": 3.0,
+     "unit": "ratio",
+     "normalised": -1.0,
+     "weight": 0.1,
+     "contribution": -0.1,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "1500 MW announced, planned or under construction against 500 MW operating (9 facility records); a large pipeline is relief ahead, so the sign is inverted; reported-only facilities are not counted on either side",
+     "scope": null
+    },
+    {
+     "factor": "price-premium",
+     "raw": 0.2396,
+     "unit": "ratio",
+     "normalised": 0.7988,
+     "weight": 0.3,
+     "contribution": 0.2396,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:13Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=RTX 4090",
+       "fetchedAt": "2026-11-08T00:39:13.162974Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Texas, US), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      },
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:13Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=RTX 4090",
+       "fetchedAt": "2026-11-08T00:39:13.162974Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Texas, US), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:13Z",
+     "note": "cell median comparable ask 0.6140 vs model global median 0.4954 USD/GPU-hour over 4 of 52 advertised asks; asks, not transactions",
+     "scope": null
+    }
+   ],
+   "contradicting": [
+    {
+     "factor": "demand-signals",
+     "raw": 0.32,
+     "unit": "score",
+     "normalised": 0.32,
+     "weight": 0.1,
+     "contribution": 0.032,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-10-20T20:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample intelligence item; the headline describes no real event",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-10-19T08:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample intelligence item; the headline describes no real event",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-10-20T20:00:00Z",
+     "note": "3 feed items touching the region or model in 30 days (severity-weighted 1.60)",
+     "scope": null
+    }
+   ],
+   "uncertainty": {
+    "coverage": 4,
+    "factorsWithData": 5,
+    "factorsTotal": 6,
+    "sampleShare": 0.5909,
+    "oldestInput": "2026-10-14T19:00:00Z",
+    "label": "exploratory"
+   },
+   "firstSeen": "2026-11-08T00:39:52.044476Z",
+   "firstSeenBasis": "the snapshot the rule was found in; no earlier snapshot on record shows it holding",
+   "status": "open",
+   "lastSeen": null,
+   "history": [
+    {
+     "t": "2026-11-07T23:59:59Z",
+     "score": 31.11,
+     "band": "balanced",
+     "coverage": 0,
+     "factorsWithData": 3,
+     "label": "exploratory",
+     "inputKinds": [
+      "archived"
+     ]
+    },
+    {
+     "t": "2026-11-08T00:39:52.044476Z",
+     "score": 44.55,
+     "band": "balanced",
+     "coverage": 4,
+     "factorsWithData": 5,
+     "label": "exploratory",
+     "inputKinds": [
+      "live"
+     ]
+    }
+   ],
+   "linkedCompanies": [
+    {
+     "ticker": "CORZ",
+     "basis": [
+      "facility-owner",
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.4125,
+     "sensitivityBasis": "authored sensitivity 0.55 for the profile role data-centre-developer, x0.75 because the profile says miner-pivot (part of the business is not compute); percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [
+      "fac-003",
+      "fac-004",
+      "fac-005"
+     ],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.990624Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "CRWV",
+     "basis": [
+      "facility-owner",
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.8,
+     "sensitivityBasis": "authored sensitivity 0.80 for the profile role gpu-cloud; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [
+      "fac-001",
+      "fac-002",
+      "fac-016"
+     ],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.990659Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "IREN",
+     "basis": [
+      "facility-owner",
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.6,
+     "sensitivityBasis": "authored sensitivity 0.80 for the profile role gpu-cloud, x0.75 because the profile says miner-pivot (part of the business is not compute); percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [
+      "fac-002",
+      "fac-006",
+      "fac-016"
+     ],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.990688Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "APLD",
+     "basis": [
+      "facility-owner",
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.55,
+     "sensitivityBasis": "authored sensitivity 0.55 for the profile role data-centre-developer; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [
+      "fac-003",
+      "fac-015"
+     ],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.990575Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "NBIS",
+     "basis": [
+      "facility-owner",
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.8,
+     "sensitivityBasis": "authored sensitivity 0.80 for the profile role gpu-cloud; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [
+      "fac-022"
+     ],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.990715Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "NVDA",
+     "basis": [
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.35,
+     "sensitivityBasis": "authored sensitivity 0.35 for the profile role accelerator-vendor; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.990736Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "SMCI",
+     "basis": [
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.3,
+     "sensitivityBasis": "authored sensitivity 0.30 for the profile role picks-and-shovels; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.990758Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "VRT",
+     "basis": [
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.3,
+     "sensitivityBasis": "authored sensitivity 0.30 for the profile role picks-and-shovels; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.990778Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    }
+   ],
+   "scenarioSeeds": [
+    "delay-facility:fac-002",
+    "delay-facility:fac-015",
+    "complete-facility:fac-002",
+    "complete-facility:fac-015",
+    "energy-shock",
+    "demand-shock",
+    "utilisation"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "anomaly:announcement-mismatch",
+    "observedAt": "2026-11-08T00:39:13Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:40:03.994522Z",
+    "licence": null,
+    "note": "capacity-pipeline normalised <= -0.75 (a pipeline of 1.5x operating MW, or 375 MW where nothing operates) while score >= 60, or operating MW >= 200 while price-premium raw >= 0.2",
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   "severityBasis": "1 + band distance 0 + 0 (contradicted)",
+   "statementClass": "inference"
+  },
+  {
+   "id": "anomaly:announcement-mismatch:us-va:rtx-4090-24gb",
+   "type": "announcement-mismatch",
+   "regionId": "us-va",
+   "gpuModelId": "rtx-4090-24gb",
+   "severity": 1,
+   "headline": "rtx-4090-24gb in US East and Midwest (Ashburn hub): substantial operating capacity while asks carry a premium (a capacity pipeline of 1.56x operating capacity; premium +304%)",
+   "rule": "capacity-pipeline normalised <= -0.75 (a pipeline of 1.5x operating MW, or 375 MW where nothing operates) while score >= 60, or operating MW >= 200 while price-premium raw >= 0.2",
+   "measures": {
+    "score": 51.56,
+    "pipelineRaw": 1.5625,
+    "pipelineUnit": "ratio",
+    "operatingMw": 400.0,
+    "premiumRaw": 3.0412
+   },
+   "supporting": [
+    {
+     "factor": "capacity-pipeline",
+     "raw": 1.5625,
+     "unit": "ratio",
+     "normalised": -0.7812,
+     "weight": 0.1,
+     "contribution": -0.0781,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "625 MW announced, planned or under construction against 400 MW operating (7 facility records); a large pipeline is relief ahead, so the sign is inverted; reported-only facilities are not counted on either side",
+     "scope": null
+    },
+    {
+     "factor": "price-premium",
+     "raw": 3.0412,
+     "unit": "ratio",
+     "normalised": 1.0,
+     "weight": 0.3,
+     "contribution": 0.3,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:13Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=RTX 4090",
+       "fetchedAt": "2026-11-08T00:39:13.162974Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Virginia, US), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:13Z",
+     "note": "cell median comparable ask 2.0018 vs model global median 0.4954 USD/GPU-hour over 1 of 52 advertised asks; asks, not transactions",
+     "scope": null
+    }
+   ],
+   "contradicting": [
+    {
+     "factor": "availability",
+     "raw": 0.0,
+     "unit": "share",
+     "normalised": -1.0,
+     "weight": 0.2,
+     "contribution": -0.2,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:13Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=RTX 4090",
+       "fetchedAt": "2026-11-08T00:39:13.162974Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Virginia, US), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:13Z",
+     "note": "1 asks: 0% unavailable, 0% limited; advertised availability, not utilisation",
+     "scope": null
+    }
+   ],
+   "uncertainty": {
+    "coverage": 1,
+    "factorsWithData": 4,
+    "factorsTotal": 6,
+    "sampleShare": 0.7,
+    "oldestInput": "2026-11-06T21:00:00Z",
+    "label": "exploratory"
+   },
+   "firstSeen": "2026-11-08T00:09:31.896041Z",
+   "firstSeenBasis": "first detected at this time; no earlier snapshot on record shows the rule holding",
+   "status": "open",
+   "lastSeen": null,
+   "history": [
+    {
+     "t": "2026-11-07T23:59:59Z",
+     "score": 30.47,
+     "band": "balanced",
+     "coverage": 0,
+     "factorsWithData": 2,
+     "label": "exploratory",
+     "inputKinds": [
+      "archived"
+     ]
+    },
+    {
+     "t": "2026-11-08T00:39:52.044476Z",
+     "score": 51.56,
+     "band": "tight",
+     "coverage": 1,
+     "factorsWithData": 4,
+     "label": "exploratory",
+     "inputKinds": [
+      "live"
+     ]
+    }
+   ],
+   "linkedCompanies": [
+    {
+     "ticker": "CORZ",
+     "basis": [
+      "facility-owner",
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.4125,
+     "sensitivityBasis": "authored sensitivity 0.55 for the profile role data-centre-developer, x0.75 because the profile says miner-pivot (part of the business is not compute); percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [
+      "fac-007",
+      "fac-009",
+      "fac-020"
+     ],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.990858Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "IREN",
+     "basis": [
+      "facility-owner",
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.6,
+     "sensitivityBasis": "authored sensitivity 0.80 for the profile role gpu-cloud, x0.75 because the profile says miner-pivot (part of the business is not compute); percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [
+      "fac-008",
+      "fac-021"
+     ],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.990937Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "NBIS",
+     "basis": [
+      "facility-owner",
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.8,
+     "sensitivityBasis": "authored sensitivity 0.80 for the profile role gpu-cloud; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [
+      "fac-008",
+      "fac-017"
+     ],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.990966Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "APLD",
+     "basis": [
+      "facility-owner",
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.55,
+     "sensitivityBasis": "authored sensitivity 0.55 for the profile role data-centre-developer; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [
+      "fac-014"
+     ],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.990828Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "CRWV",
+     "basis": [
+      "facility-owner",
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.8,
+     "sensitivityBasis": "authored sensitivity 0.80 for the profile role gpu-cloud; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [
+      "fac-007"
+     ],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.990907Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "NVDA",
+     "basis": [
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.35,
+     "sensitivityBasis": "authored sensitivity 0.35 for the profile role accelerator-vendor; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.990990Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "SMCI",
+     "basis": [
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.3,
+     "sensitivityBasis": "authored sensitivity 0.30 for the profile role picks-and-shovels; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991012Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    },
+    {
+     "ticker": "VRT",
+     "basis": [
+      "sample-profile"
+     ],
+     "documented": false,
+     "sensitivity": 0.3,
+     "sensitivityBasis": "authored sensitivity 0.30 for the profile role picks-and-shovels; percent equity move per percent compute-demand move, an estimate, not a measured beta",
+     "facilityIds": [],
+     "provenance": {
+      "kind": "derived",
+      "source": "exposure-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": "2026-11-08T00:40:03.991033Z",
+      "licence": null,
+      "note": "links from facility ownership and operator records, filings and the authored profile",
+      "inputKinds": [
+       "sample"
+      ]
+     },
+     "statementClass": "inference"
+    }
+   ],
+   "scenarioSeeds": [
+    "delay-facility:fac-014",
+    "complete-facility:fac-014",
+    "energy-shock",
+    "demand-shock",
+    "utilisation"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "anomaly:announcement-mismatch",
+    "observedAt": "2026-11-08T00:39:13Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:40:03.994688Z",
+    "licence": null,
+    "note": "capacity-pipeline normalised <= -0.75 (a pipeline of 1.5x operating MW, or 375 MW where nothing operates) while score >= 60, or operating MW >= 200 while price-premium raw >= 0.2",
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   "severityBasis": "1 + band distance 0 + 0 (contradicted)",
+   "statementClass": "inference"
+  }
+ ],
+ "cellsScanned": 10,
+ "rules": {
+  "bottleneck": "score >= 75 and availability normalised >= 0.5",
+  "announcement-mismatch": "capacity-pipeline normalised <= -0.75 (a pipeline of 1.5x operating MW, or 375 MW where nothing operates) while score >= 60, or operating MW >= 200 while price-premium raw >= 0.2",
+  "price-dispersion": "(p90 - p10) / median of comparable asks >= 0.6 with at least 4 asks in the cell",
+  "overhang": "score <= 25 with capacity-pipeline normalised <= -0.5 (a pipeline of 1.0x operating MW, or 250 MW where nothing operates)",
+  "divergence": "30-day index change and the linked basket's 30-day return differ in sign by more than 10 percentage points; the basket is the documented companies, else those on authored sample facility records in the region, else the authored profile links, labelled as such"
+ },
+ "freshness": {
+  "generatedAt": "2026-11-08T00:40:04.609317Z",
+  "oldestObservedAt": "2026-06-27T20:30:00.785653Z",
+  "sources": [
+   "akash",
+   "flopx-sample-v1",
+   "hacker-news",
+   "kalshi",
+   "polymarket-gamma",
+   "rss:corescientific",
+   "rss:coreweave",
+   "rss:nvidia",
+   "runpod",
+   "vast-ai",
+   "wikidata"
+  ],
+  "sourceDetails": [
+   {
+    "source": "akash",
+    "kind": "live",
+    "observedAt": "2026-11-08T00:39:11Z",
+    "licence": "Akash console API, an open-source (Apache-2.0) project (terms asserted, not verified)"
+   },
+   {
+    "source": "hacker-news",
+    "kind": "live",
+    "observedAt": "2026-11-07T17:01:11Z",
+    "licence": "Public Hacker News content via the Algolia search API (terms asserted, not verified)"
+   },
+   {
+    "source": "kalshi",
+    "kind": "live",
+    "observedAt": "2026-10-21T20:00:06.612447Z",
+    "licence": "Public trade API market data (terms asserted, not verified)"
+   },
+   {
+    "source": "polymarket-gamma",
+    "kind": "live",
+    "observedAt": "2026-11-08T00:38:34.895414Z",
+    "licence": "Public market data API (terms asserted, not verified)"
+   },
+   {
+    "source": "rss:corescientific",
+    "kind": "live",
+    "observedAt": "2026-11-05T12:00:00Z",
+    "licence": "Company press-release feeds; headline shown with a link to the original (terms asserted, not verified)"
+   },
+   {
+    "source": "rss:coreweave",
+    "kind": "live",
+    "observedAt": "2026-10-27T20:05:00Z",
+    "licence": "Company press-release feeds; headline shown with a link to the original (terms asserted, not verified)"
+   },
+   {
+    "source": "rss:nvidia",
+    "kind": "live",
+    "observedAt": "2026-11-06T16:00:00Z",
+    "licence": "Company press-release feeds; headline shown with a link to the original (terms asserted, not verified)"
+   },
+   {
+    "source": "runpod",
+    "kind": "live",
+    "observedAt": "2026-11-08T00:39:12Z",
+    "licence": "Public GraphQL list prices (terms asserted, not verified)"
+   },
+   {
+    "source": "vast-ai",
+    "kind": "live",
+    "observedAt": "2026-11-08T00:39:13Z",
+    "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data"
+   },
+   {
+    "source": "wikidata",
+    "kind": "live",
+    "observedAt": "2026-11-08T00:33:37Z",
+    "licence": "CC0 (terms asserted, not verified)"
+   }
+  ],
+  "unavailable": [
+   {
+    "source": "kalshi:KXUTILITYPJMWEST",
+    "reason": "no-open-markets"
+   }
+  ]
+ }
+}

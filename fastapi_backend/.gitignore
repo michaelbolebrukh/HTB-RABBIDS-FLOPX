@@ -1,0 +1,16 @@
+.env
+.venv
+__pycache__
+evident-axle-451413-h4-e308e8507f64.json
+# Local object storage (STORAGE_LOCAL_DIR default)
+uploads/
+uploads-private/
+# Local scratch/debug harnesses (never shipped). The frontend has had this since
+# it lost the same argument; a throwaway app for poking one function by hand gets
+# committed by mistake far more often than it gets deleted.
+_scratch*.py
+scratch-*.py
+# Local SQLite databases. The suite runs in-memory, but pointing DATABASE_URL at
+# a file is the normal way to inspect one by hand, and the resulting .db is a
+# runtime artifact — never source.
+*.db

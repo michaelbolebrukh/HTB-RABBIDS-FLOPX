@@ -1,0 +1,131 @@
+# Core Framework
+fastapi==0.115.8
+uvicorn[standard]==0.34.0
+gunicorn==23.0.0
+python-multipart==0.0.20
+starlette==0.45.3
+
+# Database
+SQLAlchemy==2.0.38
+psycopg2-binary==2.9.10
+alembic==1.14.1
+
+# Validation & Schemas
+pydantic==2.13.4
+pydantic_core==2.46.4
+pydantic-settings==2.7.1
+email_validator==2.2.0
+
+# Security & Authentication
+passlib==1.7.4
+bcrypt==4.2.1
+python-jose==3.3.0
+cryptography==44.0.1
+Authlib==1.4.1
+httpx==0.28.1
+itsdangerous==2.2.0
+zxcvbn==4.4.28
+
+# Rate Limiting
+slowapi==0.1.9
+limits==4.0.1
+
+# Caching (redis only exercised when CACHE_URL is set; memory backend otherwise)
+cachetools==7.1.4
+redis==8.0.1
+
+# Observability (SDK only initialized when SENTRY_DSN is set)
+sentry-sdk[fastapi]==2.32.0
+# Payments
+stripe==15.3.0
+
+# Email
+brevo-python==4.0.10
+sendgrid==6.12.4
+Jinja2==3.1.6
+python-http-client==3.3.7
+
+# Settings & Configuration
+python-dotenv==1.0.1
+
+# Generative AI service (currently unwired; imported by platform/services/generative_ai_service).
+# openai is ALSO used directly by platform/services/document_identity.py (the
+# CV parse-preview's AI fallback) — a plain SDK call at the call site, not
+# routed through the generative AI service:
+openai==2.44.0
+pillow==11.1.0
+pdfminer.six==20250506
+
+# Renders a PDF page to an image for document_identity's vision-model OCR
+# fallback (scanned CVs with no text layer). A self-contained wheel — bundles
+# its own pdfium build, no system binary — chosen specifically because there
+# is no tesseract/poppler (pdftoppm) binary available in this environment or
+# on the Render host, and torch-based OCR alternatives are too heavy for this
+# service's memory ceiling (see document_identity.py):
+pypdfium2==5.12.1
+
+# PDF sanitisation (strips /JS, /OpenAction, /AA, /EmbeddedFiles from uploaded
+# CVs before storage; platform/services/document_sanitize.py). Optional at
+# import time — the module no-ops if this is ever missing.
+pikepdf==10.11.0
+
+# ---------------------------------------------------------------------------
+# Transitive dependencies (auto-resolved from the packages above; pinned for
+# reproducible builds). Do not add application imports here.
+# ---------------------------------------------------------------------------
+annotated-types==0.7.0
+anyio==4.8.0
+certifi==2025.1.31
+cffi==1.17.1
+click==8.1.8
+Deprecated==1.2.18
+distro==1.9.0
+dnspython==2.7.0
+ecdsa==0.19.1
+greenlet==3.5.1
+h11==0.16.0
+httpcore==1.0.9
+httptools==0.6.4
+idna==3.18
+jiter==0.16.0
+Mako==1.3.12
+MarkupSafe==3.0.2
+packaging==24.2
+pyasn1==0.6.1
+pycparser==2.22
+PyYAML==6.0.2
+rsa==4.9
+six==1.17.0
+sniffio==1.3.1
+tqdm==4.67.1
+typing_extensions==4.16.0
+uvloop==0.21.0
+watchfiles==1.0.4
+websockets==15.0
+Werkzeug==3.1.3
+wrapt==1.17.2
+boto3==1.35.49
+lxml==6.1.1
+sse-starlette==2.1.3
+pydantic-ai-slim[openai,anthropic,google]==2.5.0
+# anthropic rides in unpinned via the extra above, and its 1.0.0 release (2026-08)
+# changed the SDK's http-client type (httpx2.AsyncClient), breaking our client wiring
+# on every FRESH install while existing environments kept working - exactly the silent
+# per-instance drift config-minimalism warns about. Pinned until our wiring migrates.
+anthropic==0.125.0
+nh3==0.2.20
+pywebpush==1.14.1
+# Official MCP SDK for client-side MCP servers (P9). Deliberately NOT
+# pydantic-ai's `[mcp]` extra: that pulls fastmcp-slim, which requires
+# starlette>=1.0.1 and hard-conflicts with FastAPI 0.115 (needs starlette<0.46).
+# The lower-level `mcp` SDK only needs starlette>=0.27, so it coexists with our
+# web stack, and we bridge its tools into our own tool table (uniform P8 +
+# billing + offline-testable) instead of using the SDK-side MCP capability.
+mcp==1.28.1
+
+# Display-name handling: deterministic casing (Mc/Mac, particles, roman numerals)
+# and an offline profanity wordlist+leetspeak engine for the appropriateness
+# check (both pure-Python, no heavy deps). See platform/utils/name_format.py and
+# platform/services/name_moderation.py.
+nameparser==1.4.0
+better-profanity==0.7.0

@@ -1,0 +1,212 @@
+{
+  "version": "2026-11-08",
+  "assertedSuffix": "(terms asserted, not verified)",
+  "sources": [
+    {
+      "id": "runpod",
+      "aliases": [],
+      "name": "RunPod",
+      "termsUrl": "https://www.runpod.io/legal/terms-of-service",
+      "licence": "Public GraphQL list prices",
+      "attribution": "List prices from RunPod",
+      "asserted": true,
+      "use": "display-and-archive",
+      "note": "Risk recorded: the terms ban data mining, robots and similar data-gathering tools, and whether that reaches a keyless public API is unclear. Polled at most once every five minutes."
+    },
+    {
+      "id": "akash",
+      "aliases": [],
+      "name": "Akash Network",
+      "termsUrl": "https://akash.network/",
+      "licence": "Akash console API, an open-source (Apache-2.0) project",
+      "attribution": "Median asks from the Akash Network console",
+      "asserted": true,
+      "use": "display-and-archive",
+      "note": "The data terms of the console API were not found; the Apache-2.0 licence covers the software, not necessarily the data."
+    },
+    {
+      "id": "vast-ai",
+      "aliases": [],
+      "name": "Vast.ai",
+      "termsUrl": "https://vast.ai/terms",
+      "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+      "attribution": "Vast.ai asks: a current market reading, not an index or benchmark",
+      "asserted": false,
+      "use": "display-not-index",
+      "note": "Founder decision G9-b (2026-11-07): Vast.ai asks may be shown as a current market reading in the offers table and as inputs to the regional pressure grid, labelled as such wherever they appear. They are never stored in the archive and never enter an FCPI basket or anything presented as an index or benchmark, because the terms (read 2026-11-07, V6) forbid constructing an index, benchmark, pricing-comparison service or market-data product from Vast.ai data. The deployment that uses them is temporary and comes down after the hackathon."
+    },
+    {
+      "id": "polymarket",
+      "aliases": [
+        "polymarket-gamma",
+        "polymarket-clob"
+      ],
+      "name": "Polymarket",
+      "termsUrl": "https://polymarket.com/tos",
+      "licence": "Public market data API",
+      "attribution": "Market quotes from Polymarket",
+      "asserted": true,
+      "use": "display-and-archive",
+      "note": "Risk recorded: the terms restrict use of their data by financial technology companies and market data distributors without a written agreement, which a terminal that stores and republishes quotes may fall under. Kept pending a founder decision."
+    },
+    {
+      "id": "kalshi",
+      "aliases": [],
+      "name": "Kalshi",
+      "termsUrl": "https://kalshi.com/regulatory",
+      "licence": "Public trade API market data",
+      "attribution": "Market quotes from Kalshi",
+      "asserted": true,
+      "use": "display-and-archive",
+      "note": "The terms page answered 429 to every attempt; not read."
+    },
+    {
+      "id": "sec-edgar",
+      "aliases": [],
+      "name": "SEC EDGAR",
+      "termsUrl": "https://www.sec.gov/os/accessing-edgar-data",
+      "licence": "Public domain (US government work); SEC fair-access policy applies",
+      "attribution": "Filings and XBRL facts from SEC EDGAR",
+      "asserted": true,
+      "use": "display-and-archive",
+      "note": "At most ten requests per second with a declared User-Agent carrying a contact address."
+    },
+    {
+      "id": "energy-charts",
+      "aliases": [],
+      "name": "Energy-Charts (Fraunhofer ISE)",
+      "termsUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "licence": "CC BY 4.0",
+      "attribution": "Bundesnetzagentur | SMARD.de, via Energy-Charts (Fraunhofer ISE), CC BY 4.0",
+      "asserted": false,
+      "use": "display-and-archive",
+      "note": "The licence and attribution are returned in every response body (license_info), measured 2026-11-07."
+    },
+    {
+      "id": "elexon-bmrs",
+      "aliases": [],
+      "name": "Elexon BMRS",
+      "termsUrl": "https://www.elexon.co.uk/bsc/data/balancing-mechanism-reporting-agent/copyright-licence-bmrs-data/",
+      "licence": "BMRS open data licence; commercial reuse permitted with attribution",
+      "attribution": "Contains BMRS data © Elexon Limited copyright and database right 2026",
+      "asserted": false,
+      "use": "display-and-archive",
+      "note": "Licence page read 2026-11-07: copying, publishing and commercial exploitation are permitted when the attribution statement is shown and, where possible, the licence is linked."
+    },
+    {
+      "id": "hacker-news",
+      "aliases": [],
+      "name": "Hacker News (Algolia search)",
+      "termsUrl": "https://hn.algolia.com/api",
+      "licence": "Public Hacker News content via the Algolia search API",
+      "attribution": "Stories from Hacker News, search by Algolia",
+      "asserted": true,
+      "use": "display-and-archive",
+      "note": "Headlines are shown with a link to the thread; attribution is requested."
+    },
+    {
+      "id": "rss",
+      "aliases": [
+        "rss:nvidia",
+        "rss:coreweave",
+        "rss:corescientific",
+        "rss:applieddigital"
+      ],
+      "name": "Investor-relations RSS feeds",
+      "termsUrl": "https://nvidianews.nvidia.com/releases.xml",
+      "licence": "Company press-release feeds; headline shown with a link to the original",
+      "attribution": "Press releases from NVIDIA, CoreWeave, Core Scientific and Applied Digital",
+      "asserted": true,
+      "use": "display-and-archive",
+      "note": "Only the headline, date and link are shown; the release itself stays on the company's site."
+    },
+    {
+      "id": "wikidata",
+      "aliases": [],
+      "name": "Wikidata",
+      "termsUrl": "https://www.wikidata.org/wiki/Wikidata:Licensing",
+      "licence": "CC0",
+      "attribution": "Data centre records from Wikidata",
+      "asserted": true,
+      "use": "display-and-archive",
+      "note": "Notable data centres only, never a complete map."
+    },
+    {
+      "id": "yahoo-finance",
+      "aliases": [],
+      "name": "Yahoo Finance",
+      "termsUrl": "https://legal.yahoo.com/us/en/yahoo/terms/otos/index.html",
+      "licence": "Unofficial endpoint; the provider's terms restrict redistribution. Shown pending a licensed price feed.",
+      "attribution": "Prices from Yahoo Finance, delayed",
+      "asserted": false,
+      "use": "display-only",
+      "note": "Terms read 2026-11-07: they forbid automated collection, building a database or archive from the content and commercial reuse without permission. Never stored in the archive."
+    },
+    {
+      "id": "openrouter",
+      "aliases": [],
+      "name": "OpenRouter",
+      "termsUrl": "https://openrouter.ai/terms",
+      "licence": "Public model catalogue and endpoint list (one snapshot, 2026-11-07)",
+      "attribution": "Model list prices from OpenRouter",
+      "asserted": true,
+      "use": "display-and-archive",
+      "note": "A single dated snapshot of the public catalogue and endpoints, stored with the frontend and shown on /intelligence as archived; never fetched at request time."
+    },
+    {
+      "id": "wrds-crsp",
+      "aliases": [],
+      "name": "WRDS CRSP daily stock file",
+      "termsUrl": "https://wrds-www.wharton.upenn.edu/pages/about/terms-of-use/",
+      "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+      "attribution": "Daily closes from CRSP via WRDS, adjusted for splits; research use under an institutional licence",
+      "asserted": false,
+      "use": "research-archive",
+      "note": "Founder decision G13 (2026-11-08): eight tickers, 2018-01-02 to 2025-12-31, extracted by the founder under the institutional WRDS licence and loaded into the archive by product/flopx/tools/wrds_load.py from a secret file the deployment mounts; the file is never committed. Derived results (evaluation, backtests, signals) are public; the raw series reach signed-in accounts only. Changing this row's use to display-and-archive lifts the gate. The loader's delete mode removes every row when the project comes down."
+    },
+    {
+      "id": "wrds-compustat",
+      "aliases": [],
+      "name": "WRDS Compustat fundamentals quarterly",
+      "termsUrl": "https://wrds-www.wharton.upenn.edu/pages/about/terms-of-use/",
+      "licence": "Licensed to the founder's institution for research; served to signed-in accounts only; removed after the hackathon",
+      "attribution": "Quarterly revenue, capital expenditure and total assets from Compustat via WRDS; research use under an institutional licence",
+      "asserted": false,
+      "use": "research-archive",
+      "note": "Founder decision G13 (2026-11-08), second extract: eight tickers, fiscal quarters 2018 to 2026 Q3, extracted by the founder under the institutional WRDS licence and loaded into the archive by product/flopx/tools/compustat_load.py from a secret file the deployment mounts (/etc/secrets/flopx-compustat.csv); the file is never committed. Stored per ticker as fundamental:<T>:revenue_q, fundamental:<T>:capex_q (the quarter's own spend, derived from Compustat's fiscal year-to-date capxy) and fundamental:<T>:total_assets, each at the fiscal period end with the report date in the note. Derived figures (revenue growth year on year, capex intensity) are public; the raw rows reach signed-in accounts only, and live SEC EDGAR facts win over Compustat wherever both report the same period. Changing this row's use to display-and-archive lifts the gate. The loader's delete mode removes every row when the project comes down."
+    },
+    {
+      "id": "alpaca-data",
+      "aliases": [],
+      "name": "Alpaca Market Data (founder's account)",
+      "termsUrl": "https://files.alpaca.markets/disclosures/library/TermsAndConditions.pdf",
+      "licence": "Alpaca Market Data under the founder's own account; personal and noncommercial use only; served to signed-in accounts only; removed after the hackathon",
+      "attribution": "Daily closes from Alpaca Market Data (IEX feed), adjusted for splits; personal and noncommercial use under Alpaca's terms",
+      "asserted": false,
+      "use": "research-archive",
+      "note": "Terms and Conditions read 2026-11-08: Content is provided exclusively for personal and noncommercial access and use, and no part of it may be copied, republished or publicly displayed to any other server or web site for publication, distribution or any commercial enterprise without Alpaca's written consent. So the 2026 daily bars (timeframe 1Day, split-adjusted, the IEX feed of the free Basic plan) for the eight tickers are loaded into the archive by product/flopx/tools/alpaca_load.py at startup and refreshed once a day, continuing the CRSP series past 2025-12-31; the raw points reach signed-in accounts only and derived results are public. Not display-and-archive because the terms do not permit showing the raw bars to anonymous readers. Changing this row's use lifts the gate. The loader's delete mode removes every row when the project comes down."
+    },
+    {
+      "id": "getdeploying",
+      "aliases": [],
+      "name": "GetDeploying GPU rental price history",
+      "termsUrl": "https://getdeploying.com/dataset/gpu-prices",
+      "licence": "CC BY 4.0",
+      "attribution": "GetDeploying (2026). GPU rental price history [dataset], https://getdeploying.com/dataset/gpu-prices, licensed CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/); six models selected and relabelled with FLOPX model ids",
+      "asserted": false,
+      "use": "display-and-archive",
+      "note": "Dataset page read 2026-11-08: \"Free with attribution, CC BY 4.0: Credit GetDeploying and link to the license\"; the licence covers the published dataset files only (the site and its API stay under GetDeploying's terms), prices are estimates for information only, and the newest week can change until its Sunday has been captured. The weekly CSV (103 GPU models, 94 providers, 53 trailing weeks; the median, minimum and maximum of each week's daily captures of advertised asks per model and billing type) is loaded by product/flopx/tools/getdeploying_load.py at startup and once a week into gpu:<model>:getdeploying:weekly-median, :weekly-min and :weekly-max for the six FLOPX models (on-demand rows only; GetDeploying's family slugs pool boards, so nvidia-h100 stands for h100-sxm-80gb and nvidia-a100 for a100-sxm-80gb), each week stamped at its end and held back until then. A third-party history reference served beside FCPI through the series read; never written into index:fcpi:* or gpu:<model>:on-demand:*; the pressure engine's momentum factor reads the weekly median only while a model's own FLOPX index is younger than its 30-day window, labelled as GetDeploying's and never mixed with FLOPX points. The loader's delete mode removes every row."
+    },
+    {
+      "id": "eia",
+      "aliases": [],
+      "name": "U.S. Energy Information Administration (EIA API v2, Form EIA-930)",
+      "termsUrl": "https://www.eia.gov/about/copyrights_reuse.php",
+      "licence": "US public domain (EIA)",
+      "attribution": "Hourly grid data from the U.S. Energy Information Administration (Form EIA-930), public domain",
+      "asserted": false,
+      "use": "display-and-archive",
+      "note": "Copyright page read 2026-11-08: U.S. government publications are in the public domain and EIA's data may be used and distributed; the exception it names is third-party material, which here means EIA's ICE wholesale price spreadsheet, not read. Dormant without EIA_API_KEY (the key travels only as the api_key query parameter and is never logged or stored). The API carries no wholesale price for any balancing authority (every /v2/electricity/ route listed 2026-11-08), so the series are hourly demand and the day-ahead demand forecast for ERCOT and PJM in MWh (energy:ERCOT:demand, energy:ERCOT:demand-forecast, energy:PJM:demand, energy:PJM:demand-forecast), never the energy:<zone>:day-ahead price the power-stress factor reads. The history backfill loads two years in 200-day chunks (4800 rows a request against a 5000-row cap)."
+    }
+  ]
+}

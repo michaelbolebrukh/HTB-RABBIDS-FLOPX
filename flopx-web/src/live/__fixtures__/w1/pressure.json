@@ -1,0 +1,3649 @@
+{
+ "asOf": "2026-11-08T00:39:52.417921Z",
+ "method": "cpx-v1",
+ "methodText": "Compute Pressure Index cpx-v1: a weighted sum of six normalised factors (comparable-price premium, advertised availability, 30-day index momentum, power-price stress, facility pipeline relief and demand signals) on a 0-100 scale. It infers pressure on usable supply from advertised asks, facility records, power prices, prediction markets and the feed; it does not measure utilisation and nothing in it is observed ground truth.",
+ "bands": {
+  "slack": "< 25",
+  "balanced": "25 to 50",
+  "tight": "50 to 75",
+  "acute": ">= 75"
+ },
+ "cells": [
+  {
+   "regionId": "ap-jp",
+   "gpuModelId": "h100-sxm-80gb",
+   "asOf": "2026-11-08T00:39:52.417921Z",
+   "score": 53.61,
+   "band": "tight",
+   "factors": [
+    {
+     "factor": "price-premium",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.3,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no asks in the cell: no premium can be read",
+     "scope": null
+    },
+    {
+     "factor": "availability",
+     "raw": null,
+     "unit": "share",
+     "normalised": null,
+     "weight": 0.2,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no asks in the cell",
+     "scope": null
+    },
+    {
+     "factor": "price-momentum",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.15,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [
+      {
+       "kind": "derived",
+       "source": "fcpi-v1:median-of-adjusted-asks",
+       "observedAt": "2026-11-08T00:39:12Z",
+       "sourceUrl": null,
+       "fetchedAt": "2026-11-08T00:39:52.320183Z",
+       "licence": null,
+       "note": null,
+       "inputKinds": [
+        "live"
+       ]
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:12Z",
+     "note": "index:fcpi:h100-sxm-80gb has fewer than 30 days of history before 2026-11-08",
+     "scope": "global"
+    },
+    {
+     "factor": "power-stress",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.15,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no day-ahead energy series for grid zone TEPCO",
+     "scope": null
+    },
+    {
+     "factor": "capacity-pipeline",
+     "raw": 50.0,
+     "unit": "MW",
+     "normalised": -0.1,
+     "weight": 0.1,
+     "contribution": -0.01,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "50 MW announced, planned or under construction against no operating capacity in the data, so there is no ratio: scored on an absolute scale where 500 MW reads as full relief (2 facility records); a large pipeline is relief ahead, so the sign is inverted; reported-only facilities are not counted on either side; computed over the region's sample facility records only, 2 observed records for the region listed apart and not mixed in",
+     "scope": null
+    },
+    {
+     "factor": "demand-signals",
+     "raw": 0.2445,
+     "unit": "score",
+     "normalised": 0.2445,
+     "weight": 0.1,
+     "contribution": 0.0244,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample market; a quote is a price, never a calibrated probability",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample market; a quote is a price, never a calibrated probability",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "mkt-001 implies 0.407 price-up probability; mkt-012 implies 0.322 price-up probability; 6 feed items touching the region or model in 30 days (severity-weighted 3.80)",
+     "scope": null
+    }
+   ],
+   "contradictions": [
+    {
+     "factor": "capacity-pipeline",
+     "raw": 50.0,
+     "unit": "MW",
+     "normalised": -0.1,
+     "weight": 0.1,
+     "contribution": -0.01,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "50 MW announced, planned or under construction against no operating capacity in the data, so there is no ratio: scored on an absolute scale where 500 MW reads as full relief (2 facility records); a large pipeline is relief ahead, so the sign is inverted; reported-only facilities are not counted on either side; computed over the region's sample facility records only, 2 observed records for the region listed apart and not mixed in",
+     "scope": null
+    }
+   ],
+   "uncertainty": {
+    "coverage": 0,
+    "factorsWithData": 2,
+    "factorsTotal": 6,
+    "sampleShare": 0.9091,
+    "oldestInput": "2026-10-19T08:00:00Z",
+    "label": "exploratory"
+   },
+   "method": "cpx-v1",
+   "methodText": "",
+   "inputKinds": [
+    "derived",
+    "sample"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "cpx-v1",
+    "observedAt": "2026-11-08T00:39:12Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:39:52.418798Z",
+    "licence": null,
+    "note": "inferred pressure on usable supply; not a measurement of utilisation",
+    "inputKinds": [
+     "derived",
+     "sample"
+    ]
+   },
+   "history": [],
+   "historyBasis": "",
+   "statementClass": "inference"
+  },
+  {
+   "regionId": "ap-jp",
+   "gpuModelId": "rtx-4090-24gb",
+   "asOf": "2026-11-08T00:39:52.417921Z",
+   "score": 63.5,
+   "band": "tight",
+   "factors": [
+    {
+     "factor": "price-premium",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.3,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no asks in the cell: no premium can be read",
+     "scope": null
+    },
+    {
+     "factor": "availability",
+     "raw": null,
+     "unit": "share",
+     "normalised": null,
+     "weight": 0.2,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no asks in the cell",
+     "scope": null
+    },
+    {
+     "factor": "price-momentum",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.15,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [
+      {
+       "kind": "derived",
+       "source": "fcpi-v1:median-of-adjusted-asks",
+       "observedAt": "2026-11-08T00:39:12Z",
+       "sourceUrl": null,
+       "fetchedAt": "2026-11-08T00:39:52.415112Z",
+       "licence": null,
+       "note": null,
+       "inputKinds": [
+        "live"
+       ]
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:12Z",
+     "note": "index:fcpi:rtx-4090-24gb has fewer than 30 days of history before 2026-11-08",
+     "scope": "global"
+    },
+    {
+     "factor": "power-stress",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.15,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no day-ahead energy series for grid zone TEPCO",
+     "scope": null
+    },
+    {
+     "factor": "capacity-pipeline",
+     "raw": 50.0,
+     "unit": "MW",
+     "normalised": -0.1,
+     "weight": 0.1,
+     "contribution": -0.01,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "50 MW announced, planned or under construction against no operating capacity in the data, so there is no ratio: scored on an absolute scale where 500 MW reads as full relief (2 facility records); a large pipeline is relief ahead, so the sign is inverted; reported-only facilities are not counted on either side; computed over the region's sample facility records only, 2 observed records for the region listed apart and not mixed in",
+     "scope": null
+    },
+    {
+     "factor": "demand-signals",
+     "raw": 0.64,
+     "unit": "score",
+     "normalised": 0.64,
+     "weight": 0.1,
+     "contribution": 0.064,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T05:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample intelligence item; the headline describes no real event",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-10-31T20:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample intelligence item; the headline describes no real event",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T05:00:00Z",
+     "note": "5 feed items touching the region or model in 30 days (severity-weighted 3.20)",
+     "scope": null
+    }
+   ],
+   "contradictions": [
+    {
+     "factor": "capacity-pipeline",
+     "raw": 50.0,
+     "unit": "MW",
+     "normalised": -0.1,
+     "weight": 0.1,
+     "contribution": -0.01,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "50 MW announced, planned or under construction against no operating capacity in the data, so there is no ratio: scored on an absolute scale where 500 MW reads as full relief (2 facility records); a large pipeline is relief ahead, so the sign is inverted; reported-only facilities are not counted on either side; computed over the region's sample facility records only, 2 observed records for the region listed apart and not mixed in",
+     "scope": null
+    }
+   ],
+   "uncertainty": {
+    "coverage": 0,
+    "factorsWithData": 2,
+    "factorsTotal": 6,
+    "sampleShare": 0.875,
+    "oldestInput": "2026-10-22T11:00:00Z",
+    "label": "exploratory"
+   },
+   "method": "cpx-v1",
+   "methodText": "",
+   "inputKinds": [
+    "derived",
+    "sample"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "cpx-v1",
+    "observedAt": "2026-11-08T00:39:12Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:39:52.421495Z",
+    "licence": null,
+    "note": "inferred pressure on usable supply; not a measurement of utilisation",
+    "inputKinds": [
+     "derived",
+     "sample"
+    ]
+   },
+   "history": [],
+   "historyBasis": "",
+   "statementClass": "inference"
+  },
+  {
+   "regionId": "ap-sg",
+   "gpuModelId": "h100-sxm-80gb",
+   "asOf": "2026-11-08T00:39:52.417921Z",
+   "score": 48.42,
+   "band": "balanced",
+   "factors": [
+    {
+     "factor": "price-premium",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.3,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no asks in the cell: no premium can be read",
+     "scope": null
+    },
+    {
+     "factor": "availability",
+     "raw": null,
+     "unit": "share",
+     "normalised": null,
+     "weight": 0.2,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no asks in the cell",
+     "scope": null
+    },
+    {
+     "factor": "price-momentum",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.15,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [
+      {
+       "kind": "derived",
+       "source": "fcpi-v1:median-of-adjusted-asks",
+       "observedAt": "2026-11-08T00:39:12Z",
+       "sourceUrl": null,
+       "fetchedAt": "2026-11-08T00:39:52.320183Z",
+       "licence": null,
+       "note": null,
+       "inputKinds": [
+        "live"
+       ]
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:12Z",
+     "note": "index:fcpi:h100-sxm-80gb has fewer than 30 days of history before 2026-11-08",
+     "scope": "global"
+    },
+    {
+     "factor": "power-stress",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.15,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no day-ahead energy series for grid zone EMA",
+     "scope": null
+    },
+    {
+     "factor": "capacity-pipeline",
+     "raw": 0.375,
+     "unit": "ratio",
+     "normalised": -0.1875,
+     "weight": 0.1,
+     "contribution": -0.0188,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "150 MW announced, planned or under construction against 400 MW operating (5 facility records); a large pipeline is relief ahead, so the sign is inverted; reported-only facilities are not counted on either side",
+     "scope": null
+    },
+    {
+     "factor": "demand-signals",
+     "raw": 0.1245,
+     "unit": "score",
+     "normalised": 0.1245,
+     "weight": 0.1,
+     "contribution": 0.0125,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample market; a quote is a price, never a calibrated probability",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample market; a quote is a price, never a calibrated probability",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "mkt-001 implies 0.407 price-up probability; mkt-012 implies 0.322 price-up probability; 3 feed items touching the region or model in 30 days (severity-weighted 2.60)",
+     "scope": null
+    }
+   ],
+   "contradictions": [
+    {
+     "factor": "demand-signals",
+     "raw": 0.1245,
+     "unit": "score",
+     "normalised": 0.1245,
+     "weight": 0.1,
+     "contribution": 0.0125,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample market; a quote is a price, never a calibrated probability",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample market; a quote is a price, never a calibrated probability",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "mkt-001 implies 0.407 price-up probability; mkt-012 implies 0.322 price-up probability; 3 feed items touching the region or model in 30 days (severity-weighted 2.60)",
+     "scope": null
+    }
+   ],
+   "uncertainty": {
+    "coverage": 0,
+    "factorsWithData": 2,
+    "factorsTotal": 6,
+    "sampleShare": 0.9091,
+    "oldestInput": "2026-10-18T22:00:00Z",
+    "label": "exploratory"
+   },
+   "method": "cpx-v1",
+   "methodText": "",
+   "inputKinds": [
+    "derived",
+    "sample"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "cpx-v1",
+    "observedAt": "2026-11-08T00:39:12Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:39:52.421930Z",
+    "licence": null,
+    "note": "inferred pressure on usable supply; not a measurement of utilisation",
+    "inputKinds": [
+     "derived",
+     "sample"
+    ]
+   },
+   "history": [],
+   "historyBasis": "",
+   "statementClass": "inference"
+  },
+  {
+   "regionId": "ap-sg",
+   "gpuModelId": "rtx-4090-24gb",
+   "asOf": "2026-11-08T00:39:52.417921Z",
+   "score": 55.31,
+   "band": "tight",
+   "factors": [
+    {
+     "factor": "price-premium",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.3,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no asks in the cell: no premium can be read",
+     "scope": null
+    },
+    {
+     "factor": "availability",
+     "raw": null,
+     "unit": "share",
+     "normalised": null,
+     "weight": 0.2,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no asks in the cell",
+     "scope": null
+    },
+    {
+     "factor": "price-momentum",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.15,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [
+      {
+       "kind": "derived",
+       "source": "fcpi-v1:median-of-adjusted-asks",
+       "observedAt": "2026-11-08T00:39:12Z",
+       "sourceUrl": null,
+       "fetchedAt": "2026-11-08T00:39:52.415112Z",
+       "licence": null,
+       "note": null,
+       "inputKinds": [
+        "live"
+       ]
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:12Z",
+     "note": "index:fcpi:rtx-4090-24gb has fewer than 30 days of history before 2026-11-08",
+     "scope": "global"
+    },
+    {
+     "factor": "power-stress",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.15,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no day-ahead energy series for grid zone EMA",
+     "scope": null
+    },
+    {
+     "factor": "capacity-pipeline",
+     "raw": 0.375,
+     "unit": "ratio",
+     "normalised": -0.1875,
+     "weight": 0.1,
+     "contribution": -0.0188,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "150 MW announced, planned or under construction against 400 MW operating (5 facility records); a large pipeline is relief ahead, so the sign is inverted; reported-only facilities are not counted on either side",
+     "scope": null
+    },
+    {
+     "factor": "demand-signals",
+     "raw": 0.4,
+     "unit": "score",
+     "normalised": 0.4,
+     "weight": 0.1,
+     "contribution": 0.04,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-10-25T15:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample intelligence item; the headline describes no real event",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-10-18T22:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample intelligence item; the headline describes no real event",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-10-25T15:00:00Z",
+     "note": "2 feed items touching the region or model in 30 days (severity-weighted 2.00)",
+     "scope": null
+    }
+   ],
+   "contradictions": [
+    {
+     "factor": "capacity-pipeline",
+     "raw": 0.375,
+     "unit": "ratio",
+     "normalised": -0.1875,
+     "weight": 0.1,
+     "contribution": -0.0188,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "150 MW announced, planned or under construction against 400 MW operating (5 facility records); a large pipeline is relief ahead, so the sign is inverted; reported-only facilities are not counted on either side",
+     "scope": null
+    }
+   ],
+   "uncertainty": {
+    "coverage": 0,
+    "factorsWithData": 2,
+    "factorsTotal": 6,
+    "sampleShare": 0.875,
+    "oldestInput": "2026-10-18T22:00:00Z",
+    "label": "exploratory"
+   },
+   "method": "cpx-v1",
+   "methodText": "",
+   "inputKinds": [
+    "derived",
+    "sample"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "cpx-v1",
+    "observedAt": "2026-11-08T00:39:12Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:39:52.425305Z",
+    "licence": null,
+    "note": "inferred pressure on usable supply; not a measurement of utilisation",
+    "inputKinds": [
+     "derived",
+     "sample"
+    ]
+   },
+   "history": [],
+   "historyBasis": "",
+   "statementClass": "inference"
+  },
+  {
+   "regionId": "eu-de",
+   "gpuModelId": "h100-sxm-80gb",
+   "asOf": "2026-11-08T00:39:52.417921Z",
+   "score": 30.52,
+   "band": "balanced",
+   "factors": [
+    {
+     "factor": "price-premium",
+     "raw": -0.0003,
+     "unit": "ratio",
+     "normalised": -0.0009,
+     "weight": 0.3,
+     "contribution": -0.0003,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:12Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=H100 SXM",
+       "fetchedAt": "2026-11-08T00:39:12.299564Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Germany, DE), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      },
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:12Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=H100 SXM",
+       "fetchedAt": "2026-11-08T00:39:12.299564Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Germany, DE), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:12Z",
+     "note": "cell median comparable ask 2.4698 vs model global median 2.4705 USD/GPU-hour over 3 of 9 advertised asks; asks, not transactions",
+     "scope": null
+    },
+    {
+     "factor": "availability",
+     "raw": 0.0,
+     "unit": "share",
+     "normalised": -1.0,
+     "weight": 0.2,
+     "contribution": -0.2,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:12Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=H100 SXM",
+       "fetchedAt": "2026-11-08T00:39:12.299564Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Germany, DE), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      },
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:12Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=H100 SXM",
+       "fetchedAt": "2026-11-08T00:39:12.299564Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Germany, DE), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:12Z",
+     "note": "3 asks: 0% unavailable, 0% limited; advertised availability, not utilisation",
+     "scope": null
+    },
+    {
+     "factor": "price-momentum",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.15,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [
+      {
+       "kind": "derived",
+       "source": "fcpi-v1:median-of-adjusted-asks",
+       "observedAt": "2026-11-08T00:39:12Z",
+       "sourceUrl": null,
+       "fetchedAt": "2026-11-08T00:39:52.320183Z",
+       "licence": null,
+       "note": null,
+       "inputKinds": [
+        "live"
+       ]
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:12Z",
+     "note": "index:fcpi:h100-sxm-80gb has fewer than 30 days of history before 2026-11-08",
+     "scope": "global"
+    },
+    {
+     "factor": "power-stress",
+     "raw": -0.0976,
+     "unit": "ratio",
+     "normalised": -0.1952,
+     "weight": 0.15,
+     "contribution": -0.0293,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "archived",
+       "source": "energy-charts",
+       "observedAt": "2026-11-08T00:30:00Z",
+       "sourceUrl": "https://www.energy-charts.info/charts/price_spot_market/chart.htm?l=en&c=DE",
+       "fetchedAt": "2026-11-08T00:33:25.000838Z",
+       "licence": "CC BY 4.0",
+       "note": "day-ahead price DE-LU for the delivery slot starting at t; CC BY 4.0 (creativecommons.org/licenses/by/4.0) from Bundesnetzagentur | SMARD.de; via Energy-Charts (Fraunhofer ISE)",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-08T00:30:00Z",
+     "note": "energy:DE-LU:day-ahead: latest 223.12 vs trailing 30-day median 247.25 EUR/MWh over 198 points",
+     "scope": null
+    },
+    {
+     "factor": "capacity-pipeline",
+     "raw": 1800.0,
+     "unit": "MW",
+     "normalised": -1.0,
+     "weight": 0.1,
+     "contribution": -0.1,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "1800 MW announced, planned or under construction against no operating capacity in the data, so there is no ratio: scored on an absolute scale where 500 MW reads as full relief (3 facility records); a large pipeline is relief ahead, so the sign is inverted; reported-only facilities are not counted on either side; computed over the region's sample facility records only, 18 observed records for the region listed apart and not mixed in",
+     "scope": null
+    },
+    {
+     "factor": "demand-signals",
+     "raw": -0.0155,
+     "unit": "score",
+     "normalised": -0.0155,
+     "weight": 0.1,
+     "contribution": -0.0016,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample market; a quote is a price, never a calibrated probability",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample market; a quote is a price, never a calibrated probability",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "mkt-001 implies 0.407 price-up probability; mkt-012 implies 0.322 price-up probability; 2 feed items touching the region or model in 30 days (severity-weighted 1.20)",
+     "scope": null
+    }
+   ],
+   "contradictions": [],
+   "uncertainty": {
+    "coverage": 3,
+    "factorsWithData": 5,
+    "factorsTotal": 6,
+    "sampleShare": 0.4667,
+    "oldestInput": "2026-10-11T09:00:00Z",
+    "label": "indicative"
+   },
+   "method": "cpx-v1",
+   "methodText": "",
+   "inputKinds": [
+    "archived",
+    "derived",
+    "live",
+    "sample"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "cpx-v1",
+    "observedAt": "2026-11-08T00:39:12Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:39:52.426173Z",
+    "licence": null,
+    "note": "inferred pressure on usable supply; not a measurement of utilisation",
+    "inputKinds": [
+     "archived",
+     "derived",
+     "live",
+     "sample"
+    ]
+   },
+   "history": [],
+   "historyBasis": "",
+   "statementClass": "inference"
+  },
+  {
+   "regionId": "eu-de",
+   "gpuModelId": "rtx-4090-24gb",
+   "asOf": "2026-11-08T00:39:52.417921Z",
+   "score": 15.16,
+   "band": "slack",
+   "factors": [
+    {
+     "factor": "price-premium",
+     "raw": -0.2751,
+     "unit": "ratio",
+     "normalised": -0.9169,
+     "weight": 0.3,
+     "contribution": -0.2751,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:13Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=RTX 4090",
+       "fetchedAt": "2026-11-08T00:39:13.162974Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Germany, DE), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      },
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:13Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=RTX 4090",
+       "fetchedAt": "2026-11-08T00:39:13.162974Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 2-GPU bundle (Germany, DE), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:13Z",
+     "note": "cell median comparable ask 0.3591 vs model global median 0.4954 USD/GPU-hour over 3 of 52 advertised asks; asks, not transactions",
+     "scope": null
+    },
+    {
+     "factor": "availability",
+     "raw": 0.0,
+     "unit": "share",
+     "normalised": -1.0,
+     "weight": 0.2,
+     "contribution": -0.2,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:13Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=RTX 4090",
+       "fetchedAt": "2026-11-08T00:39:13.162974Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Germany, DE), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      },
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:13Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=RTX 4090",
+       "fetchedAt": "2026-11-08T00:39:13.162974Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 2-GPU bundle (Germany, DE), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:13Z",
+     "note": "3 asks: 0% unavailable, 0% limited; advertised availability, not utilisation",
+     "scope": null
+    },
+    {
+     "factor": "price-momentum",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.15,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [
+      {
+       "kind": "derived",
+       "source": "fcpi-v1:median-of-adjusted-asks",
+       "observedAt": "2026-11-08T00:39:12Z",
+       "sourceUrl": null,
+       "fetchedAt": "2026-11-08T00:39:52.415112Z",
+       "licence": null,
+       "note": null,
+       "inputKinds": [
+        "live"
+       ]
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:12Z",
+     "note": "index:fcpi:rtx-4090-24gb has fewer than 30 days of history before 2026-11-08",
+     "scope": "global"
+    },
+    {
+     "factor": "power-stress",
+     "raw": -0.0976,
+     "unit": "ratio",
+     "normalised": -0.1952,
+     "weight": 0.15,
+     "contribution": -0.0293,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "archived",
+       "source": "energy-charts",
+       "observedAt": "2026-11-08T00:30:00Z",
+       "sourceUrl": "https://www.energy-charts.info/charts/price_spot_market/chart.htm?l=en&c=DE",
+       "fetchedAt": "2026-11-08T00:33:25.000838Z",
+       "licence": "CC BY 4.0",
+       "note": "day-ahead price DE-LU for the delivery slot starting at t; CC BY 4.0 (creativecommons.org/licenses/by/4.0) from Bundesnetzagentur | SMARD.de; via Energy-Charts (Fraunhofer ISE)",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-08T00:30:00Z",
+     "note": "energy:DE-LU:day-ahead: latest 223.12 vs trailing 30-day median 247.25 EUR/MWh over 198 points",
+     "scope": null
+    },
+    {
+     "factor": "capacity-pipeline",
+     "raw": 1800.0,
+     "unit": "MW",
+     "normalised": -1.0,
+     "weight": 0.1,
+     "contribution": -0.1,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "1800 MW announced, planned or under construction against no operating capacity in the data, so there is no ratio: scored on an absolute scale where 500 MW reads as full relief (3 facility records); a large pipeline is relief ahead, so the sign is inverted; reported-only facilities are not counted on either side; computed over the region's sample facility records only, 18 observed records for the region listed apart and not mixed in",
+     "scope": null
+    },
+    {
+     "factor": "demand-signals",
+     "raw": 0.12,
+     "unit": "score",
+     "normalised": 0.12,
+     "weight": 0.1,
+     "contribution": 0.012,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-10-11T09:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample intelligence item; the headline describes no real event",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-10-11T09:00:00Z",
+     "note": "1 feed items touching the region or model in 30 days (severity-weighted 0.60)",
+     "scope": null
+    }
+   ],
+   "contradictions": [
+    {
+     "factor": "demand-signals",
+     "raw": 0.12,
+     "unit": "score",
+     "normalised": 0.12,
+     "weight": 0.1,
+     "contribution": 0.012,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-10-11T09:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample intelligence item; the headline describes no real event",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-10-11T09:00:00Z",
+     "note": "1 feed items touching the region or model in 30 days (severity-weighted 0.60)",
+     "scope": null
+    }
+   ],
+   "uncertainty": {
+    "coverage": 3,
+    "factorsWithData": 5,
+    "factorsTotal": 6,
+    "sampleShare": 0.3333,
+    "oldestInput": "2026-10-11T09:00:00Z",
+    "label": "indicative"
+   },
+   "method": "cpx-v1",
+   "methodText": "",
+   "inputKinds": [
+    "archived",
+    "derived",
+    "live",
+    "sample"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "cpx-v1",
+    "observedAt": "2026-11-08T00:39:13Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:39:52.430385Z",
+    "licence": null,
+    "note": "inferred pressure on usable supply; not a measurement of utilisation",
+    "inputKinds": [
+     "archived",
+     "derived",
+     "live",
+     "sample"
+    ]
+   },
+   "history": [],
+   "historyBasis": "",
+   "statementClass": "inference"
+  },
+  {
+   "regionId": "eu-ie",
+   "gpuModelId": "h100-sxm-80gb",
+   "asOf": "2026-11-08T00:39:52.417921Z",
+   "score": 34.11,
+   "band": "balanced",
+   "factors": [
+    {
+     "factor": "price-premium",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.3,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no asks in the cell: no premium can be read",
+     "scope": null
+    },
+    {
+     "factor": "availability",
+     "raw": null,
+     "unit": "share",
+     "normalised": null,
+     "weight": 0.2,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no asks in the cell",
+     "scope": null
+    },
+    {
+     "factor": "price-momentum",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.15,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [
+      {
+       "kind": "derived",
+       "source": "fcpi-v1:median-of-adjusted-asks",
+       "observedAt": "2026-11-08T00:39:12Z",
+       "sourceUrl": null,
+       "fetchedAt": "2026-11-08T00:39:52.320183Z",
+       "licence": null,
+       "note": null,
+       "inputKinds": [
+        "live"
+       ]
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:12Z",
+     "note": "index:fcpi:h100-sxm-80gb has fewer than 30 days of history before 2026-11-08",
+     "scope": "global"
+    },
+    {
+     "factor": "power-stress",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.15,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no day-ahead energy series for grid zone EirGrid",
+     "scope": null
+    },
+    {
+     "factor": "capacity-pipeline",
+     "raw": 500.0,
+     "unit": "MW",
+     "normalised": -1.0,
+     "weight": 0.1,
+     "contribution": -0.1,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "500 MW announced, planned or under construction against no operating capacity in the data, so there is no ratio: scored on an absolute scale where 500 MW reads as full relief (2 facility records); a large pipeline is relief ahead, so the sign is inverted; reported-only facilities are not counted on either side; computed over the region's sample facility records only, 1 observed record for the region listed apart and not mixed in",
+     "scope": null
+    },
+    {
+     "factor": "demand-signals",
+     "raw": 0.3645,
+     "unit": "score",
+     "normalised": 0.3645,
+     "weight": 0.1,
+     "contribution": 0.0365,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample market; a quote is a price, never a calibrated probability",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample market; a quote is a price, never a calibrated probability",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "mkt-001 implies 0.407 price-up probability; mkt-012 implies 0.322 price-up probability; 7 feed items touching the region or model in 30 days (severity-weighted 5.20)",
+     "scope": null
+    }
+   ],
+   "contradictions": [
+    {
+     "factor": "demand-signals",
+     "raw": 0.3645,
+     "unit": "score",
+     "normalised": 0.3645,
+     "weight": 0.1,
+     "contribution": 0.0365,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample market; a quote is a price, never a calibrated probability",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample market; a quote is a price, never a calibrated probability",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "mkt-001 implies 0.407 price-up probability; mkt-012 implies 0.322 price-up probability; 7 feed items touching the region or model in 30 days (severity-weighted 5.20)",
+     "scope": null
+    }
+   ],
+   "uncertainty": {
+    "coverage": 0,
+    "factorsWithData": 2,
+    "factorsTotal": 6,
+    "sampleShare": 0.9167,
+    "oldestInput": "2026-10-13T09:00:00Z",
+    "label": "exploratory"
+   },
+   "method": "cpx-v1",
+   "methodText": "",
+   "inputKinds": [
+    "derived",
+    "sample"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "cpx-v1",
+    "observedAt": "2026-11-08T00:39:12Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:39:52.430876Z",
+    "licence": null,
+    "note": "inferred pressure on usable supply; not a measurement of utilisation",
+    "inputKinds": [
+     "derived",
+     "sample"
+    ]
+   },
+   "history": [],
+   "historyBasis": "",
+   "statementClass": "inference"
+  },
+  {
+   "regionId": "eu-ie",
+   "gpuModelId": "rtx-4090-24gb",
+   "asOf": "2026-11-08T00:39:52.417921Z",
+   "score": 48.0,
+   "band": "balanced",
+   "factors": [
+    {
+     "factor": "price-premium",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.3,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no asks in the cell: no premium can be read",
+     "scope": null
+    },
+    {
+     "factor": "availability",
+     "raw": null,
+     "unit": "share",
+     "normalised": null,
+     "weight": 0.2,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no asks in the cell",
+     "scope": null
+    },
+    {
+     "factor": "price-momentum",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.15,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [
+      {
+       "kind": "derived",
+       "source": "fcpi-v1:median-of-adjusted-asks",
+       "observedAt": "2026-11-08T00:39:12Z",
+       "sourceUrl": null,
+       "fetchedAt": "2026-11-08T00:39:52.415112Z",
+       "licence": null,
+       "note": null,
+       "inputKinds": [
+        "live"
+       ]
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:12Z",
+     "note": "index:fcpi:rtx-4090-24gb has fewer than 30 days of history before 2026-11-08",
+     "scope": "global"
+    },
+    {
+     "factor": "power-stress",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.15,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no day-ahead energy series for grid zone EirGrid",
+     "scope": null
+    },
+    {
+     "factor": "capacity-pipeline",
+     "raw": 500.0,
+     "unit": "MW",
+     "normalised": -1.0,
+     "weight": 0.1,
+     "contribution": -0.1,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "500 MW announced, planned or under construction against no operating capacity in the data, so there is no ratio: scored on an absolute scale where 500 MW reads as full relief (2 facility records); a large pipeline is relief ahead, so the sign is inverted; reported-only facilities are not counted on either side; computed over the region's sample facility records only, 1 observed record for the region listed apart and not mixed in",
+     "scope": null
+    },
+    {
+     "factor": "demand-signals",
+     "raw": 0.92,
+     "unit": "score",
+     "normalised": 0.92,
+     "weight": 0.1,
+     "contribution": 0.092,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-05T06:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample intelligence item; the headline describes no real event",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-10-30T10:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample intelligence item; the headline describes no real event",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-05T06:00:00Z",
+     "note": "6 feed items touching the region or model in 30 days (severity-weighted 4.60)",
+     "scope": null
+    }
+   ],
+   "contradictions": [
+    {
+     "factor": "demand-signals",
+     "raw": 0.92,
+     "unit": "score",
+     "normalised": 0.92,
+     "weight": 0.1,
+     "contribution": 0.092,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-05T06:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample intelligence item; the headline describes no real event",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-10-30T10:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample intelligence item; the headline describes no real event",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-05T06:00:00Z",
+     "note": "6 feed items touching the region or model in 30 days (severity-weighted 4.60)",
+     "scope": null
+    }
+   ],
+   "uncertainty": {
+    "coverage": 0,
+    "factorsWithData": 2,
+    "factorsTotal": 6,
+    "sampleShare": 0.8889,
+    "oldestInput": "2026-10-13T09:00:00Z",
+    "label": "exploratory"
+   },
+   "method": "cpx-v1",
+   "methodText": "",
+   "inputKinds": [
+    "derived",
+    "sample"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "cpx-v1",
+    "observedAt": "2026-11-08T00:39:12Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:39:52.433801Z",
+    "licence": null,
+    "note": "inferred pressure on usable supply; not a measurement of utilisation",
+    "inputKinds": [
+     "derived",
+     "sample"
+    ]
+   },
+   "history": [],
+   "historyBasis": "",
+   "statementClass": "inference"
+  },
+  {
+   "regionId": "eu-no",
+   "gpuModelId": "h100-sxm-80gb",
+   "asOf": "2026-11-08T00:39:52.417921Z",
+   "score": 47.36,
+   "band": "balanced",
+   "factors": [
+    {
+     "factor": "price-premium",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.3,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no asks in the cell: no premium can be read",
+     "scope": null
+    },
+    {
+     "factor": "availability",
+     "raw": null,
+     "unit": "share",
+     "normalised": null,
+     "weight": 0.2,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no asks in the cell",
+     "scope": null
+    },
+    {
+     "factor": "price-momentum",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.15,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [
+      {
+       "kind": "derived",
+       "source": "fcpi-v1:median-of-adjusted-asks",
+       "observedAt": "2026-11-08T00:39:12Z",
+       "sourceUrl": null,
+       "fetchedAt": "2026-11-08T00:39:52.320183Z",
+       "licence": null,
+       "note": null,
+       "inputKinds": [
+        "live"
+       ]
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:12Z",
+     "note": "index:fcpi:h100-sxm-80gb has fewer than 30 days of history before 2026-11-08",
+     "scope": "global"
+    },
+    {
+     "factor": "power-stress",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.15,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no day-ahead energy series for grid zone NO1",
+     "scope": null
+    },
+    {
+     "factor": "capacity-pipeline",
+     "raw": 0.5,
+     "unit": "ratio",
+     "normalised": -0.25,
+     "weight": 0.1,
+     "contribution": -0.025,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "200 MW announced, planned or under construction against 400 MW operating (6 facility records); a large pipeline is relief ahead, so the sign is inverted; reported-only facilities are not counted on either side",
+     "scope": null
+    },
+    {
+     "factor": "demand-signals",
+     "raw": 0.1445,
+     "unit": "score",
+     "normalised": 0.1445,
+     "weight": 0.1,
+     "contribution": 0.0144,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample market; a quote is a price, never a calibrated probability",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample market; a quote is a price, never a calibrated probability",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "mkt-001 implies 0.407 price-up probability; mkt-012 implies 0.322 price-up probability; 6 feed items touching the region or model in 30 days (severity-weighted 2.80)",
+     "scope": null
+    }
+   ],
+   "contradictions": [
+    {
+     "factor": "demand-signals",
+     "raw": 0.1445,
+     "unit": "score",
+     "normalised": 0.1445,
+     "weight": 0.1,
+     "contribution": 0.0144,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample market; a quote is a price, never a calibrated probability",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample market; a quote is a price, never a calibrated probability",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "mkt-001 implies 0.407 price-up probability; mkt-012 implies 0.322 price-up probability; 6 feed items touching the region or model in 30 days (severity-weighted 2.80)",
+     "scope": null
+    }
+   ],
+   "uncertainty": {
+    "coverage": 0,
+    "factorsWithData": 2,
+    "factorsTotal": 6,
+    "sampleShare": 0.9333,
+    "oldestInput": "2026-10-14T06:00:00Z",
+    "label": "exploratory"
+   },
+   "method": "cpx-v1",
+   "methodText": "",
+   "inputKinds": [
+    "derived",
+    "sample"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "cpx-v1",
+    "observedAt": "2026-11-08T00:39:12Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:39:52.434316Z",
+    "licence": null,
+    "note": "inferred pressure on usable supply; not a measurement of utilisation",
+    "inputKinds": [
+     "derived",
+     "sample"
+    ]
+   },
+   "history": [],
+   "historyBasis": "",
+   "statementClass": "inference"
+  },
+  {
+   "regionId": "eu-no",
+   "gpuModelId": "rtx-4090-24gb",
+   "asOf": "2026-11-08T00:39:52.417921Z",
+   "score": 58.5,
+   "band": "tight",
+   "factors": [
+    {
+     "factor": "price-premium",
+     "raw": 0.7079,
+     "unit": "ratio",
+     "normalised": 1.0,
+     "weight": 0.3,
+     "contribution": 0.3,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:13Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=RTX 4090",
+       "fetchedAt": "2026-11-08T00:39:13.162974Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Norway, NO), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:13Z",
+     "note": "cell median comparable ask 0.8460 vs model global median 0.4954 USD/GPU-hour over 1 of 52 advertised asks; asks, not transactions",
+     "scope": null
+    },
+    {
+     "factor": "availability",
+     "raw": 0.0,
+     "unit": "share",
+     "normalised": -1.0,
+     "weight": 0.2,
+     "contribution": -0.2,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:13Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=RTX 4090",
+       "fetchedAt": "2026-11-08T00:39:13.162974Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Norway, NO), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:13Z",
+     "note": "1 asks: 0% unavailable, 0% limited; advertised availability, not utilisation",
+     "scope": null
+    },
+    {
+     "factor": "price-momentum",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.15,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [
+      {
+       "kind": "derived",
+       "source": "fcpi-v1:median-of-adjusted-asks",
+       "observedAt": "2026-11-08T00:39:12Z",
+       "sourceUrl": null,
+       "fetchedAt": "2026-11-08T00:39:52.415112Z",
+       "licence": null,
+       "note": null,
+       "inputKinds": [
+        "live"
+       ]
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:12Z",
+     "note": "index:fcpi:rtx-4090-24gb has fewer than 30 days of history before 2026-11-08",
+     "scope": "global"
+    },
+    {
+     "factor": "power-stress",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.15,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no day-ahead energy series for grid zone NO1",
+     "scope": null
+    },
+    {
+     "factor": "capacity-pipeline",
+     "raw": 0.5,
+     "unit": "ratio",
+     "normalised": -0.25,
+     "weight": 0.1,
+     "contribution": -0.025,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "200 MW announced, planned or under construction against 400 MW operating (6 facility records); a large pipeline is relief ahead, so the sign is inverted; reported-only facilities are not counted on either side",
+     "scope": null
+    },
+    {
+     "factor": "demand-signals",
+     "raw": 0.44,
+     "unit": "score",
+     "normalised": 0.44,
+     "weight": 0.1,
+     "contribution": 0.044,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-03T16:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample intelligence item; the headline describes no real event",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-03T00:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample intelligence item; the headline describes no real event",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-03T16:00:00Z",
+     "note": "5 feed items touching the region or model in 30 days (severity-weighted 2.20)",
+     "scope": null
+    }
+   ],
+   "contradictions": [
+    {
+     "factor": "availability",
+     "raw": 0.0,
+     "unit": "share",
+     "normalised": -1.0,
+     "weight": 0.2,
+     "contribution": -0.2,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:13Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=RTX 4090",
+       "fetchedAt": "2026-11-08T00:39:13.162974Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Norway, NO), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:13Z",
+     "note": "1 asks: 0% unavailable, 0% limited; advertised availability, not utilisation",
+     "scope": null
+    },
+    {
+     "factor": "capacity-pipeline",
+     "raw": 0.5,
+     "unit": "ratio",
+     "normalised": -0.25,
+     "weight": 0.1,
+     "contribution": -0.025,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "200 MW announced, planned or under construction against 400 MW operating (6 facility records); a large pipeline is relief ahead, so the sign is inverted; reported-only facilities are not counted on either side",
+     "scope": null
+    }
+   ],
+   "uncertainty": {
+    "coverage": 1,
+    "factorsWithData": 4,
+    "factorsTotal": 6,
+    "sampleShare": 0.7857,
+    "oldestInput": "2026-10-14T06:00:00Z",
+    "label": "exploratory"
+   },
+   "method": "cpx-v1",
+   "methodText": "",
+   "inputKinds": [
+    "derived",
+    "live",
+    "sample"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "cpx-v1",
+    "observedAt": "2026-11-08T00:39:13Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:39:52.437600Z",
+    "licence": null,
+    "note": "inferred pressure on usable supply; not a measurement of utilisation",
+    "inputKinds": [
+     "derived",
+     "live",
+     "sample"
+    ]
+   },
+   "history": [],
+   "historyBasis": "",
+   "statementClass": "inference"
+  },
+  {
+   "regionId": "us-or",
+   "gpuModelId": "h100-sxm-80gb",
+   "asOf": "2026-11-08T00:39:52.417921Z",
+   "score": 30.61,
+   "band": "balanced",
+   "factors": [
+    {
+     "factor": "price-premium",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.3,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no asks in the cell: no premium can be read",
+     "scope": null
+    },
+    {
+     "factor": "availability",
+     "raw": null,
+     "unit": "share",
+     "normalised": null,
+     "weight": 0.2,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no asks in the cell",
+     "scope": null
+    },
+    {
+     "factor": "price-momentum",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.15,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [
+      {
+       "kind": "derived",
+       "source": "fcpi-v1:median-of-adjusted-asks",
+       "observedAt": "2026-11-08T00:39:12Z",
+       "sourceUrl": null,
+       "fetchedAt": "2026-11-08T00:39:52.320183Z",
+       "licence": null,
+       "note": null,
+       "inputKinds": [
+        "live"
+       ]
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:12Z",
+     "note": "index:fcpi:h100-sxm-80gb has fewer than 30 days of history before 2026-11-08",
+     "scope": "global"
+    },
+    {
+     "factor": "power-stress",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.15,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no day-ahead energy series for grid zone BPA",
+     "scope": null
+    },
+    {
+     "factor": "capacity-pipeline",
+     "raw": 5.5556,
+     "unit": "ratio",
+     "normalised": -1.0,
+     "weight": 0.1,
+     "contribution": -0.1,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "1250 MW announced, planned or under construction against 225 MW operating (6 facility records); a large pipeline is relief ahead, so the sign is inverted; reported-only facilities are not counted on either side",
+     "scope": null
+    },
+    {
+     "factor": "demand-signals",
+     "raw": 0.2245,
+     "unit": "score",
+     "normalised": 0.2245,
+     "weight": 0.1,
+     "contribution": 0.0225,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample market; a quote is a price, never a calibrated probability",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample market; a quote is a price, never a calibrated probability",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "mkt-001 implies 0.407 price-up probability; mkt-012 implies 0.322 price-up probability; 5 feed items touching the region or model in 30 days (severity-weighted 3.60)",
+     "scope": null
+    }
+   ],
+   "contradictions": [
+    {
+     "factor": "demand-signals",
+     "raw": 0.2245,
+     "unit": "score",
+     "normalised": 0.2245,
+     "weight": 0.1,
+     "contribution": 0.0225,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample market; a quote is a price, never a calibrated probability",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample market; a quote is a price, never a calibrated probability",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "mkt-001 implies 0.407 price-up probability; mkt-012 implies 0.322 price-up probability; 5 feed items touching the region or model in 30 days (severity-weighted 3.60)",
+     "scope": null
+    }
+   ],
+   "uncertainty": {
+    "coverage": 0,
+    "factorsWithData": 2,
+    "factorsTotal": 6,
+    "sampleShare": 0.9286,
+    "oldestInput": "2026-10-10T07:00:00Z",
+    "label": "exploratory"
+   },
+   "method": "cpx-v1",
+   "methodText": "",
+   "inputKinds": [
+    "derived",
+    "sample"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "cpx-v1",
+    "observedAt": "2026-11-08T00:39:12Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:39:52.438140Z",
+    "licence": null,
+    "note": "inferred pressure on usable supply; not a measurement of utilisation",
+    "inputKinds": [
+     "derived",
+     "sample"
+    ]
+   },
+   "history": [],
+   "historyBasis": "",
+   "statementClass": "inference"
+  },
+  {
+   "regionId": "us-or",
+   "gpuModelId": "rtx-4090-24gb",
+   "asOf": "2026-11-08T00:39:52.417921Z",
+   "score": 40.0,
+   "band": "balanced",
+   "factors": [
+    {
+     "factor": "price-premium",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.3,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no asks in the cell: no premium can be read",
+     "scope": null
+    },
+    {
+     "factor": "availability",
+     "raw": null,
+     "unit": "share",
+     "normalised": null,
+     "weight": 0.2,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no asks in the cell",
+     "scope": null
+    },
+    {
+     "factor": "price-momentum",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.15,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [
+      {
+       "kind": "derived",
+       "source": "fcpi-v1:median-of-adjusted-asks",
+       "observedAt": "2026-11-08T00:39:12Z",
+       "sourceUrl": null,
+       "fetchedAt": "2026-11-08T00:39:52.415112Z",
+       "licence": null,
+       "note": null,
+       "inputKinds": [
+        "live"
+       ]
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:12Z",
+     "note": "index:fcpi:rtx-4090-24gb has fewer than 30 days of history before 2026-11-08",
+     "scope": "global"
+    },
+    {
+     "factor": "power-stress",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.15,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no day-ahead energy series for grid zone BPA",
+     "scope": null
+    },
+    {
+     "factor": "capacity-pipeline",
+     "raw": 5.5556,
+     "unit": "ratio",
+     "normalised": -1.0,
+     "weight": 0.1,
+     "contribution": -0.1,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "1250 MW announced, planned or under construction against 225 MW operating (6 facility records); a large pipeline is relief ahead, so the sign is inverted; reported-only facilities are not counted on either side",
+     "scope": null
+    },
+    {
+     "factor": "demand-signals",
+     "raw": 0.6,
+     "unit": "score",
+     "normalised": 0.6,
+     "weight": 0.1,
+     "contribution": 0.06,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-10-31T19:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample intelligence item; the headline describes no real event",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-10-28T04:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample intelligence item; the headline describes no real event",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-10-31T19:00:00Z",
+     "note": "4 feed items touching the region or model in 30 days (severity-weighted 3.00)",
+     "scope": null
+    }
+   ],
+   "contradictions": [
+    {
+     "factor": "demand-signals",
+     "raw": 0.6,
+     "unit": "score",
+     "normalised": 0.6,
+     "weight": 0.1,
+     "contribution": 0.06,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-10-31T19:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample intelligence item; the headline describes no real event",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-10-28T04:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample intelligence item; the headline describes no real event",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-10-31T19:00:00Z",
+     "note": "4 feed items touching the region or model in 30 days (severity-weighted 3.00)",
+     "scope": null
+    }
+   ],
+   "uncertainty": {
+    "coverage": 0,
+    "factorsWithData": 2,
+    "factorsTotal": 6,
+    "sampleShare": 0.9091,
+    "oldestInput": "2026-10-10T07:00:00Z",
+    "label": "exploratory"
+   },
+   "method": "cpx-v1",
+   "methodText": "",
+   "inputKinds": [
+    "derived",
+    "sample"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "cpx-v1",
+    "observedAt": "2026-11-08T00:39:12Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:39:52.441326Z",
+    "licence": null,
+    "note": "inferred pressure on usable supply; not a measurement of utilisation",
+    "inputKinds": [
+     "derived",
+     "sample"
+    ]
+   },
+   "history": [],
+   "historyBasis": "",
+   "statementClass": "inference"
+  },
+  {
+   "regionId": "us-tx",
+   "gpuModelId": "h100-sxm-80gb",
+   "asOf": "2026-11-08T00:39:52.417921Z",
+   "score": 26.89,
+   "band": "balanced",
+   "factors": [
+    {
+     "factor": "price-premium",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.3,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no asks in the cell: no premium can be read",
+     "scope": null
+    },
+    {
+     "factor": "availability",
+     "raw": null,
+     "unit": "share",
+     "normalised": null,
+     "weight": 0.2,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no asks in the cell",
+     "scope": null
+    },
+    {
+     "factor": "price-momentum",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.15,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [
+      {
+       "kind": "derived",
+       "source": "fcpi-v1:median-of-adjusted-asks",
+       "observedAt": "2026-11-08T00:39:12Z",
+       "sourceUrl": null,
+       "fetchedAt": "2026-11-08T00:39:52.320183Z",
+       "licence": null,
+       "note": null,
+       "inputKinds": [
+        "live"
+       ]
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:12Z",
+     "note": "index:fcpi:h100-sxm-80gb has fewer than 30 days of history before 2026-11-08",
+     "scope": "global"
+    },
+    {
+     "factor": "power-stress",
+     "raw": -0.2142,
+     "unit": "ratio",
+     "normalised": -0.4283,
+     "weight": 0.15,
+     "contribution": -0.0642,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "energy:ERCOT:day-ahead: latest 34.71 vs trailing 30-day median 44.17 USD/MWh over 31 points",
+     "scope": null
+    },
+    {
+     "factor": "capacity-pipeline",
+     "raw": 3.0,
+     "unit": "ratio",
+     "normalised": -1.0,
+     "weight": 0.1,
+     "contribution": -0.1,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "1500 MW announced, planned or under construction against 500 MW operating (9 facility records); a large pipeline is relief ahead, so the sign is inverted; reported-only facilities are not counted on either side",
+     "scope": null
+    },
+    {
+     "factor": "demand-signals",
+     "raw": 0.0245,
+     "unit": "score",
+     "normalised": 0.0245,
+     "weight": 0.1,
+     "contribution": 0.0025,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample market; a quote is a price, never a calibrated probability",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample market; a quote is a price, never a calibrated probability",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "mkt-001 implies 0.407 price-up probability; mkt-012 implies 0.322 price-up probability; 3 feed items touching the region or model in 30 days (severity-weighted 1.60)",
+     "scope": null
+    }
+   ],
+   "contradictions": [
+    {
+     "factor": "demand-signals",
+     "raw": 0.0245,
+     "unit": "score",
+     "normalised": 0.0245,
+     "weight": 0.1,
+     "contribution": 0.0025,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample market; a quote is a price, never a calibrated probability",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample market; a quote is a price, never a calibrated probability",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "mkt-001 implies 0.407 price-up probability; mkt-012 implies 0.322 price-up probability; 3 feed items touching the region or model in 30 days (severity-weighted 1.60)",
+     "scope": null
+    }
+   ],
+   "uncertainty": {
+    "coverage": 0,
+    "factorsWithData": 3,
+    "factorsTotal": 6,
+    "sampleShare": 0.9375,
+    "oldestInput": "2026-10-14T19:00:00Z",
+    "label": "exploratory"
+   },
+   "method": "cpx-v1",
+   "methodText": "",
+   "inputKinds": [
+    "derived",
+    "sample"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "cpx-v1",
+    "observedAt": "2026-11-08T00:39:12Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:39:52.442294Z",
+    "licence": null,
+    "note": "inferred pressure on usable supply; not a measurement of utilisation",
+    "inputKinds": [
+     "derived",
+     "sample"
+    ]
+   },
+   "history": [
+    {
+     "t": "2026-11-07T23:59:59Z",
+     "score": 26.89,
+     "band": "balanced",
+     "coverage": 0,
+     "factorsWithData": 3,
+     "label": "exploratory",
+     "inputKinds": [
+      "archived"
+     ]
+    },
+    {
+     "t": "2026-11-08T00:41:56.111921Z",
+     "score": 26.89,
+     "band": "balanced",
+     "coverage": 0,
+     "factorsWithData": 3,
+     "label": "exploratory",
+     "inputKinds": [
+      "live"
+     ]
+    }
+   ],
+   "historyBasis": "FLOPX-collected since 2026-11-07 (2 days); nothing earlier exists",
+   "statementClass": "inference"
+  },
+  {
+   "regionId": "us-tx",
+   "gpuModelId": "rtx-4090-24gb",
+   "asOf": "2026-11-08T00:39:52.417921Z",
+   "score": 44.55,
+   "band": "balanced",
+   "factors": [
+    {
+     "factor": "price-premium",
+     "raw": 0.2396,
+     "unit": "ratio",
+     "normalised": 0.7988,
+     "weight": 0.3,
+     "contribution": 0.2396,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:13Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=RTX 4090",
+       "fetchedAt": "2026-11-08T00:39:13.162974Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Texas, US), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      },
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:13Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=RTX 4090",
+       "fetchedAt": "2026-11-08T00:39:13.162974Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Texas, US), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:13Z",
+     "note": "cell median comparable ask 0.6140 vs model global median 0.4954 USD/GPU-hour over 4 of 52 advertised asks; asks, not transactions",
+     "scope": null
+    },
+    {
+     "factor": "availability",
+     "raw": 0.0,
+     "unit": "share",
+     "normalised": -1.0,
+     "weight": 0.2,
+     "contribution": -0.2,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:13Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=RTX 4090",
+       "fetchedAt": "2026-11-08T00:39:13.162974Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Texas, US), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      },
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:13Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=RTX 4090",
+       "fetchedAt": "2026-11-08T00:39:13.162974Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Texas, US), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:13Z",
+     "note": "4 asks: 0% unavailable, 0% limited; advertised availability, not utilisation",
+     "scope": null
+    },
+    {
+     "factor": "price-momentum",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.15,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [
+      {
+       "kind": "derived",
+       "source": "fcpi-v1:median-of-adjusted-asks",
+       "observedAt": "2026-11-08T00:39:12Z",
+       "sourceUrl": null,
+       "fetchedAt": "2026-11-08T00:39:52.415112Z",
+       "licence": null,
+       "note": null,
+       "inputKinds": [
+        "live"
+       ]
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:12Z",
+     "note": "index:fcpi:rtx-4090-24gb has fewer than 30 days of history before 2026-11-08",
+     "scope": "global"
+    },
+    {
+     "factor": "power-stress",
+     "raw": -0.2142,
+     "unit": "ratio",
+     "normalised": -0.4283,
+     "weight": 0.15,
+     "contribution": -0.0642,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "energy:ERCOT:day-ahead: latest 34.71 vs trailing 30-day median 44.17 USD/MWh over 31 points",
+     "scope": null
+    },
+    {
+     "factor": "capacity-pipeline",
+     "raw": 3.0,
+     "unit": "ratio",
+     "normalised": -1.0,
+     "weight": 0.1,
+     "contribution": -0.1,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "1500 MW announced, planned or under construction against 500 MW operating (9 facility records); a large pipeline is relief ahead, so the sign is inverted; reported-only facilities are not counted on either side",
+     "scope": null
+    },
+    {
+     "factor": "demand-signals",
+     "raw": 0.32,
+     "unit": "score",
+     "normalised": 0.32,
+     "weight": 0.1,
+     "contribution": 0.032,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-10-20T20:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample intelligence item; the headline describes no real event",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-10-19T08:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample intelligence item; the headline describes no real event",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-10-20T20:00:00Z",
+     "note": "3 feed items touching the region or model in 30 days (severity-weighted 1.60)",
+     "scope": null
+    }
+   ],
+   "contradictions": [
+    {
+     "factor": "price-premium",
+     "raw": 0.2396,
+     "unit": "ratio",
+     "normalised": 0.7988,
+     "weight": 0.3,
+     "contribution": 0.2396,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:13Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=RTX 4090",
+       "fetchedAt": "2026-11-08T00:39:13.162974Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Texas, US), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      },
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:13Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=RTX 4090",
+       "fetchedAt": "2026-11-08T00:39:13.162974Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Texas, US), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:13Z",
+     "note": "cell median comparable ask 0.6140 vs model global median 0.4954 USD/GPU-hour over 4 of 52 advertised asks; asks, not transactions",
+     "scope": null
+    },
+    {
+     "factor": "demand-signals",
+     "raw": 0.32,
+     "unit": "score",
+     "normalised": 0.32,
+     "weight": 0.1,
+     "contribution": 0.032,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-10-20T20:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample intelligence item; the headline describes no real event",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-10-19T08:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample intelligence item; the headline describes no real event",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-10-20T20:00:00Z",
+     "note": "3 feed items touching the region or model in 30 days (severity-weighted 1.60)",
+     "scope": null
+    }
+   ],
+   "uncertainty": {
+    "coverage": 4,
+    "factorsWithData": 5,
+    "factorsTotal": 6,
+    "sampleShare": 0.5909,
+    "oldestInput": "2026-10-14T19:00:00Z",
+    "label": "exploratory"
+   },
+   "method": "cpx-v1",
+   "methodText": "",
+   "inputKinds": [
+    "derived",
+    "live",
+    "sample"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "cpx-v1",
+    "observedAt": "2026-11-08T00:39:13Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:39:52.448951Z",
+    "licence": null,
+    "note": "inferred pressure on usable supply; not a measurement of utilisation",
+    "inputKinds": [
+     "derived",
+     "live",
+     "sample"
+    ]
+   },
+   "history": [],
+   "historyBasis": "",
+   "statementClass": "inference"
+  },
+  {
+   "regionId": "us-va",
+   "gpuModelId": "h100-sxm-80gb",
+   "asOf": "2026-11-08T00:39:52.417921Z",
+   "score": 28.58,
+   "band": "balanced",
+   "factors": [
+    {
+     "factor": "price-premium",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.3,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no asks in the cell: no premium can be read",
+     "scope": null
+    },
+    {
+     "factor": "availability",
+     "raw": null,
+     "unit": "share",
+     "normalised": null,
+     "weight": 0.2,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no asks in the cell",
+     "scope": null
+    },
+    {
+     "factor": "price-momentum",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.15,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [
+      {
+       "kind": "derived",
+       "source": "fcpi-v1:median-of-adjusted-asks",
+       "observedAt": "2026-11-08T00:39:12Z",
+       "sourceUrl": null,
+       "fetchedAt": "2026-11-08T00:39:52.320183Z",
+       "licence": null,
+       "note": null,
+       "inputKinds": [
+        "live"
+       ]
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:12Z",
+     "note": "index:fcpi:h100-sxm-80gb has fewer than 30 days of history before 2026-11-08",
+     "scope": "global"
+    },
+    {
+     "factor": "power-stress",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.15,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no day-ahead energy series for grid zone PJM",
+     "scope": null
+    },
+    {
+     "factor": "capacity-pipeline",
+     "raw": 1.5625,
+     "unit": "ratio",
+     "normalised": -0.7812,
+     "weight": 0.1,
+     "contribution": -0.0781,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "625 MW announced, planned or under construction against 400 MW operating (7 facility records); a large pipeline is relief ahead, so the sign is inverted; reported-only facilities are not counted on either side",
+     "scope": null
+    },
+    {
+     "factor": "demand-signals",
+     "raw": -0.0755,
+     "unit": "score",
+     "normalised": -0.0755,
+     "weight": 0.1,
+     "contribution": -0.0076,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample market; a quote is a price, never a calibrated probability",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "authored sample market; a quote is a price, never a calibrated probability",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "mkt-001 implies 0.407 price-up probability; mkt-012 implies 0.322 price-up probability; 1 feed items touching the region or model in 30 days (severity-weighted 0.60)",
+     "scope": null
+    }
+   ],
+   "contradictions": [],
+   "uncertainty": {
+    "coverage": 0,
+    "factorsWithData": 2,
+    "factorsTotal": 6,
+    "sampleShare": 0.9091,
+    "oldestInput": "2026-10-19T08:00:00Z",
+    "label": "exploratory"
+   },
+   "method": "cpx-v1",
+   "methodText": "",
+   "inputKinds": [
+    "derived",
+    "sample"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "cpx-v1",
+    "observedAt": "2026-11-08T00:39:12Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:39:52.449493Z",
+    "licence": null,
+    "note": "inferred pressure on usable supply; not a measurement of utilisation",
+    "inputKinds": [
+     "derived",
+     "sample"
+    ]
+   },
+   "history": [],
+   "historyBasis": "",
+   "statementClass": "inference"
+  },
+  {
+   "regionId": "us-va",
+   "gpuModelId": "rtx-4090-24gb",
+   "asOf": "2026-11-08T00:39:52.417921Z",
+   "score": 51.56,
+   "band": "tight",
+   "factors": [
+    {
+     "factor": "price-premium",
+     "raw": 3.0412,
+     "unit": "ratio",
+     "normalised": 1.0,
+     "weight": 0.3,
+     "contribution": 0.3,
+     "direction": "up",
+     "evidence": [
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:13Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=RTX 4090",
+       "fetchedAt": "2026-11-08T00:39:13.162974Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Virginia, US), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:13Z",
+     "note": "cell median comparable ask 2.0018 vs model global median 0.4954 USD/GPU-hour over 1 of 52 advertised asks; asks, not transactions",
+     "scope": null
+    },
+    {
+     "factor": "availability",
+     "raw": 0.0,
+     "unit": "share",
+     "normalised": -1.0,
+     "weight": 0.2,
+     "contribution": -0.2,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:13Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=RTX 4090",
+       "fetchedAt": "2026-11-08T00:39:13.162974Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Virginia, US), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:13Z",
+     "note": "1 asks: 0% unavailable, 0% limited; advertised availability, not utilisation",
+     "scope": null
+    },
+    {
+     "factor": "price-momentum",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.15,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [
+      {
+       "kind": "derived",
+       "source": "fcpi-v1:median-of-adjusted-asks",
+       "observedAt": "2026-11-08T00:39:12Z",
+       "sourceUrl": null,
+       "fetchedAt": "2026-11-08T00:39:52.415112Z",
+       "licence": null,
+       "note": null,
+       "inputKinds": [
+        "live"
+       ]
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:12Z",
+     "note": "index:fcpi:rtx-4090-24gb has fewer than 30 days of history before 2026-11-08",
+     "scope": "global"
+    },
+    {
+     "factor": "power-stress",
+     "raw": null,
+     "unit": "ratio",
+     "normalised": null,
+     "weight": 0.15,
+     "contribution": null,
+     "direction": "none",
+     "evidence": [],
+     "observedAt": null,
+     "note": "no day-ahead energy series for grid zone PJM",
+     "scope": null
+    },
+    {
+     "factor": "capacity-pipeline",
+     "raw": 1.5625,
+     "unit": "ratio",
+     "normalised": -0.7812,
+     "weight": 0.1,
+     "contribution": -0.0781,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "625 MW announced, planned or under construction against 400 MW operating (7 facility records); a large pipeline is relief ahead, so the sign is inverted; reported-only facilities are not counted on either side",
+     "scope": null
+    },
+    {
+     "factor": "demand-signals",
+     "raw": 0.0,
+     "unit": "score",
+     "normalised": 0.0,
+     "weight": 0.1,
+     "contribution": 0.0,
+     "direction": "flat",
+     "evidence": [],
+     "observedAt": null,
+     "note": "0 feed items touching the region or model in 30 days (severity-weighted 0.00)",
+     "scope": null
+    }
+   ],
+   "contradictions": [
+    {
+     "factor": "availability",
+     "raw": 0.0,
+     "unit": "share",
+     "normalised": -1.0,
+     "weight": 0.2,
+     "contribution": -0.2,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "live",
+       "source": "vast-ai",
+       "observedAt": "2026-11-08T00:39:13Z",
+       "sourceUrl": "https://cloud.vast.ai/?gpu_name=RTX 4090",
+       "fetchedAt": "2026-11-08T00:39:13.162974Z",
+       "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data",
+       "note": "Vast.ai asks: a current market reading, not an index or benchmark. Advertised ask for a 1-GPU bundle (Virginia, US), not utilisation; observedAt taken from the response Date header",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-08T00:39:13Z",
+     "note": "1 asks: 0% unavailable, 0% limited; advertised availability, not utilisation",
+     "scope": null
+    },
+    {
+     "factor": "capacity-pipeline",
+     "raw": 1.5625,
+     "unit": "ratio",
+     "normalised": -0.7812,
+     "weight": 0.1,
+     "contribution": -0.0781,
+     "direction": "down",
+     "evidence": [
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      },
+      {
+       "kind": "sample",
+       "source": "flopx-sample-v1",
+       "observedAt": "2026-11-06T21:00:00Z",
+       "sourceUrl": null,
+       "fetchedAt": null,
+       "licence": null,
+       "note": "public geography; status, capacity, owners and timeline are authored sample values",
+       "inputKinds": []
+      }
+     ],
+     "observedAt": "2026-11-06T21:00:00Z",
+     "note": "625 MW announced, planned or under construction against 400 MW operating (7 facility records); a large pipeline is relief ahead, so the sign is inverted; reported-only facilities are not counted on either side",
+     "scope": null
+    }
+   ],
+   "uncertainty": {
+    "coverage": 1,
+    "factorsWithData": 4,
+    "factorsTotal": 6,
+    "sampleShare": 0.7,
+    "oldestInput": "2026-11-06T21:00:00Z",
+    "label": "exploratory"
+   },
+   "method": "cpx-v1",
+   "methodText": "",
+   "inputKinds": [
+    "derived",
+    "live",
+    "sample"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "cpx-v1",
+    "observedAt": "2026-11-08T00:39:13Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:39:52.452960Z",
+    "licence": null,
+    "note": "inferred pressure on usable supply; not a measurement of utilisation",
+    "inputKinds": [
+     "derived",
+     "live",
+     "sample"
+    ]
+   },
+   "history": [],
+   "historyBasis": "",
+   "statementClass": "inference"
+  }
+ ],
+ "statementClass": "inference",
+ "freshness": {
+  "generatedAt": "2026-11-08T00:39:52.453421Z",
+  "oldestObservedAt": "2026-06-27T20:30:00.785653Z",
+  "sources": [
+   "akash",
+   "flopx-sample-v1",
+   "hacker-news",
+   "kalshi",
+   "polymarket-gamma",
+   "rss:corescientific",
+   "rss:coreweave",
+   "rss:nvidia",
+   "runpod",
+   "vast-ai",
+   "wikidata"
+  ],
+  "sourceDetails": [
+   {
+    "source": "akash",
+    "kind": "live",
+    "observedAt": "2026-11-08T00:39:11Z",
+    "licence": "Akash console API, an open-source (Apache-2.0) project (terms asserted, not verified)"
+   },
+   {
+    "source": "hacker-news",
+    "kind": "live",
+    "observedAt": "2026-11-07T17:01:11Z",
+    "licence": "Public Hacker News content via the Algolia search API (terms asserted, not verified)"
+   },
+   {
+    "source": "kalshi",
+    "kind": "live",
+    "observedAt": "2026-10-21T20:00:06.612447Z",
+    "licence": "Public trade API market data (terms asserted, not verified)"
+   },
+   {
+    "source": "polymarket-gamma",
+    "kind": "live",
+    "observedAt": "2026-11-08T00:38:34.895414Z",
+    "licence": "Public market data API (terms asserted, not verified)"
+   },
+   {
+    "source": "rss:corescientific",
+    "kind": "live",
+    "observedAt": "2026-11-05T12:00:00Z",
+    "licence": "Company press-release feeds; headline shown with a link to the original (terms asserted, not verified)"
+   },
+   {
+    "source": "rss:coreweave",
+    "kind": "live",
+    "observedAt": "2026-10-27T20:05:00Z",
+    "licence": "Company press-release feeds; headline shown with a link to the original (terms asserted, not verified)"
+   },
+   {
+    "source": "rss:nvidia",
+    "kind": "live",
+    "observedAt": "2026-11-06T16:00:00Z",
+    "licence": "Company press-release feeds; headline shown with a link to the original (terms asserted, not verified)"
+   },
+   {
+    "source": "runpod",
+    "kind": "live",
+    "observedAt": "2026-11-08T00:39:12Z",
+    "licence": "Public GraphQL list prices (terms asserted, not verified)"
+   },
+   {
+    "source": "vast-ai",
+    "kind": "live",
+    "observedAt": "2026-11-08T00:39:13Z",
+    "licence": "Vast.ai public search API, shown as a current market reading only; the terms forbid building an index, benchmark or pricing-comparison product from Vast.ai data"
+   },
+   {
+    "source": "wikidata",
+    "kind": "live",
+    "observedAt": "2026-11-08T00:33:37Z",
+    "licence": "CC0 (terms asserted, not verified)"
+   }
+  ],
+  "unavailable": [
+   {
+    "source": "kalshi:KXUTILITYPJMWEST",
+    "reason": "no-open-markets"
+   }
+  ]
+ }
+}

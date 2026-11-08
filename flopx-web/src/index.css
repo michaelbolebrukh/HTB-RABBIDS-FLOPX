@@ -1,0 +1,314 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import 'tailwindcss';
+
+@theme static {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --font-serif: 'Manrope', 'Inter', ui-sans-serif, sans-serif;
+
+  /* Default: Implement's original dark terminal. */
+  --color-ink: #08090a;
+  --color-panel: #0f1112;
+  --color-raise: #15181a;
+  --color-hover: #1b1f21;
+  --color-line: #20252a;
+  --color-line2: #2d3338;
+  --color-bone: #ebe7dd;
+  --color-mute: #9aa0a3;
+  --color-dim: #5f666b;
+  --color-accent: #f28c28;
+
+  /* Truth categories */
+  --color-obs: #ebe7dd;
+  --color-inf: #f5a524;
+  --color-fct: #67d4f8;
+  --color-dec: #b69cff;
+
+  --color-up: #4fd18b;
+  --color-down: #ff6a55;
+  --color-warn: #f2cf4a;
+
+  /* Categorical data hues (provider type), fixed order; validated for CVD + contrast on --color-panel. */
+  --color-cat1: #3987e5;
+  --color-cat2: #d95926;
+  --color-cat3: #199e70;
+  --color-cat4: #c98500;
+  --color-cat5: #d55181;
+  --color-cat6: #9085e9;
+
+  --color-land: #0f1214;
+  --color-ocean: #0d1012;
+  --color-ocean-edge: #08090a;
+  --color-halo: #08090a;
+  --color-map-dot: #2d3338;
+  --halo-opacity: 0.85;
+  --color-label-bg: #08090a;
+  --label-bg-opacity: 0;
+
+  --color-p0: #3a4248;
+  --color-p1: #8a7040;
+  --color-p2: #f5a524;
+  --color-p3: #ff6e3a;
+  --color-p4: #ff4646;
+
+  /* Map pressure glows: same ramp as text in dark mode. */
+  --color-g0: #3a4248;
+  --color-g1: #8a7040;
+  --color-g2: #f5a524;
+  --color-g3: #ff6e3a;
+  --color-g4: #ff4646;
+}
+
+/* Light mode: flopx paper surfaces (5300 "Paper" blend), truth hues deepened for paper. */
+:root[data-blend='light'] {
+  --font-mono: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  color-scheme: light;
+
+  --color-ink: #f6f1e8;
+  --color-panel: #ffffff;
+  --color-raise: #fbf8f2;
+  --color-hover: #f3ede2;
+  --color-line: #e6ded1;
+  --color-line2: #cfc4b2;
+  --color-bone: #1e1b16;
+  --color-mute: #4b463e;
+  --color-dim: #6e675d;
+
+  --color-obs: #1e1b16;
+  --color-inf: #9a5800;
+  --color-fct: #00718f;
+  --color-dec: #6a45d6;
+
+  --color-up: #17723a;
+  --color-down: #b23a0b;
+  --color-warn: #836000;
+
+  --color-cat1: #2a78d6;
+  --color-cat2: #eb6834;
+  --color-cat3: #199e70;
+  --color-cat4: #a86f00;
+  --color-cat5: #c2457a;
+  --color-cat6: #6250d6;
+
+  --color-land: #fdfbf7;
+  --color-ocean: #efe8dc;
+  --color-ocean-edge: #e7dece;
+  --color-halo: #ffffff;
+  --color-map-dot: #e4dbcc;
+  --halo-opacity: 0.9;
+  --color-label-bg: #ffffff;
+  --label-bg-opacity: 0.88;
+
+  --color-p0: #6b6256;
+  --color-p1: #805e12;
+  --color-p2: #9a5100;
+  --color-p3: #b23a0b;
+  --color-p4: #a3191b;
+
+  /* Map pressure glows: light, saturated hues; the deep text ramp turns muddy as a translucent wash on paper. */
+  --color-g0: #d8cfc0;
+  --color-g1: #f2c36b;
+  --color-g2: #f59e3d;
+  --color-g3: #ec6a3c;
+  --color-g4: #dc3b3b;
+  --glow-core: 0.5;
+  --glow-mid: 0.16;
+}
+:root { color-scheme: dark; --glow-core: 0.85; --glow-mid: 0.35; }
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    background: var(--color-ink);
+    color: var(--color-bone);
+    font-family: var(--font-sans);
+    font-feature-settings: 'cv11', 'tnum';
+    -webkit-font-smoothing: antialiased;
+  }
+  .font-serif {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  ::selection {
+    background: color-mix(in oklab, var(--color-fct) 35%, transparent);
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-line2) transparent;
+  }
+}
+
+@layer utilities {
+  /* Slim slider: --pct (set inline) fills the track up to the thumb, in --range-color (cyan by default). */
+  .range {
+    appearance: none;
+    width: 100%;
+    height: 14px;
+    background: transparent;
+    cursor: pointer;
+  }
+  .range::-webkit-slider-runnable-track {
+    height: 3px;
+    border-radius: 2px;
+    background: linear-gradient(to right, var(--range-color, var(--color-fct)) var(--pct, 0%), var(--color-line2) var(--pct, 0%));
+  }
+  .range::-moz-range-track {
+    height: 3px;
+    border-radius: 2px;
+    background: linear-gradient(to right, var(--range-color, var(--color-fct)) var(--pct, 0%), var(--color-line2) var(--pct, 0%));
+  }
+  .range::-webkit-slider-thumb {
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    margin-top: -4.5px;
+    border-radius: 50%;
+    background: var(--color-panel);
+    border: 2px solid var(--range-color, var(--color-fct));
+    transition: transform 0.12s;
+  }
+  .range::-moz-range-thumb {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--color-panel);
+    border: 2px solid var(--range-color, var(--color-fct));
+  }
+  .range:hover::-webkit-slider-thumb,
+  .range:focus-visible::-webkit-slider-thumb { transform: scale(1.2); }
+  .range:focus-visible { outline: none; }
+  .range:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 3px color-mix(in oklab, var(--range-color, var(--color-fct)) 25%, transparent); }
+  .num {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--color-dim);
+  }
+  .hatch-inf {
+    background-image: repeating-linear-gradient(135deg, color-mix(in oklab, var(--color-inf) 32%, transparent) 0 1.5px, transparent 1.5px 5px);
+  }
+  .hatch-sim {
+    background-image: repeating-linear-gradient(45deg, color-mix(in oklab, var(--color-bone) 6%, transparent) 0 6px, transparent 6px 12px);
+  }
+  .dash-border {
+    border-style: dashed;
+  }
+  .marquee {
+    animation: marquee 80s linear infinite;
+  }
+  .marquee:hover {
+    animation-play-state: paused;
+  }
+  .pulse-dot {
+    animation: pulse 2s ease-in-out infinite;
+  }
+  .fade-in {
+    animation: fadein 0.25s ease-out;
+  }
+  .slide-in {
+    animation: slidein 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes slidein {
+  from { opacity: 0; transform: translateX(24px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee, .pulse-dot, .fade-in, .slide-in { animation: none; }
+}
+
+/* ---------------- Presenter tour (src/tour) ----------------
+   The stage dims the page around a spotlight, anchors a card to the real element and animates
+   beat transitions. Positions move with CSS transitions, content enters with keyframes, and
+   everything collapses to its final state under prefers-reduced-motion. */
+.tour-stage { --tour-scale: 1; font-size: calc(13.4px * var(--tour-scale)); } /* body copy (0.86em) reads 11.5px, badges (0.75em) 10px at 1440 */
+.tour-stage[data-present='true'] { --tour-scale: 1.2; }
+/* Badges keep 10px (times the present scale) wherever they sit, so a nested em context cannot shrink them. */
+.tour-stage .tour-badge { font-size: calc(10px * var(--tour-scale)) !important; }
+/* While a tour runs the page can scroll past the rail, so a panel at the foot of a page can sit above it. */
+html[data-tour] #main-scroll { scroll-padding-bottom: 96px; }
+html[data-tour] #main-scroll > :last-child { padding-bottom: 96px; }
+/* Below 768 px the card is a bottom sheet: full width, at most 45% of the height, body scrolling. */
+.tour-sheet { transition: height 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.tour-sheet .tour-card-body { -webkit-overflow-scrolling: touch; }
+.tour-dim {
+  position: fixed;
+  pointer-events: none;
+  border-radius: 8px;
+  box-shadow: 0 0 0 9999px color-mix(in oklab, var(--color-ink) 72%, transparent);
+  outline: 1.5px solid color-mix(in oklab, var(--color-bone) 55%, transparent);
+  outline-offset: 0;
+  transition: top 0.36s cubic-bezier(0.2, 0.8, 0.2, 1), left 0.36s cubic-bezier(0.2, 0.8, 0.2, 1), width 0.36s cubic-bezier(0.2, 0.8, 0.2, 1), height 0.36s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s;
+}
+.tour-dim::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 12px;
+  border: 1px solid var(--tour-ring, var(--color-inf));
+  opacity: 0.7;
+  animation: tour-ring 2.2s ease-in-out infinite;
+}
+.tour-card {
+  position: fixed;
+  transition: top 0.36s cubic-bezier(0.2, 0.8, 0.2, 1), left 0.36s cubic-bezier(0.2, 0.8, 0.2, 1), width 0.36s cubic-bezier(0.2, 0.8, 0.2, 1), max-height 0.36s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.tour-card-in { animation: tour-card-in 0.34s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.tour-card-out { animation: tour-card-out 0.22s ease-in both; }
+.tour-connector path { stroke-dasharray: 600; stroke-dashoffset: 600; animation: tour-draw 0.5s ease-out 0.18s forwards; }
+.tour-connector circle { opacity: 0; animation: tour-pop 0.3s ease-out 0.6s forwards; }
+.tour-chip { opacity: 0; transform: translateX(-10px); transition: opacity 0.32s ease-out, transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.tour-chip[data-on='true'] { opacity: 1; transform: none; }
+.tour-bar { width: 0; transition: width 0.9s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.tour-bar[data-on='true'] { width: var(--w); }
+.tour-fan path { stroke-dasharray: 400; stroke-dashoffset: 400; }
+.tour-fan path[data-on='true'] { animation: tour-draw 0.7s ease-out forwards; }
+.tour-flow-arrow { transform-origin: left center; transform: scaleX(0); transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s; }
+.tour-flow-arrow[data-on='true'] { transform: none; }
+.tour-rail-fill { transition: width 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.tour-dwell { transition: width 0.25s linear; }
+.tour-fade { animation: fadein 0.3s ease-out both; }
+@keyframes tour-ring {
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.015); opacity: 0.25; }
+}
+@keyframes tour-card-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.985); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes tour-card-out {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: translateY(-6px); }
+}
+@keyframes tour-draw { to { stroke-dashoffset: 0; } }
+@keyframes tour-pop { from { opacity: 0; transform: scale(0.4); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .tour-dim, .tour-card, .tour-sheet, .tour-chip, .tour-bar, .tour-flow-arrow, .tour-rail-fill, .tour-dwell { transition: none; }
+  .tour-dim::after, .tour-card-in, .tour-card-out, .tour-connector path, .tour-connector circle, .tour-fan path[data-on='true'], .tour-fade { animation: none; }
+  .tour-connector path, .tour-fan path { stroke-dashoffset: 0; }
+  .tour-connector circle { opacity: 1; }
+  .tour-chip { opacity: 1; transform: none; }
+  .tour-bar { width: var(--w); }
+  .tour-flow-arrow { transform: none; }
+}

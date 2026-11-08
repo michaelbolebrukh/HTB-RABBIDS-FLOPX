@@ -1,0 +1,352 @@
+{
+ "seriesId": "energy:ERCOT:day-ahead",
+ "unit": "USD/MWh",
+ "points": [
+  {
+   "seriesId": "energy:ERCOT:day-ahead",
+   "t": "2026-05-11T21:00:00Z",
+   "value": 40.9,
+   "unit": "USD/MWh",
+   "provenance": {
+    "kind": "sample",
+    "source": "flopx-sample-v1",
+    "observedAt": "2026-05-11T21:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": null,
+    "licence": null,
+    "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+    "inputKinds": []
+   }
+  },
+  {
+   "seriesId": "energy:ERCOT:day-ahead",
+   "t": "2026-05-21T21:00:00Z",
+   "value": 49.01,
+   "unit": "USD/MWh",
+   "provenance": {
+    "kind": "sample",
+    "source": "flopx-sample-v1",
+    "observedAt": "2026-05-21T21:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": null,
+    "licence": null,
+    "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+    "inputKinds": []
+   }
+  },
+  {
+   "seriesId": "energy:ERCOT:day-ahead",
+   "t": "2026-05-31T21:00:00Z",
+   "value": 39.9,
+   "unit": "USD/MWh",
+   "provenance": {
+    "kind": "sample",
+    "source": "flopx-sample-v1",
+    "observedAt": "2026-05-31T21:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": null,
+    "licence": null,
+    "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+    "inputKinds": []
+   }
+  },
+  {
+   "seriesId": "energy:ERCOT:day-ahead",
+   "t": "2026-06-10T21:00:00Z",
+   "value": 44.97,
+   "unit": "USD/MWh",
+   "provenance": {
+    "kind": "sample",
+    "source": "flopx-sample-v1",
+    "observedAt": "2026-06-10T21:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": null,
+    "licence": null,
+    "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+    "inputKinds": []
+   }
+  },
+  {
+   "seriesId": "energy:ERCOT:day-ahead",
+   "t": "2026-06-20T21:00:00Z",
+   "value": 31.36,
+   "unit": "USD/MWh",
+   "provenance": {
+    "kind": "sample",
+    "source": "flopx-sample-v1",
+    "observedAt": "2026-06-20T21:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": null,
+    "licence": null,
+    "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+    "inputKinds": []
+   }
+  },
+  {
+   "seriesId": "energy:ERCOT:day-ahead",
+   "t": "2026-06-30T21:00:00Z",
+   "value": 28.97,
+   "unit": "USD/MWh",
+   "provenance": {
+    "kind": "sample",
+    "source": "flopx-sample-v1",
+    "observedAt": "2026-06-30T21:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": null,
+    "licence": null,
+    "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+    "inputKinds": []
+   }
+  },
+  {
+   "seriesId": "energy:ERCOT:day-ahead",
+   "t": "2026-07-10T21:00:00Z",
+   "value": 22.94,
+   "unit": "USD/MWh",
+   "provenance": {
+    "kind": "sample",
+    "source": "flopx-sample-v1",
+    "observedAt": "2026-07-10T21:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": null,
+    "licence": null,
+    "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+    "inputKinds": []
+   }
+  },
+  {
+   "seriesId": "energy:ERCOT:day-ahead",
+   "t": "2026-07-20T21:00:00Z",
+   "value": 37.08,
+   "unit": "USD/MWh",
+   "provenance": {
+    "kind": "sample",
+    "source": "flopx-sample-v1",
+    "observedAt": "2026-07-20T21:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": null,
+    "licence": null,
+    "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+    "inputKinds": []
+   }
+  },
+  {
+   "seriesId": "energy:ERCOT:day-ahead",
+   "t": "2026-07-30T21:00:00Z",
+   "value": 48.88,
+   "unit": "USD/MWh",
+   "provenance": {
+    "kind": "sample",
+    "source": "flopx-sample-v1",
+    "observedAt": "2026-07-30T21:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": null,
+    "licence": null,
+    "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+    "inputKinds": []
+   }
+  },
+  {
+   "seriesId": "energy:ERCOT:day-ahead",
+   "t": "2026-08-09T21:00:00Z",
+   "value": 53.06,
+   "unit": "USD/MWh",
+   "provenance": {
+    "kind": "sample",
+    "source": "flopx-sample-v1",
+    "observedAt": "2026-08-09T21:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": null,
+    "licence": null,
+    "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+    "inputKinds": []
+   }
+  },
+  {
+   "seriesId": "energy:ERCOT:day-ahead",
+   "t": "2026-08-19T21:00:00Z",
+   "value": 36.74,
+   "unit": "USD/MWh",
+   "provenance": {
+    "kind": "sample",
+    "source": "flopx-sample-v1",
+    "observedAt": "2026-08-19T21:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": null,
+    "licence": null,
+    "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+    "inputKinds": []
+   }
+  },
+  {
+   "seriesId": "energy:ERCOT:day-ahead",
+   "t": "2026-08-29T21:00:00Z",
+   "value": 35.21,
+   "unit": "USD/MWh",
+   "provenance": {
+    "kind": "sample",
+    "source": "flopx-sample-v1",
+    "observedAt": "2026-08-29T21:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": null,
+    "licence": null,
+    "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+    "inputKinds": []
+   }
+  },
+  {
+   "seriesId": "energy:ERCOT:day-ahead",
+   "t": "2026-09-08T21:00:00Z",
+   "value": 31.04,
+   "unit": "USD/MWh",
+   "provenance": {
+    "kind": "sample",
+    "source": "flopx-sample-v1",
+    "observedAt": "2026-09-08T21:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": null,
+    "licence": null,
+    "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+    "inputKinds": []
+   }
+  },
+  {
+   "seriesId": "energy:ERCOT:day-ahead",
+   "t": "2026-09-18T21:00:00Z",
+   "value": 34.97,
+   "unit": "USD/MWh",
+   "provenance": {
+    "kind": "sample",
+    "source": "flopx-sample-v1",
+    "observedAt": "2026-09-18T21:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": null,
+    "licence": null,
+    "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+    "inputKinds": []
+   }
+  },
+  {
+   "seriesId": "energy:ERCOT:day-ahead",
+   "t": "2026-09-28T21:00:00Z",
+   "value": 42.36,
+   "unit": "USD/MWh",
+   "provenance": {
+    "kind": "sample",
+    "source": "flopx-sample-v1",
+    "observedAt": "2026-09-28T21:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": null,
+    "licence": null,
+    "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+    "inputKinds": []
+   }
+  },
+  {
+   "seriesId": "energy:ERCOT:day-ahead",
+   "t": "2026-10-08T21:00:00Z",
+   "value": 44.37,
+   "unit": "USD/MWh",
+   "provenance": {
+    "kind": "sample",
+    "source": "flopx-sample-v1",
+    "observedAt": "2026-10-08T21:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": null,
+    "licence": null,
+    "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+    "inputKinds": []
+   }
+  },
+  {
+   "seriesId": "energy:ERCOT:day-ahead",
+   "t": "2026-10-18T21:00:00Z",
+   "value": 50.29,
+   "unit": "USD/MWh",
+   "provenance": {
+    "kind": "sample",
+    "source": "flopx-sample-v1",
+    "observedAt": "2026-10-18T21:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": null,
+    "licence": null,
+    "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+    "inputKinds": []
+   }
+  },
+  {
+   "seriesId": "energy:ERCOT:day-ahead",
+   "t": "2026-10-28T21:00:00Z",
+   "value": 44.17,
+   "unit": "USD/MWh",
+   "provenance": {
+    "kind": "sample",
+    "source": "flopx-sample-v1",
+    "observedAt": "2026-10-28T21:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": null,
+    "licence": null,
+    "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+    "inputKinds": []
+   }
+  },
+  {
+   "seriesId": "energy:ERCOT:day-ahead",
+   "t": "2026-11-04T21:00:00Z",
+   "value": 31.88,
+   "unit": "USD/MWh",
+   "provenance": {
+    "kind": "sample",
+    "source": "flopx-sample-v1",
+    "observedAt": "2026-11-04T21:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": null,
+    "licence": null,
+    "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+    "inputKinds": []
+   }
+  },
+  {
+   "seriesId": "energy:ERCOT:day-ahead",
+   "t": "2026-11-05T21:00:00Z",
+   "value": 39.99,
+   "unit": "USD/MWh",
+   "provenance": {
+    "kind": "sample",
+    "source": "flopx-sample-v1",
+    "observedAt": "2026-11-05T21:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": null,
+    "licence": null,
+    "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+    "inputKinds": []
+   }
+  },
+  {
+   "seriesId": "energy:ERCOT:day-ahead",
+   "t": "2026-11-06T21:00:00Z",
+   "value": 34.71,
+   "unit": "USD/MWh",
+   "provenance": {
+    "kind": "sample",
+    "source": "flopx-sample-v1",
+    "observedAt": "2026-11-06T21:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": null,
+    "licence": null,
+    "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+    "inputKinds": []
+   }
+  }
+ ],
+ "freshness": {
+  "generatedAt": "2026-11-08T00:40:38.809684Z",
+  "oldestObservedAt": "2026-05-11T21:00:00Z",
+  "sources": [
+   "flopx-sample-v1"
+  ],
+  "sourceDetails": [],
+  "unavailable": []
+ },
+ "breaks": []
+}

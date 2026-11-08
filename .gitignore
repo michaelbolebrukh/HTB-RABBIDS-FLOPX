@@ -1,0 +1,22 @@
+# Dependencies and build output
+node_modules/
+flopx-web/dist/
+.vercel/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.db
+
+# Secrets and local configuration: never committed
+.env
+.env.*
+!.env.example
+.secrets/
+fastapi_backend/uploads/
+fastapi_backend/uploads-private/
+
+# OS and editor
+.DS_Store

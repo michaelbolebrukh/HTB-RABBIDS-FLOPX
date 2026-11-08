@@ -1,0 +1,30 @@
+Your subscription renewed. Here is your receipt.
+
+FLOPX
+
+Your subscription renewed
+
+Hi {{name}}, your {{plan_name}} subscription has renewed and your payment went
+through. Here is a summary for your records.
+
+{{plan_name}}{{amount}}
+
+Date: {{date}}
+
+Reference: {{reference}}
+
+Manage account [https://flopx.vercel.app/desk]
+
+Want to change or cancel your plan? Contact us
+[https://flopx.vercel.app/contact].
+
+You're receiving this email because you have an active subscription at
+flopx.vercel.app. This is a transactional receipt for your renewal, not a
+marketing message.
+
+flopx.vercel.app [https://flopx.vercel.app/]
+
+© FLOPX. All rights reserved.
+
+Privacy Policy [https://flopx.vercel.app/privacy-policy] Terms of Service
+[https://flopx.vercel.app/terms-of-service]

@@ -1,0 +1,766 @@
+{
+ "url": "https://api.eia.gov/v2/electricity/rto/region-data/data/?api_key=<redacted>&frequency=hourly&data[0]=value&facets[respondent][0]=PJM&facets[type][0]=D&facets[type][1]=DF&start=2026-11-07T00&end=2026-11-08T23&sort[0][column]=period&sort[0][direction]=asc&length=5000",
+ "status": 200,
+ "date": "Sun, 08 Nov 2026 10:48:05 GMT",
+ "contentType": "application/json",
+ "recordedAt": "2026-11-08T10:48Z",
+ "body": {
+  "response": {
+   "total": "80",
+   "dateFormat": "YYYY-MM-DD\"T\"HH24",
+   "frequency": "hourly",
+   "data": [
+    {
+     "period": "2026-11-07T00",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "93975",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T00",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "91339",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T01",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "92396",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T01",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "89487",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T02",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "90547",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T02",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "87283",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T03",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "88214",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T03",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "84278",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T04",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "85316",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T04",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "80621",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T05",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "82920",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T05",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "78349",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T06",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "80482",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T06",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "76960",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T07",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "78682",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T07",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "75829",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T08",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "78173",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T08",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "75373",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T09",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "77974",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T09",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "75698",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T10",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "77753",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T10",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "77271",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T11",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "79068",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T11",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "79852",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T12",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "80105",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T12",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "82639",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T13",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "81572",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T13",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "84394",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T14",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "84157",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T14",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "84470",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T15",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "85264",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T15",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "83675",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T16",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "85697",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T16",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "82781",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T17",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "85661",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T17",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "81965",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T18",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "85243",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T18",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "81299",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T19",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "85132",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T19",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "80985",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T20",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "85093",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T20",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "81557",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T21",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "84973",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T21",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "83204",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T22",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "86723",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T22",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "85683",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T23",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "89572",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-07T23",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "87614",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-08T00",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "90377",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-08T00",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "88609",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-08T01",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "90008",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-08T01",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "88185",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-08T02",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "88982",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-08T02",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "86813",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-08T03",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "87229",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-08T03",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "84785",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-08T04",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "85130",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-08T04",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "82263",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-08T05",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "83480",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-08T05",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "80279",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-08T06",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "81765",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-08T07",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "81025",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-08T08",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "80519",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-08T09",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "79987",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-08T09",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "78650",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-08T10",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "80130",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-08T10",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "79891",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-08T11",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "82212",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-08T12",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "84404",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-08T13",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "85462",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-08T14",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "84779",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-08T15",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "83637",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-08T16",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "82904",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-08T17",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "82531",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-08T18",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "82279",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-08T19",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "82334",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-08T20",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "83385",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-08T21",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "85715",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-08T22",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "89166",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2026-11-08T23",
+     "respondent": "PJM",
+     "respondent-name": "PJM Interconnection, LLC",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "90854",
+     "value-units": "megawatthours"
+    }
+   ],
+   "description": "Hourly demand, day-ahead demand forecast, net generation, and interchange by balancing authority.  \n    Source: Form EIA-930\n    Product: Hourly Electric Grid Monitor"
+  },
+  "request": {
+   "command": "/v2/electricity/rto/region-data/data/",
+   "params": {
+    "frequency": "hourly",
+    "data": [
+     "value"
+    ],
+    "facets": {
+     "respondent": [
+      "PJM"
+     ],
+     "type": [
+      "D",
+      "DF"
+     ]
+    },
+    "start": "2026-11-07T00",
+    "end": "2026-11-08T23",
+    "sort": [
+     {
+      "column": "period",
+      "direction": "asc"
+     }
+    ],
+    "length": "5000"
+   }
+  },
+  "apiVersion": "2.1.14",
+  "ExcelAddInVersion": "2.1.0"
+ }
+}

@@ -1,0 +1,288 @@
+{
+ "query": "Tell me about the H200",
+ "intent": "brief",
+ "route": "/ask?q=Tell+me+about+the+H200",
+ "filters": {
+  "g": "h200-sxm-141gb",
+  "target": "gpu:h200-sxm-141gb"
+ },
+ "explanation": {
+  "matched": {
+   "gpuModels": [
+    "h200"
+   ]
+  },
+  "unmatchedTokens": [
+   "tell",
+   "me",
+   "about",
+   "the"
+  ],
+  "numbers": [],
+  "periodDays": null
+ },
+ "actions": [
+  {
+   "kind": "open",
+   "route": "/ask?q=Tell+me+about+the+H200",
+   "requiresConfirmation": false
+  }
+ ],
+ "engine": "grammar",
+ "brief": {
+  "targetKind": "gpu",
+  "targetId": "h200-sxm-141gb",
+  "headline": "NVIDIA h200-sxm-141gb: inferred pressure 15/100, 0 open anomalies, 3 recent items",
+  "sentences": [
+   {
+    "text": "h200-sxm-141gb comparable price was last observed at 4.44 USD/GPU-hour on 2026-11-08 (derived data from fcpi-v1:median-of-adjusted-asks).",
+    "statementClass": "observation",
+    "evidenceIds": [
+     "index:fcpi:h200-sxm-141gb"
+    ]
+   },
+   {
+    "text": "Inferred compute pressure for h200-sxm-141gb in ap-jp is 15 of 100 (slack), driven mainly by price-premium (-1.00) and availability (-1.00); this is an estimate from 4 of 6 factors over 3 asks and is labelled exploratory, not measured utilisation.",
+    "statementClass": "inference",
+    "evidenceIds": [
+     "pressure:ap-jp:h200-sxm-141gb"
+    ]
+   },
+   {
+    "text": "Arguing against that reading: demand-signals (+0.23).",
+    "statementClass": "inference",
+    "evidenceIds": [
+     "pressure:ap-jp:h200-sxm-141gb"
+    ]
+   },
+   {
+    "text": "2026-10-30, price-move (verified, severity 3): h200-sxm-141gb on-demand median moved -3.7% in 7 days",
+    "statementClass": "observation",
+    "evidenceIds": [
+     "intel-034"
+    ]
+   },
+   {
+    "text": "2026-10-20, launch (verified, severity 1): Helios Nodes launches reserved h200-sxm-141gb tier",
+    "statementClass": "observation",
+    "evidenceIds": [
+     "intel-040"
+    ]
+   },
+   {
+    "text": "2026-10-10, supply-anomaly (interpretation, severity 3): Borealis Compute lists unusually many h200-sxm-141gb offers in US West (Hillsboro hub)",
+    "statementClass": "observation",
+    "evidenceIds": [
+     "intel-020"
+    ]
+   },
+   {
+    "text": "The market \"H200 on-demand median price below $3.50/GPU-hour at end of December 2026?\" prices Yes at 73% (sample-prediction-venue); a quote, not a forecast of record.",
+    "statementClass": "observation",
+    "evidenceIds": [
+     "mkt-002"
+    ]
+   }
+  ],
+  "evidence": [
+   {
+    "id": "index:fcpi:h200-sxm-141gb",
+    "kind": "series",
+    "href": "/research?tab=lab&series=index%3Afcpi%3Ah200-sxm-141gb",
+    "statementClass": "observation",
+    "observedAt": "2026-11-08T02:14:54Z",
+    "provenanceKind": "derived",
+    "provenance": {
+     "kind": "derived",
+     "source": "fcpi-v1:median-of-adjusted-asks",
+     "observedAt": "2026-11-08T02:14:54Z",
+     "sourceUrl": null,
+     "fetchedAt": "2026-11-08T02:15:03.628654Z",
+     "licence": null,
+     "note": null,
+     "inputKinds": [
+      "live"
+     ]
+    },
+    "inputKinds": [
+     "live"
+    ]
+   },
+   {
+    "id": "pressure:ap-jp:h200-sxm-141gb",
+    "kind": "pressure-cell",
+    "href": "/xray?r=ap-jp&g=h200-sxm-141gb",
+    "statementClass": "inference",
+    "observedAt": "2026-11-08T02:14:59Z",
+    "provenanceKind": "derived",
+    "provenance": {
+     "kind": "derived",
+     "source": "cpx-v1",
+     "observedAt": "2026-11-08T02:14:59Z",
+     "sourceUrl": null,
+     "fetchedAt": "2026-11-08T02:15:03.740511Z",
+     "licence": null,
+     "note": "inferred pressure on usable supply; not a measurement of utilisation",
+     "inputKinds": [
+      "derived",
+      "live",
+      "sample"
+     ]
+    },
+    "inputKinds": [
+     "derived",
+     "live",
+     "sample"
+    ]
+   },
+   {
+    "id": "intel-034",
+    "kind": "feed",
+    "href": "/feed/intel-034",
+    "statementClass": "observation",
+    "observedAt": "2026-10-30T07:00:00Z",
+    "provenanceKind": "sample",
+    "provenance": {
+     "kind": "sample",
+     "source": "flopx-sample-v1",
+     "observedAt": "2026-10-30T10:00:00Z",
+     "sourceUrl": null,
+     "fetchedAt": null,
+     "licence": null,
+     "note": "authored sample intelligence item; the headline describes no real event",
+     "inputKinds": []
+    },
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   {
+    "id": "intel-040",
+    "kind": "feed",
+    "href": "/feed/intel-040",
+    "statementClass": "observation",
+    "observedAt": "2026-10-20T17:00:00Z",
+    "provenanceKind": "sample",
+    "provenance": {
+     "kind": "sample",
+     "source": "flopx-sample-v1",
+     "observedAt": "2026-10-20T20:00:00Z",
+     "sourceUrl": null,
+     "fetchedAt": null,
+     "licence": null,
+     "note": "authored sample intelligence item; the headline describes no real event",
+     "inputKinds": []
+    },
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   {
+    "id": "intel-020",
+    "kind": "feed",
+    "href": "/feed/intel-020",
+    "statementClass": "observation",
+    "observedAt": "2026-10-10T06:00:00Z",
+    "provenanceKind": "sample",
+    "provenance": {
+     "kind": "sample",
+     "source": "flopx-sample-v1",
+     "observedAt": "2026-10-10T07:00:00Z",
+     "sourceUrl": null,
+     "fetchedAt": null,
+     "licence": null,
+     "note": "authored sample intelligence item; the headline describes no real event",
+     "inputKinds": []
+    },
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   {
+    "id": "mkt-002",
+    "kind": "market",
+    "href": "/markets/mkt-002",
+    "statementClass": "observation",
+    "observedAt": "2026-11-06T21:00:00Z",
+    "provenanceKind": "sample",
+    "provenance": {
+     "kind": "sample",
+     "source": "flopx-sample-v1",
+     "observedAt": "2026-11-06T21:00:00Z",
+     "sourceUrl": null,
+     "fetchedAt": null,
+     "licence": null,
+     "note": "authored sample market; a quote is a price, never a calibrated probability",
+     "inputKinds": []
+    },
+    "inputKinds": [
+     "sample"
+    ]
+   }
+  ],
+  "followThrough": [
+   {
+    "kind": "open",
+    "route": "/research?tab=lab&series=index%3Afcpi%3Ah200-sxm-141gb",
+    "label": "series"
+   },
+   {
+    "kind": "open",
+    "route": "/xray?r=ap-jp&g=h200-sxm-141gb",
+    "label": "pressure-cell"
+   },
+   {
+    "kind": "open",
+    "route": "/feed/intel-034",
+    "label": "feed"
+   },
+   {
+    "kind": "open",
+    "route": "/feed/intel-040",
+    "label": "feed"
+   },
+   {
+    "kind": "open",
+    "route": "/feed/intel-020",
+    "label": "feed"
+   },
+   {
+    "kind": "open",
+    "route": "/markets/mkt-002",
+    "label": "market"
+   }
+  ],
+  "caveats": [
+   "composed from the product's own evidence; sentences are templates, not reasoning",
+   "sample inputs: the sample set is authored and observed nowhere"
+  ],
+  "method": "composed-from-evidence-v1",
+  "statementClass": "inference",
+  "notLanguageModel": true,
+  "engine": "composed",
+  "languageModelNote": "no language model was used; a drafting mode exists behind ANTHROPIC_API_KEY and no key is configured",
+  "freshness": {
+   "generatedAt": "2026-11-08T02:15:08.813183Z",
+   "oldestObservedAt": "2026-06-27T20:30:00.785653Z",
+   "sources": [
+    "akash",
+    "flopx-sample-v1",
+    "hacker-news",
+    "kalshi",
+    "polymarket-gamma",
+    "rss:corescientific",
+    "rss:coreweave",
+    "rss:nvidia",
+    "runpod",
+    "vast-ai",
+    "wikidata"
+   ],
+   "unavailable": [
+    {
+     "source": "kalshi:KXUTILITYPJMWEST",
+     "reason": "no-open-markets"
+    }
+   ]
+  }
+ }
+}

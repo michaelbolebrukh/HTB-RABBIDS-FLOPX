@@ -1,0 +1,884 @@
+{
+ "markets": [
+  {
+   "id": "polymarket:6658653",
+   "venue": "polymarket",
+   "question": "Will the Ornn B200 Index be at least $10.00 on December 31, 2026?",
+   "outcomes": [
+    {
+     "label": "Yes",
+     "price": 0.562,
+     "impliedProbability": 0.562
+    },
+    {
+     "label": "No",
+     "price": 0.438,
+     "impliedProbability": 0.438
+    }
+   ],
+   "lastUpdated": "2026-11-08T00:38:34.895414Z",
+   "provenance": {
+    "kind": "live",
+    "source": "polymarket-gamma",
+    "observedAt": "2026-11-08T00:38:34.895414Z",
+    "sourceUrl": "https://polymarket.com/event/gpu-rental-prices-b200-end-of-2026-higher-strikes",
+    "fetchedAt": "2026-11-08T00:39:11.964650Z",
+    "licence": "Public market data API (terms asserted, not verified)",
+    "note": "a quote is a price in USDC, never a calibrated probability; bracket markets settle on the Ornn GPU price index",
+    "inputKinds": []
+   },
+   "resolutionRules": "This market will resolve according to the finalized Ornn B200 Index price for December 31, 2026. Resolution source: https://data.ornn.com/markets/b200",
+   "liquidity": 1700.11329,
+   "volume24H": 3078.818442,
+   "history": [],
+   "linkedEntities": {
+    "tickers": [],
+    "regionIds": [],
+    "facilityIds": [],
+    "gpuModelIds": []
+   }
+  },
+  {
+   "id": "polymarket:2870608",
+   "venue": "polymarket",
+   "question": "Will the Ornn H200 Index be at least $7.50 on December 31, 2026?",
+   "outcomes": [
+    {
+     "label": "Yes",
+     "price": 0.387,
+     "impliedProbability": 0.387
+    },
+    {
+     "label": "No",
+     "price": 0.613,
+     "impliedProbability": 0.613
+    }
+   ],
+   "lastUpdated": "2026-11-08T00:38:34.895414Z",
+   "provenance": {
+    "kind": "live",
+    "source": "polymarket-gamma",
+    "observedAt": "2026-11-08T00:38:34.895414Z",
+    "sourceUrl": "https://polymarket.com/event/gpu-rental-prices-h200-end-of-2026-20260709164949059",
+    "fetchedAt": "2026-11-08T00:39:11.964650Z",
+    "licence": "Public market data API (terms asserted, not verified)",
+    "note": "a quote is a price in USDC, never a calibrated probability; bracket markets settle on the Ornn GPU price index",
+    "inputKinds": []
+   },
+   "resolutionRules": "This market will resolve according to the finalized Ornn H200 Index price for December 31, 2026.  Resolution source: https://dashboard.ornnai.com",
+   "liquidity": 2255.67774,
+   "volume24H": 1573.592425,
+   "history": [],
+   "linkedEntities": {
+    "tickers": [],
+    "regionIds": [],
+    "facilityIds": [],
+    "gpuModelIds": []
+   }
+  },
+  {
+   "id": "polymarket:6658652",
+   "venue": "polymarket",
+   "question": "Will the Ornn B200 Index be between $9.50 and $10.00 on December 31, 2026?",
+   "outcomes": [
+    {
+     "label": "Yes",
+     "price": 0.15,
+     "impliedProbability": 0.15
+    },
+    {
+     "label": "No",
+     "price": 0.85,
+     "impliedProbability": 0.85
+    }
+   ],
+   "lastUpdated": "2026-11-08T00:36:35.669385Z",
+   "provenance": {
+    "kind": "live",
+    "source": "polymarket-gamma",
+    "observedAt": "2026-11-08T00:36:35.669385Z",
+    "sourceUrl": "https://polymarket.com/event/gpu-rental-prices-b200-end-of-2026-higher-strikes",
+    "fetchedAt": "2026-11-08T00:39:11.964650Z",
+    "licence": "Public market data API (terms asserted, not verified)",
+    "note": "a quote is a price in USDC, never a calibrated probability; bracket markets settle on the Ornn GPU price index",
+    "inputKinds": []
+   },
+   "resolutionRules": "This market will resolve according to the finalized Ornn B200 Index price for December 31, 2026. Resolution source: https://data.ornn.com/markets/b200",
+   "liquidity": 2599.553,
+   "volume24H": 1462.1541829999999,
+   "history": [],
+   "linkedEntities": {
+    "tickers": [],
+    "regionIds": [],
+    "facilityIds": [],
+    "gpuModelIds": []
+   }
+  },
+  {
+   "id": "polymarket:6658651",
+   "venue": "polymarket",
+   "question": "Will the Ornn B200 Index be between $9.00 and $9.50 on December 31, 2026?",
+   "outcomes": [
+    {
+     "label": "Yes",
+     "price": 0.255,
+     "impliedProbability": 0.255
+    },
+    {
+     "label": "No",
+     "price": 0.745,
+     "impliedProbability": 0.745
+    }
+   ],
+   "lastUpdated": "2026-11-08T00:38:34.895414Z",
+   "provenance": {
+    "kind": "live",
+    "source": "polymarket-gamma",
+    "observedAt": "2026-11-08T00:38:34.895414Z",
+    "sourceUrl": "https://polymarket.com/event/gpu-rental-prices-b200-end-of-2026-higher-strikes",
+    "fetchedAt": "2026-11-08T00:39:11.964650Z",
+    "licence": "Public market data API (terms asserted, not verified)",
+    "note": "a quote is a price in USDC, never a calibrated probability; bracket markets settle on the Ornn GPU price index",
+    "inputKinds": []
+   },
+   "resolutionRules": "This market will resolve according to the finalized Ornn B200 Index price for December 31, 2026. Resolution source: https://data.ornn.com/markets/b200",
+   "liquidity": 2654.9779,
+   "volume24H": 1322.24273,
+   "history": [],
+   "linkedEntities": {
+    "tickers": [],
+    "regionIds": [],
+    "facilityIds": [],
+    "gpuModelIds": []
+   }
+  },
+  {
+   "id": "polymarket:5166851",
+   "venue": "polymarket",
+   "question": "Will the Ornn RTX 5090 Index be between $0.65 and $0.70 on November 30, 2026?",
+   "outcomes": [
+    {
+     "label": "Yes",
+     "price": 0.32,
+     "impliedProbability": 0.32
+    },
+    {
+     "label": "No",
+     "price": 0.68,
+     "impliedProbability": 0.68
+    }
+   ],
+   "lastUpdated": "2026-11-08T00:38:34.895414Z",
+   "provenance": {
+    "kind": "live",
+    "source": "polymarket-gamma",
+    "observedAt": "2026-11-08T00:38:34.895414Z",
+    "sourceUrl": "https://polymarket.com/event/gpu-rental-prices-rtx-5090-end-of-november",
+    "fetchedAt": "2026-11-08T00:39:11.964650Z",
+    "licence": "Public market data API (terms asserted, not verified)",
+    "note": "a quote is a price in USDC, never a calibrated probability; bracket markets settle on the Ornn GPU price index",
+    "inputKinds": []
+   },
+   "resolutionRules": "This market will resolve according to the finalized Ornn RTX 5090 Index price for November 30, 2026. Resolution source: https://dashboard.ornnai.com/compute",
+   "liquidity": 1790.5786,
+   "volume24H": 1315.514883,
+   "history": [],
+   "linkedEntities": {
+    "tickers": [],
+    "regionIds": [],
+    "facilityIds": [],
+    "gpuModelIds": []
+   }
+  },
+  {
+   "id": "polymarket:6656702",
+   "venue": "polymarket",
+   "question": "Will the Ornn A100 Index be between $1.00 and $1.25 on December 31, 2026?",
+   "outcomes": [
+    {
+     "label": "Yes",
+     "price": 0.435,
+     "impliedProbability": 0.435
+    },
+    {
+     "label": "No",
+     "price": 0.565,
+     "impliedProbability": 0.565
+    }
+   ],
+   "lastUpdated": "2026-11-08T00:38:34.895414Z",
+   "provenance": {
+    "kind": "live",
+    "source": "polymarket-gamma",
+    "observedAt": "2026-11-08T00:38:34.895414Z",
+    "sourceUrl": "https://polymarket.com/event/gpu-rental-prices-a100-end-of-december-2026",
+    "fetchedAt": "2026-11-08T00:39:11.964650Z",
+    "licence": "Public market data API (terms asserted, not verified)",
+    "note": "a quote is a price in USDC, never a calibrated probability; bracket markets settle on the Ornn GPU price index",
+    "inputKinds": []
+   },
+   "resolutionRules": "This market will resolve according to the finalized Ornn A100 Index price for December 31, 2026. Resolution source: https://data.ornn.com/markets/a100-sxm4",
+   "liquidity": 3651.8003,
+   "volume24H": 1131.456496,
+   "history": [],
+   "linkedEntities": {
+    "tickers": [],
+    "regionIds": [],
+    "facilityIds": [],
+    "gpuModelIds": []
+   }
+  },
+  {
+   "id": "polymarket:6658650",
+   "venue": "polymarket",
+   "question": "Will the Ornn B200 Index be between $8.50 and $9.00 on December 31, 2026?",
+   "outcomes": [
+    {
+     "label": "Yes",
+     "price": 0.07,
+     "impliedProbability": 0.07
+    },
+    {
+     "label": "No",
+     "price": 0.93,
+     "impliedProbability": 0.93
+    }
+   ],
+   "lastUpdated": "2026-11-08T00:38:34.895414Z",
+   "provenance": {
+    "kind": "live",
+    "source": "polymarket-gamma",
+    "observedAt": "2026-11-08T00:38:34.895414Z",
+    "sourceUrl": "https://polymarket.com/event/gpu-rental-prices-b200-end-of-2026-higher-strikes",
+    "fetchedAt": "2026-11-08T00:39:11.964650Z",
+    "licence": "Public market data API (terms asserted, not verified)",
+    "note": "a quote is a price in USDC, never a calibrated probability; bracket markets settle on the Ornn GPU price index",
+    "inputKinds": []
+   },
+   "resolutionRules": "This market will resolve according to the finalized Ornn B200 Index price for December 31, 2026. Resolution source: https://data.ornn.com/markets/b200",
+   "liquidity": 2645.98,
+   "volume24H": 904.390117,
+   "history": [],
+   "linkedEntities": {
+    "tickers": [],
+    "regionIds": [],
+    "facilityIds": [],
+    "gpuModelIds": []
+   }
+  },
+  {
+   "id": "polymarket:5166853",
+   "venue": "polymarket",
+   "question": "Will the Ornn RTX 5090 Index be at least $0.75 on November 30, 2026?",
+   "outcomes": [
+    {
+     "label": "Yes",
+     "price": 0.25,
+     "impliedProbability": 0.25
+    },
+    {
+     "label": "No",
+     "price": 0.75,
+     "impliedProbability": 0.75
+    }
+   ],
+   "lastUpdated": "2026-11-08T00:38:34.895414Z",
+   "provenance": {
+    "kind": "live",
+    "source": "polymarket-gamma",
+    "observedAt": "2026-11-08T00:38:34.895414Z",
+    "sourceUrl": "https://polymarket.com/event/gpu-rental-prices-rtx-5090-end-of-november",
+    "fetchedAt": "2026-11-08T00:39:11.964650Z",
+    "licence": "Public market data API (terms asserted, not verified)",
+    "note": "a quote is a price in USDC, never a calibrated probability; bracket markets settle on the Ornn GPU price index",
+    "inputKinds": []
+   },
+   "resolutionRules": "This market will resolve according to the finalized Ornn RTX 5090 Index price for November 30, 2026. Resolution source: https://dashboard.ornnai.com/compute",
+   "liquidity": 1587.4822,
+   "volume24H": 814.810175,
+   "history": [],
+   "linkedEntities": {
+    "tickers": [],
+    "regionIds": [],
+    "facilityIds": [],
+    "gpuModelIds": []
+   }
+  },
+  {
+   "id": "kalshi:KXUSDCCAPACITY-27MAR05-T65.0",
+   "venue": "kalshi",
+   "question": "Will Americas operational data center capacity for 2026 be above 65.0 GW?",
+   "outcomes": [
+    {
+     "label": "Yes (Above 65.0 GW)",
+     "price": 0.19,
+     "impliedProbability": 0.19
+    },
+    {
+     "label": "No",
+     "price": 0.81,
+     "impliedProbability": 0.81
+    }
+   ],
+   "lastUpdated": "2026-06-27T20:30:00.785653Z",
+   "provenance": {
+    "kind": "live",
+    "source": "kalshi",
+    "observedAt": "2026-06-27T20:30:00.785653Z",
+    "sourceUrl": "https://kalshi.com/markets/kxusdccapacity",
+    "fetchedAt": "2026-11-08T00:39:11.698732Z",
+    "licence": "Public trade API market data (terms asserted, not verified)",
+    "note": "a quote is a price in dollars per contract, never a calibrated probability; last trade 0.19, volume 189.19",
+    "inputKinds": []
+   },
+   "resolutionRules": "If the Americas operational data center capacity for year-end 2026 is above 65.0 GW, then the market resolves to Yes.",
+   "liquidity": 184.19,
+   "volume24H": 0.0,
+   "history": [],
+   "linkedEntities": {
+    "tickers": [],
+    "regionIds": [],
+    "facilityIds": [],
+    "gpuModelIds": []
+   }
+  },
+  {
+   "id": "kalshi:KXTXERCOTPEAK-27JAN01-T92000",
+   "venue": "kalshi",
+   "question": "Will integrated system load on the ERCOT grid during 2026 get above 92,000 MW?",
+   "outcomes": [
+    {
+     "label": "Yes (Above 92,000 MW)",
+     "price": 0.04,
+     "impliedProbability": 0.04
+    },
+    {
+     "label": "No",
+     "price": 0.96,
+     "impliedProbability": 0.96
+    }
+   ],
+   "lastUpdated": "2026-08-19T18:59:31.127948Z",
+   "provenance": {
+    "kind": "live",
+    "source": "kalshi",
+    "observedAt": "2026-08-19T18:59:31.127948Z",
+    "sourceUrl": "https://kalshi.com/markets/kxtxercotpeak",
+    "fetchedAt": "2026-11-08T00:39:11.729448Z",
+    "licence": "Public trade API market data (terms asserted, not verified)",
+    "note": "a quote is a price in dollars per contract, never a calibrated probability; last trade 0.04, volume 231872.56",
+    "inputKinds": []
+   },
+   "resolutionRules": "If ERCOT reports that the integrated system load on the ERCOT grid during calendar year 2026 is above 92,000 MW, then the market resolves to Yes.",
+   "liquidity": 39103.55,
+   "volume24H": 0.0,
+   "history": [],
+   "linkedEntities": {
+    "tickers": [],
+    "regionIds": [
+     "us-tx"
+    ],
+    "facilityIds": [],
+    "gpuModelIds": []
+   }
+  },
+  {
+   "id": "mkt-001",
+   "venue": "sample-prediction-venue",
+   "question": "H100 on-demand median price above $3.00/GPU-hour at end of December 2026?",
+   "outcomes": [
+    {
+     "label": "Yes",
+     "price": 0.407,
+     "impliedProbability": 0.407
+    },
+    {
+     "label": "No",
+     "price": 0.593,
+     "impliedProbability": 0.593
+    }
+   ],
+   "lastUpdated": "2026-11-06T21:00:00Z",
+   "provenance": {
+    "kind": "sample",
+    "source": "flopx-sample-v1",
+    "observedAt": "2026-11-06T21:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": null,
+    "licence": null,
+    "note": "authored sample market; a quote is a price, never a calibrated probability",
+    "inputKinds": []
+   },
+   "resolutionRules": "Sample market: resolves on the FLOPX sample index level on the stated date. No real contract exists for this question in this dataset.",
+   "liquidity": 37830.0,
+   "volume24H": null,
+   "history": [
+    {
+     "seriesId": "market:mkt-001:yes",
+     "t": "2026-10-26T21:00:00Z",
+     "value": 0.494,
+     "unit": "probability",
+     "provenance": {
+      "kind": "sample",
+      "source": "flopx-sample-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": null,
+      "licence": null,
+      "note": "authored sample market; a quote is a price, never a calibrated probability",
+      "inputKinds": []
+     }
+    },
+    {
+     "seriesId": "market:mkt-001:yes",
+     "t": "2026-10-27T21:00:00Z",
+     "value": 0.514,
+     "unit": "probability",
+     "provenance": {
+      "kind": "sample",
+      "source": "flopx-sample-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": null,
+      "licence": null,
+      "note": "authored sample market; a quote is a price, never a calibrated probability",
+      "inputKinds": []
+     }
+    },
+    {
+     "seriesId": "market:mkt-001:yes",
+     "t": "2026-10-28T21:00:00Z",
+     "value": 0.533,
+     "unit": "probability",
+     "provenance": {
+      "kind": "sample",
+      "source": "flopx-sample-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": null,
+      "licence": null,
+      "note": "authored sample market; a quote is a price, never a calibrated probability",
+      "inputKinds": []
+     }
+    },
+    {
+     "seriesId": "market:mkt-001:yes",
+     "t": "2026-10-29T21:00:00Z",
+     "value": 0.547,
+     "unit": "probability",
+     "provenance": {
+      "kind": "sample",
+      "source": "flopx-sample-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": null,
+      "licence": null,
+      "note": "authored sample market; a quote is a price, never a calibrated probability",
+      "inputKinds": []
+     }
+    },
+    {
+     "seriesId": "market:mkt-001:yes",
+     "t": "2026-10-30T21:00:00Z",
+     "value": 0.532,
+     "unit": "probability",
+     "provenance": {
+      "kind": "sample",
+      "source": "flopx-sample-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": null,
+      "licence": null,
+      "note": "authored sample market; a quote is a price, never a calibrated probability",
+      "inputKinds": []
+     }
+    },
+    {
+     "seriesId": "market:mkt-001:yes",
+     "t": "2026-10-31T21:00:00Z",
+     "value": 0.514,
+     "unit": "probability",
+     "provenance": {
+      "kind": "sample",
+      "source": "flopx-sample-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": null,
+      "licence": null,
+      "note": "authored sample market; a quote is a price, never a calibrated probability",
+      "inputKinds": []
+     }
+    },
+    {
+     "seriesId": "market:mkt-001:yes",
+     "t": "2026-11-01T21:00:00Z",
+     "value": 0.482,
+     "unit": "probability",
+     "provenance": {
+      "kind": "sample",
+      "source": "flopx-sample-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": null,
+      "licence": null,
+      "note": "authored sample market; a quote is a price, never a calibrated probability",
+      "inputKinds": []
+     }
+    },
+    {
+     "seriesId": "market:mkt-001:yes",
+     "t": "2026-11-02T21:00:00Z",
+     "value": 0.472,
+     "unit": "probability",
+     "provenance": {
+      "kind": "sample",
+      "source": "flopx-sample-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": null,
+      "licence": null,
+      "note": "authored sample market; a quote is a price, never a calibrated probability",
+      "inputKinds": []
+     }
+    },
+    {
+     "seriesId": "market:mkt-001:yes",
+     "t": "2026-11-03T21:00:00Z",
+     "value": 0.484,
+     "unit": "probability",
+     "provenance": {
+      "kind": "sample",
+      "source": "flopx-sample-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": null,
+      "licence": null,
+      "note": "authored sample market; a quote is a price, never a calibrated probability",
+      "inputKinds": []
+     }
+    },
+    {
+     "seriesId": "market:mkt-001:yes",
+     "t": "2026-11-04T21:00:00Z",
+     "value": 0.42,
+     "unit": "probability",
+     "provenance": {
+      "kind": "sample",
+      "source": "flopx-sample-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": null,
+      "licence": null,
+      "note": "authored sample market; a quote is a price, never a calibrated probability",
+      "inputKinds": []
+     }
+    },
+    {
+     "seriesId": "market:mkt-001:yes",
+     "t": "2026-11-05T21:00:00Z",
+     "value": 0.417,
+     "unit": "probability",
+     "provenance": {
+      "kind": "sample",
+      "source": "flopx-sample-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": null,
+      "licence": null,
+      "note": "authored sample market; a quote is a price, never a calibrated probability",
+      "inputKinds": []
+     }
+    },
+    {
+     "seriesId": "market:mkt-001:yes",
+     "t": "2026-11-06T21:00:00Z",
+     "value": 0.407,
+     "unit": "probability",
+     "provenance": {
+      "kind": "sample",
+      "source": "flopx-sample-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": null,
+      "licence": null,
+      "note": "authored sample market; a quote is a price, never a calibrated probability",
+      "inputKinds": []
+     }
+    }
+   ],
+   "linkedEntities": {
+    "tickers": [
+     "NVDA",
+     "CRWV"
+    ],
+    "regionIds": [
+     "us-tx"
+    ],
+    "facilityIds": [],
+    "gpuModelIds": []
+   }
+  },
+  {
+   "id": "mkt-002",
+   "venue": "sample-prediction-venue",
+   "question": "H200 on-demand median price below $3.50/GPU-hour at end of December 2026?",
+   "outcomes": [
+    {
+     "label": "Yes",
+     "price": 0.733,
+     "impliedProbability": 0.733
+    },
+    {
+     "label": "No",
+     "price": 0.267,
+     "impliedProbability": 0.267
+    }
+   ],
+   "lastUpdated": "2026-11-06T21:00:00Z",
+   "provenance": {
+    "kind": "sample",
+    "source": "flopx-sample-v1",
+    "observedAt": "2026-11-06T21:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": null,
+    "licence": null,
+    "note": "authored sample market; a quote is a price, never a calibrated probability",
+    "inputKinds": []
+   },
+   "resolutionRules": "Sample market: resolves on the FLOPX sample index level on the stated date. No real contract exists for this question in this dataset.",
+   "liquidity": 25891.0,
+   "volume24H": null,
+   "history": [
+    {
+     "seriesId": "market:mkt-002:yes",
+     "t": "2026-10-26T21:00:00Z",
+     "value": 0.766,
+     "unit": "probability",
+     "provenance": {
+      "kind": "sample",
+      "source": "flopx-sample-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": null,
+      "licence": null,
+      "note": "authored sample market; a quote is a price, never a calibrated probability",
+      "inputKinds": []
+     }
+    },
+    {
+     "seriesId": "market:mkt-002:yes",
+     "t": "2026-10-27T21:00:00Z",
+     "value": 0.735,
+     "unit": "probability",
+     "provenance": {
+      "kind": "sample",
+      "source": "flopx-sample-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": null,
+      "licence": null,
+      "note": "authored sample market; a quote is a price, never a calibrated probability",
+      "inputKinds": []
+     }
+    },
+    {
+     "seriesId": "market:mkt-002:yes",
+     "t": "2026-10-28T21:00:00Z",
+     "value": 0.765,
+     "unit": "probability",
+     "provenance": {
+      "kind": "sample",
+      "source": "flopx-sample-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": null,
+      "licence": null,
+      "note": "authored sample market; a quote is a price, never a calibrated probability",
+      "inputKinds": []
+     }
+    },
+    {
+     "seriesId": "market:mkt-002:yes",
+     "t": "2026-10-29T21:00:00Z",
+     "value": 0.737,
+     "unit": "probability",
+     "provenance": {
+      "kind": "sample",
+      "source": "flopx-sample-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": null,
+      "licence": null,
+      "note": "authored sample market; a quote is a price, never a calibrated probability",
+      "inputKinds": []
+     }
+    },
+    {
+     "seriesId": "market:mkt-002:yes",
+     "t": "2026-10-30T21:00:00Z",
+     "value": 0.748,
+     "unit": "probability",
+     "provenance": {
+      "kind": "sample",
+      "source": "flopx-sample-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": null,
+      "licence": null,
+      "note": "authored sample market; a quote is a price, never a calibrated probability",
+      "inputKinds": []
+     }
+    },
+    {
+     "seriesId": "market:mkt-002:yes",
+     "t": "2026-10-31T21:00:00Z",
+     "value": 0.789,
+     "unit": "probability",
+     "provenance": {
+      "kind": "sample",
+      "source": "flopx-sample-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": null,
+      "licence": null,
+      "note": "authored sample market; a quote is a price, never a calibrated probability",
+      "inputKinds": []
+     }
+    },
+    {
+     "seriesId": "market:mkt-002:yes",
+     "t": "2026-11-01T21:00:00Z",
+     "value": 0.8,
+     "unit": "probability",
+     "provenance": {
+      "kind": "sample",
+      "source": "flopx-sample-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": null,
+      "licence": null,
+      "note": "authored sample market; a quote is a price, never a calibrated probability",
+      "inputKinds": []
+     }
+    },
+    {
+     "seriesId": "market:mkt-002:yes",
+     "t": "2026-11-02T21:00:00Z",
+     "value": 0.804,
+     "unit": "probability",
+     "provenance": {
+      "kind": "sample",
+      "source": "flopx-sample-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": null,
+      "licence": null,
+      "note": "authored sample market; a quote is a price, never a calibrated probability",
+      "inputKinds": []
+     }
+    },
+    {
+     "seriesId": "market:mkt-002:yes",
+     "t": "2026-11-03T21:00:00Z",
+     "value": 0.749,
+     "unit": "probability",
+     "provenance": {
+      "kind": "sample",
+      "source": "flopx-sample-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": null,
+      "licence": null,
+      "note": "authored sample market; a quote is a price, never a calibrated probability",
+      "inputKinds": []
+     }
+    },
+    {
+     "seriesId": "market:mkt-002:yes",
+     "t": "2026-11-04T21:00:00Z",
+     "value": 0.718,
+     "unit": "probability",
+     "provenance": {
+      "kind": "sample",
+      "source": "flopx-sample-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": null,
+      "licence": null,
+      "note": "authored sample market; a quote is a price, never a calibrated probability",
+      "inputKinds": []
+     }
+    },
+    {
+     "seriesId": "market:mkt-002:yes",
+     "t": "2026-11-05T21:00:00Z",
+     "value": 0.685,
+     "unit": "probability",
+     "provenance": {
+      "kind": "sample",
+      "source": "flopx-sample-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": null,
+      "licence": null,
+      "note": "authored sample market; a quote is a price, never a calibrated probability",
+      "inputKinds": []
+     }
+    },
+    {
+     "seriesId": "market:mkt-002:yes",
+     "t": "2026-11-06T21:00:00Z",
+     "value": 0.733,
+     "unit": "probability",
+     "provenance": {
+      "kind": "sample",
+      "source": "flopx-sample-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": null,
+      "licence": null,
+      "note": "authored sample market; a quote is a price, never a calibrated probability",
+      "inputKinds": []
+     }
+    }
+   ],
+   "linkedEntities": {
+    "tickers": [
+     "NVDA"
+    ],
+    "regionIds": [],
+    "facilityIds": [],
+    "gpuModelIds": []
+   }
+  }
+ ],
+ "freshness": {
+  "generatedAt": "2026-11-08T00:39:58.686044Z",
+  "oldestObservedAt": "2026-06-27T20:30:00.785653Z",
+  "sources": [
+   "flopx-sample-v1",
+   "kalshi",
+   "polymarket-gamma"
+  ],
+  "sourceDetails": [
+   {
+    "source": "kalshi",
+    "kind": "live",
+    "observedAt": "2026-10-21T20:00:06.612447Z",
+    "licence": "Public trade API market data (terms asserted, not verified)"
+   },
+   {
+    "source": "polymarket-gamma",
+    "kind": "live",
+    "observedAt": "2026-11-08T00:38:34.895414Z",
+    "licence": "Public market data API (terms asserted, not verified)"
+   }
+  ],
+  "unavailable": [
+   {
+    "source": "kalshi:KXUTILITYPJMWEST",
+    "reason": "no-open-markets"
+   }
+  ]
+ }
+}

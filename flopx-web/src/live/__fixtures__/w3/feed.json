@@ -1,0 +1,633 @@
+{
+ "items": [
+  {
+   "id": "hn:50406064",
+   "kind": "announcement",
+   "headline": "Good Luck Getting a Cheap GPU. AMD Is a 'Data Center First Company,' CEO Says",
+   "whyItMatters": "Community attention (19 points, 10 comments): a signal of what practitioners are discussing, not a primary source.",
+   "publishedAt": "2026-11-07T17:01:11Z",
+   "observedAt": "2026-11-07T17:01:11Z",
+   "severity": 1,
+   "classification": "interpretation",
+   "provenance": {
+    "kind": "live",
+    "source": "hacker-news",
+    "observedAt": "2026-11-07T17:01:11Z",
+    "sourceUrl": "https://news.ycombinator.com/item?id=50406064",
+    "fetchedAt": "2026-11-08T00:33:25.867744Z",
+    "licence": "Public Hacker News content via the Algolia search API (terms asserted, not verified)",
+    "note": "Hacker News story; discussion, not a primary source",
+    "inputKinds": []
+   },
+   "geography": {
+    "regionIds": []
+   },
+   "entities": {
+    "tickers": [],
+    "facilityIds": [],
+    "gpuModelIds": [],
+    "marketIds": []
+   },
+   "evidence": [
+    {
+     "label": "article",
+     "href": "https://www.pcmag.com/news/good-luck-getting-a-cheap-gpu-amd-is-a-data-center-first-company-ceo-says",
+     "kind": "article"
+    },
+    {
+     "label": "discussion",
+     "href": "https://news.ycombinator.com/item?id=50406064",
+     "kind": "article"
+    }
+   ],
+   "scenarioSeed": null
+  },
+  {
+   "id": "hn:50396819",
+   "kind": "announcement",
+   "headline": "AMD CEO saying it's a \"data center first\" company and PC sales will plummet",
+   "whyItMatters": "Community attention (33 points, 26 comments): a signal of what practitioners are discussing, not a primary source.",
+   "publishedAt": "2026-11-06T19:05:15Z",
+   "observedAt": "2026-11-06T19:05:15Z",
+   "severity": 1,
+   "classification": "interpretation",
+   "provenance": {
+    "kind": "live",
+    "source": "hacker-news",
+    "observedAt": "2026-11-06T19:05:15Z",
+    "sourceUrl": "https://news.ycombinator.com/item?id=50396819",
+    "fetchedAt": "2026-11-08T00:33:25.867744Z",
+    "licence": "Public Hacker News content via the Algolia search API (terms asserted, not verified)",
+    "note": "Hacker News story; discussion, not a primary source",
+    "inputKinds": []
+   },
+   "geography": {
+    "regionIds": []
+   },
+   "entities": {
+    "tickers": [],
+    "facilityIds": [],
+    "gpuModelIds": [],
+    "marketIds": []
+   },
+   "evidence": [
+    {
+     "label": "article",
+     "href": "https://www.techradar.com/computing/gpu/amd-ceo-enrages-gamers-by-saying-its-now-a-data-center-first-company-and-predicts-pc-sales-will-plummet-by-a-double-digit-percentage-in-2027",
+     "kind": "article"
+    },
+    {
+     "label": "discussion",
+     "href": "https://news.ycombinator.com/item?id=50396819",
+     "kind": "article"
+    }
+   ],
+   "scenarioSeed": null
+  },
+  {
+   "id": "rss:nvidia:https-blogs-nvidia-com-blog-telco-open-source-tools-research-6g-networks-",
+   "kind": "announcement",
+   "headline": "How NVIDIA Open Source Tools Are Helping Researchers Build Next-Generation 6G Networks",
+   "whyItMatters": "A year ago, NVIDIA open sourced its Aerial wireless software, joining Sionna and a broader suite of open source tools for accelerating next-generation 6G network development. Together, they give researchers a foundation for testing ideas, comparing results and building on each ot",
+   "publishedAt": "2026-11-06T16:00:00Z",
+   "observedAt": "2026-11-06T16:00:00Z",
+   "severity": 2,
+   "classification": "verified",
+   "provenance": {
+    "kind": "live",
+    "source": "rss:nvidia",
+    "observedAt": "2026-11-06T16:00:00Z",
+    "sourceUrl": "https://blogs.nvidia.com/blog/telco-open-source-tools-research-6g-networks/",
+    "fetchedAt": "2026-11-08T00:33:25.498874Z",
+    "licence": "Company press-release feeds; headline shown with a link to the original (terms asserted, not verified)",
+    "note": "NVIDIA newsroom RSS; primary source",
+    "inputKinds": []
+   },
+   "geography": {
+    "regionIds": []
+   },
+   "entities": {
+    "tickers": [
+     "NVDA"
+    ],
+    "facilityIds": [],
+    "gpuModelIds": [],
+    "marketIds": []
+   },
+   "evidence": [
+    {
+     "label": "NVIDIA newsroom",
+     "href": "https://blogs.nvidia.com/blog/telco-open-source-tools-research-6g-networks/",
+     "kind": "article"
+    }
+   ],
+   "scenarioSeed": null
+  },
+  {
+   "id": "intel-012",
+   "kind": "divergence",
+   "headline": "NVDA diverges from the b200-sxm-192gb sample index over 20 days",
+   "whyItMatters": "The divergence strategy watches this z-score; association, not causation.",
+   "publishedAt": "2026-11-06T05:00:00Z",
+   "observedAt": "2026-11-06T03:00:00Z",
+   "severity": 3,
+   "classification": "interpretation",
+   "provenance": {
+    "kind": "sample",
+    "source": "flopx-sample-v1",
+    "observedAt": "2026-11-06T05:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": null,
+    "licence": null,
+    "note": "authored sample intelligence item; the headline describes no real event",
+    "inputKinds": []
+   },
+   "geography": {
+    "regionIds": [
+     "ap-jp"
+    ]
+   },
+   "entities": {
+    "tickers": [
+     "NVDA"
+    ],
+    "facilityIds": [],
+    "gpuModelIds": [
+     "b200-sxm-192gb"
+    ],
+    "marketIds": []
+   },
+   "evidence": [
+    {
+     "label": "sample offer",
+     "href": "/gpu?tab=offers&offer=offer-033",
+     "kind": "offer"
+    },
+    {
+     "label": "sample series",
+     "href": "/research?tab=lab&series=gpu:b200-sxm-192gb:on-demand:global",
+     "kind": "series"
+    }
+   ],
+   "scenarioSeed": null
+  },
+  {
+   "id": "sec:0001878848-26-000066",
+   "kind": "earnings",
+   "headline": "IREN Ltd filed 10-Q: 10-Q",
+   "whyItMatters": "A primary-source filing; what it says is in the document itself, not in this card.",
+   "publishedAt": "2026-11-05T21:06:52Z",
+   "observedAt": "2026-11-05T21:06:52Z",
+   "severity": 3,
+   "classification": "verified",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2026-11-05T21:06:52Z",
+    "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1878848/000187884826000066/iren-20260930.htm",
+    "fetchedAt": "2026-11-08T00:33:38.705267Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "EDGAR filing index; acceptance time is the publication time",
+    "inputKinds": []
+   },
+   "geography": {
+    "regionIds": []
+   },
+   "entities": {
+    "tickers": [
+     "IREN"
+    ],
+    "facilityIds": [],
+    "gpuModelIds": [],
+    "marketIds": []
+   },
+   "evidence": [
+    {
+     "label": "10-Q 0001878848-26-000066",
+     "href": "https://www.sec.gov/Archives/edgar/data/1878848/000187884826000066/iren-20260930.htm",
+     "kind": "filing"
+    }
+   ],
+   "scenarioSeed": null
+  },
+  {
+   "id": "sec:0001878848-26-000065",
+   "kind": "announcement",
+   "headline": "IREN Ltd filed 8-K: 8-K",
+   "whyItMatters": "A primary-source filing; what it says is in the document itself, not in this card.",
+   "publishedAt": "2026-11-05T21:03:11Z",
+   "observedAt": "2026-11-05T21:03:11Z",
+   "severity": 2,
+   "classification": "verified",
+   "provenance": {
+    "kind": "live",
+    "source": "sec-edgar",
+    "observedAt": "2026-11-05T21:03:11Z",
+    "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1878848/000187884826000065/iren-20261105.htm",
+    "fetchedAt": "2026-11-08T00:33:38.705267Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)",
+    "note": "EDGAR filing index; acceptance time is the publication time",
+    "inputKinds": []
+   },
+   "geography": {
+    "regionIds": []
+   },
+   "entities": {
+    "tickers": [
+     "IREN"
+    ],
+    "facilityIds": [],
+    "gpuModelIds": [],
+    "marketIds": []
+   },
+   "evidence": [
+    {
+     "label": "8-K 0001878848-26-000065",
+     "href": "https://www.sec.gov/Archives/edgar/data/1878848/000187884826000065/iren-20261105.htm",
+     "kind": "filing"
+    }
+   ],
+   "scenarioSeed": null
+  },
+  {
+   "id": "rss:nvidia:https-blogs-nvidia-com-blog-vera-cpu-highest-throughput-fastest-agents-",
+   "kind": "announcement",
+   "headline": "Vera Delivers the Best of Both Worlds: Highest Throughput and Fastest Agents",
+   "whyItMatters": "AI agents do more than generate answers. They search for information, query databases, write and test code and take action.\u00a0 Each of those steps relies on a CPU, with agents moving between GPU reasoning and CPU execution throughout a task.\u00a0 As businesses put more agents to work,",
+   "publishedAt": "2026-11-05T20:00:41Z",
+   "observedAt": "2026-11-05T20:00:41Z",
+   "severity": 2,
+   "classification": "verified",
+   "provenance": {
+    "kind": "live",
+    "source": "rss:nvidia",
+    "observedAt": "2026-11-05T20:00:41Z",
+    "sourceUrl": "https://blogs.nvidia.com/blog/vera-cpu-highest-throughput-fastest-agents/",
+    "fetchedAt": "2026-11-08T00:33:25.498874Z",
+    "licence": "Company press-release feeds; headline shown with a link to the original (terms asserted, not verified)",
+    "note": "NVIDIA newsroom RSS; primary source",
+    "inputKinds": []
+   },
+   "geography": {
+    "regionIds": []
+   },
+   "entities": {
+    "tickers": [
+     "NVDA"
+    ],
+    "facilityIds": [],
+    "gpuModelIds": [],
+    "marketIds": []
+   },
+   "evidence": [
+    {
+     "label": "NVIDIA newsroom",
+     "href": "https://blogs.nvidia.com/blog/vera-cpu-highest-throughput-fastest-agents/",
+     "kind": "article"
+    }
+   ],
+   "scenarioSeed": null
+  },
+  {
+   "id": "rss:corescientific:s-press-releases-detail-146-core-scientific-announces-third-quarter-2026-results",
+   "kind": "earnings",
+   "headline": "Core Scientific Announces Third Quarter 2026 Results",
+   "whyItMatters": "Primary-source release from Core Scientific investor relations.",
+   "publishedAt": "2026-11-05T12:00:00Z",
+   "observedAt": "2026-11-05T12:00:00Z",
+   "severity": 3,
+   "classification": "verified",
+   "provenance": {
+    "kind": "live",
+    "source": "rss:corescientific",
+    "observedAt": "2026-11-05T12:00:00Z",
+    "sourceUrl": "https://investors.corescientific.com/news-events/press-releases/detail/146/core-scientific-announces-third-quarter-2026-results",
+    "fetchedAt": "2026-11-08T00:33:25.162285Z",
+    "licence": "Company press-release feeds; headline shown with a link to the original (terms asserted, not verified)",
+    "note": "Core Scientific investor relations RSS; primary source",
+    "inputKinds": []
+   },
+   "geography": {
+    "regionIds": []
+   },
+   "entities": {
+    "tickers": [
+     "CORZ"
+    ],
+    "facilityIds": [],
+    "gpuModelIds": [],
+    "marketIds": []
+   },
+   "evidence": [
+    {
+     "label": "Core Scientific investor relations",
+     "href": "https://investors.corescientific.com/news-events/press-releases/detail/146/core-scientific-announces-third-quarter-2026-results",
+     "kind": "article"
+    }
+   ],
+   "scenarioSeed": null
+  },
+  {
+   "id": "intel-038",
+   "kind": "supply-anomaly",
+   "headline": "Helios Nodes lists unusually many l40s-48gb offers in Ireland and UK (Dublin hub)",
+   "whyItMatters": "Listing depth is advertised supply, not utilisation; read with the availability flags.",
+   "publishedAt": "2026-11-05T06:00:00Z",
+   "observedAt": "2026-11-05T04:00:00Z",
+   "severity": 4,
+   "classification": "interpretation",
+   "provenance": {
+    "kind": "sample",
+    "source": "flopx-sample-v1",
+    "observedAt": "2026-11-05T06:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": null,
+    "licence": null,
+    "note": "authored sample intelligence item; the headline describes no real event",
+    "inputKinds": []
+   },
+   "geography": {
+    "regionIds": [
+     "eu-ie"
+    ]
+   },
+   "entities": {
+    "tickers": [],
+    "facilityIds": [],
+    "gpuModelIds": [
+     "l40s-48gb"
+    ],
+    "marketIds": []
+   },
+   "evidence": [
+    {
+     "label": "sample offer",
+     "href": "/gpu?tab=offers&offer=offer-043",
+     "kind": "offer"
+    },
+    {
+     "label": "sample series",
+     "href": "/research?tab=lab&series=gpu:l40s-48gb:on-demand:global",
+     "kind": "series"
+    }
+   ],
+   "scenarioSeed": null
+  },
+  {
+   "id": "intel-024",
+   "kind": "price-move",
+   "headline": "b200-sxm-192gb on-demand median moved +7.2% in 7 days",
+   "whyItMatters": "A move this size on the sample index shifts the comparable-offer ranking for b200-sxm-192gb in Nordics (Oslo hub).",
+   "publishedAt": "2026-11-03T16:00:00Z",
+   "observedAt": "2026-11-03T16:00:00Z",
+   "severity": 3,
+   "classification": "verified",
+   "provenance": {
+    "kind": "sample",
+    "source": "flopx-sample-v1",
+    "observedAt": "2026-11-03T16:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": null,
+    "licence": null,
+    "note": "authored sample intelligence item; the headline describes no real event",
+    "inputKinds": []
+   },
+   "geography": {
+    "regionIds": [
+     "eu-no"
+    ]
+   },
+   "entities": {
+    "tickers": [],
+    "facilityIds": [],
+    "gpuModelIds": [
+     "b200-sxm-192gb"
+    ],
+    "marketIds": []
+   },
+   "evidence": [
+    {
+     "label": "sample offer",
+     "href": "/gpu?tab=offers&offer=offer-010",
+     "kind": "offer"
+    },
+    {
+     "label": "sample series",
+     "href": "/research?tab=lab&series=gpu:b200-sxm-192gb:on-demand:global",
+     "kind": "series"
+    }
+   ],
+   "scenarioSeed": null
+  },
+  {
+   "id": "intel-003",
+   "kind": "prediction-reprice",
+   "headline": "Sample market on b200-sxm-192gb repriced by +9.6%",
+   "whyItMatters": "A quote is a price, not a calibrated probability; the move says where sample traders lean.",
+   "publishedAt": "2026-11-03T00:00:00Z",
+   "observedAt": "2026-11-02T20:00:00Z",
+   "severity": 1,
+   "classification": "prediction",
+   "provenance": {
+    "kind": "sample",
+    "source": "flopx-sample-v1",
+    "observedAt": "2026-11-03T00:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": null,
+    "licence": null,
+    "note": "authored sample intelligence item; the headline describes no real event",
+    "inputKinds": []
+   },
+   "geography": {
+    "regionIds": [
+     "eu-no"
+    ]
+   },
+   "entities": {
+    "tickers": [],
+    "facilityIds": [],
+    "gpuModelIds": [
+     "b200-sxm-192gb"
+    ],
+    "marketIds": [
+     "mkt-010"
+    ]
+   },
+   "evidence": [
+    {
+     "label": "sample offer",
+     "href": "/gpu?tab=offers&offer=offer-054",
+     "kind": "offer"
+    },
+    {
+     "label": "sample series",
+     "href": "/research?tab=lab&series=gpu:b200-sxm-192gb:on-demand:global",
+     "kind": "series"
+    }
+   ],
+   "scenarioSeed": null
+  },
+  {
+   "id": "rss:coreweave:es-date-of-third-quarter-2026-financial-results-and-conference-call-default-aspx",
+   "kind": "earnings",
+   "headline": "CoreWeave Announces Date of Third Quarter 2026 Financial Results and Conference Call",
+   "whyItMatters": "Primary-source release from CoreWeave investor relations.",
+   "publishedAt": "2026-10-27T20:05:00Z",
+   "observedAt": "2026-10-27T20:05:00Z",
+   "severity": 3,
+   "classification": "verified",
+   "provenance": {
+    "kind": "live",
+    "source": "rss:coreweave",
+    "observedAt": "2026-10-27T20:05:00Z",
+    "sourceUrl": "https://investors.coreweave.com/news/news-details/2026/CoreWeave-Announces-Date-of-Third-Quarter-2026-Financial-Results-and-Conference-Call/default.aspx",
+    "fetchedAt": "2026-11-08T00:33:25.362371Z",
+    "licence": "Company press-release feeds; headline shown with a link to the original (terms asserted, not verified)",
+    "note": "CoreWeave investor relations RSS; primary source",
+    "inputKinds": []
+   },
+   "geography": {
+    "regionIds": []
+   },
+   "entities": {
+    "tickers": [
+     "CRWV"
+    ],
+    "facilityIds": [],
+    "gpuModelIds": [],
+    "marketIds": []
+   },
+   "evidence": [
+    {
+     "label": "CoreWeave investor relations",
+     "href": "https://investors.coreweave.com/news/news-details/2026/CoreWeave-Announces-Date-of-Third-Quarter-2026-Financial-Results-and-Conference-Call/default.aspx",
+     "kind": "article"
+    }
+   ],
+   "scenarioSeed": null
+  },
+  {
+   "id": "rss:coreweave:m-with-new-capacity-in-denmark-and-first-global-ai-network-backbone-default-aspx",
+   "kind": "announcement",
+   "headline": "CoreWeave Expands Global AI Cloud Platform With New Capacity in Denmark and First Global AI Network Backbone",
+   "whyItMatters": "Primary-source release from CoreWeave investor relations.",
+   "publishedAt": "2026-10-27T07:00:00Z",
+   "observedAt": "2026-10-27T07:00:00Z",
+   "severity": 2,
+   "classification": "verified",
+   "provenance": {
+    "kind": "live",
+    "source": "rss:coreweave",
+    "observedAt": "2026-10-27T07:00:00Z",
+    "sourceUrl": "https://investors.coreweave.com/news/news-details/2026/CoreWeave-Expands-Global-AI-Cloud-Platform-With-New-Capacity-in-Denmark-and-First-Global-AI-Network-Backbone/default.aspx",
+    "fetchedAt": "2026-11-08T00:33:25.362371Z",
+    "licence": "Company press-release feeds; headline shown with a link to the original (terms asserted, not verified)",
+    "note": "CoreWeave investor relations RSS; primary source",
+    "inputKinds": []
+   },
+   "geography": {
+    "regionIds": []
+   },
+   "entities": {
+    "tickers": [
+     "CRWV"
+    ],
+    "facilityIds": [],
+    "gpuModelIds": [],
+    "marketIds": []
+   },
+   "evidence": [
+    {
+     "label": "CoreWeave investor relations",
+     "href": "https://investors.coreweave.com/news/news-details/2026/CoreWeave-Expands-Global-AI-Cloud-Platform-With-New-Capacity-in-Denmark-and-First-Global-AI-Network-Backbone/default.aspx",
+     "kind": "article"
+    }
+   ],
+   "scenarioSeed": null
+  },
+  {
+   "id": "rss:corescientific:ules-third-quarter-fiscal-year-2026-earnings-release-conference-call-and-webcast",
+   "kind": "earnings",
+   "headline": "Core Scientific, Inc. Schedules Third Quarter Fiscal Year 2026 Earnings Release, Conference Call and Webcast",
+   "whyItMatters": "Primary-source release from Core Scientific investor relations.",
+   "publishedAt": "2026-10-15T11:00:00Z",
+   "observedAt": "2026-10-15T11:00:00Z",
+   "severity": 3,
+   "classification": "verified",
+   "provenance": {
+    "kind": "live",
+    "source": "rss:corescientific",
+    "observedAt": "2026-10-15T11:00:00Z",
+    "sourceUrl": "https://investors.corescientific.com/news-events/press-releases/detail/145/core-scientific-inc-schedules-third-quarter-fiscal-year-2026-earnings-release-conference-call-and-webcast",
+    "fetchedAt": "2026-11-08T00:33:25.162285Z",
+    "licence": "Company press-release feeds; headline shown with a link to the original (terms asserted, not verified)",
+    "note": "Core Scientific investor relations RSS; primary source",
+    "inputKinds": []
+   },
+   "geography": {
+    "regionIds": []
+   },
+   "entities": {
+    "tickers": [
+     "CORZ"
+    ],
+    "facilityIds": [],
+    "gpuModelIds": [],
+    "marketIds": []
+   },
+   "evidence": [
+    {
+     "label": "Core Scientific investor relations",
+     "href": "https://investors.corescientific.com/news-events/press-releases/detail/145/core-scientific-inc-schedules-third-quarter-fiscal-year-2026-earnings-release-conference-call-and-webcast",
+     "kind": "article"
+    }
+   ],
+   "scenarioSeed": null
+  }
+ ],
+ "freshness": {
+  "generatedAt": "2026-11-08T00:39:58.680974Z",
+  "oldestObservedAt": "2026-10-12T21:35:35Z",
+  "sources": [
+   "flopx-sample-v1",
+   "hacker-news",
+   "rss:corescientific",
+   "rss:coreweave",
+   "rss:nvidia",
+   "sec-edgar"
+  ],
+  "sourceDetails": [
+   {
+    "source": "hacker-news",
+    "kind": "live",
+    "observedAt": "2026-11-07T17:01:11Z",
+    "licence": "Public Hacker News content via the Algolia search API (terms asserted, not verified)"
+   },
+   {
+    "source": "rss:corescientific",
+    "kind": "live",
+    "observedAt": "2026-11-05T12:00:00Z",
+    "licence": "Company press-release feeds; headline shown with a link to the original (terms asserted, not verified)"
+   },
+   {
+    "source": "rss:coreweave",
+    "kind": "live",
+    "observedAt": "2026-10-27T20:05:00Z",
+    "licence": "Company press-release feeds; headline shown with a link to the original (terms asserted, not verified)"
+   },
+   {
+    "source": "rss:nvidia",
+    "kind": "live",
+    "observedAt": "2026-11-06T16:00:00Z",
+    "licence": "Company press-release feeds; headline shown with a link to the original (terms asserted, not verified)"
+   },
+   {
+    "source": "sec-edgar",
+    "kind": "live",
+    "observedAt": "2026-11-05T21:06:52Z",
+    "licence": "Public domain (US government work); SEC fair-access policy applies (terms asserted, not verified)"
+   }
+  ],
+  "unavailable": []
+ }
+}

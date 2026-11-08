@@ -1,0 +1,1 @@
+{"ticker":"NVDA","interval":"1d","range":"6mo","bars":[],"unavailable":{"source":"yahoo-finance","reason":"http-429"},"sampleSeriesId":"equity:NVDA:close","freshness":{"generatedAt":"2026-11-08T00:44:26.660577Z","oldestObservedAt":null,"sources":[],"sourceDetails":[],"unavailable":[{"source":"yahoo-finance","reason":"http-429"}]}}

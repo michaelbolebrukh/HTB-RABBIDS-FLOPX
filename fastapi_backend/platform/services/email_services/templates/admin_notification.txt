@@ -1,0 +1,25 @@
+Internal notification from your platform.
+
+FLOPX
+
+{% if severity and severity_critical %}{{severity}}{% endif %}{% if severity and
+not severity_critical %}{{severity}}{% endif %}
+
+{{heading}}
+
+{{body}}
+
+{% if cta_url %}
+
+{{cta_label}} [{{cta_url}}]
+
+{% endif %}
+
+Automated operator notification - no reader action was involved.
+
+flopx.vercel.app [https://flopx.vercel.app/]
+
+© FLOPX. All rights reserved.
+
+Privacy Policy [https://flopx.vercel.app/privacy-policy] Terms of Service
+[https://flopx.vercel.app/terms-of-service]

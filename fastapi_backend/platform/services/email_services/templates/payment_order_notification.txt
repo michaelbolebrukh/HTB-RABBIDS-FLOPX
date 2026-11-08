@@ -1,0 +1,24 @@
+A new order was placed.
+
+FLOPX
+
+New order
+
+Item: {{item_key}} ({{item_type}})
+
+Amount: {{amount}}
+
+Quantity: {{quantity}}
+
+User ID: {{user_id}}
+
+Requires shipping: {{ships}}
+
+Checkout session: {{session_id}}
+
+flopx.vercel.app [https://flopx.vercel.app/]
+
+© FLOPX. All rights reserved.
+
+Privacy Policy [https://flopx.vercel.app/privacy-policy] Terms of Service
+[https://flopx.vercel.app/terms-of-service]

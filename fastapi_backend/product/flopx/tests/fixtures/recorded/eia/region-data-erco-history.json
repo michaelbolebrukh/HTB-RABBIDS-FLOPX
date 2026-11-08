@@ -1,0 +1,1342 @@
+{
+ "url": "https://api.eia.gov/v2/electricity/rto/region-data/data/?api_key=<redacted>&frequency=hourly&data[0]=value&facets[respondent][0]=ERCO&facets[type][0]=D&facets[type][1]=DF&start=2024-11-08T00&end=2024-11-10T23&sort[0][column]=period&sort[0][direction]=asc&length=5000",
+ "status": 200,
+ "date": "Sun, 08 Nov 2026 10:48:06 GMT",
+ "contentType": "application/json",
+ "recordedAt": "2026-11-08T10:48Z",
+ "body": {
+  "response": {
+   "total": "144",
+   "dateFormat": "YYYY-MM-DD\"T\"HH24",
+   "frequency": "hourly",
+   "data": [
+    {
+     "period": "2024-11-08T00",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "55515",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T00",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "55836",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T01",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "55307",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T01",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "55852",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T02",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "54720",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T02",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "54969",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T03",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "54170",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T03",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "54155",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T04",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "52874",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T04",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "52890",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T05",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "50288",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T05",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "50655",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T06",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "47862",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T06",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "48062",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T07",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "45821",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T07",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "46056",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T08",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "44315",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T08",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "44695",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T09",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "43731",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T09",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "43825",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T10",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "43182",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T10",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "43709",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T11",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "43552",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T11",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "43898",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T12",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "44797",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T12",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "45396",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T13",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "47491",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T13",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "47957",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T14",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "48919",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T14",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "49225",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T15",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "50459",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T15",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "50942",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T16",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "52065",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T16",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "52708",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T17",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "53594",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T17",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "53991",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T18",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "54872",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T18",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "55412",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T19",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "56076",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T19",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "56566",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T20",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "56974",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T20",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "57563",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T21",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "57460",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T21",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "58134",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T22",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "57036",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T22",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "58159",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T23",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "56083",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-08T23",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "57425",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T00",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "54859",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T00",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "56641",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T01",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "53920",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T01",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "55822",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T02",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "52556",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T02",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "54117",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T03",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "51251",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T03",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "53073",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T04",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "49720",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T04",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "51560",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T05",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "47878",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T05",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "49513",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T06",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "45800",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T06",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "46869",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T07",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "44086",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T07",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "44109",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T08",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "42292",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T08",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "42536",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T09",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "40796",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T09",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "41479",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T10",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "40087",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T10",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "41093",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T11",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "39754",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T11",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "40484",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T12",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "40150",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T12",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "40782",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T13",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "40945",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T13",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "41861",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T14",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "41740",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T14",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "43415",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T15",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "43109",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T15",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "45098",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T16",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "44184",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T16",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "46414",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T17",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "45110",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T17",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "47073",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T18",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "46275",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T18",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "47788",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T19",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "47745",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T19",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "48482",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T20",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "49312",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T20",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "49226",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T21",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "50856",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T21",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "49945",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T22",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "51798",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T22",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "50373",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T23",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "51739",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-09T23",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "50129",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T00",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "50443",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T00",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "49926",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T01",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "50357",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T01",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "50314",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T02",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "49308",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T02",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "49604",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T03",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "48112",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T03",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "49047",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T04",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "46779",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T04",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "47956",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T05",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "45171",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T05",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "46392",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T06",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "43427",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T06",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "44212",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T07",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "41929",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T07",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "43015",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T08",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "40676",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T08",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "41652",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T09",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "39800",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T09",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "40560",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T10",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "39332",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T10",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "40050",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T11",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "39240",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T11",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "39887",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T12",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "39534",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T12",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "40024",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T13",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "40259",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T13",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "40748",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T14",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "41029",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T14",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "42150",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T15",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "42634",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T15",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "44295",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T16",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "44309",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T16",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "45856",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T17",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "45850",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T17",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "46978",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T18",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "47613",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T18",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "48315",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T19",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "49667",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T19",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "49604",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T20",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "51750",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T20",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "51074",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T21",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "53368",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T21",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "52554",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T22",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "54656",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T22",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "53357",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T23",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "D",
+     "type-name": "Demand",
+     "value": "54787",
+     "value-units": "megawatthours"
+    },
+    {
+     "period": "2024-11-10T23",
+     "respondent": "ERCO",
+     "respondent-name": "Electric Reliability Council of Texas, Inc.",
+     "type": "DF",
+     "type-name": "Day-ahead demand forecast",
+     "value": "53096",
+     "value-units": "megawatthours"
+    }
+   ],
+   "description": "Hourly demand, day-ahead demand forecast, net generation, and interchange by balancing authority.  \n    Source: Form EIA-930\n    Product: Hourly Electric Grid Monitor"
+  },
+  "request": {
+   "command": "/v2/electricity/rto/region-data/data/",
+   "params": {
+    "frequency": "hourly",
+    "data": [
+     "value"
+    ],
+    "facets": {
+     "respondent": [
+      "ERCO"
+     ],
+     "type": [
+      "D",
+      "DF"
+     ]
+    },
+    "start": "2024-11-08T00",
+    "end": "2024-11-10T23",
+    "sort": [
+     {
+      "column": "period",
+      "direction": "asc"
+     }
+    ],
+    "length": "5000"
+   }
+  },
+  "apiVersion": "2.1.14",
+  "ExcelAddInVersion": "2.1.0"
+ }
+}

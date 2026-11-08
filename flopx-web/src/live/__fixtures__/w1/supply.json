@@ -1,0 +1,1010 @@
+{
+ "regions": [
+  {
+   "regionId": "ap-jp",
+   "asOf": "2026-11-08T00:39:52.148038Z",
+   "operatingMw": 0.0,
+   "underConstructionMw": 50.0,
+   "announcedMw": 0.0,
+   "reportedMw": 200.0,
+   "effectiveMw": 40.0,
+   "effectiveGpuEquivalents": 32639,
+   "gpuEquivalentsCoverage": "all 1 counted facilities carry a GPU estimate",
+   "facilities": [
+    {
+     "facilityId": "fac-036",
+     "name": "Tokyo, JP campus (sample)",
+     "status": "reported",
+     "capacityMw": 200.0,
+     "gpuCountEstimate": null,
+     "expectedOnline": "2027-08-13",
+     "monthsLate": null,
+     "completionProbability": null,
+     "contributesMw": 0.0
+    },
+    {
+     "facilityId": "fac-037",
+     "name": "Osaka, JP campus (sample)",
+     "status": "under-construction",
+     "capacityMw": 50.0,
+     "gpuCountEstimate": 40799,
+     "expectedOnline": "2028-01-25",
+     "monthsLate": 0.0,
+     "completionProbability": 0.8,
+     "contributesMw": 40.0
+    }
+   ],
+   "assumptions": [
+    {
+     "name": "utilisation",
+     "value": 0.7,
+     "range": [
+      0.5,
+      0.9
+     ],
+     "note": "share of operating capacity assumed in use; an assumption, never observed"
+    },
+    {
+     "name": "completion-ceiling",
+     "value": 0.8,
+     "range": [
+      0.5,
+      1.0
+     ],
+     "note": "an on-time under-construction facility counts at most this share of its stated capacity"
+    },
+    {
+     "name": "late-horizon-months",
+     "value": 24.0,
+     "range": [
+      12.0,
+      36.0
+     ],
+     "note": "completion probability falls linearly to zero this many months past the expected online date"
+    },
+    {
+     "name": "no-date-probability",
+     "value": 0.25,
+     "range": [
+      0.0,
+      0.5
+     ],
+     "note": "an under-construction facility with no expected online date counts at this probability"
+    }
+   ],
+   "method": "effective-supply-v1",
+   "inputKinds": [
+    "sample"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "effective-supply-v1",
+    "observedAt": "2026-11-08T00:39:52.148038Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:39:52.148278Z",
+    "licence": null,
+    "note": "facility records x stated assumptions; announced MW is never counted as operating; computed over the region's sample facility records only, 2 observed records for the region listed apart and not mixed in",
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   "statementClass": "inference"
+  },
+  {
+   "regionId": "ap-sg",
+   "asOf": "2026-11-08T00:39:52.148038Z",
+   "operatingMw": 400.0,
+   "underConstructionMw": 0.0,
+   "announcedMw": 150.0,
+   "reportedMw": 0.0,
+   "effectiveMw": 280.0,
+   "effectiveGpuEquivalents": 197042,
+   "gpuEquivalentsCoverage": "all 3 counted facilities carry a GPU estimate",
+   "facilities": [
+    {
+     "facilityId": "fac-034",
+     "name": "Singapore campus (sample)",
+     "status": "announced",
+     "capacityMw": 100.0,
+     "gpuCountEstimate": null,
+     "expectedOnline": "2028-04-20",
+     "monthsLate": 0.0,
+     "completionProbability": null,
+     "contributesMw": 0.0
+    },
+    {
+     "facilityId": "fac-035",
+     "name": "Johor, MY campus (sample)",
+     "status": "operating",
+     "capacityMw": 300.0,
+     "gpuCountEstimate": 212294,
+     "expectedOnline": null,
+     "monthsLate": null,
+     "completionProbability": null,
+     "contributesMw": 210.0
+    },
+    {
+     "facilityId": "fac-038",
+     "name": "Sydney, AU campus (sample)",
+     "status": "operating",
+     "capacityMw": 50.0,
+     "gpuCountEstimate": 38485,
+     "expectedOnline": null,
+     "monthsLate": null,
+     "completionProbability": null,
+     "contributesMw": 35.0
+    },
+    {
+     "facilityId": "fac-039",
+     "name": "Mumbai, IN campus (sample)",
+     "status": "planned",
+     "capacityMw": 50.0,
+     "gpuCountEstimate": null,
+     "expectedOnline": "2028-01-25",
+     "monthsLate": 0.0,
+     "completionProbability": null,
+     "contributesMw": 0.0
+    },
+    {
+     "facilityId": "fac-040",
+     "name": "Canberra, AU campus (sample)",
+     "status": "operating",
+     "capacityMw": 50.0,
+     "gpuCountEstimate": 30709,
+     "expectedOnline": null,
+     "monthsLate": null,
+     "completionProbability": null,
+     "contributesMw": 35.0
+    }
+   ],
+   "assumptions": [
+    {
+     "name": "utilisation",
+     "value": 0.7,
+     "range": [
+      0.5,
+      0.9
+     ],
+     "note": "share of operating capacity assumed in use; an assumption, never observed"
+    },
+    {
+     "name": "completion-ceiling",
+     "value": 0.8,
+     "range": [
+      0.5,
+      1.0
+     ],
+     "note": "an on-time under-construction facility counts at most this share of its stated capacity"
+    },
+    {
+     "name": "late-horizon-months",
+     "value": 24.0,
+     "range": [
+      12.0,
+      36.0
+     ],
+     "note": "completion probability falls linearly to zero this many months past the expected online date"
+    },
+    {
+     "name": "no-date-probability",
+     "value": 0.25,
+     "range": [
+      0.0,
+      0.5
+     ],
+     "note": "an under-construction facility with no expected online date counts at this probability"
+    }
+   ],
+   "method": "effective-supply-v1",
+   "inputKinds": [
+    "sample"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "effective-supply-v1",
+    "observedAt": "2026-11-08T00:39:52.148038Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:39:52.148344Z",
+    "licence": null,
+    "note": "facility records x stated assumptions; announced MW is never counted as operating",
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   "statementClass": "inference"
+  },
+  {
+   "regionId": "eu-de",
+   "asOf": "2026-11-08T00:39:52.148038Z",
+   "operatingMw": 0.0,
+   "underConstructionMw": 500.0,
+   "announcedMw": 1300.0,
+   "reportedMw": 0.0,
+   "effectiveMw": 400.0,
+   "effectiveGpuEquivalents": 329907,
+   "gpuEquivalentsCoverage": "all 1 counted facilities carry a GPU estimate",
+   "facilities": [
+    {
+     "facilityId": "fac-024",
+     "name": "Frankfurt, DE campus (sample)",
+     "status": "under-construction",
+     "capacityMw": 500.0,
+     "gpuCountEstimate": 412384,
+     "expectedOnline": "2027-03-18",
+     "monthsLate": 0.0,
+     "completionProbability": 0.8,
+     "contributesMw": 400.0
+    },
+    {
+     "facilityId": "fac-025",
+     "name": "Amsterdam, NL campus (sample)",
+     "status": "announced",
+     "capacityMw": 300.0,
+     "gpuCountEstimate": null,
+     "expectedOnline": "2028-02-22",
+     "monthsLate": 0.0,
+     "completionProbability": null,
+     "contributesMw": 0.0
+    },
+    {
+     "facilityId": "fac-026",
+     "name": "Paris, FR campus (sample)",
+     "status": "planned",
+     "capacityMw": 1000.0,
+     "gpuCountEstimate": null,
+     "expectedOnline": "2027-12-03",
+     "monthsLate": 0.0,
+     "completionProbability": null,
+     "contributesMw": 0.0
+    }
+   ],
+   "assumptions": [
+    {
+     "name": "utilisation",
+     "value": 0.7,
+     "range": [
+      0.5,
+      0.9
+     ],
+     "note": "share of operating capacity assumed in use; an assumption, never observed"
+    },
+    {
+     "name": "completion-ceiling",
+     "value": 0.8,
+     "range": [
+      0.5,
+      1.0
+     ],
+     "note": "an on-time under-construction facility counts at most this share of its stated capacity"
+    },
+    {
+     "name": "late-horizon-months",
+     "value": 24.0,
+     "range": [
+      12.0,
+      36.0
+     ],
+     "note": "completion probability falls linearly to zero this many months past the expected online date"
+    },
+    {
+     "name": "no-date-probability",
+     "value": 0.25,
+     "range": [
+      0.0,
+      0.5
+     ],
+     "note": "an under-construction facility with no expected online date counts at this probability"
+    }
+   ],
+   "method": "effective-supply-v1",
+   "inputKinds": [
+    "sample"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "effective-supply-v1",
+    "observedAt": "2026-11-08T00:39:52.148038Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:39:52.148394Z",
+    "licence": null,
+    "note": "facility records x stated assumptions; announced MW is never counted as operating; computed over the region's sample facility records only, 18 observed records for the region listed apart and not mixed in",
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   "statementClass": "inference"
+  },
+  {
+   "regionId": "eu-ie",
+   "asOf": "2026-11-08T00:39:52.148038Z",
+   "operatingMw": 0.0,
+   "underConstructionMw": 300.0,
+   "announcedMw": 200.0,
+   "reportedMw": 0.0,
+   "effectiveMw": 240.0,
+   "effectiveGpuEquivalents": 210330,
+   "gpuEquivalentsCoverage": "all 1 counted facilities carry a GPU estimate",
+   "facilities": [
+    {
+     "facilityId": "fac-023",
+     "name": "Dublin, IE campus (sample)",
+     "status": "planned",
+     "capacityMw": 200.0,
+     "gpuCountEstimate": null,
+     "expectedOnline": "2027-06-15",
+     "monthsLate": 0.0,
+     "completionProbability": null,
+     "contributesMw": 0.0
+    },
+    {
+     "facilityId": "fac-027",
+     "name": "London, UK campus (sample)",
+     "status": "under-construction",
+     "capacityMw": 300.0,
+     "gpuCountEstimate": 262912,
+     "expectedOnline": "2028-09-24",
+     "monthsLate": 0.0,
+     "completionProbability": 0.8,
+     "contributesMw": 240.0
+    }
+   ],
+   "assumptions": [
+    {
+     "name": "utilisation",
+     "value": 0.7,
+     "range": [
+      0.5,
+      0.9
+     ],
+     "note": "share of operating capacity assumed in use; an assumption, never observed"
+    },
+    {
+     "name": "completion-ceiling",
+     "value": 0.8,
+     "range": [
+      0.5,
+      1.0
+     ],
+     "note": "an on-time under-construction facility counts at most this share of its stated capacity"
+    },
+    {
+     "name": "late-horizon-months",
+     "value": 24.0,
+     "range": [
+      12.0,
+      36.0
+     ],
+     "note": "completion probability falls linearly to zero this many months past the expected online date"
+    },
+    {
+     "name": "no-date-probability",
+     "value": 0.25,
+     "range": [
+      0.0,
+      0.5
+     ],
+     "note": "an under-construction facility with no expected online date counts at this probability"
+    }
+   ],
+   "method": "effective-supply-v1",
+   "inputKinds": [
+    "sample"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "effective-supply-v1",
+    "observedAt": "2026-11-08T00:39:52.148038Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:39:52.148430Z",
+    "licence": null,
+    "note": "facility records x stated assumptions; announced MW is never counted as operating; computed over the region's sample facility records only, 1 observed record for the region listed apart and not mixed in",
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   "statementClass": "inference"
+  },
+  {
+   "regionId": "eu-no",
+   "asOf": "2026-11-08T00:39:52.148038Z",
+   "operatingMw": 400.0,
+   "underConstructionMw": 0.0,
+   "announcedMw": 200.0,
+   "reportedMw": 1000.0,
+   "effectiveMw": 280.0,
+   "effectiveGpuEquivalents": 211571,
+   "gpuEquivalentsCoverage": "all 3 counted facilities carry a GPU estimate",
+   "facilities": [
+    {
+     "facilityId": "fac-028",
+     "name": "Hamina, FI campus (sample)",
+     "status": "operating",
+     "capacityMw": 200.0,
+     "gpuCountEstimate": 168946,
+     "expectedOnline": null,
+     "monthsLate": null,
+     "completionProbability": null,
+     "contributesMw": 140.0
+    },
+    {
+     "facilityId": "fac-029",
+     "name": "Lulea, SE campus (sample)",
+     "status": "operating",
+     "capacityMw": 100.0,
+     "gpuCountEstimate": 63280,
+     "expectedOnline": null,
+     "monthsLate": null,
+     "completionProbability": null,
+     "contributesMw": 70.0
+    },
+    {
+     "facilityId": "fac-030",
+     "name": "Odense, DK campus (sample)",
+     "status": "operating",
+     "capacityMw": 100.0,
+     "gpuCountEstimate": 70018,
+     "expectedOnline": null,
+     "monthsLate": null,
+     "completionProbability": null,
+     "contributesMw": 70.0
+    },
+    {
+     "facilityId": "fac-031",
+     "name": "Stavanger, NO campus (sample)",
+     "status": "reported",
+     "capacityMw": 1000.0,
+     "gpuCountEstimate": null,
+     "expectedOnline": "2028-08-10",
+     "monthsLate": null,
+     "completionProbability": null,
+     "contributesMw": 0.0
+    },
+    {
+     "facilityId": "fac-032",
+     "name": "Narvik, NO campus (sample)",
+     "status": "planned",
+     "capacityMw": 100.0,
+     "gpuCountEstimate": null,
+     "expectedOnline": "2027-10-09",
+     "monthsLate": 0.0,
+     "completionProbability": null,
+     "contributesMw": 0.0
+    },
+    {
+     "facilityId": "fac-033",
+     "name": "Keflavik, IS campus (sample)",
+     "status": "planned",
+     "capacityMw": 100.0,
+     "gpuCountEstimate": null,
+     "expectedOnline": "2028-02-11",
+     "monthsLate": 0.0,
+     "completionProbability": null,
+     "contributesMw": 0.0
+    }
+   ],
+   "assumptions": [
+    {
+     "name": "utilisation",
+     "value": 0.7,
+     "range": [
+      0.5,
+      0.9
+     ],
+     "note": "share of operating capacity assumed in use; an assumption, never observed"
+    },
+    {
+     "name": "completion-ceiling",
+     "value": 0.8,
+     "range": [
+      0.5,
+      1.0
+     ],
+     "note": "an on-time under-construction facility counts at most this share of its stated capacity"
+    },
+    {
+     "name": "late-horizon-months",
+     "value": 24.0,
+     "range": [
+      12.0,
+      36.0
+     ],
+     "note": "completion probability falls linearly to zero this many months past the expected online date"
+    },
+    {
+     "name": "no-date-probability",
+     "value": 0.25,
+     "range": [
+      0.0,
+      0.5
+     ],
+     "note": "an under-construction facility with no expected online date counts at this probability"
+    }
+   ],
+   "method": "effective-supply-v1",
+   "inputKinds": [
+    "sample"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "effective-supply-v1",
+    "observedAt": "2026-11-08T00:39:52.148038Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:39:52.148480Z",
+    "licence": null,
+    "note": "facility records x stated assumptions; announced MW is never counted as operating",
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   "statementClass": "inference"
+  },
+  {
+   "regionId": "us-or",
+   "asOf": "2026-11-08T00:39:52.148038Z",
+   "operatingMw": 225.0,
+   "underConstructionMw": 0.0,
+   "announcedMw": 1250.0,
+   "reportedMw": 100.0,
+   "effectiveMw": 157.5,
+   "effectiveGpuEquivalents": 135432,
+   "gpuEquivalentsCoverage": "all 2 counted facilities carry a GPU estimate",
+   "facilities": [
+    {
+     "facilityId": "fac-010",
+     "name": "Hillsboro, OR campus (sample)",
+     "status": "operating",
+     "capacityMw": 200.0,
+     "gpuCountEstimate": 175100,
+     "expectedOnline": null,
+     "monthsLate": null,
+     "completionProbability": null,
+     "contributesMw": 140.0
+    },
+    {
+     "facilityId": "fac-011",
+     "name": "Prineville, OR campus (sample)",
+     "status": "planned",
+     "capacityMw": 1000.0,
+     "gpuCountEstimate": null,
+     "expectedOnline": "2028-04-15",
+     "monthsLate": 0.0,
+     "completionProbability": null,
+     "contributesMw": 0.0
+    },
+    {
+     "facilityId": "fac-012",
+     "name": "Umatilla, OR campus (sample)",
+     "status": "announced",
+     "capacityMw": 50.0,
+     "gpuCountEstimate": null,
+     "expectedOnline": "2028-01-16",
+     "monthsLate": 0.0,
+     "completionProbability": null,
+     "contributesMw": 0.0
+    },
+    {
+     "facilityId": "fac-013",
+     "name": "Quincy, WA campus (sample)",
+     "status": "reported",
+     "capacityMw": 100.0,
+     "gpuCountEstimate": null,
+     "expectedOnline": "2028-04-14",
+     "monthsLate": null,
+     "completionProbability": null,
+     "contributesMw": 0.0
+    },
+    {
+     "facilityId": "fac-018",
+     "name": "Phoenix, AZ campus (sample)",
+     "status": "operating",
+     "capacityMw": 25.0,
+     "gpuCountEstimate": 18375,
+     "expectedOnline": null,
+     "monthsLate": null,
+     "completionProbability": null,
+     "contributesMw": 17.5
+    },
+    {
+     "facilityId": "fac-019",
+     "name": "Las Vegas, NV campus (sample)",
+     "status": "planned",
+     "capacityMw": 200.0,
+     "gpuCountEstimate": null,
+     "expectedOnline": "2027-08-29",
+     "monthsLate": 0.0,
+     "completionProbability": null,
+     "contributesMw": 0.0
+    }
+   ],
+   "assumptions": [
+    {
+     "name": "utilisation",
+     "value": 0.7,
+     "range": [
+      0.5,
+      0.9
+     ],
+     "note": "share of operating capacity assumed in use; an assumption, never observed"
+    },
+    {
+     "name": "completion-ceiling",
+     "value": 0.8,
+     "range": [
+      0.5,
+      1.0
+     ],
+     "note": "an on-time under-construction facility counts at most this share of its stated capacity"
+    },
+    {
+     "name": "late-horizon-months",
+     "value": 24.0,
+     "range": [
+      12.0,
+      36.0
+     ],
+     "note": "completion probability falls linearly to zero this many months past the expected online date"
+    },
+    {
+     "name": "no-date-probability",
+     "value": 0.25,
+     "range": [
+      0.0,
+      0.5
+     ],
+     "note": "an under-construction facility with no expected online date counts at this probability"
+    }
+   ],
+   "method": "effective-supply-v1",
+   "inputKinds": [
+    "sample"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "effective-supply-v1",
+    "observedAt": "2026-11-08T00:39:52.148038Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:39:52.148530Z",
+    "licence": null,
+    "note": "facility records x stated assumptions; announced MW is never counted as operating",
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   "statementClass": "inference"
+  },
+  {
+   "regionId": "us-tx",
+   "asOf": "2026-11-08T00:39:52.148038Z",
+   "operatingMw": 500.0,
+   "underConstructionMw": 1000.0,
+   "announcedMw": 500.0,
+   "reportedMw": 600.0,
+   "effectiveMw": 1150.0,
+   "effectiveGpuEquivalents": 850869,
+   "gpuEquivalentsCoverage": "all 4 counted facilities carry a GPU estimate",
+   "facilities": [
+    {
+     "facilityId": "fac-001",
+     "name": "Abilene, TX campus (sample)",
+     "status": "reported",
+     "capacityMw": 150.0,
+     "gpuCountEstimate": null,
+     "expectedOnline": "2028-09-27",
+     "monthsLate": null,
+     "completionProbability": null,
+     "contributesMw": 0.0
+    },
+    {
+     "facilityId": "fac-002",
+     "name": "Dallas, TX campus (sample)",
+     "status": "under-construction",
+     "capacityMw": 500.0,
+     "gpuCountEstimate": 301993,
+     "expectedOnline": "2028-05-13",
+     "monthsLate": 0.0,
+     "completionProbability": 0.8,
+     "contributesMw": 400.0
+    },
+    {
+     "facilityId": "fac-003",
+     "name": "Rockdale, TX campus (sample)",
+     "status": "reported",
+     "capacityMw": 150.0,
+     "gpuCountEstimate": null,
+     "expectedOnline": "2027-11-10",
+     "monthsLate": null,
+     "completionProbability": null,
+     "contributesMw": 0.0
+    },
+    {
+     "facilityId": "fac-004",
+     "name": "Denton, TX campus (sample)",
+     "status": "planned",
+     "capacityMw": 300.0,
+     "gpuCountEstimate": null,
+     "expectedOnline": "2027-06-26",
+     "monthsLate": 0.0,
+     "completionProbability": null,
+     "contributesMw": 0.0
+    },
+    {
+     "facilityId": "fac-005",
+     "name": "Childress, TX campus (sample)",
+     "status": "operating",
+     "capacityMw": 300.0,
+     "gpuCountEstimate": 240061,
+     "expectedOnline": null,
+     "monthsLate": null,
+     "completionProbability": null,
+     "contributesMw": 210.0
+    },
+    {
+     "facilityId": "fac-006",
+     "name": "Garden City, TX campus (sample)",
+     "status": "operating",
+     "capacityMw": 200.0,
+     "gpuCountEstimate": 126348,
+     "expectedOnline": null,
+     "monthsLate": null,
+     "completionProbability": null,
+     "contributesMw": 140.0
+    },
+    {
+     "facilityId": "fac-015",
+     "name": "Ellendale, ND campus (sample)",
+     "status": "under-construction",
+     "capacityMw": 500.0,
+     "gpuCountEstimate": 440985,
+     "expectedOnline": "2028-05-12",
+     "monthsLate": 0.0,
+     "completionProbability": 0.8,
+     "contributesMw": 400.0
+    },
+    {
+     "facilityId": "fac-016",
+     "name": "Jamestown, ND campus (sample)",
+     "status": "announced",
+     "capacityMw": 200.0,
+     "gpuCountEstimate": null,
+     "expectedOnline": "2028-08-08",
+     "monthsLate": 0.0,
+     "completionProbability": null,
+     "contributesMw": 0.0
+    },
+    {
+     "facilityId": "fac-022",
+     "name": "Kansas City, MO campus (sample)",
+     "status": "reported",
+     "capacityMw": 300.0,
+     "gpuCountEstimate": null,
+     "expectedOnline": "2027-03-06",
+     "monthsLate": null,
+     "completionProbability": null,
+     "contributesMw": 0.0
+    }
+   ],
+   "assumptions": [
+    {
+     "name": "utilisation",
+     "value": 0.7,
+     "range": [
+      0.5,
+      0.9
+     ],
+     "note": "share of operating capacity assumed in use; an assumption, never observed"
+    },
+    {
+     "name": "completion-ceiling",
+     "value": 0.8,
+     "range": [
+      0.5,
+      1.0
+     ],
+     "note": "an on-time under-construction facility counts at most this share of its stated capacity"
+    },
+    {
+     "name": "late-horizon-months",
+     "value": 24.0,
+     "range": [
+      12.0,
+      36.0
+     ],
+     "note": "completion probability falls linearly to zero this many months past the expected online date"
+    },
+    {
+     "name": "no-date-probability",
+     "value": 0.25,
+     "range": [
+      0.0,
+      0.5
+     ],
+     "note": "an under-construction facility with no expected online date counts at this probability"
+    }
+   ],
+   "method": "effective-supply-v1",
+   "inputKinds": [
+    "sample"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "effective-supply-v1",
+    "observedAt": "2026-11-08T00:39:52.148038Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:39:52.148597Z",
+    "licence": null,
+    "note": "facility records x stated assumptions; announced MW is never counted as operating",
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   "statementClass": "inference"
+  },
+  {
+   "regionId": "us-va",
+   "asOf": "2026-11-08T00:39:52.148038Z",
+   "operatingMw": 400.0,
+   "underConstructionMw": 150.0,
+   "announcedMw": 475.0,
+   "reportedMw": 0.0,
+   "effectiveMw": 400.0,
+   "effectiveGpuEquivalents": 320768,
+   "gpuEquivalentsCoverage": "all 3 counted facilities carry a GPU estimate",
+   "facilities": [
+    {
+     "facilityId": "fac-007",
+     "name": "Ashburn, VA campus (sample)",
+     "status": "announced",
+     "capacityMw": 200.0,
+     "gpuCountEstimate": null,
+     "expectedOnline": "2027-06-08",
+     "monthsLate": 0.0,
+     "completionProbability": null,
+     "contributesMw": 0.0
+    },
+    {
+     "facilityId": "fac-008",
+     "name": "Manassas, VA campus (sample)",
+     "status": "operating",
+     "capacityMw": 100.0,
+     "gpuCountEstimate": 84047,
+     "expectedOnline": null,
+     "monthsLate": null,
+     "completionProbability": null,
+     "contributesMw": 70.0
+    },
+    {
+     "facilityId": "fac-009",
+     "name": "Richmond, VA campus (sample)",
+     "status": "planned",
+     "capacityMw": 25.0,
+     "gpuCountEstimate": null,
+     "expectedOnline": "2028-03-17",
+     "monthsLate": 0.0,
+     "completionProbability": null,
+     "contributesMw": 0.0
+    },
+    {
+     "facilityId": "fac-014",
+     "name": "Council Bluffs, IA campus (sample)",
+     "status": "under-construction",
+     "capacityMw": 150.0,
+     "gpuCountEstimate": 111142,
+     "expectedOnline": "2027-09-22",
+     "monthsLate": 0.0,
+     "completionProbability": 0.8,
+     "contributesMw": 120.0
+    },
+    {
+     "facilityId": "fac-017",
+     "name": "New Albany, OH campus (sample)",
+     "status": "operating",
+     "capacityMw": 300.0,
+     "gpuCountEstimate": 247174,
+     "expectedOnline": null,
+     "monthsLate": null,
+     "completionProbability": null,
+     "contributesMw": 210.0
+    },
+    {
+     "facilityId": "fac-020",
+     "name": "Atlanta, GA campus (sample)",
+     "status": "planned",
+     "capacityMw": 50.0,
+     "gpuCountEstimate": null,
+     "expectedOnline": "2028-05-05",
+     "monthsLate": 0.0,
+     "completionProbability": null,
+     "contributesMw": 0.0
+    },
+    {
+     "facilityId": "fac-021",
+     "name": "Chicago, IL campus (sample)",
+     "status": "planned",
+     "capacityMw": 200.0,
+     "gpuCountEstimate": null,
+     "expectedOnline": "2028-10-13",
+     "monthsLate": 0.0,
+     "completionProbability": null,
+     "contributesMw": 0.0
+    }
+   ],
+   "assumptions": [
+    {
+     "name": "utilisation",
+     "value": 0.7,
+     "range": [
+      0.5,
+      0.9
+     ],
+     "note": "share of operating capacity assumed in use; an assumption, never observed"
+    },
+    {
+     "name": "completion-ceiling",
+     "value": 0.8,
+     "range": [
+      0.5,
+      1.0
+     ],
+     "note": "an on-time under-construction facility counts at most this share of its stated capacity"
+    },
+    {
+     "name": "late-horizon-months",
+     "value": 24.0,
+     "range": [
+      12.0,
+      36.0
+     ],
+     "note": "completion probability falls linearly to zero this many months past the expected online date"
+    },
+    {
+     "name": "no-date-probability",
+     "value": 0.25,
+     "range": [
+      0.0,
+      0.5
+     ],
+     "note": "an under-construction facility with no expected online date counts at this probability"
+    }
+   ],
+   "method": "effective-supply-v1",
+   "inputKinds": [
+    "sample"
+   ],
+   "provenance": {
+    "kind": "derived",
+    "source": "effective-supply-v1",
+    "observedAt": "2026-11-08T00:39:52.148038Z",
+    "sourceUrl": null,
+    "fetchedAt": "2026-11-08T00:39:52.148653Z",
+    "licence": null,
+    "note": "facility records x stated assumptions; announced MW is never counted as operating",
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   "statementClass": "inference"
+  }
+ ],
+ "freshness": {
+  "generatedAt": "2026-11-08T00:39:52.148763Z",
+  "oldestObservedAt": "2026-11-06T21:00:00Z",
+  "sources": [
+   "flopx-sample-v1",
+   "wikidata"
+  ],
+  "sourceDetails": [
+   {
+    "source": "wikidata",
+    "kind": "live",
+    "observedAt": "2026-11-08T00:33:37Z",
+    "licence": "CC0 (terms asserted, not verified)"
+   }
+  ],
+  "unavailable": [
+   {
+    "source": "kalshi:KXUTILITYPJMWEST",
+    "reason": "no-open-markets"
+   }
+  ]
+ }
+}

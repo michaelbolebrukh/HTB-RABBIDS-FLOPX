@@ -1,0 +1,31 @@
+{
+ "query": "What are the latest news?",
+ "intent": "feed",
+ "route": "/feed",
+ "filters": {},
+ "explanation": {
+  "matched": {
+   "measures": [
+    "feed"
+   ],
+   "actions": [
+    "show"
+   ]
+  },
+  "unmatchedTokens": [
+   "are",
+   "the"
+  ],
+  "numbers": [],
+  "periodDays": null
+ },
+ "actions": [
+  {
+   "kind": "open",
+   "route": "/feed",
+   "requiresConfirmation": false
+  }
+ ],
+ "engine": "grammar",
+ "brief": null
+}

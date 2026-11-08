@@ -1,0 +1,23 @@
+Your answers to {{flow_title}} are saved.
+
+FLOPX
+
+Pick up where you left off
+
+You started {{flow_title}} at flopx.vercel.app. Your answers so far are saved.
+Use the link below to carry on from where you stopped.
+
+Continue [{{resume_url}}]
+
+This link is personal to you, so don't forward it. If you don't carry on, we
+delete these answers automatically.
+
+You're receiving this because this address was used to start {{flow_title}} at
+flopx.vercel.app. Stop these emails [{{stop_url}}]
+
+flopx.vercel.app [https://flopx.vercel.app/]
+
+© FLOPX. All rights reserved.
+
+Privacy Policy [https://flopx.vercel.app/privacy-policy] Terms of Service
+[https://flopx.vercel.app/terms-of-service]

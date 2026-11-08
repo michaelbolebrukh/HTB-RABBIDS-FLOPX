@@ -1,0 +1,227 @@
+{
+ "query": "What is the state of Virginia?",
+ "intent": "brief",
+ "route": "/ask?q=What+is+the+state+of+Virginia%3F",
+ "filters": {
+  "r": "us-va",
+  "target": "region:us-va"
+ },
+ "explanation": {
+  "matched": {
+   "regions": [
+    "virginia"
+   ],
+   "actions": [
+    "show"
+   ]
+  },
+  "unmatchedTokens": [
+   "is",
+   "the",
+   "state",
+   "of"
+  ],
+  "numbers": [],
+  "periodDays": null
+ },
+ "actions": [
+  {
+   "kind": "open",
+   "route": "/ask?q=What+is+the+state+of+Virginia%3F",
+   "requiresConfirmation": false
+  }
+ ],
+ "engine": "grammar",
+ "brief": {
+  "targetKind": "region",
+  "targetId": "us-va",
+  "headline": "US East and Midwest (Ashburn hub): inferred pressure 52/100, 1 open anomalies, 1 recent items",
+  "sentences": [
+   {
+    "text": "Inferred compute pressure for rtx-4090-24gb in us-va is 52 of 100 (tight), driven mainly by price-premium (+1.00); this is an estimate from 4 of 6 factors over 1 asks and is labelled exploratory, not measured utilisation.",
+    "statementClass": "inference",
+    "evidenceIds": [
+     "pressure:us-va:rtx-4090-24gb"
+    ]
+   },
+   {
+    "text": "Arguing against that reading: availability (-1.00), capacity-pipeline (-0.78).",
+    "statementClass": "inference",
+    "evidenceIds": [
+     "pressure:us-va:rtx-4090-24gb"
+    ]
+   },
+   {
+    "text": "Facility records show 400 MW operating, 150 MW under construction and 475 MW announced or planned in us-va; at an assumed 70% utilisation the effective supply is estimated at 400 MW. Announced megawatts are not live capacity.",
+    "statementClass": "inference",
+    "evidenceIds": [
+     "supply:us-va"
+    ]
+   },
+   {
+    "text": "Anomaly announcement-mismatch (severity 1 of 5): rtx-4090-24gb in US East and Midwest (Ashburn hub): substantial operating capacity while asks carry a premium (a capacity pipeline of 1.56x operating capacity; premium +327%). No company is linked to it by a facility record or filing.",
+    "statementClass": "inference",
+    "evidenceIds": [
+     "anomaly:announcement-mismatch:us-va:rtx-4090-24gb"
+    ]
+   },
+   {
+    "text": "2026-10-08, launch (verified, severity 1): Atlas Hyperscale launches reserved rtx-4090-24gb tier",
+    "statementClass": "observation",
+    "evidenceIds": [
+     "intel-022"
+    ]
+   }
+  ],
+  "evidence": [
+   {
+    "id": "pressure:us-va:rtx-4090-24gb",
+    "kind": "pressure-cell",
+    "href": "/xray?r=us-va&g=rtx-4090-24gb",
+    "statementClass": "inference",
+    "observedAt": "2026-11-08T02:10:58Z",
+    "provenanceKind": "derived",
+    "provenance": {
+     "kind": "derived",
+     "source": "cpx-v1",
+     "observedAt": "2026-11-08T02:10:58Z",
+     "sourceUrl": null,
+     "fetchedAt": "2026-11-08T02:14:52.448226Z",
+     "licence": null,
+     "note": "inferred pressure on usable supply; not a measurement of utilisation",
+     "inputKinds": [
+      "derived",
+      "live",
+      "sample"
+     ]
+    },
+    "inputKinds": [
+     "derived",
+     "live",
+     "sample"
+    ]
+   },
+   {
+    "id": "supply:us-va",
+    "kind": "effective-supply",
+    "href": "/xray?r=us-va&tab=supply",
+    "statementClass": "inference",
+    "observedAt": "2026-11-08T02:14:52.413979Z",
+    "provenanceKind": "derived",
+    "provenance": {
+     "kind": "derived",
+     "source": "effective-supply-v1",
+     "observedAt": "2026-11-08T02:14:52.413979Z",
+     "sourceUrl": null,
+     "fetchedAt": "2026-11-08T02:15:00.515868Z",
+     "licence": null,
+     "note": "facility records x stated assumptions; announced MW is never counted as operating",
+     "inputKinds": [
+      "sample"
+     ]
+    },
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   {
+    "id": "anomaly:announcement-mismatch:us-va:rtx-4090-24gb",
+    "kind": "anomaly",
+    "href": "/xray/anomalies/anomaly:announcement-mismatch:us-va:rtx-4090-24gb",
+    "statementClass": "inference",
+    "observedAt": "2026-11-08T02:10:58Z",
+    "provenanceKind": "derived",
+    "provenance": {
+     "kind": "derived",
+     "source": "anomaly:announcement-mismatch",
+     "observedAt": "2026-11-08T02:10:58Z",
+     "sourceUrl": null,
+     "fetchedAt": "2026-11-08T02:15:00.510554Z",
+     "licence": null,
+     "note": "capacity-pipeline normalised <= -0.75 (a pipeline of 1.5x operating MW, or 375 MW where nothing operates) while score >= 60, or operating MW >= 200 while price-premium raw >= 0.2",
+     "inputKinds": [
+      "sample"
+     ]
+    },
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   {
+    "id": "intel-022",
+    "kind": "feed",
+    "href": "/feed/intel-022",
+    "statementClass": "observation",
+    "observedAt": "2026-10-08T07:00:00Z",
+    "provenanceKind": "sample",
+    "provenance": {
+     "kind": "sample",
+     "source": "flopx-sample-v1",
+     "observedAt": "2026-10-08T09:00:00Z",
+     "sourceUrl": null,
+     "fetchedAt": null,
+     "licence": null,
+     "note": "authored sample intelligence item; the headline describes no real event",
+     "inputKinds": []
+    },
+    "inputKinds": [
+     "sample"
+    ]
+   }
+  ],
+  "followThrough": [
+   {
+    "kind": "open",
+    "route": "/xray?r=us-va&g=rtx-4090-24gb",
+    "label": "pressure-cell"
+   },
+   {
+    "kind": "open",
+    "route": "/xray?r=us-va&tab=supply",
+    "label": "effective-supply"
+   },
+   {
+    "kind": "open",
+    "route": "/xray/anomalies/anomaly:announcement-mismatch:us-va:rtx-4090-24gb",
+    "label": "anomaly"
+   },
+   {
+    "kind": "open",
+    "route": "/feed/intel-022",
+    "label": "feed"
+   }
+  ],
+  "caveats": [
+   "composed from the product's own evidence; sentences are templates, not reasoning",
+   "sample inputs: the sample set is authored and observed nowhere"
+  ],
+  "method": "composed-from-evidence-v1",
+  "statementClass": "inference",
+  "notLanguageModel": true,
+  "engine": "composed",
+  "languageModelNote": "no language model was used; a drafting mode exists behind ANTHROPIC_API_KEY and no key is configured",
+  "freshness": {
+   "generatedAt": "2026-11-08T02:15:00.516390Z",
+   "oldestObservedAt": "2026-06-27T20:30:00.785653Z",
+   "sources": [
+    "akash",
+    "flopx-sample-v1",
+    "hacker-news",
+    "kalshi",
+    "polymarket-gamma",
+    "rss:corescientific",
+    "rss:coreweave",
+    "rss:nvidia",
+    "runpod",
+    "vast-ai",
+    "wikidata"
+   ],
+   "unavailable": [
+    {
+     "source": "kalshi:KXUTILITYPJMWEST",
+     "reason": "no-open-markets"
+    }
+   ]
+  }
+ }
+}

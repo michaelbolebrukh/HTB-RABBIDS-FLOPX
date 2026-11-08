@@ -1,0 +1,20 @@
+Your FLOPX verification code is {{code}}.
+
+FLOPX
+
+Welcome, {{name}}
+
+Thanks for joining FLOPX. Use the code below to verify your account.
+
+{{code}}
+
+This code expires in {{expiry_minutes}} minutes.
+
+If you didn’t create this account, you can safely ignore this email.
+
+flopx.vercel.app [https://flopx.vercel.app/]
+
+© FLOPX. All rights reserved.
+
+Privacy Policy [https://flopx.vercel.app/privacy-policy] Terms of Service
+[https://flopx.vercel.app/terms-of-service]

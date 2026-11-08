@@ -1,0 +1,319 @@
+{
+ "query": "Tell me about the H100",
+ "intent": "brief",
+ "route": "/ask?q=Tell+me+about+the+H100",
+ "filters": {
+  "g": "h100-sxm-80gb",
+  "target": "gpu:h100-sxm-80gb"
+ },
+ "explanation": {
+  "matched": {
+   "gpuModels": [
+    "h100"
+   ]
+  },
+  "unmatchedTokens": [
+   "tell",
+   "me",
+   "about",
+   "the"
+  ],
+  "numbers": [],
+  "periodDays": null
+ },
+ "actions": [
+  {
+   "kind": "open",
+   "route": "/ask?q=Tell+me+about+the+H100",
+   "requiresConfirmation": false
+  }
+ ],
+ "engine": "grammar",
+ "brief": {
+  "targetKind": "gpu",
+  "targetId": "h100-sxm-80gb",
+  "headline": "NVIDIA h100-sxm-80gb: inferred pressure 17/100, 1 open anomalies, 1 recent items",
+  "sentences": [
+   {
+    "text": "h100-sxm-80gb comparable price was last observed at 2.86 USD/GPU-hour on 2026-11-08 (derived data from fcpi-v1:median-of-adjusted-asks).",
+    "statementClass": "observation",
+    "evidenceIds": [
+     "index:fcpi:h100-sxm-80gb"
+    ]
+   },
+   {
+    "text": "Inferred compute pressure for h100-sxm-80gb in eu-de is 17 of 100 (slack), driven mainly by price-premium (-0.71) and availability (-1.00); this is an estimate from 5 of 6 factors over 1 asks and is labelled exploratory, not measured utilisation.",
+    "statementClass": "inference",
+    "evidenceIds": [
+     "pressure:eu-de:h100-sxm-80gb"
+    ]
+   },
+   {
+    "text": "The slackest cell in view is h100-sxm-80gb in ap-jp at 15 (slack).",
+    "statementClass": "inference",
+    "evidenceIds": [
+     "pressure:ap-jp:h100-sxm-80gb"
+    ]
+   },
+   {
+    "text": "Anomaly overhang (severity 3 of 5): h100-sxm-80gb in Western Europe (Frankfurt hub): slack inferred pressure (17) while a capacity pipeline of 1,800 MW, with no operating capacity in the data, is still coming. No company is linked to it by a facility record or filing.",
+    "statementClass": "inference",
+    "evidenceIds": [
+     "anomaly:overhang:eu-de:h100-sxm-80gb"
+    ]
+   },
+   {
+    "text": "2026-10-19, price-move (verified, severity 3): h100-sxm-80gb on-demand median moved +6.2% in 7 days",
+    "statementClass": "observation",
+    "evidenceIds": [
+     "intel-014"
+    ]
+   },
+   {
+    "text": "The market \"H100 on-demand median price above $3.00/GPU-hour at end of December 2026?\" prices Yes at 41% (sample-prediction-venue); a quote, not a forecast of record.",
+    "statementClass": "observation",
+    "evidenceIds": [
+     "mkt-001"
+    ]
+   },
+   {
+    "text": "The market \"Spot H100 discount to on-demand narrows below 40% by end of March 2027?\" prices Yes at 68% (sample-prediction-venue); a quote, not a forecast of record.",
+    "statementClass": "observation",
+    "evidenceIds": [
+     "mkt-012"
+    ]
+   }
+  ],
+  "evidence": [
+   {
+    "id": "index:fcpi:h100-sxm-80gb",
+    "kind": "series",
+    "href": "/research?tab=lab&series=index%3Afcpi%3Ah100-sxm-80gb",
+    "statementClass": "observation",
+    "observedAt": "2026-11-08T02:10:53Z",
+    "provenanceKind": "derived",
+    "provenance": {
+     "kind": "derived",
+     "source": "fcpi-v1:median-of-adjusted-asks",
+     "observedAt": "2026-11-08T02:10:53Z",
+     "sourceUrl": null,
+     "fetchedAt": "2026-11-08T02:11:39.229029Z",
+     "licence": null,
+     "note": null,
+     "inputKinds": [
+      "live"
+     ]
+    },
+    "inputKinds": [
+     "live"
+    ]
+   },
+   {
+    "id": "pressure:eu-de:h100-sxm-80gb",
+    "kind": "pressure-cell",
+    "href": "/xray?r=eu-de&g=h100-sxm-80gb",
+    "statementClass": "inference",
+    "observedAt": "2026-11-08T02:10:58Z",
+    "provenanceKind": "derived",
+    "provenance": {
+     "kind": "derived",
+     "source": "cpx-v1",
+     "observedAt": "2026-11-08T02:10:58Z",
+     "sourceUrl": null,
+     "fetchedAt": "2026-11-08T02:11:39.247483Z",
+     "licence": null,
+     "note": "inferred pressure on usable supply; not a measurement of utilisation",
+     "inputKinds": [
+      "archived",
+      "derived",
+      "live",
+      "sample"
+     ]
+    },
+    "inputKinds": [
+     "archived",
+     "derived",
+     "live",
+     "sample"
+    ]
+   },
+   {
+    "id": "pressure:ap-jp:h100-sxm-80gb",
+    "kind": "pressure-cell",
+    "href": "/xray?r=ap-jp&g=h100-sxm-80gb",
+    "statementClass": "inference",
+    "observedAt": "2026-11-08T02:10:58Z",
+    "provenanceKind": "derived",
+    "provenance": {
+     "kind": "derived",
+     "source": "cpx-v1",
+     "observedAt": "2026-11-08T02:10:58Z",
+     "sourceUrl": null,
+     "fetchedAt": "2026-11-08T02:11:39.237970Z",
+     "licence": null,
+     "note": "inferred pressure on usable supply; not a measurement of utilisation",
+     "inputKinds": [
+      "derived",
+      "live",
+      "sample"
+     ]
+    },
+    "inputKinds": [
+     "derived",
+     "live",
+     "sample"
+    ]
+   },
+   {
+    "id": "anomaly:overhang:eu-de:h100-sxm-80gb",
+    "kind": "anomaly",
+    "href": "/xray/anomalies/anomaly:overhang:eu-de:h100-sxm-80gb",
+    "statementClass": "inference",
+    "observedAt": "2026-11-08T02:10:58Z",
+    "provenanceKind": "derived",
+    "provenance": {
+     "kind": "derived",
+     "source": "anomaly:overhang",
+     "observedAt": "2026-11-08T02:10:58Z",
+     "sourceUrl": null,
+     "fetchedAt": "2026-11-08T02:11:44.658057Z",
+     "licence": null,
+     "note": "score <= 25 with capacity-pipeline normalised <= -0.5 (a pipeline of 1.0x operating MW, or 250 MW where nothing operates)",
+     "inputKinds": [
+      "sample"
+     ]
+    },
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   {
+    "id": "intel-014",
+    "kind": "feed",
+    "href": "/feed/intel-014",
+    "statementClass": "observation",
+    "observedAt": "2026-10-19T06:00:00Z",
+    "provenanceKind": "sample",
+    "provenance": {
+     "kind": "sample",
+     "source": "flopx-sample-v1",
+     "observedAt": "2026-10-19T08:00:00Z",
+     "sourceUrl": null,
+     "fetchedAt": null,
+     "licence": null,
+     "note": "authored sample intelligence item; the headline describes no real event",
+     "inputKinds": []
+    },
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   {
+    "id": "mkt-001",
+    "kind": "market",
+    "href": "/markets/mkt-001",
+    "statementClass": "observation",
+    "observedAt": "2026-11-06T21:00:00Z",
+    "provenanceKind": "sample",
+    "provenance": {
+     "kind": "sample",
+     "source": "flopx-sample-v1",
+     "observedAt": "2026-11-06T21:00:00Z",
+     "sourceUrl": null,
+     "fetchedAt": null,
+     "licence": null,
+     "note": "authored sample market; a quote is a price, never a calibrated probability",
+     "inputKinds": []
+    },
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   {
+    "id": "mkt-012",
+    "kind": "market",
+    "href": "/markets/mkt-012",
+    "statementClass": "observation",
+    "observedAt": "2026-11-06T21:00:00Z",
+    "provenanceKind": "sample",
+    "provenance": {
+     "kind": "sample",
+     "source": "flopx-sample-v1",
+     "observedAt": "2026-11-06T21:00:00Z",
+     "sourceUrl": null,
+     "fetchedAt": null,
+     "licence": null,
+     "note": "authored sample market; a quote is a price, never a calibrated probability",
+     "inputKinds": []
+    },
+    "inputKinds": [
+     "sample"
+    ]
+   }
+  ],
+  "followThrough": [
+   {
+    "kind": "open",
+    "route": "/research?tab=lab&series=index%3Afcpi%3Ah100-sxm-80gb",
+    "label": "series"
+   },
+   {
+    "kind": "open",
+    "route": "/xray?r=eu-de&g=h100-sxm-80gb",
+    "label": "pressure-cell"
+   },
+   {
+    "kind": "open",
+    "route": "/xray?r=ap-jp&g=h100-sxm-80gb",
+    "label": "pressure-cell"
+   },
+   {
+    "kind": "open",
+    "route": "/xray/anomalies/anomaly:overhang:eu-de:h100-sxm-80gb",
+    "label": "anomaly"
+   },
+   {
+    "kind": "open",
+    "route": "/feed/intel-014",
+    "label": "feed"
+   },
+   {
+    "kind": "open",
+    "route": "/markets/mkt-001",
+    "label": "market"
+   }
+  ],
+  "caveats": [
+   "composed from the product's own evidence; sentences are templates, not reasoning",
+   "sample inputs: the sample set is authored and observed nowhere"
+  ],
+  "method": "composed-from-evidence-v1",
+  "statementClass": "inference",
+  "notLanguageModel": true,
+  "engine": "composed",
+  "languageModelNote": "no language model was used; a drafting mode exists behind ANTHROPIC_API_KEY and no key is configured",
+  "freshness": {
+   "generatedAt": "2026-11-08T02:11:44.667542Z",
+   "oldestObservedAt": "2026-06-27T20:30:00.785653Z",
+   "sources": [
+    "akash",
+    "flopx-sample-v1",
+    "hacker-news",
+    "kalshi",
+    "polymarket-gamma",
+    "rss:corescientific",
+    "rss:coreweave",
+    "rss:nvidia",
+    "runpod",
+    "vast-ai",
+    "wikidata"
+   ],
+   "unavailable": [
+    {
+     "source": "kalshi:KXUTILITYPJMWEST",
+     "reason": "no-open-markets"
+    }
+   ]
+  }
+ }
+}

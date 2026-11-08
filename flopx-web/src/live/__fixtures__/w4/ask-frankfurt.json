@@ -1,0 +1,180 @@
+{
+ "query": "What is happening in Frankfurt?",
+ "intent": "brief",
+ "route": "/ask?q=What+is+happening+in+Frankfurt%3F",
+ "filters": {
+  "r": "eu-de",
+  "target": "region:eu-de"
+ },
+ "explanation": {
+  "matched": {
+   "regions": [
+    "frankfurt"
+   ],
+   "measures": [
+    "brief"
+   ],
+   "actions": [
+    "show"
+   ]
+  },
+  "unmatchedTokens": [
+   "is",
+   "in"
+  ],
+  "numbers": [],
+  "periodDays": null
+ },
+ "actions": [
+  {
+   "kind": "open",
+   "route": "/ask?q=What+is+happening+in+Frankfurt%3F",
+   "requiresConfirmation": false
+  }
+ ],
+ "engine": "grammar",
+ "brief": {
+  "targetKind": "region",
+  "targetId": "eu-de",
+  "headline": "Western Europe (Frankfurt hub): 1 recent items, 0 open anomalies",
+  "sentences": [
+   {
+    "text": "DE-LU day-ahead power was last observed at 213 EUR/MWh on 2026-11-08 (archived data from energy-charts).",
+    "statementClass": "observation",
+    "evidenceIds": [
+     "energy:DE-LU:day-ahead"
+    ]
+   },
+   {
+    "text": "Facility records show 0 MW operating, 500 MW under construction and 1,300 MW announced or planned in eu-de; at an assumed 70% utilisation the effective supply is estimated at 400 MW. Announced megawatts are not live capacity.",
+    "statementClass": "inference",
+    "evidenceIds": [
+     "supply:eu-de"
+    ]
+   },
+   {
+    "text": "2026-10-11, divergence (interpretation, severity 3): IREN diverges from the b200-sxm-192gb sample index over 20 days",
+    "statementClass": "observation",
+    "evidenceIds": [
+     "intel-025"
+    ]
+   }
+  ],
+  "evidence": [
+   {
+    "id": "energy:DE-LU:day-ahead",
+    "kind": "series",
+    "href": "/infra?r=eu-de",
+    "statementClass": "observation",
+    "observedAt": "2026-11-08T02:00:00Z",
+    "provenanceKind": "archived",
+    "provenance": {
+     "kind": "archived",
+     "source": "energy-charts",
+     "observedAt": "2026-11-08T02:00:00Z",
+     "sourceUrl": "https://www.energy-charts.info/charts/price_spot_market/chart.htm?l=en&c=DE",
+     "fetchedAt": "2026-11-08T02:10:49.057229Z",
+     "licence": "CC BY 4.0",
+     "note": "day-ahead price DE-LU for the delivery slot starting at t; CC BY 4.0 (creativecommons.org/licenses/by/4.0) from Bundesnetzagentur | SMARD.de; via Energy-Charts (Fraunhofer ISE)",
+     "inputKinds": []
+    },
+    "inputKinds": [
+     "archived"
+    ]
+   },
+   {
+    "id": "supply:eu-de",
+    "kind": "effective-supply",
+    "href": "/xray?r=eu-de&tab=supply",
+    "statementClass": "inference",
+    "observedAt": "2026-11-08T02:15:23.657259Z",
+    "provenanceKind": "derived",
+    "provenance": {
+     "kind": "derived",
+     "source": "effective-supply-v1",
+     "observedAt": "2026-11-08T02:15:23.657259Z",
+     "sourceUrl": null,
+     "fetchedAt": "2026-11-08T02:15:33.592409Z",
+     "licence": null,
+     "note": "facility records x stated assumptions; announced MW is never counted as operating; computed over the region's sample facility records only, 18 observed records for the region listed apart and not mixed in",
+     "inputKinds": [
+      "sample"
+     ]
+    },
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   {
+    "id": "intel-025",
+    "kind": "feed",
+    "href": "/feed/intel-025",
+    "statementClass": "observation",
+    "observedAt": "2026-10-11T04:00:00Z",
+    "provenanceKind": "sample",
+    "provenance": {
+     "kind": "sample",
+     "source": "flopx-sample-v1",
+     "observedAt": "2026-10-11T09:00:00Z",
+     "sourceUrl": null,
+     "fetchedAt": null,
+     "licence": null,
+     "note": "authored sample intelligence item; the headline describes no real event",
+     "inputKinds": []
+    },
+    "inputKinds": [
+     "sample"
+    ]
+   }
+  ],
+  "followThrough": [
+   {
+    "kind": "open",
+    "route": "/infra?r=eu-de",
+    "label": "series"
+   },
+   {
+    "kind": "open",
+    "route": "/xray?r=eu-de&tab=supply",
+    "label": "effective-supply"
+   },
+   {
+    "kind": "open",
+    "route": "/feed/intel-025",
+    "label": "feed"
+   }
+  ],
+  "caveats": [
+   "composed from the product's own evidence; sentences are templates, not reasoning",
+   "sample inputs: the sample set is authored and observed nowhere"
+  ],
+  "method": "composed-from-evidence-v1",
+  "statementClass": "inference",
+  "notLanguageModel": true,
+  "engine": "composed",
+  "languageModelNote": "no language model was used; a drafting mode exists behind ANTHROPIC_API_KEY and no key is configured",
+  "freshness": {
+   "generatedAt": "2026-11-08T02:15:33.593272Z",
+   "oldestObservedAt": "2026-06-27T20:30:00.785653Z",
+   "sources": [
+    "akash",
+    "flopx-sample-v1",
+    "hacker-news",
+    "kalshi",
+    "polymarket-gamma",
+    "rss:corescientific",
+    "rss:coreweave",
+    "rss:nvidia",
+    "runpod",
+    "vast-ai",
+    "wikidata"
+   ],
+   "unavailable": [
+    {
+     "source": "kalshi:KXUTILITYPJMWEST",
+     "reason": "no-open-markets"
+    }
+   ]
+  }
+ }
+}

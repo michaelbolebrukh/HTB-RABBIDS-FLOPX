@@ -1,0 +1,39 @@
+{
+ "query": "Plan a job of 64 GPU-hours on H200",
+ "intent": "procure",
+ "route": "/procure?g=h200-sxm-141gb&gpus=64&gpuHours=64",
+ "filters": {
+  "g": "h200-sxm-141gb",
+  "gpus": 64,
+  "gpuHours": 64
+ },
+ "explanation": {
+  "matched": {
+   "gpuModels": [
+    "h200"
+   ],
+   "measures": [
+    "procure"
+   ]
+  },
+  "unmatchedTokens": [
+   "a",
+   "of",
+   "64",
+   "on"
+  ],
+  "numbers": [
+   64.0
+  ],
+  "periodDays": null
+ },
+ "actions": [
+  {
+   "kind": "open",
+   "route": "/procure?g=h200-sxm-141gb&gpus=64&gpuHours=64",
+   "requiresConfirmation": false
+  }
+ ],
+ "engine": "grammar",
+ "brief": null
+}

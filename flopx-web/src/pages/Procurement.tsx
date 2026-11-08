@@ -1,0 +1,307 @@
+import { useMemo, useState } from 'react'
+import { CircleCheck, ShoppingCart } from 'lucide-react'
+import { GPUS, NOW_IDX, OFFERS, providerById, regionById, REGIONS } from '@/data/core'
+import { SIGNALS } from '@/data/fund'
+import { Distribution } from '@/components/charts'
+import { Btn, cx, dominantFresh, Empty, Fresh, Meter, PageHeader, Panel, Seg, TruthTag } from '@/components/ui'
+import { PROCUREMENT, SNAPSHOT, TIMING_GATE } from '@/data/handoff'
+import { pressureAt } from '@/lib/model'
+import { useStore } from '@/lib/store'
+import { GPU_MODEL, offerRegionName } from '@/live/gpu'
+import { freshOf } from '@/live/provenance'
+import { uncertaintyOf, useProcurePlan, type ProcureSpec, type RankedOption, type ScenarioRow } from '@/live/adapt-w5'
+
+const AREAS: Record<string, string[]> = { Any: [], US: ['us-tx', 'us-va', 'us-az', 'us-or'], EU: ['ie-dub', 'uk-lon', 'nl-ams', 'de-fra', 'no-nordics'], 'North America': ['us-tx', 'us-va', 'us-az', 'us-or', 'ca-qc'], APAC: ['sg', 'jp-tyo', 'in-mum', 'au-syd'] }
+
+/** "$41.8k" above ten thousand dollars, "$414.93" below: the hand-off job cost hundreds, a 12-week job costs tens of thousands. */
+const fmtCost = (v: number) => (v >= 10_000 ? `$${(v / 1000).toFixed(1)}k` : `$${v.toFixed(2)}`)
+
+/** Design rows (the hand-off snapshot) in the live row shape. */
+const SNAPSHOT_ROWS: ScenarioRow[] = PROCUREMENT.plans.map((p) => ({ ...p, live: false }))
+
+function PlanBars({ rows, median, title }: { rows: ScenarioRow[]; median: number | null; title: string }) {
+  // The design scaled its bars to a fixed $480 for a $415 to $465 job; the live job's costs set the scale.
+  const max = Math.max(...rows.map((r) => r.cost), median ?? 0) * 1.1 || 1
+  const pct = (v: number) => `${(v / max) * 100}%`
+  const rec = rows.find((r) => r.recommended)
+  const saving = rec && median ? 1 - rec.cost / median : null
+  return (
+    <div title={title}>
+      <div className="relative space-y-2.5 pt-4">
+        {median != null && (
+          <div className="pointer-events-none absolute bottom-0 top-0" style={{ left: `calc(7rem + (100% - 7rem - 5.5rem) * ${median / max})`, borderLeft: '1px dashed var(--color-dim)' }} title={`Median feasible ask ${fmtCost(median)}`}>
+            <span className="num absolute -top-0.5 left-1 whitespace-nowrap text-[10px] text-dim">median {fmtCost(median)}</span>
+          </div>
+        )}
+        {rows.map((p) => (
+          <div key={p.id} className="grid grid-cols-[7rem_minmax(0,1fr)_5.5rem] items-center gap-0" title={`${p.label}: ${p.note}`}>
+            <div className={cx('truncate text-[12px]', p.recommended ? 'text-bone' : 'text-mute')}>{p.label}</div>
+            <div className="relative h-3">
+              <div
+                className={cx('absolute inset-y-0 left-0 rounded-sm', !p.feasible && 'hatch-inf border')}
+                style={{ width: pct(p.cost), background: p.feasible ? (p.recommended ? 'var(--color-cat1)' : 'var(--color-dim)') : undefined, borderColor: 'var(--color-dim)', opacity: p.feasible ? 1 : 0.7 }}
+              />
+            </div>
+            <div className="pl-2 text-right leading-tight">
+              <div className="num text-[12px] text-bone">{fmtCost(p.cost)}</div>
+              {p.recommended && saving != null && saving > 0.0005 && <div className="num text-[10px] text-bone">−{(saving * 100).toFixed(1)}%</div>}
+              {!p.feasible && <div className="font-mono text-[10px] text-down">not allowed</div>}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+export default function Procurement() {
+  const { route, toast, live } = useStore()
+  const [gpu, setGpu] = useState(route.params.gpu ?? 'h100')
+  const [n, setN] = useState(+(route.params.n ?? 64))
+  const [weeks, setWeeks] = useState(+(route.params.weeks ?? 12))
+  const [deadline, setDeadline] = useState(30)
+  const [area, setArea] = useState('Any')
+  const [ib, setIb] = useState(false)
+  const [minRel, setMinRel] = useState(80)
+  const [budget, setBudget] = useState(1500)
+  const [requests, setRequests] = useState<Record<string, 'requested' | 'held'>>({})
+  const hours = weeks * 168
+  const spec: ProcureSpec = { gpu, n, weeks, deadlineDays: deadline, area, ib, minRel, budgetK: budget }
+  // The backend's costed plan for this spec (POST /flopx/procure/plan, three scenario variants) and
+  // the index forecast for the GPU. Until it lands, and if it fails, the design's own ranking below
+  // stays on screen with each offer's own badge.
+  const planned = useProcurePlan(spec)
+  const planLive = planned.status === 'live' && planned.plan != null
+  // The design's client-side ranking over OFFERS (W0's live offers, or the design's illustrative
+  // ones for a GPU with no coverage), in the live row shape, as the fallback.
+  const fallback = useMemo((): RankedOption[] => OFFERS.filter((o) => o.gpu === gpu && (!ib || o.interconnect === 'InfiniBand 3.2T') && (area === 'Any' || AREAS[area].includes(o.region)) && (!Number.isFinite(providerById(o.provider)?.reliability ?? NaN) || providerById(o.provider)!.reliability >= minRel) && o.contract !== 'Spot')
+    .map((o) => {
+      const pr = providerById(o.provider)
+      const r = regionById(o.region)!
+      const p = pressureAt(r, NOW_IDX) ?? 50
+      const fixed = o.contract !== 'On-demand'
+      const drift = fixed ? 0 : -0.012 * Math.min(3, weeks / 4)
+      const total = o.price * n * hours * (1 + drift)
+      const spread = fixed ? 0.02 : 0.09 + Math.max(0, p - 60) / 300
+      const availRisk = o.available === 'Available' ? 'Low' : o.available === 'Limited' ? 'Medium' : 'High'
+      const risks = [o.available !== 'Available' && `Capacity ${o.available.toLowerCase()} · regional pressure ${p.toFixed(0)}`, o.contract === '1-yr reserved' && weeks < 52 && 'Commit exceeds workload, so you pay for idle time', !fixed && 'On-demand price may change', pr?.type === 'Hyperscaler' && 'List price: negotiated rate likely lower', o.egress !== 'Free' && o.egress !== 'n/a' && `Egress ${o.egress}`].filter(Boolean) as string[]
+      const commitTotal = o.contract === '1-yr reserved' ? o.price * n * 8760 : o.contract === '1-mo reserved' ? o.price * n * Math.ceil(weeks / 4.3) * 730 : total
+      return {
+        id: o.id, providerId: o.provider, providerName: pr?.name ?? o.provider, regionName: offerRegionName(o), contract: o.contract, interconnect: o.interconnect, sla: o.sla, price: o.price, observed: o.observed, freshness: o.freshness,
+        reliability: pr?.reliability ?? NaN, availRisk, available: o.available, risks, tradeOffs: [], marketReading: o.note ? `Vast.ai asks: a current ${o.note}` : undefined,
+        total: Math.max(total, commitTotal), lo: total * (1 - spread), hi: Math.max(total, commitTotal) * (1 + spread / 2), live: !!o.live, interruptible: false, meetsDeadline: null, sourceUrl: o.sourceUrl,
+      } satisfies RankedOption
+    })
+    .sort((a, b) => a.total - b.total), [gpu, n, weeks, area, ib, minRel, hours, live])
+  const options: RankedOption[] = planLive ? planned.plan!.options : fallback
+  // The status most ranked rows share is said once in the eyebrow; only a row that differs keeps a chip.
+  const optionsFresh = dominantFresh(options.slice(0, 7).map((o) => o.freshness))
+  const over = (x: number) => x / 1000 > budget
+  const sig = SIGNALS.find((s) => s.id === 'sig-h100')!
+  const ref = options.length ? options.reduce((a, b) => (b.total < a.total ? b : a)) : undefined
+  const gpuRow = GPUS.find((g) => g.id === gpu)
+  const gpuName = gpuRow?.name ?? gpu
+  /** "H100", as the design's GPU buttons and the panel eyebrow abbreviate it. */
+  const gpuShort = gpuName.replace(' SXM', '').replace(' 80GB', '')
+  // The 1M uncertainty panel: the backend forecast when it answers, else the design's example, badged.
+  const fc = planned.forecast
+  const fcOk = fc?.kind === 'ok' ? fc.data : null
+  const dist = fcOk && gpuRow?.live ? uncertaintyOf(fcOk, gpuRow.live.current) : null
+  const fcReason = !GPU_MODEL[gpu] ? `FLOPX has no index for ${gpuName}` : fc?.kind === 'refused' ? `FLOPX refuses a ${fc.detail.horizon ?? 30}-day forecast for ${gpuName}: ${fc.detail.history_points ?? 0} of ${fc.detail.required_points ?? 60} points of history` : fc?.kind === 'ok' && !dist ? `No current ${gpuName} index level to anchor the forecast` : fc?.kind === 'failed' ? `Forecast unavailable (${fc.error})` : 'Forecast pending'
+  const scenarios = planLive ? planned.scenarios : null
+  const gate = planned.gate
+  const eyebrow = planLive
+    ? planned.plan!.tier === 'live'
+      ? `${options.length} live asks can run this job · expected total cost · FLOPX planner ${planned.plan!.asOf} UTC`
+      : planned.plan!.tier === 'sample'
+        ? `No live ask lists ${n} × ${gpuName}; ${options.length} FLOPX sample asks shown, illustrative · expected total cost`
+        : `No ask can run this job · FLOPX planner ${planned.plan!.asOf} UTC`
+    : `${options.length} observed offers meet constraints · expected total cost`
+
+  return (
+    <div>
+      <PageHeader eyebrow={<><ShoppingCart size={12} /> Compute procurement decision desk</>} title="Rent compute, not exposure" sub="For buyers of actual GPU capacity. Enter workload requirements and compare observed offers, scheduling scenarios, costs and reliability. Estimates, available offers and reservation status are labelled distinctly." />
+      <div className="mb-4 flex flex-wrap gap-x-6 gap-y-1 text-[11.5px] text-mute">
+        <span className="flex items-center gap-1.5"><TruthTag truth="obs" compact /> Offers are quoted, not guaranteed</span>
+        <span className="flex items-center gap-1.5"><TruthTag truth="fct" compact /> Costs are modelled ranges</span>
+        <span className="flex items-center gap-1.5"><TruthTag truth="dec" compact /> Nothing is reserved until confirmed</span>
+      </div>
+      <div className="grid grid-cols-1 gap-5 xl:grid-cols-[320px_1fr]">
+        <Panel title="Workload requirements" className="self-start" bodyClass="!p-0">
+          <Section title="Hardware" accent="var(--color-cat1)">
+            <div className="grid grid-cols-3 gap-1.5" role="radiogroup" aria-label="GPU">
+              {GPUS.map((g) => (
+                <button key={g.id} role="radio" aria-checked={gpu === g.id} onClick={() => setGpu(g.id)}
+                  className={cx('cursor-pointer rounded-[4px] border px-2 py-1.5 text-left transition-colors', gpu === g.id ? 'border-[var(--accent)] bg-[color-mix(in_oklab,var(--accent)_12%,transparent)]' : 'border-line hover:border-line2 hover:bg-hover')}>
+                  <div className={cx('font-serif text-[13px]', gpu === g.id ? 'text-[var(--accent)]' : 'text-mute')}>{g.name.replace(' SXM', '').replace(' 80GB', '')}</div>
+                  <div className="num text-[10px] text-dim">{g.memory.split(' ').slice(0, 2).join(' ')}</div>
+                </button>
+              ))}
+            </div>
+            <Range label="GPU count" value={n} display={`${n} GPUs`} min={8} max={512} step={8} onChange={setN} />
+          </Section>
+          <Section title="Schedule" accent="var(--color-cat3)">
+            <Range label="Duration" value={weeks} display={`${weeks} wk`} min={1} max={52} onChange={setWeeks} />
+            <Range label="Must start within" value={deadline} display={`${deadline} d`} min={3} max={120} onChange={setDeadline} />
+          </Section>
+          <Section title="Constraints" accent="var(--color-cat2)">
+            <div>
+              <div className="mb-1.5 text-[12px] text-mute">Location</div>
+              <Seg className="flex w-full [&>button]:flex-auto [&>button]:whitespace-nowrap" size="sm" value={area} onChange={setArea} options={Object.keys(AREAS).map((a) => ({ id: a, label: a === 'North America' ? 'N. Am.' : a, title: a }))} />
+            </div>
+            <Switch label="Require InfiniBand" hint="Needed for multi-node training" checked={ib} onChange={setIb} />
+            <Range label="Min. provider reliability" value={minRel} display={`${minRel}/100`} min={60} max={97} onChange={setMinRel} />
+            <Range label="Budget" value={budget} display={budget >= 1000 ? `$${(budget / 1000).toFixed(2)}M` : `$${budget}k`} min={100} max={5000} step={50} onChange={setBudget} color={ref ? (over(ref.total) ? 'var(--color-down)' : 'var(--color-up)') : undefined} fmtEnds={(v) => (v >= 1000 ? `$${v / 1000}M` : `$${v}k`)} />
+          </Section>
+          <dl className="grid grid-cols-3 border-t border-line bg-raise/60">
+            <Stat label="GPU-hours" value={(n * hours).toLocaleString()} />
+            <Stat label="Nodes" value={`${(n / 8).toFixed(0)} × 8`} />
+            <Stat label="Cheapest" value={ref ? `$${Math.round(ref.total / 1000)}k` : '—'} tone={ref ? (over(ref.total) ? 'down' : 'up') : undefined} sub={ref ? (over(ref.total) ? 'over budget' : 'within budget') : 'no match'} />
+          </dl>
+        </Panel>
+
+        <div className="space-y-5">
+          <Panel title="Ranked options" eyebrow={<>{eyebrow}{optionsFresh && <Fresh quiet f={optionsFresh} label={options.some((o) => o.freshness !== optionsFresh) ? `${optionsFresh} unless a row says otherwise` : undefined} />}</>} bodyClass="p-0">
+            {options.length === 0 ? (
+              <Empty className="m-4" tone="warn" title={planLive ? 'No ask can run this job' : 'No observed offers match'} body={planLive ? `FLOPX saw ${planned.plan!.returned} candidate asks for ${gpuName} and excluded ${planned.plan!.excluded['gpu-count'] ?? 0} for listing fewer than ${n} GPUs, ${planned.plan!.excluded['region'] ?? 0} for location and ${planned.plan!.excluded['unavailable'] ?? 0} as unavailable. Relax the count, location or reliability constraints. FLOPX will not invent capacity that hasn't been quoted.` : "Relax the location, fabric or reliability constraints. FLOPX will not invent capacity that hasn't been quoted."} />
+            ) : options.slice(0, 7).map((x, i) => {
+              const st = requests[x.id]
+              return (
+                <div key={x.id} className="grid grid-cols-[20px_minmax(0,1fr)_auto_150px] items-start gap-x-5 border-b border-line/60 px-4 py-3.5 last:border-b-0">
+                  <span className={cx('num pt-px text-[12px]', i === 0 ? 'font-semibold text-bone' : 'text-dim')}>{i + 1}</span>
+                  <div className="min-w-0 text-[11.5px] text-mute">
+                    <div className="text-[13.5px] leading-tight"><span className="font-semibold text-bone">{x.providerName}</span><span className="text-mute"> · {x.regionName}</span></div>
+                    <div className="mt-1">{x.contract} · {x.interconnect} · SLA <span className="num">{x.sla}</span></div>
+                    <div className="mt-0.5 flex flex-wrap items-center gap-x-1.5"><span><span className="num text-bone">${x.price.toFixed(2)}</span>/GPU-hr</span><span className="text-dim">· observed {x.observed}</span>{x.freshness !== optionsFresh && <Fresh f={x.freshness} className="ml-1" />}</div>
+                    <div className="mt-0.5">Reliability <span className="num text-bone">{Number.isFinite(x.reliability) ? x.reliability : 'n/a'}</span><span className="text-dim">/100</span> · <span className={x.availRisk === 'High' ? 'text-down' : x.availRisk === 'Medium' ? 'text-warn' : ''}>{x.availRisk.toLowerCase()} availability risk</span></div>
+                    {x.marketReading && <div className="mt-0.5 text-dim">{x.marketReading}</div>}
+                    {x.risks.length > 0 && <ul className="mt-1.5 space-y-0.5 text-dim">{x.risks.map((r) => <li key={r}>– {r}</li>)}</ul>}
+                  </div>
+                  <div className="text-right">
+                    <div className={cx('num text-[16px] leading-tight', over(x.total) ? 'text-down' : 'text-bone')}>${(x.total / 1000).toFixed(0)}k</div>
+                    <div className="num mt-0.5 text-[10.5px] text-dim">${(x.lo / 1000).toFixed(0)}–{(x.hi / 1000).toFixed(0)}k est.</div>
+                    {over(x.total) && <div className="text-[10.5px] text-down">Over budget</div>}
+                  </div>
+                  <div className="w-[150px] text-right">
+                    {st === 'requested' ? (
+                      <div className="font-mono text-[10px] text-dec"><span className="pulse-dot mr-1 inline-block size-1.5 rounded-full bg-dec" />Quote requested<div className="text-dim">Not reserved · awaiting provider</div><button className="mt-1 cursor-pointer text-mute underline" onClick={() => { setRequests((r) => ({ ...r, [x.id]: 'held' })); toast(`${x.providerName}: capacity hold confirmed (simulated, 48h)`, 'ok') }}>Simulate provider reply</button></div>
+                    ) : st === 'held' ? (
+                      <div className="font-mono text-[10px] text-up"><CircleCheck size={11} className="mr-1 inline" />48h hold (simulated)<div className="text-dim">Not purchased</div></div>
+                    ) : (
+                      <Btn size="sm" variant={i === 0 ? 'primary' : 'outline'} disabled={x.available === 'Sold out'} onClick={() => { setRequests((r) => ({ ...r, [x.id]: 'requested' })); toast(`Quote request sent to ${x.providerName} (simulated)`, 'info') }}>{x.available === 'Sold out' ? 'Sold out' : 'Request quote'}</Btn>
+                    )}
+                  </div>
+                </div>
+              )
+            })}
+          </Panel>
+
+          {(ref || scenarios) && (
+            <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1fr_320px]">
+              {/* Live: the backend's plans for the selected GPU and spec. Fallback: the 7 Nov hand-off snapshot (an H200 job), badged as such. */}
+              <Panel
+                title="Scheduling scenarios"
+                eyebrow={scenarios ? scenarios.job : `${PROCUREMENT.job} (hand-off example)`}
+                right={scenarios ? <Fresh quiet f={scenarios.freshness} label={scenarios.freshness === 'illustrative' ? 'Illustrative · sample tier' : `${scenarios.freshness === 'live' ? 'Live asks' : 'Asks'} ${scenarios.asOf} UTC`} /> : <Fresh quiet f="historical" label={SNAPSHOT.short} />}
+              >
+                {scenarios ? <PlanBars rows={scenarios.rows} median={scenarios.median} title={`Median over ${scenarios.n} feasible ${scenarios.freshness === 'illustrative' ? 'FLOPX sample' : 'live'} asks`} /> : <PlanBars rows={SNAPSHOT_ROWS} median={PROCUREMENT.median} title={PROCUREMENT.jobNote} />}
+                {gate ? (
+                  <div className="mt-4 rounded-md border border-line p-3" title={gate.note}>
+                    <div className="flex items-center justify-between text-[12.5px] font-medium">Timing gate<span className={cx('font-mono text-[10px]', gate.open ? 'text-up' : 'text-down')}>{gate.open ? 'Open' : 'Closed'}</span></div>
+                    <div className="mt-2 space-y-2.5">
+                      <div title="Index history"><Meter value={gate.historyPoints} max={gate.historyNeeded} color="var(--color-cat2)" /></div>
+                      <div title="Skill"><Meter value={gate.skillPct ?? 0} max={gate.skillNeeded} color="var(--color-cat3)" hatched={gate.skillPct == null} /></div>
+                    </div>
+                    <div className="num mt-2 text-[11px] text-mute">{gate.open ? 'Open' : 'Closed'}: {gate.historyPoints} of {gate.historyNeeded} daily {gpuShort} index points · {gate.skillPct == null ? 'skill not yet measurable' : `${gate.skillPct >= 0 ? '+' : ''}${gate.skillPct.toFixed(1)}% of +${gate.skillNeeded}% skill`}</div>
+                  </div>
+                ) : (
+                  <div className="mt-4 rounded-md border border-line p-3" title={TIMING_GATE.note}>
+                    <div className="flex items-center justify-between text-[12.5px] font-medium">Timing gate<span className={cx('font-mono text-[10px]', TIMING_GATE.open ? 'text-up' : 'text-down')}>{TIMING_GATE.open ? 'Open' : 'Closed'}</span></div>
+                    <div className="mt-2 space-y-2.5">
+                      <div title="Out-of-sample history"><Meter value={TIMING_GATE.historyHours} max={TIMING_GATE.historyNeeded} color="var(--color-cat2)" /></div>
+                      <div title="Skill"><Meter value={TIMING_GATE.skillPct} max={TIMING_GATE.skillNeeded} color="var(--color-cat3)" /></div>
+                    </div>
+                    <div className="num mt-2 text-[11px] text-mute">Closed: {TIMING_GATE.historyHours} of {TIMING_GATE.historyNeeded} h history · +{TIMING_GATE.skillPct}% of +{TIMING_GATE.skillNeeded}% skill <span className="text-dim">({SNAPSHOT.short})</span></div>
+                  </div>
+                )}
+              </Panel>
+              <Panel title="1M price uncertainty" eyebrow={`${gpuShort} index forecast`} right={dist && fcOk ? <Fresh f={freshOf(fcOk.provenance).freshness} label={fcOk.exploratory ? 'Exploratory' : undefined} /> : <span title={fcReason}><Fresh f="illustrative" /></span>}>
+                {dist ? (
+                  <Distribution p10={dist.p10} mean={dist.mean} p90={dist.p90} label={`${fcOk!.horizon}-day change in the index (${fcOk!.chosen})`} />
+                ) : (
+                  <>
+                    <Distribution p10={sig.horizons['1M'].p10} mean={sig.horizons['1M'].mean} p90={sig.horizons['1M'].p90} label="1M change in on-demand price" />
+                    <div className="font-mono text-[10px] text-dim">{fcReason}. Design example shown, not a FLOPX forecast.</div>
+                  </>
+                )}
+              </Panel>
+            </div>
+          )}
+          <div className="font-mono text-[10px] text-dim">Coverage: {coverageNote()} {planLive && planned.plan!.caveats.length > 0 && <>FLOPX planner: {planned.plan!.caveats.join(' · ')}. </>}Rental recommendations are separate from equity signals and do not create portfolio positions.</div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/** "9 regions fully covered. Sydney quotes stale; Johannesburg has none." composed from the region list's own quality flags. */
+function coverageNote(): string {
+  const good = REGIONS.filter((r) => r.quality === 'good').length
+  const stale = REGIONS.filter((r) => r.quality === 'stale').map((r) => r.short)
+  const none = REGIONS.filter((r) => r.quality === 'none').map((r) => r.short)
+  const parts = [`${good} regions fully covered.`]
+  if (stale.length) parts.push(`${stale.join(', ')} quotes stale${none.length ? ';' : '.'}`)
+  if (none.length) parts.push(`${none.join(', ')} ${none.length === 1 ? 'has' : 'have'} none.`)
+  return parts.join(' ')
+}
+
+/** Form group with its own accent: sliders, values, selections and switches inside pick it up via --accent / --range-color. */
+function Section({ title, accent, children }: { title: string; accent: string; children: React.ReactNode }) {
+  return (
+    <div className="space-y-4 border-b border-line px-4 py-4 last:border-b-0" style={{ '--accent': accent, '--range-color': accent } as React.CSSProperties}>
+      <div className="flex items-center gap-2 font-serif text-[13px] text-bone"><span aria-hidden className="h-3 w-[3px] rounded-[1px] bg-[var(--accent)]" />{title}</div>
+      {children}
+    </div>
+  )
+}
+
+/** Labelled slider: thin neutral track with a filled portion, value on the right, range ends below. */
+function Range({ label, value, display, min, max, step = 1, onChange, fmtEnds = String, color }: { label: string; value: number; display: string; min: number; max: number; step?: number; onChange: (v: number) => void; fmtEnds?: (v: number) => string; color?: string }) {
+  const pct = ((value - min) / (max - min)) * 100
+  // "64 GPUs" → value in the display face, unit dimmed.
+  const [, num = display, unit = ''] = display.match(/^(\S+)\s*(.*)$/) ?? []
+  return (
+    <label className="block" style={color ? ({ '--range-color': color } as React.CSSProperties) : undefined}>
+      <div className="mb-1.5 flex items-baseline justify-between">
+        <span className="text-[12px] text-mute">{label}</span>
+        <span className="font-serif text-[15px] tabular-nums text-[var(--range-color)]">{num}{unit && <span className="ml-1 font-sans text-[11px] font-normal text-dim">{unit}</span>}</span>
+      </div>
+      <input type="range" className="range" min={min} max={max} step={step} value={value} onChange={(e) => onChange(+e.target.value)} style={{ '--pct': `${pct}%` } as React.CSSProperties} />
+      <div className="num mt-0.5 flex justify-between text-[9.5px] text-dim"><span>{fmtEnds(min)}</span><span>{fmtEnds(max)}</span></div>
+    </label>
+  )
+}
+
+function Switch({ label, hint, checked, onChange }: { label: string; hint?: string; checked: boolean; onChange: (v: boolean) => void }) {
+  return (
+    <button type="button" role="switch" aria-checked={checked} onClick={() => onChange(!checked)} className="flex w-full cursor-pointer items-center justify-between gap-3 text-left">
+      <span>
+        <span className="block text-[12px] text-mute">{label}</span>
+        {hint && <span className="block text-[10.5px] text-dim">{hint}</span>}
+      </span>
+      <span className={cx('relative h-[18px] w-[32px] shrink-0 rounded-full border transition-colors', checked ? 'border-[var(--accent)] bg-[var(--accent)]' : 'border-line2 bg-ink')}>
+        <span className={cx('absolute top-[2px] h-3 w-3 rounded-full transition-all', checked ? 'left-[15px] bg-ink' : 'left-[2px] bg-dim')} />
+      </span>
+    </button>
+  )
+}
+
+function Stat({ label, value, sub, tone }: { label: string; value: string; sub?: string; tone?: 'up' | 'down' }) {
+  return (
+    <div className="border-r border-line px-3 py-2.5 last:border-r-0">
+      <dt className="text-[10px] text-dim">{label}</dt>
+      <dd className={cx('font-serif text-[15px] tabular-nums', tone === 'up' ? 'text-up' : tone === 'down' ? 'text-down' : 'text-bone')}>{value}</dd>
+      {sub && <dd className="text-[9.5px] text-dim">{sub}</dd>}
+    </div>
+  )
+}

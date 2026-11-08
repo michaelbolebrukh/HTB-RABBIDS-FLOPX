@@ -1,0 +1,1 @@
+{"url": "https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXUTILITYPJMWEST&limit=20&status=open", "status": 200, "date": "Sat, 07 Nov 2026 15:53:07 GMT", "contentType": "application/json", "recordedAt": "2026-11-07T15:51Z", "body": {"cursor": "", "markets": []}}

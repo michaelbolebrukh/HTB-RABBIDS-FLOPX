@@ -1,0 +1,30 @@
+{
+ "query": "Is a second venue like Brev worth checking?",
+ "intent": "overview",
+ "route": "/",
+ "filters": {},
+ "explanation": {
+  "matched": {},
+  "unmatchedTokens": [
+   "is",
+   "a",
+   "second",
+   "venue",
+   "like",
+   "brev",
+   "worth",
+   "checking"
+  ],
+  "numbers": [],
+  "periodDays": null
+ },
+ "actions": [
+  {
+   "kind": "open",
+   "route": "/",
+   "requiresConfirmation": false
+  }
+ ],
+ "engine": "grammar",
+ "brief": null
+}

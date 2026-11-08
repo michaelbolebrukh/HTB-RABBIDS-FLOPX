@@ -1,0 +1,5 @@
+# Test-only dependencies. The Render runtime installs requirements.txt only;
+# CI installs this on top to run the pytest suite. Kept separate so the
+# production image never ships test tooling.
+pytest==9.1.1
+pytest-asyncio==1.4.0

@@ -1,0 +1,327 @@
+{
+ "query": "How is Nebius doing?",
+ "intent": "brief",
+ "route": "/ask?q=How+is+Nebius+doing%3F",
+ "filters": {
+  "t": "NBIS",
+  "target": "ticker:NBIS"
+ },
+ "explanation": {
+  "matched": {
+   "tickers": [
+    "nebius"
+   ],
+   "actions": [
+    "show"
+   ]
+  },
+  "unmatchedTokens": [
+   "is",
+   "doing"
+  ],
+  "numbers": [],
+  "periodDays": null
+ },
+ "actions": [
+  {
+   "kind": "open",
+   "route": "/ask?q=How+is+Nebius+doing%3F",
+   "requiresConfirmation": false
+  }
+ ],
+ "engine": "grammar",
+ "brief": {
+  "targetKind": "ticker",
+  "targetId": "NBIS",
+  "headline": "Nebius Group N.V. (NBIS): inferred pressure 52/100, 0 open anomalies, 2 recent items",
+  "sentences": [
+   {
+    "text": "NBIS close was last observed at 88.75 USD on 2026-11-06 (sample data from flopx-sample-v1).",
+    "statementClass": "observation",
+    "evidenceIds": [
+     "equity:NBIS:close"
+    ]
+   },
+   {
+    "text": "Inferred compute pressure for rtx-4090-24gb in us-va is 52 of 100 (tight), driven mainly by price-premium (+1.00); this is an estimate from 4 of 6 factors over 2 asks and is labelled exploratory, not measured utilisation.",
+    "statementClass": "inference",
+    "evidenceIds": [
+     "pressure:us-va:rtx-4090-24gb"
+    ]
+   },
+   {
+    "text": "Arguing against that reading: availability (-1.00), capacity-pipeline (-0.78).",
+    "statementClass": "inference",
+    "evidenceIds": [
+     "pressure:us-va:rtx-4090-24gb"
+    ]
+   },
+   {
+    "text": "2026-10-14, earnings (verified, severity 4): NBIS reports quarterly results",
+    "statementClass": "observation",
+    "evidenceIds": [
+     "intel-032"
+    ]
+   },
+   {
+    "text": "2026-10-08, divergence (interpretation, severity 2): NBIS diverges from the h200-sxm-141gb sample index over 20 days",
+    "statementClass": "observation",
+    "evidenceIds": [
+     "intel-026"
+    ]
+   },
+   {
+    "text": "The market \"B200 on-demand median price above $6.00/GPU-hour at end of December 2026?\" prices Yes at 34% (sample-prediction-venue); a quote, not a forecast of record.",
+    "statementClass": "observation",
+    "evidenceIds": [
+     "mkt-003"
+    ]
+   },
+   {
+    "text": "The market \"A top-5 neocloud announces 1 GW of contracted capacity before March 2027?\" prices Yes at 34% (sample-prediction-venue); a quote, not a forecast of record.",
+    "statementClass": "observation",
+    "evidenceIds": [
+     "mkt-007"
+    ]
+   },
+   {
+    "text": "Out of sample at 1 days for NBIS, the compute-augmented model's verdict against the price baseline is insufficient-sample (n = 239, skill n/a); on archived/sample closes this tests the method, not the market.",
+    "statementClass": "inference",
+    "evidenceIds": [
+     "evaluation:NBIS:1d"
+    ]
+   },
+   {
+    "text": "Out of sample at 5 days for NBIS, the compute-augmented model's verdict against the price baseline is insufficient-sample (n = 235, skill n/a); on archived/sample closes this tests the method, not the market.",
+    "statementClass": "inference",
+    "evidenceIds": [
+     "evaluation:NBIS:5d"
+    ]
+   }
+  ],
+  "evidence": [
+   {
+    "id": "equity:NBIS:close",
+    "kind": "series",
+    "href": "/research?tab=lab&series=equity%3ANBIS%3Aclose",
+    "statementClass": "observation",
+    "observedAt": "2026-11-06T21:00:00Z",
+    "provenanceKind": "sample",
+    "provenance": {
+     "kind": "sample",
+     "source": "flopx-sample-v1",
+     "observedAt": "2026-11-06T21:00:00Z",
+     "sourceUrl": null,
+     "fetchedAt": null,
+     "licence": null,
+     "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+     "inputKinds": []
+    },
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   {
+    "id": "pressure:us-va:rtx-4090-24gb",
+    "kind": "pressure-cell",
+    "href": "/xray?r=us-va&g=rtx-4090-24gb",
+    "statementClass": "inference",
+    "observedAt": "2026-11-08T02:15:03Z",
+    "provenanceKind": "derived",
+    "provenance": {
+     "kind": "derived",
+     "source": "cpx-v1",
+     "observedAt": "2026-11-08T02:15:03Z",
+     "sourceUrl": null,
+     "fetchedAt": "2026-11-08T02:15:11.201643Z",
+     "licence": null,
+     "note": "inferred pressure on usable supply; not a measurement of utilisation",
+     "inputKinds": [
+      "derived",
+      "live",
+      "sample"
+     ]
+    },
+    "inputKinds": [
+     "derived",
+     "live",
+     "sample"
+    ]
+   },
+   {
+    "id": "intel-032",
+    "kind": "feed",
+    "href": "/feed/intel-032",
+    "statementClass": "observation",
+    "observedAt": "2026-10-14T19:00:00Z",
+    "provenanceKind": "sample",
+    "provenance": {
+     "kind": "sample",
+     "source": "flopx-sample-v1",
+     "observedAt": "2026-10-14T19:00:00Z",
+     "sourceUrl": null,
+     "fetchedAt": null,
+     "licence": null,
+     "note": "authored sample intelligence item; the headline describes no real event",
+     "inputKinds": []
+    },
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   {
+    "id": "intel-026",
+    "kind": "feed",
+    "href": "/feed/intel-026",
+    "statementClass": "observation",
+    "observedAt": "2026-10-08T10:00:00Z",
+    "provenanceKind": "sample",
+    "provenance": {
+     "kind": "sample",
+     "source": "flopx-sample-v1",
+     "observedAt": "2026-10-08T12:00:00Z",
+     "sourceUrl": null,
+     "fetchedAt": null,
+     "licence": null,
+     "note": "authored sample intelligence item; the headline describes no real event",
+     "inputKinds": []
+    },
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   {
+    "id": "mkt-003",
+    "kind": "market",
+    "href": "/markets/mkt-003",
+    "statementClass": "observation",
+    "observedAt": "2026-11-06T21:00:00Z",
+    "provenanceKind": "sample",
+    "provenance": {
+     "kind": "sample",
+     "source": "flopx-sample-v1",
+     "observedAt": "2026-11-06T21:00:00Z",
+     "sourceUrl": null,
+     "fetchedAt": null,
+     "licence": null,
+     "note": "authored sample market; a quote is a price, never a calibrated probability",
+     "inputKinds": []
+    },
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   {
+    "id": "mkt-007",
+    "kind": "market",
+    "href": "/markets/mkt-007",
+    "statementClass": "observation",
+    "observedAt": "2026-11-06T21:00:00Z",
+    "provenanceKind": "sample",
+    "provenance": {
+     "kind": "sample",
+     "source": "flopx-sample-v1",
+     "observedAt": "2026-11-06T21:00:00Z",
+     "sourceUrl": null,
+     "fetchedAt": null,
+     "licence": null,
+     "note": "authored sample market; a quote is a price, never a calibrated probability",
+     "inputKinds": []
+    },
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   {
+    "id": "evaluation:NBIS:1d",
+    "kind": "evaluation",
+    "href": "/research?tab=evaluation&target=NBIS&horizon=1d",
+    "statementClass": "inference",
+    "observedAt": null,
+    "provenanceKind": null,
+    "provenance": null,
+    "inputKinds": [
+     "archived",
+     "sample"
+    ]
+   },
+   {
+    "id": "evaluation:NBIS:5d",
+    "kind": "evaluation",
+    "href": "/research?tab=evaluation&target=NBIS&horizon=5d",
+    "statementClass": "inference",
+    "observedAt": null,
+    "provenanceKind": null,
+    "provenance": null,
+    "inputKinds": [
+     "archived",
+     "sample"
+    ]
+   }
+  ],
+  "followThrough": [
+   {
+    "kind": "open",
+    "route": "/research?tab=lab&series=equity%3ANBIS%3Aclose",
+    "label": "series"
+   },
+   {
+    "kind": "open",
+    "route": "/xray?r=us-va&g=rtx-4090-24gb",
+    "label": "pressure-cell"
+   },
+   {
+    "kind": "open",
+    "route": "/feed/intel-032",
+    "label": "feed"
+   },
+   {
+    "kind": "open",
+    "route": "/feed/intel-026",
+    "label": "feed"
+   },
+   {
+    "kind": "open",
+    "route": "/markets/mkt-003",
+    "label": "market"
+   },
+   {
+    "kind": "open",
+    "route": "/markets/mkt-007",
+    "label": "market"
+   }
+  ],
+  "caveats": [
+   "composed from the product's own evidence; sentences are templates, not reasoning",
+   "sample inputs: the sample set is authored and observed nowhere"
+  ],
+  "method": "composed-from-evidence-v1",
+  "statementClass": "inference",
+  "notLanguageModel": true,
+  "engine": "composed",
+  "languageModelNote": "no language model was used; a drafting mode exists behind ANTHROPIC_API_KEY and no key is configured",
+  "freshness": {
+   "generatedAt": "2026-11-08T02:15:19.836566Z",
+   "oldestObservedAt": "2026-06-27T20:30:00.785653Z",
+   "sources": [
+    "akash",
+    "flopx-sample-v1",
+    "hacker-news",
+    "kalshi",
+    "polymarket-gamma",
+    "rss:corescientific",
+    "rss:coreweave",
+    "rss:nvidia",
+    "runpod",
+    "vast-ai",
+    "wikidata"
+   ],
+   "unavailable": [
+    {
+     "source": "kalshi:KXUTILITYPJMWEST",
+     "reason": "no-open-markets"
+    }
+   ]
+  }
+ }
+}

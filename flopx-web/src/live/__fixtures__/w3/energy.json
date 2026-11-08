@@ -1,0 +1,312 @@
+{
+ "zones": [
+  {
+   "zone": "DE-LU",
+   "seriesId": "energy:DE-LU:day-ahead",
+   "unit": "EUR/MWh",
+   "latest": 223.12,
+   "latestAt": "2026-11-08T00:30:00Z",
+   "median30D": 247.255,
+   "changePct30D": null,
+   "points": [
+    {
+     "seriesId": "energy:DE-LU:day-ahead",
+     "t": "2026-11-07T23:15:00Z",
+     "value": 249.19,
+     "unit": "EUR/MWh",
+     "provenance": {
+      "kind": "archived",
+      "source": "energy-charts",
+      "observedAt": "2026-11-07T23:15:00Z",
+      "sourceUrl": "https://www.energy-charts.info/charts/price_spot_market/chart.htm?l=en&c=DE",
+      "fetchedAt": "2026-11-08T00:09:22.529588Z",
+      "licence": "CC BY 4.0",
+      "note": "day-ahead price DE-LU for the delivery slot starting at t; CC BY 4.0 (creativecommons.org/licenses/by/4.0) from Bundesnetzagentur | SMARD.de; via Energy-Charts (Fraunhofer ISE)",
+      "inputKinds": []
+     }
+    },
+    {
+     "seriesId": "energy:DE-LU:day-ahead",
+     "t": "2026-11-07T23:30:00Z",
+     "value": 236.38,
+     "unit": "EUR/MWh",
+     "provenance": {
+      "kind": "archived",
+      "source": "energy-charts",
+      "observedAt": "2026-11-07T23:30:00Z",
+      "sourceUrl": "https://www.energy-charts.info/charts/price_spot_market/chart.htm?l=en&c=DE",
+      "fetchedAt": "2026-11-08T00:09:22.529588Z",
+      "licence": "CC BY 4.0",
+      "note": "day-ahead price DE-LU for the delivery slot starting at t; CC BY 4.0 (creativecommons.org/licenses/by/4.0) from Bundesnetzagentur | SMARD.de; via Energy-Charts (Fraunhofer ISE)",
+      "inputKinds": []
+     }
+    },
+    {
+     "seriesId": "energy:DE-LU:day-ahead",
+     "t": "2026-11-07T23:45:00Z",
+     "value": 226.37,
+     "unit": "EUR/MWh",
+     "provenance": {
+      "kind": "archived",
+      "source": "energy-charts",
+      "observedAt": "2026-11-07T23:45:00Z",
+      "sourceUrl": "https://www.energy-charts.info/charts/price_spot_market/chart.htm?l=en&c=DE",
+      "fetchedAt": "2026-11-08T00:09:22.529588Z",
+      "licence": "CC BY 4.0",
+      "note": "day-ahead price DE-LU for the delivery slot starting at t; CC BY 4.0 (creativecommons.org/licenses/by/4.0) from Bundesnetzagentur | SMARD.de; via Energy-Charts (Fraunhofer ISE)",
+      "inputKinds": []
+     }
+    },
+    {
+     "seriesId": "energy:DE-LU:day-ahead",
+     "t": "2026-11-08T00:00:00Z",
+     "value": 237.96,
+     "unit": "EUR/MWh",
+     "provenance": {
+      "kind": "archived",
+      "source": "energy-charts",
+      "observedAt": "2026-11-08T00:00:00Z",
+      "sourceUrl": "https://www.energy-charts.info/charts/price_spot_market/chart.htm?l=en&c=DE",
+      "fetchedAt": "2026-11-08T00:09:22.529588Z",
+      "licence": "CC BY 4.0",
+      "note": "day-ahead price DE-LU for the delivery slot starting at t; CC BY 4.0 (creativecommons.org/licenses/by/4.0) from Bundesnetzagentur | SMARD.de; via Energy-Charts (Fraunhofer ISE)",
+      "inputKinds": []
+     }
+    },
+    {
+     "seriesId": "energy:DE-LU:day-ahead",
+     "t": "2026-11-08T00:15:00Z",
+     "value": 229.86,
+     "unit": "EUR/MWh",
+     "provenance": {
+      "kind": "archived",
+      "source": "energy-charts",
+      "observedAt": "2026-11-08T00:15:00Z",
+      "sourceUrl": "https://www.energy-charts.info/charts/price_spot_market/chart.htm?l=en&c=DE",
+      "fetchedAt": "2026-11-08T00:24:31.368596Z",
+      "licence": "CC BY 4.0",
+      "note": "day-ahead price DE-LU for the delivery slot starting at t; CC BY 4.0 (creativecommons.org/licenses/by/4.0) from Bundesnetzagentur | SMARD.de; via Energy-Charts (Fraunhofer ISE)",
+      "inputKinds": []
+     }
+    },
+    {
+     "seriesId": "energy:DE-LU:day-ahead",
+     "t": "2026-11-08T00:30:00Z",
+     "value": 223.12,
+     "unit": "EUR/MWh",
+     "provenance": {
+      "kind": "archived",
+      "source": "energy-charts",
+      "observedAt": "2026-11-08T00:30:00Z",
+      "sourceUrl": "https://www.energy-charts.info/charts/price_spot_market/chart.htm?l=en&c=DE",
+      "fetchedAt": "2026-11-08T00:33:25.000838Z",
+      "licence": "CC BY 4.0",
+      "note": "day-ahead price DE-LU for the delivery slot starting at t; CC BY 4.0 (creativecommons.org/licenses/by/4.0) from Bundesnetzagentur | SMARD.de; via Energy-Charts (Fraunhofer ISE)",
+      "inputKinds": []
+     }
+    }
+   ],
+   "regions": [
+    "eu-de"
+   ],
+   "provenance": {
+    "kind": "archived",
+    "source": "energy-charts",
+    "observedAt": "2026-11-08T00:30:00Z",
+    "sourceUrl": "https://www.energy-charts.info/charts/price_spot_market/chart.htm?l=en&c=DE",
+    "fetchedAt": "2026-11-08T00:33:25.000838Z",
+    "licence": "CC BY 4.0",
+    "note": "day-ahead price DE-LU for the delivery slot starting at t; CC BY 4.0 (creativecommons.org/licenses/by/4.0) from Bundesnetzagentur | SMARD.de; via Energy-Charts (Fraunhofer ISE)",
+    "inputKinds": []
+   },
+   "statementClass": "observation"
+  },
+  {
+   "zone": "ERCOT",
+   "seriesId": "energy:ERCOT:day-ahead",
+   "unit": "USD/MWh",
+   "latest": 34.71,
+   "latestAt": "2026-11-06T21:00:00Z",
+   "median30D": 44.17,
+   "changePct30D": -8.5375,
+   "points": [
+    {
+     "seriesId": "energy:ERCOT:day-ahead",
+     "t": "2026-11-01T21:00:00Z",
+     "value": 35.26,
+     "unit": "USD/MWh",
+     "provenance": {
+      "kind": "sample",
+      "source": "flopx-sample-v1",
+      "observedAt": "2026-11-01T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": null,
+      "licence": null,
+      "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+      "inputKinds": []
+     }
+    },
+    {
+     "seriesId": "energy:ERCOT:day-ahead",
+     "t": "2026-11-02T21:00:00Z",
+     "value": 34.9,
+     "unit": "USD/MWh",
+     "provenance": {
+      "kind": "sample",
+      "source": "flopx-sample-v1",
+      "observedAt": "2026-11-02T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": null,
+      "licence": null,
+      "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+      "inputKinds": []
+     }
+    },
+    {
+     "seriesId": "energy:ERCOT:day-ahead",
+     "t": "2026-11-03T21:00:00Z",
+     "value": 36.79,
+     "unit": "USD/MWh",
+     "provenance": {
+      "kind": "sample",
+      "source": "flopx-sample-v1",
+      "observedAt": "2026-11-03T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": null,
+      "licence": null,
+      "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+      "inputKinds": []
+     }
+    },
+    {
+     "seriesId": "energy:ERCOT:day-ahead",
+     "t": "2026-11-04T21:00:00Z",
+     "value": 31.88,
+     "unit": "USD/MWh",
+     "provenance": {
+      "kind": "sample",
+      "source": "flopx-sample-v1",
+      "observedAt": "2026-11-04T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": null,
+      "licence": null,
+      "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+      "inputKinds": []
+     }
+    },
+    {
+     "seriesId": "energy:ERCOT:day-ahead",
+     "t": "2026-11-05T21:00:00Z",
+     "value": 39.99,
+     "unit": "USD/MWh",
+     "provenance": {
+      "kind": "sample",
+      "source": "flopx-sample-v1",
+      "observedAt": "2026-11-05T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": null,
+      "licence": null,
+      "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+      "inputKinds": []
+     }
+    },
+    {
+     "seriesId": "energy:ERCOT:day-ahead",
+     "t": "2026-11-06T21:00:00Z",
+     "value": 34.71,
+     "unit": "USD/MWh",
+     "provenance": {
+      "kind": "sample",
+      "source": "flopx-sample-v1",
+      "observedAt": "2026-11-06T21:00:00Z",
+      "sourceUrl": null,
+      "fetchedAt": null,
+      "licence": null,
+      "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+      "inputKinds": []
+     }
+    }
+   ],
+   "regions": [
+    "us-tx"
+   ],
+   "provenance": {
+    "kind": "sample",
+    "source": "flopx-sample-v1",
+    "observedAt": "2026-11-06T21:00:00Z",
+    "sourceUrl": null,
+    "fetchedAt": null,
+    "licence": null,
+    "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+    "inputKinds": []
+   },
+   "statementClass": "observation"
+  }
+ ],
+ "missing": [
+  {
+   "zone": "BPA",
+   "regions": [
+    "us-or"
+   ],
+   "reason": "no-series"
+  },
+  {
+   "zone": "EMA",
+   "regions": [
+    "ap-sg"
+   ],
+   "reason": "no-series"
+  },
+  {
+   "zone": "EirGrid",
+   "regions": [
+    "eu-ie"
+   ],
+   "reason": "no-series"
+  },
+  {
+   "zone": "NO1",
+   "regions": [
+    "eu-no"
+   ],
+   "reason": "no-series"
+  },
+  {
+   "zone": "PJM",
+   "regions": [
+    "us-va"
+   ],
+   "reason": "no-series"
+  },
+  {
+   "zone": "TEPCO",
+   "regions": [
+    "ap-jp"
+   ],
+   "reason": "no-series"
+  }
+ ],
+ "freshness": {
+  "generatedAt": "2026-11-08T00:39:58.866629Z",
+  "oldestObservedAt": "2026-11-06T21:00:00Z",
+  "sources": [
+   "energy-charts",
+   "flopx-sample-v1"
+  ],
+  "sourceDetails": [
+   {
+    "source": "energy-charts",
+    "kind": "archived",
+    "observedAt": "2026-11-08T00:30:00Z",
+    "licence": "CC BY 4.0"
+   }
+  ],
+  "unavailable": [
+   {
+    "source": "kalshi:KXUTILITYPJMWEST",
+    "reason": "no-open-markets"
+   }
+  ]
+ }
+}

@@ -1,0 +1,1 @@
+{"detail":{"code":"flopx.insufficient-history","reason":"history-shorter-than-twice-horizon","history_points":3,"horizon":30,"required_points":60}}

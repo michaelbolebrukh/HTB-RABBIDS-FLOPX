@@ -1,0 +1,26 @@
+A new contact form message arrived.
+
+FLOPX
+
+New contact message
+
+From: {{name}} ({{email}})
+
+Company: {{company}}
+
+Contact ID: {{contact_id}}
+
+Account: {{user_account}}
+
+Submitted: {{timestamp}}
+
+{{message}}
+
+To respond, simply reply to this email.
+
+flopx.vercel.app [https://flopx.vercel.app/]
+
+© FLOPX. All rights reserved.
+
+Privacy Policy [https://flopx.vercel.app/privacy-policy] Terms of Service
+[https://flopx.vercel.app/terms-of-service]

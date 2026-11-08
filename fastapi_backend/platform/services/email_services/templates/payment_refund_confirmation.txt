@@ -1,0 +1,27 @@
+Your refund has been processed.
+
+FLOPX
+
+Your refund has been processed
+
+Hi {{name}}, we have processed a refund of {{amount}} for your order. Depending
+on your bank, it may take a few business days to appear on your statement.
+
+{{item_name}}{{amount}} refunded
+
+Date: {{date}}
+
+Order reference: {{reference}}
+
+Questions about your refund? Contact us [https://flopx.vercel.app/contact].
+
+You're receiving this email because a refund was issued for a purchase at
+flopx.vercel.app. This is a transactional message about your refund, not a
+marketing message.
+
+flopx.vercel.app [https://flopx.vercel.app/]
+
+© FLOPX. All rights reserved.
+
+Privacy Policy [https://flopx.vercel.app/privacy-policy] Terms of Service
+[https://flopx.vercel.app/terms-of-service]

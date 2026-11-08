@@ -1,0 +1,312 @@
+{
+ "query": "How is Nvidia doing?",
+ "intent": "brief",
+ "route": "/ask?q=How+is+Nvidia+doing%3F",
+ "filters": {
+  "t": "NVDA",
+  "target": "ticker:NVDA"
+ },
+ "explanation": {
+  "matched": {
+   "tickers": [
+    "nvidia"
+   ],
+   "actions": [
+    "show"
+   ]
+  },
+  "unmatchedTokens": [
+   "is",
+   "doing"
+  ],
+  "numbers": [],
+  "periodDays": null
+ },
+ "actions": [
+  {
+   "kind": "open",
+   "route": "/ask?q=How+is+Nvidia+doing%3F",
+   "requiresConfirmation": false
+  }
+ ],
+ "engine": "grammar",
+ "brief": {
+  "targetKind": "ticker",
+  "targetId": "NVDA",
+  "headline": "NVIDIA Corporation (NVDA): 3 recent items, 0 open anomalies",
+  "sentences": [
+   {
+    "text": "NVDA close was last observed at 182.4 USD on 2026-11-06 (sample data from flopx-sample-v1).",
+    "statementClass": "observation",
+    "evidenceIds": [
+     "equity:NVDA:close"
+    ]
+   },
+   {
+    "text": "2026-11-06, announcement (verified, severity 2): How NVIDIA Open Source Tools Are Helping Researchers Build Next-Generation 6G Networks",
+    "statementClass": "observation",
+    "evidenceIds": [
+     "rss:nvidia:https-blogs-nvidia-com-blog-telco-open-source-tools-research-6g-networks-"
+    ]
+   },
+   {
+    "text": "2026-11-06, divergence (interpretation, severity 3): NVDA diverges from the b200-sxm-192gb sample index over 20 days",
+    "statementClass": "observation",
+    "evidenceIds": [
+     "intel-012"
+    ]
+   },
+   {
+    "text": "2026-11-05, announcement (verified, severity 2): Vera Delivers the Best of Both Worlds: Highest Throughput and Fastest Agents",
+    "statementClass": "observation",
+    "evidenceIds": [
+     "rss:nvidia:https-blogs-nvidia-com-blog-vera-cpu-highest-throughput-fastest-agents-"
+    ]
+   },
+   {
+    "text": "The market \"H100 on-demand median price above $3.00/GPU-hour at end of December 2026?\" prices Yes at 41% (sample-prediction-venue); a quote, not a forecast of record.",
+    "statementClass": "observation",
+    "evidenceIds": [
+     "mkt-001"
+    ]
+   },
+   {
+    "text": "The market \"H200 on-demand median price below $3.50/GPU-hour at end of December 2026?\" prices Yes at 73% (sample-prediction-venue); a quote, not a forecast of record.",
+    "statementClass": "observation",
+    "evidenceIds": [
+     "mkt-002"
+    ]
+   },
+   {
+    "text": "Out of sample at 1 days for NVDA, the compute-augmented model's verdict against the price baseline is insufficient-sample (n = 1950, skill n/a); on archived closes this tests the method, not the market.",
+    "statementClass": "inference",
+    "evidenceIds": [
+     "evaluation:NVDA:1d"
+    ]
+   },
+   {
+    "text": "Out of sample at 5 days for NVDA, the compute-augmented model's verdict against the price baseline is insufficient-sample (n = 1946, skill n/a); on archived closes this tests the method, not the market.",
+    "statementClass": "inference",
+    "evidenceIds": [
+     "evaluation:NVDA:5d"
+    ]
+   }
+  ],
+  "evidence": [
+   {
+    "id": "equity:NVDA:close",
+    "kind": "series",
+    "href": "/research?tab=lab&series=equity%3ANVDA%3Aclose",
+    "statementClass": "observation",
+    "observedAt": "2026-11-06T21:00:00Z",
+    "provenanceKind": "sample",
+    "provenance": {
+     "kind": "sample",
+     "source": "flopx-sample-v1",
+     "observedAt": "2026-11-06T21:00:00Z",
+     "sourceUrl": null,
+     "fetchedAt": null,
+     "licence": null,
+     "note": "24 monthly + 180 daily sample points per GPU model, 180 daily sample closes per ticker, one energy indicator.",
+     "inputKinds": []
+    },
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   {
+    "id": "rss:nvidia:https-blogs-nvidia-com-blog-telco-open-source-tools-research-6g-networks-",
+    "kind": "feed",
+    "href": "/feed/rss:nvidia:https-blogs-nvidia-com-blog-telco-open-source-tools-research-6g-networks-",
+    "statementClass": "observation",
+    "observedAt": "2026-11-06T16:00:00Z",
+    "provenanceKind": "live",
+    "provenance": {
+     "kind": "live",
+     "source": "rss:nvidia",
+     "observedAt": "2026-11-06T16:00:00Z",
+     "sourceUrl": "https://blogs.nvidia.com/blog/telco-open-source-tools-research-6g-networks/",
+     "fetchedAt": "2026-11-08T02:06:49.948642Z",
+     "licence": "Company press-release feeds; headline shown with a link to the original (terms asserted, not verified)",
+     "note": "NVIDIA newsroom RSS; primary source",
+     "inputKinds": []
+    },
+    "inputKinds": [
+     "live"
+    ]
+   },
+   {
+    "id": "intel-012",
+    "kind": "feed",
+    "href": "/feed/intel-012",
+    "statementClass": "observation",
+    "observedAt": "2026-11-06T03:00:00Z",
+    "provenanceKind": "sample",
+    "provenance": {
+     "kind": "sample",
+     "source": "flopx-sample-v1",
+     "observedAt": "2026-11-06T05:00:00Z",
+     "sourceUrl": null,
+     "fetchedAt": null,
+     "licence": null,
+     "note": "authored sample intelligence item; the headline describes no real event",
+     "inputKinds": []
+    },
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   {
+    "id": "rss:nvidia:https-blogs-nvidia-com-blog-vera-cpu-highest-throughput-fastest-agents-",
+    "kind": "feed",
+    "href": "/feed/rss:nvidia:https-blogs-nvidia-com-blog-vera-cpu-highest-throughput-fastest-agents-",
+    "statementClass": "observation",
+    "observedAt": "2026-11-05T20:00:41Z",
+    "provenanceKind": "live",
+    "provenance": {
+     "kind": "live",
+     "source": "rss:nvidia",
+     "observedAt": "2026-11-05T20:00:41Z",
+     "sourceUrl": "https://blogs.nvidia.com/blog/vera-cpu-highest-throughput-fastest-agents/",
+     "fetchedAt": "2026-11-08T02:06:49.948642Z",
+     "licence": "Company press-release feeds; headline shown with a link to the original (terms asserted, not verified)",
+     "note": "NVIDIA newsroom RSS; primary source",
+     "inputKinds": []
+    },
+    "inputKinds": [
+     "live"
+    ]
+   },
+   {
+    "id": "mkt-001",
+    "kind": "market",
+    "href": "/markets/mkt-001",
+    "statementClass": "observation",
+    "observedAt": "2026-11-06T21:00:00Z",
+    "provenanceKind": "sample",
+    "provenance": {
+     "kind": "sample",
+     "source": "flopx-sample-v1",
+     "observedAt": "2026-11-06T21:00:00Z",
+     "sourceUrl": null,
+     "fetchedAt": null,
+     "licence": null,
+     "note": "authored sample market; a quote is a price, never a calibrated probability",
+     "inputKinds": []
+    },
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   {
+    "id": "mkt-002",
+    "kind": "market",
+    "href": "/markets/mkt-002",
+    "statementClass": "observation",
+    "observedAt": "2026-11-06T21:00:00Z",
+    "provenanceKind": "sample",
+    "provenance": {
+     "kind": "sample",
+     "source": "flopx-sample-v1",
+     "observedAt": "2026-11-06T21:00:00Z",
+     "sourceUrl": null,
+     "fetchedAt": null,
+     "licence": null,
+     "note": "authored sample market; a quote is a price, never a calibrated probability",
+     "inputKinds": []
+    },
+    "inputKinds": [
+     "sample"
+    ]
+   },
+   {
+    "id": "evaluation:NVDA:1d",
+    "kind": "evaluation",
+    "href": "/research?tab=evaluation&target=NVDA&horizon=1d",
+    "statementClass": "inference",
+    "observedAt": null,
+    "provenanceKind": null,
+    "provenance": null,
+    "inputKinds": [
+     "archived"
+    ]
+   },
+   {
+    "id": "evaluation:NVDA:5d",
+    "kind": "evaluation",
+    "href": "/research?tab=evaluation&target=NVDA&horizon=5d",
+    "statementClass": "inference",
+    "observedAt": null,
+    "provenanceKind": null,
+    "provenance": null,
+    "inputKinds": [
+     "archived"
+    ]
+   }
+  ],
+  "followThrough": [
+   {
+    "kind": "open",
+    "route": "/research?tab=lab&series=equity%3ANVDA%3Aclose",
+    "label": "series"
+   },
+   {
+    "kind": "open",
+    "route": "/feed/rss:nvidia:https-blogs-nvidia-com-blog-telco-open-source-tools-research-6g-networks-",
+    "label": "feed"
+   },
+   {
+    "kind": "open",
+    "route": "/feed/intel-012",
+    "label": "feed"
+   },
+   {
+    "kind": "open",
+    "route": "/feed/rss:nvidia:https-blogs-nvidia-com-blog-vera-cpu-highest-throughput-fastest-agents-",
+    "label": "feed"
+   },
+   {
+    "kind": "open",
+    "route": "/markets/mkt-001",
+    "label": "market"
+   },
+   {
+    "kind": "open",
+    "route": "/markets/mkt-002",
+    "label": "market"
+   }
+  ],
+  "caveats": [
+   "composed from the product's own evidence; sentences are templates, not reasoning",
+   "sample inputs: the sample set is authored and observed nowhere"
+  ],
+  "method": "composed-from-evidence-v1",
+  "statementClass": "inference",
+  "notLanguageModel": true,
+  "engine": "composed",
+  "languageModelNote": "no language model was used; a drafting mode exists behind ANTHROPIC_API_KEY and no key is configured",
+  "freshness": {
+   "generatedAt": "2026-11-08T02:14:48.863689Z",
+   "oldestObservedAt": "2026-06-27T20:30:00.785653Z",
+   "sources": [
+    "akash",
+    "flopx-sample-v1",
+    "hacker-news",
+    "kalshi",
+    "polymarket-gamma",
+    "rss:corescientific",
+    "rss:coreweave",
+    "rss:nvidia",
+    "runpod",
+    "vast-ai",
+    "wikidata"
+   ],
+   "unavailable": [
+    {
+     "source": "kalshi:KXUTILITYPJMWEST",
+     "reason": "no-open-markets"
+    }
+   ]
+  }
+ }
+}

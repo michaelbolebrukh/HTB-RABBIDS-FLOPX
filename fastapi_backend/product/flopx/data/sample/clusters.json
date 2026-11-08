@@ -1,0 +1,7 @@
+{"provenance": {"kind": "sample", "source": "flopx-sample-v1", "observedAt": "2026-11-07T00:00:00Z", "note": "Authored cluster map over the eight covered tickers; a classification, not an index constituent list.", "authoredAt": "2026-11-07", "basis": "Authored by hand on 2026-11-07 from each company's listed segments in companies.json; an editorial grouping for exposure reporting, never observed and never a weighting."},
+ "items": [
+  {"id": "gpu-cloud", "name": "GPU cloud", "tickers": ["CRWV", "NBIS"], "note": "rents accelerators as a service"},
+  {"id": "semis", "name": "Semiconductors and systems", "tickers": ["NVDA", "SMCI"], "note": "sells the accelerators and the servers they sit in"},
+  {"id": "power-and-dc", "name": "Power and data centres", "tickers": ["IREN", "CORZ", "APLD"], "note": "owns or develops powered sites that host compute"},
+  {"id": "infrastructure", "name": "Critical infrastructure", "tickers": ["VRT"], "note": "power and thermal equipment for data centres"}
+ ]}

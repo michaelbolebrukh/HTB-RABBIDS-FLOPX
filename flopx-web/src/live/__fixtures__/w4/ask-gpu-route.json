@@ -1,0 +1,47 @@
+{
+ "query": "Cheapest H100 in Texas right now",
+ "intent": "gpu",
+ "route": "/gpu?g=h100-sxm-80gb&r=us-tx&range=1d&view=offers&sort=adjusted",
+ "filters": {
+  "g": "h100-sxm-80gb",
+  "r": "us-tx",
+  "range": "1d",
+  "view": "offers",
+  "sort": "adjusted"
+ },
+ "explanation": {
+  "matched": {
+   "gpuModels": [
+    "h100"
+   ],
+   "regions": [
+    "texas"
+   ],
+   "measures": [
+    "price"
+   ],
+   "actions": [
+    "compare"
+   ],
+   "period": [
+    "today"
+   ]
+  },
+  "unmatchedTokens": [
+   "in",
+   "right",
+   "now"
+  ],
+  "numbers": [],
+  "periodDays": 1
+ },
+ "actions": [
+  {
+   "kind": "open",
+   "route": "/gpu?g=h100-sxm-80gb&r=us-tx&range=1d&view=offers&sort=adjusted",
+   "requiresConfirmation": false
+  }
+ ],
+ "engine": "grammar",
+ "brief": null
+}

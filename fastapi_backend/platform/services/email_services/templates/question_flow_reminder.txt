@@ -1,0 +1,23 @@
+You haven't finished {{flow_title}} yet.
+
+FLOPX
+
+You haven't finished setting up
+
+Hi {{name}}, you created an account at flopx.vercel.app but haven't completed
+{{flow_title}} yet. It only takes a minute, and you can change your answers
+later.
+
+Continue [{{cta_url}}]
+
+If you'd rather not finish, you can ignore this email.
+
+You're receiving this because you created an account at flopx.vercel.app and
+haven't finished setting it up. Stop these reminders [{{stop_url}}]
+
+flopx.vercel.app [https://flopx.vercel.app/]
+
+© FLOPX. All rights reserved.
+
+Privacy Policy [https://flopx.vercel.app/privacy-policy] Terms of Service
+[https://flopx.vercel.app/terms-of-service]
