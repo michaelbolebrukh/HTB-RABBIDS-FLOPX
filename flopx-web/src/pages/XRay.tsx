@@ -10,6 +10,7 @@ import { Stat, Timeline } from '@/components/Inspector'
 import { AIBlock, Btn, cx, Delta, dominantFresh, EntityLink, Fresh, Meter, Seg, Source, Spark, TruthGlyph, TruthTag } from '@/components/ui'
 import { PRESSURE_BAND_WORDS, pressureAt, pressureColor, pressureWord, scenarioImpact, uncAt } from '@/lib/model'
 import { useStore, type XLayer } from '@/lib/store'
+import { activePerspective, perspectiveValue } from '@/lib/powerMap'
 import { derived, SNAPSHOT, XRAY_CAPACITY as XC } from '@/data/handoff'
 
 const LAYERS: { id: XLayer; label: string; truth: 'obs' | 'inf' | 'dec'; desc: string }[] = [
@@ -20,6 +21,9 @@ const LAYERS: { id: XLayer; label: string; truth: 'obs' | 'inf' | 'dec'; desc: s
   { id: 'effective', label: 'Effective capacity', truth: 'inf', desc: 'Announced (dotted) vs usable (hatched)' },
   { id: 'exposure', label: 'Financial exposure', truth: 'dec', desc: 'Documented company ties' },
 ]
+
+/** Region-list column header for each perspective; the list reads the most recently switched-on layer. */
+const PERSPECTIVE_COL: Record<XLayer, string> = { pressure: 'CPI', rental: 'H100 $/h', power: 'Power', pipeline: 'Eff. MW', effective: 'Eff. MW', exposure: 'Cos' }
 
 /** Every panel around the map collapses with a chevron on its edge and comes back the same way; panels stay mounted, so their state survives. */
 type Pane = 'header' | 'brief' | 'capacity' | 'rail' | 'time' | 'side'
@@ -187,7 +191,7 @@ function LeftRail() {
     if (animRef.current) cancelAnimationFrame(animRef.current)
     const from = xray.reveal
     if (from === to) return
-    if (to === 100 && !xray.layers.includes('pressure')) setXray((x) => ({ layers: [...x.layers, 'pressure'] }))
+    if (to === 100) setXray((x) => (x.layers.includes('pressure') ? {} : { layers: [...x.layers, 'pressure'] }))
     const start = performance.now()
     const tick = (now: number) => {
       const k = Math.min(1, (now - start) / 1400)
@@ -216,7 +220,7 @@ function LeftRail() {
             )
           })}
         </div>
-        <input type="range" min={0} max={100} value={xray.reveal} onChange={(e) => setXray({ reveal: +e.target.value, layers: xray.layers.includes('pressure') ? xray.layers : [...xray.layers, 'pressure'] })} className="range" style={{ '--pct': `${xray.reveal}%`, '--range-color': 'var(--color-inf)' } as React.CSSProperties} aria-label="Observed to inferred" />
+        <input type="range" min={0} max={100} value={xray.reveal} onChange={(e) => { const v = +e.target.value; setXray((x) => ({ reveal: v, layers: x.layers.includes('pressure') ? x.layers : [...x.layers, 'pressure'] })) }} className="range" style={{ '--pct': `${xray.reveal}%`, '--range-color': 'var(--color-inf)' } as React.CSSProperties} aria-label="Observed to inferred" />
         <div className="mt-0.5 flex justify-between text-[9.5px] text-dim"><span>Raw fragments</span><span>Full inference</span></div>
       </div>
       <div className="border-b border-line p-4">
@@ -225,7 +229,7 @@ function LeftRail() {
           {LAYERS.map((l) => {
             const on = xray.layers.includes(l.id)
             return (
-              <button key={l.id} onClick={() => setXray((x) => ({ layers: on ? x.layers.filter((y) => y !== l.id) : [...x.layers, l.id] }))} className={cx('flex w-full cursor-pointer items-start gap-2.5 rounded-[4px] border px-2.5 py-2 text-left transition-colors', on ? 'border-line2 bg-raise' : 'border-transparent hover:bg-panel')}>
+              <button key={l.id} aria-pressed={on} onClick={() => setXray((x) => ({ layers: x.layers.includes(l.id) ? x.layers.filter((y) => y !== l.id) : [...x.layers, l.id] }))} className={cx('flex w-full cursor-pointer items-start gap-2.5 rounded-[4px] border px-2.5 py-2 text-left transition-colors', on ? 'border-line2 bg-raise' : 'border-transparent hover:bg-panel')}>
                 <span className={cx('mt-0.5 flex size-3.5 shrink-0 items-center justify-center rounded-[3px] border', on ? 'border-bone bg-bone' : 'border-line2')}>{on && <span className="size-1.5 bg-ink" />}</span>
                 <span className="min-w-0 flex-1">
                   <span className="flex items-center justify-between gap-1"><span className={cx('text-[12px]', on ? 'text-bone' : 'text-mute')}>{l.label}</span><TruthGlyph truth={l.truth} size={7} /></span>
@@ -414,6 +418,8 @@ function GlobalPanel() {
   // Δ2M compares two months; with only the current month real, a covered region has no honest Δ2M yet.
   const ranked = REGIONS.filter((r) => r.quality !== 'none').map((r) => ({ r, p: pressureAt(r, xray.t, xray.scenario)!, d: !r.live || (r.live.pressure?.realSlots[NOW_IDX - 2] && r.live.pressure?.realSlots[NOW_IDX]) ? r.pressure[NOW_IDX] - r.pressure[NOW_IDX - 2] : null })).sort((a, b) => b.p - a.p)
   const cards = ANOMALY_CARDS.slice(0, 2)
+  const persp = activePerspective(xray.layers)
+  if (persp !== 'pressure') ranked.sort((a, b) => perspectiveValue(b.r, persp).sort - perspectiveValue(a.r, persp).sort)
   return (
     <div className="flex w-[420px] shrink-0 flex-col border-l border-line bg-panel">
       <div className="border-b border-line px-5 py-4">
@@ -443,13 +449,14 @@ function GlobalPanel() {
         )}
       </div>
       <div className="flex-1 overflow-y-auto px-5 py-3">
-        <div className="eyebrow mb-2 grid grid-cols-[1fr_60px_56px_44px] gap-2"><span>Region</span><span>24M</span><span className="text-right">CPI</span><span className="text-right">Δ2M</span></div>
+        <div className="eyebrow mb-2 grid grid-cols-[1fr_60px_56px_44px] gap-2"><span>Region</span><span>24M</span><span className="text-right">{PERSPECTIVE_COL[persp]}</span><span className="text-right">{persp === 'pressure' ? 'Δ2M' : ''}</span></div>
         {ranked.map(({ r, p, d }) => (
           <button key={r.id} onClick={() => setXray({ region: r.id, tab: 'brief' })} className="grid w-full cursor-pointer grid-cols-[1fr_60px_56px_44px] items-center gap-2 border-b border-line/60 py-2 text-left hover:bg-hover">
             <span className="flex min-w-0 items-center gap-1.5 text-[12px]"><span className="truncate">{r.name}</span>{!r.live ? <span className="shrink-0 text-[11px] text-dim font-medium">Illustrative</span> : r.quality !== 'good' && <span className="shrink-0 text-[11px] text-warn font-medium capitalize">{r.quality}</span>}</span>
             <Spark values={r.pressure.slice(0, NOW_IDX + 1)} width={60} height={16} color="var(--color-inf)" />
-            <span className="num text-right text-[12px]" style={{ color: pressureColor(p) }}>{p.toFixed(0)}<span className="text-[9.5px] text-dim">±{uncAt(r, xray.t).toFixed(0)}</span></span>
-            {d == null ? <span className="num text-right text-[11px] text-dim" title="Only the current month is a FLOPX reading so far">n/a</span> : <Delta v={d} d={0} suffix="" className="text-right text-[11px]" />}
+            {persp === 'pressure' ? <span className="num text-right text-[12px]" style={{ color: pressureColor(p) }}>{p.toFixed(0)}<span className="text-[9.5px] text-dim">±{uncAt(r, xray.t).toFixed(0)}</span></span>
+              : (() => { const v = perspectiveValue(r, persp); return <span className="num col-span-2 text-right text-[12px]" title={v.note}>{v.value ?? <span className="text-dim">n/a</span>}<span className="block text-[9.5px] leading-tight text-dim">{v.note}</span></span> })()}
+            {persp !== 'pressure' ? null : d == null ? <span className="num text-right text-[11px] text-dim" title="Only the current month is a FLOPX reading so far">n/a</span> : <Delta v={d} d={0} suffix="" className="text-right text-[11px]" />}
           </button>
         ))}
         <button onClick={() => setXray({ region: 'za-jnb' })} className="grid w-full cursor-pointer grid-cols-[1fr_auto] py-2 text-left text-[12px] text-dim hover:bg-hover"><span>Johannesburg</span><span className="text-[11px]">No data</span></button>
@@ -467,7 +474,7 @@ function BriefTab({ r }: { r: Region }) {
         {r.note && <div className="rounded-md border border-line bg-ink p-3 text-[12.5px] text-bone/90">{r.note}</div>}
         <div className="grid grid-cols-2 gap-2">
           <Stat label="H100 median" value={r.h100 ? `$${r.h100.toFixed(2)}` : '—'} truth="obs" sub={r.h100 ? (r.live?.rental?.fallback ? 'global median · fallback' : Number.isFinite(r.h100Chg) ? `${fmtPct(r.h100Chg)} 30d` : 'no 30d history yet') : 'no quotes'} />
-          <Stat label="Premium" value={r.live?.rental && r.live.rental.premiumPct == null ? r.live.rental.premiumLabel : fmtPct(r.premium, 0)} truth="obs" sub={r.live?.rental && r.live.rental.premiumPct == null ? 'no regional asks' : 'vs global'} />
+          <Stat label="Premium" value={!r.live?.rental ? 'n/a' : r.live.rental.premiumPct == null ? 'n/a' : fmtPct(r.live.rental.premiumPct, 1)} truth="obs" sub={!r.live?.rental ? 'no live asks' : r.live.rental.premiumPct == null ? 'global median, no regional asks' : 'regional median vs global'} />
           <Stat label="Operational" value={`${(r.opMW / 1000).toFixed(2)} GW`} truth="obs" sub="reported" />
           <Stat label={r.live?.supply ? 'Usable additions' : `Usable by ${horizonLabel(12)}`} value={`+${r.eff27[0]}–${r.eff27[1]}`} truth="inf" sub={r.live?.supply ? `MW of ${r.announced27} in pipeline (sample records)` : `MW vs ${r.announced27} announced`} />
         </div>

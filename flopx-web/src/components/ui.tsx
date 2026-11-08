@@ -1,9 +1,11 @@
-import { createContext, useContext, useState, type ButtonHTMLAttributes, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, useState, type ButtonHTMLAttributes, type ReactNode } from 'react'
 import { Info, RotateCcw, Sparkles } from 'lucide-react'
 import type { Freshness, Truth } from '@/data/core'
 import type { HorizonId, ValidationStatus } from '@/data/fund'
 import { useStore, useStoreOptional, type EntityRef } from '@/lib/store'
 import { collapse, panelKey, useCollapsed } from '@/lib/layout'
+import { fetchJson } from '@/live/client'
+import type { ResearchMetricsPayload } from './ResearchMetrics'
 import { Drawer, FoldButton, SideFoldButton, useRegisterInRow, useRowSlot } from './collapse'
 
 export function cx(...c: (string | false | null | undefined)[]) {
@@ -510,4 +512,73 @@ export function Notes({ items, className }: { items: string[]; className?: strin
       {items.map((t, i) => <li key={i} className="flex gap-2"><span className="w-3 shrink-0 text-right tabular-nums">{i + 1}</span><span>{t}</span></li>)}
     </ol>
   )
+}
+
+// IC and Sharpe where Emre's model comparison shows them, filled from /flopx/research/evaluation
+// (`crossSection` meanIc · tStat · nDates, `tradable` sharpe · nTrades). One fetch is shared by every
+// mount. A payload without those blocks renders the honest gap, never a placeholder number.
+let evalCache: Promise<ResearchMetricsPayload | null> | null = null
+/** The research evaluation payload, fetched once per page load; undefined while loading, null when it did not answer. */
+export function useResearchEval(): ResearchMetricsPayload | null | undefined {
+  const [data, setData] = useState<ResearchMetricsPayload | null | undefined>(undefined)
+  useEffect(() => {
+    let alive = true
+    evalCache ??= fetchJson<ResearchMetricsPayload>('/flopx/research/evaluation', { timeoutMs: 30_000 }).then((r) => (r.ok ? r.data : null))
+    evalCache.then((d) => alive && setData(d))
+    return () => {
+      alive = false
+    }
+  }, [])
+  return data
+}
+/** The design's horizon ids mapped onto the evaluation's trading-day horizons. */
+export const HORIZON_DAYS: Record<HorizonId, number> = { '1W': 5, '1M': 21, '3M': 63 }
+const IC_MODELS: { id: string; label: string }[] = [
+  { id: 'baseline', label: 'Trailing-return baseline' },
+  { id: 'augmented', label: '+ Compute-market data' },
+  { id: 'combined', label: '+ News event intensity' },
+]
+const sgn = (v: number, d: number) => `${v < 0 ? '\u2212' : '+'}${Math.abs(v).toFixed(d)}`
+export const IC_SHARPE_GAP = 'This evaluation carries no IC or Sharpe yet: the backend answering predates them.'
+/** IC (mean, t, dates) and Sharpe (trades) per model at one horizon, in the model-comparison grid. */
+export function IcSharpeView({ payload, horizon }: { payload: ResearchMetricsPayload | null | undefined; horizon: HorizonId }) {
+  const days = HORIZON_DAYS[horizon]
+  const cs = payload?.crossSection
+  const tr = payload?.tradable
+  const present = !!payload && Array.isArray(cs) && Array.isArray(tr)
+  const kinds = new Set((payload?.historyCoverage ?? []).flatMap((c) => c.inputKinds))
+  const sampleOnly = kinds.size === 0 || (kinds.size === 1 && kinds.has('sample'))
+  const badge = payload === undefined ? <Fresh quiet f="unavailable" label="not loaded · awaiting the FLOPX evaluation" /> : present ? <Fresh quiet f={sampleOnly ? 'illustrative' : 'historical'} label={sampleOnly ? 'Research number · sample closes' : 'Research number · observed closes'} /> : <Fresh quiet f="unavailable" label="Not in this payload" />
+  return (
+    <Panel title="Rank skill and Sharpe by model" eyebrow={<>IC across tickers · sign-of-forecast trade {badge}</>} right={<span className="text-[11px] text-dim">{horizon} horizon · {days} trading days</span>}>
+      {!present ? (
+        <div className="py-3 text-[12px] text-mute" data-ic-sharpe="gap">{payload === undefined ? 'Loading the research evaluation.' : payload === null ? 'The research evaluation did not answer, so no IC or Sharpe is shown.' : IC_SHARPE_GAP}</div>
+      ) : (
+        <>
+          <div className="grid h-8 grid-cols-[1.6fr_repeat(4,minmax(0,1fr))] items-center gap-x-3 border-b border-line text-[11px] font-medium text-dim">
+            <span>Model</span><span className="text-right">IC</span><span className="text-right">t · dates</span><span className="text-right">Sharpe</span><span className="text-right">trades</span>
+          </div>
+          {IC_MODELS.map((m, i) => {
+            const c = cs!.find((r) => r.horizonDays === days && r.model === m.id)
+            const t = tr!.find((r) => r.horizonDays === days && r.model === m.id)
+            const scored = (c?.nDates ?? 0) > 0 || (t?.nTrades ?? 0) > 0
+            return (
+              <div key={m.id} data-row={`${days}-${m.id}`} className={cx('grid grid-cols-[1.6fr_repeat(4,minmax(0,1fr))] items-center gap-x-3 border-b border-line-soft py-1.5', !scored && 'opacity-70')}>
+                <span className="text-[12px]"><span className="num mr-2 text-[10.5px] text-dim">{String.fromCharCode(65 + i)}</span>{m.label}</span>
+                <span className="num text-right text-[12px]">{c?.meanIc == null ? '\u2014' : sgn(c.meanIc, 3)}</span>
+                <span className="num text-right text-[11px] text-mute">{c && c.nDates > 0 ? `${c.tStat == null ? '\u2014' : `t ${c.tStat.toFixed(2)}`} · ${c.nDates}` : 'not scored'}</span>
+                <span className="num text-right text-[12px]">{t?.sharpe == null ? '\u2014' : sgn(t.sharpe, 2)}</span>
+                <span className="num text-right text-[11px] text-mute">{t && t.nTrades > 0 ? t.nTrades : '\u2014'}</span>
+              </div>
+            )
+          })}
+          <div className="mt-2 font-mono text-[10px] text-dim">no costs, research number</div>
+        </>
+      )}
+    </Panel>
+  )
+}
+/** Fetches (shared) and renders IcSharpeView. */
+export function IcSharpe({ horizon }: { horizon: HorizonId }) {
+  return <IcSharpeView payload={useResearchEval()} horizon={horizon} />
 }

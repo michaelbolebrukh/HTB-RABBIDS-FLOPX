@@ -6,7 +6,7 @@ import mapWorkerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
 import { geoDistance } from 'd3-geo'
 import { NOW_IDX, REGIONS, type Region } from '@/data/core'
 import { PROJECTS, type Project, type Stage } from '@/data/infra'
-import { capPips, POWER_HOT, powerTone, stagesByRegion } from '@/lib/powerMap'
+import { activePerspective, capPips, exposureOf, perspectiveValue, POWER_HOT, powerTone, stagesByRegion } from '@/lib/powerMap'
 import { pressureAt, pressureColor, pressureWord, scenarioDelta, uncAt } from '@/lib/model'
 import { continentLeaders, type Continent } from '@/lib/continents'
 import type { Scenario, XLayer } from '@/lib/store'
@@ -148,6 +148,13 @@ export function WorldMap({ layers, reveal = 100, t = NOW_IDX, selected, selected
   const vis = (lon: number, lat: number) => !!cam && (!globe || geoDistance([lon, lat], centre) < Math.PI / 2 - 0.12)
 
   const has = (l: XLayer) => layers.includes(l)
+  // The name label carries the active perspective's value: the pressure score, or (once another layer is the latest switched on) that layer's live reading.
+  const persp = activePerspective(layers)
+  const valOf = (r: Region): { text: string; color: string; note: string } | null => {
+    if (persp === 'pressure') { const p = has('pressure') ? pressureAt(r, t, scenario) : null; return p != null ? { text: p.toFixed(0), color: pressureColor(p), note: `pressure ${p.toFixed(0)}` } : null }
+    const v = perspectiveValue(r, persp)
+    return v.value ? { text: v.value, color: persp === 'exposure' ? 'var(--color-dec)' : 'var(--color-bone)', note: v.note } : null
+  }
   const inferredOpacity = reveal / 100
   const rawOpacity = 0.25 + 0.75 * (1 - reveal / 100)
   const future = t > NOW_IDX
@@ -161,7 +168,7 @@ export function WorldMap({ layers, reveal = 100, t = NOW_IDX, selected, selected
   /** Pressure ring radius: grows with capacity and inferred pressure. */
   const ringOf = (r: Region, p: number) => rOf(r) * (0.5 + (p / 100) * 0.75)
   const summary = facilities === 'summary'
-  const labels = layoutLabels({ regions, pt, rOf, has, selected: selected ?? null, compare, compact: !!compact, t, scenario, w: size.w, h: size.h, summary })
+  const labels = layoutLabels({ regions, pt, rOf, has, valOf, selected: selected ?? null, compare, compact: !!compact, t, scenario, w: size.w, h: size.h, summary })
   const hoverRegion = hover ? regions.find((r) => r.id === hover) : undefined
   return (
     <div ref={ref} className="relative h-full w-full overflow-hidden" style={{ minHeight }}>
@@ -274,15 +281,22 @@ export function WorldMap({ layers, reveal = 100, t = NOW_IDX, selected, selected
               {L.rental && (
                 <g opacity={isSel ? 1 : Math.max(0.6, rawOpacity)} transform={`translate(${L.rental.x},${L.rental.y})`}>
                   <rect width={50} height={15} rx={2} fill="var(--color-panel)" stroke={r.quality === 'stale' ? 'var(--color-warn)' : 'var(--color-line2)'} strokeDasharray={r.quality === 'stale' ? '2 2' : undefined} />
-                  <text x={4} y={10.5} className="fill-bone font-mono" fontSize={9.5}>${r.h100.toFixed(2)}</text>
-                  <text x={46} y={10.5} textAnchor="end" className="font-mono" fontSize={8} fill={r.premium > 8 ? 'var(--color-down)' : r.premium < -3 ? 'var(--color-up)' : 'var(--color-mute)'}>{r.premium > 0 ? '+' : ''}{r.premium}</text>
+                  {(() => {
+                    const q = r.live!.rental!
+                    const prem = q.fallback || q.premiumPct == null ? null : Math.round(q.premiumPct)
+                    return <>
+                      <title>{q.fallback || q.premiumPct == null ? `${r.short}: global median $${q.median!.toFixed(2)}/GPU-hr, n/a premium (no regional asks)` : `${r.short}: regional median $${q.median!.toFixed(2)}/GPU-hr, ${q.premiumLabel} vs global`}</title>
+                      <text x={4} y={10.5} className="fill-bone font-mono" fontSize={9.5}>${q.median!.toFixed(2)}</text>
+                      <text x={46} y={10.5} textAnchor="end" className="font-mono" fontSize={8} fill={prem == null ? 'var(--color-dim)' : prem > 8 ? 'var(--color-down)' : prem < -3 ? 'var(--color-up)' : 'var(--color-mute)'}>{prem == null ? 'n/a' : `${prem > 0 ? '+' : ''}${prem}`}</text>
+                    </>
+                  })()}
                 </g>
               )}
               {L.ties && (
                 <g transform={`translate(${L.ties.box.x},${L.ties.box.y})`}>
                   {L.ties.shown.map((tk, k) => (
                     <g key={tk} transform={`translate(${k * (TIE_W + 2)},0)`}>
-                      <rect width={TIE_W} height={13} rx={2} fill="color-mix(in oklab, var(--color-dec) 14%, var(--color-panel))" stroke="var(--color-dec)" strokeOpacity={0.6} />
+                      <rect width={TIE_W} height={13} rx={2} fill="color-mix(in oklab, var(--color-dec) 14%, var(--color-panel))" stroke="var(--color-dec)" strokeOpacity={0.6} strokeDasharray={r.documented.some((d) => d.t === tk) ? undefined : '2 1.5'}><title>{r.documented.some((d) => d.t === tk) ? `${tk}: documented tie` : `${tk}: authored tie from company profile, not a filing`}</title></rect>
                       <text x={TIE_W / 2} y={9.5} textAnchor="middle" className="font-mono" fontSize={8.5} fill="var(--color-dec)">{tk}</text>
                     </g>
                   ))}
@@ -293,7 +307,7 @@ export function WorldMap({ layers, reveal = 100, t = NOW_IDX, selected, selected
               {L.name && (
                 <text x={L.name.x} y={L.name.y + 10.5} className="font-mono" fontSize={10.5} fill={isSel ? 'var(--color-bone)' : 'var(--color-mute)'} letterSpacing="0.06em" fontWeight={isSel ? 600 : 400} {...HALO}>
                   {r.short}
-                  {has('pressure') && p != null && <tspan fill={pressureColor(p)} dx={4}>{p.toFixed(0)}</tspan>}
+                  {(() => { const v = valOf(r); return v && <tspan fill={v.color} dx={4}><title>{`${r.short}: ${v.note}`}</title>{v.text}</tspan> })()}
                 </text>
               )}
               {L.name && L.price != null && (
@@ -416,8 +430,8 @@ interface RegionLabels {
  * everything dropped is still in the hover card. The selected region's labels
  * always show, at their preferred slot if nothing fits.
  */
-function layoutLabels({ regions, pt, rOf, has, selected, compare, compact, t, scenario, w, h, summary = false }: {
-  regions: Region[]; pt: (lon: number, lat: number) => [number, number]; rOf: (r: Region) => number; has: (l: XLayer) => boolean
+function layoutLabels({ regions, pt, rOf, has, valOf, selected, compare, compact, t, scenario, w, h, summary = false }: {
+  regions: Region[]; pt: (lon: number, lat: number) => [number, number]; rOf: (r: Region) => number; has: (l: XLayer) => boolean; valOf: (r: Region) => { text: string } | null
   selected: string | null; compare: string[]; compact: boolean; t: number; scenario: Scenario | null; w: number; h: number; summary?: boolean
 }): Map<string, RegionLabels> {
   const out = new Map<string, RegionLabels>(regions.map((r) => [r.id, {}]))
@@ -443,9 +457,9 @@ function layoutLabels({ regions, pt, rOf, has, selected, compare, compact, t, sc
   for (const r of order) {
     const stages = summary && has('pipeline') ? STAGES.get(r.id) ?? [] : []
     const showPrice = has('power') && r.power > 0
-    if (!(has('pressure') || has('power') || stages.length > 0 || r.id === selected)) continue
-    const p = pressureAt(r, t, scenario)
-    let tw = monoWidth(r.short.length, 10.5, 0.06) + (has('pressure') && p != null ? 4 + monoWidth(String(Math.round(p)).length, 10.5, 0.06) : 0)
+    const v = valOf(r)
+    if (!(has('pressure') || has('power') || v || stages.length > 0 || r.id === selected)) continue
+    let tw = monoWidth(r.short.length, 10.5, 0.06) + (v ? 4 + monoWidth(v.text.length, 10.5, 0.06) : 0)
     const price = showPrice ? tw + 6 : undefined
     if (price != null) tw = price + METER_W
     const pips = stages.length ? { at: tw + 6, ...capPips(stages) } : undefined
@@ -463,7 +477,7 @@ function layoutLabels({ regions, pt, rOf, has, selected, compare, compact, t, sc
   }
   // 2. Rental quotes.
   if (has('rental')) for (const r of order) {
-    if (r.quality === 'none' || !(r.h100 > 0)) continue
+    if (r.quality === 'none' || r.live?.rental?.median == null) continue
     const [x, y] = at(r)
     const W = 50, H = 15
     out.get(r.id)!.rental = put(r, [
@@ -475,7 +489,7 @@ function layoutLabels({ regions, pt, rOf, has, selected, compare, compact, t, sc
   }
   // 3. Documented company ties: full row, else first ticker + count.
   if (has('exposure')) for (const r of order) {
-    const tk = r.documented.map((d) => d.t)
+    const tk = exposureOf(r)?.tickers.map((d) => d.t) ?? []
     if (r.quality === 'none' || tk.length === 0) continue
     const [x, y] = at(r)
     const H = 13

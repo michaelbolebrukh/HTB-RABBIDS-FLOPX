@@ -1,12 +1,20 @@
 import { useMemo, useState } from 'react'
-import { ArrowRight, Cpu } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { AS_OF, band, fmtReliability, GPUS, MONTHS, NOW_IDX, OFFERS, PROVIDERS, providerById, REGIONS, regionById, type Offer } from '@/data/core'
 import { GDH_URL, offerRegionName, offerRegionShort } from '@/live/gpu'
 import { SIGNALS } from '@/data/fund'
 import { beeswarm, FCPI_MARKS_LABEL, GDH_BADGE_LABEL, SCALED_SHORT_LABEL, TimeChart, useWidth } from '@/components/charts'
-import { Btn, cx, dominantFresh, Empty, Fresh, freshLabel, PageHeader, Panel, Seg, TruthGlyph, TruthTag, Validation } from '@/components/ui'
+import { Row } from '@/components/collapse'
+import { Btn, cx, dominantFresh, Empty, Fn, Fresh, freshLabel, Notes, PageHeader, Panel, Seg, TruthGlyph, TruthTag, Validation } from '@/components/ui'
 import { BREV, derived, GPU_FV, SNAPSHOT } from '@/data/handoff'
 import { useStore } from '@/lib/store'
+
+const NOTES = [
+  'Spreads reflect differences in latency, interconnect, egress, data residency and provider mix. They are not risk-free arbitrage. * = stale feed.',
+  'Quotes are list prices observed from provider APIs and marketplaces, not transaction prices.',
+  'Ask = fair value + residual. Routing never reads the residual; it buys the cheapest ask that fits.',
+]
+const PROVIDER_TYPES = ['Hyperscaler', 'Neocloud', 'Marketplace'] as const
 
 const median = (a: number[]) => { const s = [...a].sort((x, y) => x - y); return s.length ? (s.length % 2 ? s[(s.length - 1) / 2] : (s[s.length / 2 - 1] + s[s.length / 2]) / 2) : 0 }
 
@@ -44,18 +52,20 @@ export default function Markets() {
   const lastWeek = hist ? hist.weekly[hist.weekly.length - 1] : null
   // The offers table carries its status once, in the eyebrow; only a row that differs from the rest keeps a chip.
   const offersFresh = dominantFresh(offers.map((o) => o.freshness))
+  // SLA and egress are terms of the provider type: the line above the table reads them off the listed offers.
+  const terms = PROVIDER_TYPES.map((t) => ({ t, o: offers.find((o) => providerById(o.provider)?.type === t) })).filter((x) => x.o)
 
   return (
     <div>
       <PageHeader
-        eyebrow={<><Cpu size={12} /> Compute markets · {AS_OF}</>}
+        eyebrow={<span title={`Provider APIs and marketplaces · as of ${AS_OF}`}>Provider APIs and marketplaces</span>}
         title="GPU rental markets"
-        sub="Compare quoted prices across hardware, providers, geography, contract terms and service quality. Quotes are list prices observed from provider APIs and marketplaces, not transaction prices."
-        right={<Seg value={gpu} onChange={setGpu} options={GPUS.map((x) => ({ id: x.id, label: x.name }))} />}
+        sub="Quoted GPU prices by hardware, provider, region and contract."
+        right={<Seg className="max-w-full overflow-x-auto" value={gpu} onChange={setGpu} options={GPUS.map((x) => ({ id: x.id, label: x.name }))} />}
       />
 
-      <div className="mb-5 grid grid-cols-1 gap-5 xl:grid-cols-[1.4fr_1fr]">
-        <Panel title={`${g.name} rental index`} eyebrow={<><TruthGlyph truth="obs" size={7} />Median on-demand $/GPU-hr · monthly</>} right={<div className="flex items-center gap-2">{gl ? <><Fresh quiet f={gl.freshness} label={gl.freshLabel} />{gl.scaled && <Fresh quiet f="illustrative" label={SCALED_SHORT_LABEL} />}</> : <><Fresh quiet f="illustrative" />{gpu === 'h100' && <Validation s={sig.horizons[hz].status} />}</>}<Seg size="sm" value={hz} onChange={setHz} options={[{ id: '1W', label: '1W' }, { id: '1M', label: '1M' }, { id: '3M', label: '3M' }]} /></div>}>
+      <Row cols={[1.4, 1]} className="mb-5">
+        <Panel title={`${g.name} rental index`} id="Rental index" eyebrow={<><TruthGlyph truth="obs" size={7} />Median on-demand $/GPU-hr · monthly</>} right={<div className="flex items-center gap-2">{gl ? <><Fresh quiet f={gl.freshness} label={gl.freshLabel} />{gl.scaled && <Fresh quiet f="illustrative" label={SCALED_SHORT_LABEL} />}</> : <><Fresh quiet f="illustrative" />{gpu === 'h100' && <Validation s={sig.horizons[hz].status} />}</>}<Seg size="sm" value={hz} onChange={setHz} options={[{ id: '1W', label: '1W' }, { id: '1M', label: '1M' }, { id: '3M', label: '3M' }]} /></div>}>
           <TimeChart
             labels={MONTHS.slice(0, NOW_IDX + 4)}
             height={230}
@@ -68,13 +78,13 @@ export default function Markets() {
               { id: 'fc', label: `${hz} cost forecast`, values: fcVals.slice(0, NOW_IDX + 4), color: 'var(--color-fct)', style: 'dashed', band: { lo: b.lo.slice(0, NOW_IDX + 4).map((v, i) => (i <= NOW_IDX + fcMonths ? v : null)), hi: b.hi.slice(0, NOW_IDX + 4).map((v, i) => (i <= NOW_IDX + fcMonths ? v : null)) } },
             ]}
           />
-          <div className="mt-2 flex flex-wrap gap-4 font-mono text-[10.5px] text-mute">
-            <span title={gl ? `FCPI index: median of ${gl.coverage.offerCount} comparable asks (US-normalised, ${gl.coverage.providers} provider${gl.coverage.providers === 1 ? '' : 's'}, ${gl.coverage.regions} region${gl.coverage.regions === 1 ? '' : 's'}). Vast.ai asks are shown in the distribution below but never enter the index (licence). ${gl.limitations.join('; ')}` : 'Illustrative design value'}>Now <span className="text-bone">${(gl ? gl.current : g.index[NOW_IDX]).toFixed(2)}</span>{gl && <span className="text-dim"> · {gl.observed} UTC · index over {gl.coverage.offerCount} comparable ask{gl.coverage.offerCount === 1 ? '' : 's'}; {OFFERS.filter((o) => o.gpu === gpu).length} offers listed; Vast asks shown, never in the index</span>}</span>
+          <div className="mt-2 flex flex-wrap gap-4 text-[11px] text-mute">
+            <span title={gl ? `FCPI index: median of ${gl.coverage.offerCount} comparable asks (US-normalised, ${gl.coverage.providers} provider${gl.coverage.providers === 1 ? '' : 's'}, ${gl.coverage.regions} region${gl.coverage.regions === 1 ? '' : 's'}). Vast.ai asks are shown in the distribution below but never enter the index (licence). ${gl.limitations.join('; ')}` : 'Illustrative design value'}>Now <span className="num text-bone">${(gl ? gl.current : g.index[NOW_IDX]).toFixed(2)}</span>{gl && <span className="text-dim"> · {gl.observed} UTC · index over {gl.coverage.offerCount} comparable ask{gl.coverage.offerCount === 1 ? '' : 's'}; {OFFERS.filter((o) => o.gpu === gpu).length} offers listed; Vast asks shown, never in the index</span>}</span>
             {hist && <span className="flex items-center"><Fresh quiet f="historical" label={GDH_BADGE_LABEL} /></span>}
             {hist && lastWeek && <span title={`GetDeploying's weekly median of advertised on-demand asks for the ${g.name} family (SXM and PCIe boards pooled), ${hist.weeks} weeks from ${hist.first} to ${hist.last}, each stamped at its week's end; the line shows their monthly means. Archived by FLOPX, CC BY 4.0.`}>GetDeploying week ending {hist.last} <span className="text-bone">${lastWeek.value.toFixed(2)}</span><span className="text-dim"> · weekly median, archived</span></span>}
-            <span title={gl ? (sigLive && gpu === 'h100' ? sig.basisNote : 'Illustrative: the FLOPX forecast needs at least twice the horizon in index history') : undefined}>{hz} forecast <span className="text-fct">{gpu === 'h100' && sigLive && sig.horizons[hz].status === 'insufficient' ? 'not issued (insufficient history)' : gpu === 'h100' ? `${sig.horizons[hz].mean > 0 ? '+' : ''}${sig.horizons[hz].mean}% [${sig.horizons[hz].p10}, ${sig.horizons[hz].p90}]` : `$${fcBase[NOW_IDX + fcMonths].toFixed(2)} (exploratory)`}</span></span>
+            <span title={gl ? (sigLive && gpu === 'h100' ? sig.basisNote : 'Illustrative: the FLOPX forecast needs at least twice the horizon in index history') : undefined}>{hz} forecast <span className="num text-fct">{gpu === 'h100' && sigLive && sig.horizons[hz].status === 'insufficient' ? 'not issued (insufficient history)' : gpu === 'h100' ? `${sig.horizons[hz].mean > 0 ? '+' : ''}${sig.horizons[hz].mean}% [${sig.horizons[hz].p10}, ${sig.horizons[hz].p90}]` : `$${fcBase[NOW_IDX + fcMonths].toFixed(2)} (exploratory)`}</span></span>
             {gl && <span className="text-dim">{hist ? `${MONTHS[firstReal]} to ${MONTHS[NOW_IDX]} real (GetDeploying, archived); ` : ''}{gl.scaled ? `${firstReal > 0 ? `history before ${MONTHS[firstReal]} and ` : ''}forecast scaled to today's reading, illustrative` : `${firstReal > 0 ? `Before ${MONTHS[firstReal]} illustrative; ` : ''}forecast${gpu === 'h100' ? ' and its validation' : ''} illustrative`}</span>}
-            <span title={g.pressureLive ? `Median of ${g.pressureLive.cells} regional ${g.pressureLive.method} scores, ${g.pressureLive.asOf} UTC` : 'Illustrative design value'}>Inferred category pressure <span className="text-inf">{g.pressure}</span>{!g.pressureLive && <span className="text-dim"> (illustrative)</span>}</span>
+            <span title={g.pressureLive ? `Median of ${g.pressureLive.cells} regional ${g.pressureLive.method} scores, ${g.pressureLive.asOf} UTC` : 'Illustrative design value'}>Inferred category pressure <span className="num text-inf">{g.pressure}</span>{!g.pressureLive && <span className="text-dim"> (illustrative)</span>}</span>
             {gpu !== 'h100' && <span className="text-warn">Forecasts for {g.name} are not yet validated</span>}
           </div>
           {hist && (
@@ -83,7 +93,7 @@ export default function Markets() {
             </div>
           )}
         </Panel>
-        <Panel title="Regional spread" eyebrow={`On-demand median by region vs global $${globalMed.toFixed(2)}`}>
+        <Panel title="Regional spread" eyebrow={<>{`On-demand median by region vs global $${globalMed.toFixed(2)}`}{' '}<Fn n={1} note={NOTES[0]} />{odFresh && <> <Fresh quiet f="illustrative" /></>}</>}>
           <div className="space-y-1.5">
             {byRegion.map(({ r, med, prices, known }) => {
               const prem = ((med - globalMed) / globalMed) * 100
@@ -100,105 +110,107 @@ export default function Markets() {
               )
             })}
           </div>
-          <div className="mt-3 text-[10.5px] leading-relaxed text-dim">Spreads reflect differences in latency, interconnect, egress, data residency and provider mix. They are not risk-free arbitrage. * stale feed.{odFresh && <> <Fresh quiet f="illustrative" /></>}</div>
         </Panel>
-      </div>
+      </Row>
 
-      <div className="mb-5 grid grid-cols-1 items-start gap-5 xl:grid-cols-[1fr_380px]">
-        <Panel title="Price distribution" eyebrow="Every observed offer · by contract type" right={<span className="flex items-center gap-2 font-mono text-[10px] text-dim">{OFFERS.some((o) => o.gpu === gpu && o.freshness === 'illustrative') && <Fresh quiet f="illustrative" />}{OFFERS.filter((o) => o.gpu === gpu).length} offers · $/GPU-hr</span>}>
+      <Row cols={[1, '380px']} className="mb-5 items-start">
+        <Panel title="Price distribution" eyebrow="Every observed offer · by contract type" right={<span className="flex items-center gap-2 text-[11px] text-dim">{OFFERS.some((o) => o.gpu === gpu && o.freshness === 'illustrative') && <Fresh quiet f="illustrative" />}<span><span className="num">{OFFERS.filter((o) => o.gpu === gpu).length}</span> offers · $/GPU-hr</span></span>}>
           <Strip offers={OFFERS.filter((o) => o.gpu === gpu)} onPick={(o) => inspect({ kind: 'provider', id: o.provider, label: providerById(o.provider)!.name })} />
         </Panel>
         <WorkloadBox />
-      </div>
+      </Row>
 
-      <div className="mb-5 grid grid-cols-1 items-start gap-5 xl:grid-cols-3">
-        <Panel title="Fair value" eyebrow={GPU_FV.asOf} right={<Fresh quiet f="historical" label={SNAPSHOT.short} />}>
-          <div className="num text-[22px] leading-tight">{GPU_FV.asks.toLocaleString()} <span className="font-sans text-[12px] text-mute">asks</span></div>
-          <div className="mt-3 text-[11px] text-dim">Share of log-price variance</div>
-          <div className="mt-1 flex h-3 w-full overflow-hidden rounded-sm" role="img" aria-label={`Fair value explains r² ${GPU_FV.r2} of log price`} title={`Ridge on ${GPU_FV.features}`}>
-            <span className="bg-cat1" style={{ width: `${GPU_FV.r2 * 100}%` }} title={`Fair value, r² ${GPU_FV.r2}`} />
-            <span className="bg-cat3" style={{ width: `${(1 - GPU_FV.r2) * 100}%` }} title="Unexplained: region, mispricing and noise" />
+      <Panel className="mb-5" id="Fair value" title="Fair value and venue comparison" right={<span className="flex items-center gap-2 text-[11px] text-dim">Hedonic fit and Brev scrape · <Fresh quiet f="historical" label={SNAPSHOT.short} /></span>} bodyClass="p-0">
+        <div className="grid grid-cols-1 divide-line-soft max-lg:divide-y lg:grid-cols-3 lg:divide-x">
+          <div className="p-4">
+            <div className="mb-2 text-[12.5px] font-semibold text-bone">Fair value <span className="font-normal text-dim">· {GPU_FV.asOf}</span></div>
+            <div className="num text-[22px] leading-tight">{GPU_FV.asks.toLocaleString()} <span className="font-sans text-[12px] text-mute">asks</span></div>
+            <div className="mt-3 text-[11px] text-dim">Share of log-price variance</div>
+            <div className="mt-1 flex h-3 w-full overflow-hidden rounded-sm" role="img" aria-label={`Fair value explains r² ${GPU_FV.r2} of log price`} title={`Ridge on ${GPU_FV.features}`}>
+              <span className="bg-cat1" style={{ width: `${GPU_FV.r2 * 100}%` }} title={`Fair value, r² ${GPU_FV.r2}`} />
+              <span className="bg-cat3" style={{ width: `${(1 - GPU_FV.r2) * 100}%` }} title="Unexplained: region, mispricing and noise" />
+            </div>
+            <div className="mt-1.5 flex justify-between text-[11px] text-mute">
+              <span className="flex items-center gap-1.5"><span className="size-2 rounded-full bg-cat1" />Explained by specs <span className="num text-bone">r² {GPU_FV.r2}</span></span>
+              <span className="flex items-center gap-1.5"><span className="size-2 rounded-full bg-cat3" />Unexplained <span className="num text-bone">{(1 - GPU_FV.r2).toFixed(2)}</span></span>
+            </div>
+            <div className="mt-3 text-[11px] text-dim" title="An ask's residual is its mispricing">Ask = fair value + residual<Fn n={3} note={NOTES[2]} /></div>
           </div>
-          <div className="mt-1.5 flex justify-between text-[11px] text-mute">
-            <span className="flex items-center gap-1.5"><span className="size-2 rounded-full bg-cat1" />Explained by specs <span className="num text-bone">r² {GPU_FV.r2}</span></span>
-            <span className="flex items-center gap-1.5"><span className="size-2 rounded-full bg-cat3" />Unexplained <span className="num text-bone">{(1 - GPU_FV.r2).toFixed(2)}</span></span>
+          <div className="p-4">
+            <div className="mb-2 text-[12.5px] font-semibold text-bone">Same GPU, different place <span className="font-normal text-dim">· {GPU_FV.example.gpu}</span></div>
+            <div className="space-y-2">
+              {[GPU_FV.example.low, GPU_FV.example.high].map((p, i) => (
+                <div key={p.place} className="grid grid-cols-[64px_1fr_72px] items-center gap-2 text-[11px]">
+                  <span className="text-mute">{p.place}</span>
+                  <div className="h-2 rounded-sm bg-line/60"><div className="h-full rounded-sm bg-mute" style={{ width: `${(p.price / GPU_FV.example.high.price) * 100}%` }} title={`${p.place} $${p.price.toFixed(2)}`} /></div>
+                  <span className="num text-right text-bone">${p.price.toFixed(2)}{i === 1 && <span className="ml-1 text-warn">+{(derived.sameGpuPremium * 100).toFixed(0)}%</span>}</span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 flex h-3 w-full overflow-hidden rounded-sm" role="img" aria-label={`${GPU_FV.example.gapLogPts} log-point gap: ${GPU_FV.example.specsLogPts} from specs, ${derived.regionLogPts.toFixed(1)} from region and mispricing`}>
+              <span className="bg-cat1" style={{ width: `${(GPU_FV.example.specsLogPts / GPU_FV.example.gapLogPts) * 100}%` }} />
+              <span className="bg-cat3" style={{ width: `${(derived.regionLogPts / GPU_FV.example.gapLogPts) * 100}%` }} />
+            </div>
+            <div className="mt-1.5 flex justify-between text-[11px] text-mute">
+              <span className="flex items-center gap-1.5"><span className="size-2 rounded-full bg-cat1" />Specs <span className="num text-bone">{GPU_FV.example.specsLogPts}</span></span>
+              <span className="flex items-center gap-1.5"><span className="size-2 rounded-full bg-cat3" />Region + mispricing <span className="num text-bone">{derived.regionLogPts.toFixed(1)}</span></span>
+            </div>
+            <div className="num mt-1 text-[10.5px] text-dim">{GPU_FV.example.gapLogPts} log points total</div>
           </div>
-          <div className="mt-3 text-[11px] text-dim" title="An ask's residual is its mispricing">Ask = fair value + residual</div>
-        </Panel>
-        <Panel title="Same GPU, different place" eyebrow={GPU_FV.example.gpu} right={<Fresh quiet f="historical" label={SNAPSHOT.short} />}>
-          <div className="space-y-2">
-            {[GPU_FV.example.low, GPU_FV.example.high].map((p, i) => (
-              <div key={p.place} className="grid grid-cols-[64px_1fr_72px] items-center gap-2 text-[11px]">
-                <span className="text-mute">{p.place}</span>
-                <div className="h-2 rounded-sm bg-line/60"><div className="h-full rounded-sm bg-cat1" style={{ width: `${(p.price / GPU_FV.example.high.price) * 100}%` }} title={`${p.place} $${p.price.toFixed(2)}`} /></div>
-                <span className="num text-right text-bone">${p.price.toFixed(2)}{i === 1 && <span className="ml-1 text-warn">+{(derived.sameGpuPremium * 100).toFixed(0)}%</span>}</span>
-              </div>
-            ))}
+          <div className="p-4">
+            <div className="mb-2 text-[12.5px] font-semibold text-bone">Second venue: Brev <span className="font-normal text-dim">· {BREV.clouds} clouds</span></div>
+            <div className="text-[11px] text-dim" title={`Clouds: ${BREV.examples.join(', ')}`}>Cheapest H200 SXM, $/GPU-hr</div>
+            <div className="mt-2 space-y-2">
+              {([['Vast', BREV.h200sxm.vast], ['Brev', BREV.h200sxm.brev]] as const).map(([k, v]) => (
+                <div key={k} className="grid grid-cols-[40px_1fr_72px] items-center gap-2 text-[11px]">
+                  <span className="text-mute">{k}</span>
+                  <div className="h-2 rounded-sm bg-line/60"><div className="h-full rounded-sm bg-mute" style={{ width: `${(v / BREV.h200sxm.brev) * 100}%` }} title={`${k} $${v.toFixed(2)}`} /></div>
+                  <span className="num text-right text-bone">${v.toFixed(2)}{k === 'Brev' && <span className="ml-1 text-warn">+{(derived.brevPremium * 100).toFixed(0)}%</span>}</span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-3 text-[11px] text-dim"><span className="num text-mute">{BREV.clouds}</span> clouds · <span className="num text-mute">{BREV.locations}</span> locations · <span className="num text-mute">{BREV.rows.toLocaleString()}</span> rows · r² <span className="num text-mute">{BREV.r2}</span></div>
+            <p className="mt-3 text-[11.5px] text-dim">Dearer per hour, but sells whole 8-GPU nodes</p>
           </div>
-          <div className="mt-4 flex h-3 w-full overflow-hidden rounded-sm" role="img" aria-label={`${GPU_FV.example.gapLogPts} log-point gap: ${GPU_FV.example.specsLogPts} from specs, ${derived.regionLogPts.toFixed(1)} from region and mispricing`}>
-            <span className="bg-cat1" style={{ width: `${(GPU_FV.example.specsLogPts / GPU_FV.example.gapLogPts) * 100}%` }} />
-            <span className="bg-cat3" style={{ width: `${(derived.regionLogPts / GPU_FV.example.gapLogPts) * 100}%` }} />
-          </div>
-          <div className="mt-1.5 flex justify-between text-[11px] text-mute">
-            <span className="flex items-center gap-1.5"><span className="size-2 rounded-full bg-cat1" />Specs <span className="num text-bone">{GPU_FV.example.specsLogPts}</span></span>
-            <span className="flex items-center gap-1.5" title="Routing never reads the residual; it buys the cheapest ask that fits."><span className="size-2 rounded-full bg-cat3" />Region + mispricing <span className="num text-bone">{derived.regionLogPts.toFixed(1)}</span></span>
-          </div>
-          <div className="num mt-1 text-[10.5px] text-dim">{GPU_FV.example.gapLogPts} log points total</div>
-        </Panel>
-        <Panel title="Second venue: Brev" eyebrow={`${BREV.clouds} clouds`} right={<Fresh quiet f="historical" label={SNAPSHOT.short} />}>
-          <div className="text-[11px] text-dim" title={`Clouds: ${BREV.examples.join(', ')}`}>Cheapest H200 SXM, $/GPU-hr</div>
-          <div className="mt-2 space-y-2">
-            {([['Vast', BREV.h200sxm.vast], ['Brev', BREV.h200sxm.brev]] as const).map(([k, v]) => (
-              <div key={k} className="grid grid-cols-[40px_1fr_72px] items-center gap-2 text-[11px]">
-                <span className="text-mute">{k}</span>
-                <div className="h-2 rounded-sm bg-line/60"><div className="h-full rounded-sm bg-cat2" style={{ width: `${(v / BREV.h200sxm.brev) * 100}%` }} title={`${k} $${v.toFixed(2)}`} /></div>
-                <span className="num text-right text-bone">${v.toFixed(2)}{k === 'Brev' && <span className="ml-1 text-warn">+{(derived.brevPremium * 100).toFixed(0)}%</span>}</span>
-              </div>
-            ))}
-          </div>
-          <div className="mt-3 flex flex-wrap gap-1.5">
-            {[`${BREV.clouds} clouds`, `${BREV.locations} locations`, `${BREV.rows.toLocaleString()} rows`, `r² ${BREV.r2}`].map((c) => <span key={c} className="num rounded-full border border-line px-2 py-0.5 text-[11px] text-bone">{c}</span>)}
-          </div>
-          <p className="mt-3 text-[11.5px] text-dim">Dearer per hour, but sells whole 8-GPU nodes</p>
-        </Panel>
-      </div>
+        </div>
+      </Panel>
 
       <Panel
         title="Offers"
-        eyebrow={<>Observed quotes · click a row to inspect the provider{offersFresh && <Fresh quiet f={offersFresh} label={offers.some((o) => o.freshness !== offersFresh) ? `${freshLabel(offersFresh)} unless a row says otherwise` : undefined} />}</>}
+        eyebrow={<span className="flex items-center gap-1.5" title="Click a row to inspect the provider">Observed quotes<Fn n={2} note={NOTES[1]} />{offersFresh && <Fresh quiet f={offersFresh} label={offers.some((o) => o.freshness !== offersFresh) ? `${freshLabel(offersFresh)} unless a row says otherwise` : undefined} />}</span>}
         right={
           <div className="flex flex-wrap items-center gap-2">
-            <select value={contract} onChange={(e) => setContract(e.target.value as typeof contract)} className="h-7 rounded-[4px] border border-line2 bg-ink px-2 font-mono text-[11px]"><option value="all">All contracts</option>{['On-demand', 'Spot', '1-mo reserved', '1-yr reserved'].map((c) => <option key={c}>{c}</option>)}</select>
-            <select value={provider} onChange={(e) => setProvider(e.target.value)} className="h-7 rounded-[4px] border border-line2 bg-ink px-2 font-mono text-[11px]"><option value="all">All providers</option>{PROVIDERS.filter((p) => OFFERS.some((o) => o.provider === p.id)).map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}</select>
-            <select value={region} onChange={(e) => setRegion(e.target.value)} className="h-7 rounded-[4px] border border-line2 bg-ink px-2 font-mono text-[11px]"><option value="all">All regions</option>{[...new Map(OFFERS.map((o) => [o.region, o])).values()].map((o) => ({ id: o.region, name: offerRegionName(o) })).sort((a, b) => a.name.localeCompare(b.name)).map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}</select>
+            <select value={contract} onChange={(e) => setContract(e.target.value as typeof contract)} className="h-7 rounded-[4px] border border-line2 bg-ink px-2 text-[11.5px]"><option value="all">All contracts</option>{['On-demand', 'Spot', '1-mo reserved', '1-yr reserved'].map((c) => <option key={c}>{c}</option>)}</select>
+            <select value={provider} onChange={(e) => setProvider(e.target.value)} className="h-7 rounded-[4px] border border-line2 bg-ink px-2 text-[11.5px]"><option value="all">All providers</option>{PROVIDERS.filter((p) => OFFERS.some((o) => o.provider === p.id)).map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}</select>
+            <select value={region} onChange={(e) => setRegion(e.target.value)} className="h-7 rounded-[4px] border border-line2 bg-ink px-2 text-[11.5px]"><option value="all">All regions</option>{[...new Map(OFFERS.map((o) => [o.region, o])).values()].map((o) => ({ id: o.region, name: offerRegionName(o) })).sort((a, b) => a.name.localeCompare(b.name)).map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}</select>
             <Seg size="sm" value={ic} onChange={setIc} options={[{ id: 'all', label: 'Any fabric' }, { id: 'ib', label: 'InfiniBand' }]} />
           </div>
         }
         bodyClass="p-0"
       >
         {offers.length === 0 ? <Empty className="m-4" title="No offers match these filters" body="Try another region or contract type. FLOPX shows only offers it has actually observed." /> : (
-          <div className="max-h-[480px] overflow-y-auto">
+          <div className="max-h-[480px] overflow-auto">
+            {terms.length > 0 && <div className="border-b border-line-soft px-3 py-1.5 text-[11px] text-dim">SLA · egress by provider type: {terms.map(({ t, o }, k) => <span key={t}>{k > 0 && '; '}{t} <span className="num text-mute">{o!.sla} · {o!.egress}</span></span>)}. Observed time is {offersFresh ? freshLabel(offersFresh).toLowerCase() : 'live'} unless marked.</div>}
             <table className="w-full text-[12px]">
               <thead className="sticky top-0 bg-panel">
-                <tr className="border-b border-line text-[11px] text-dim font-medium">
-                  {['Provider', 'Region', 'Contract', 'Fabric', 'Node', 'Availability', 'SLA', 'Egress', 'Observed', '$/GPU-hr'].map((h, i) => <th key={h} className={cx('px-4 py-2 font-normal', i === 9 ? 'text-right' : 'text-left')}>{h}</th>)}
+                <tr className="h-8 border-b border-line text-[11px] whitespace-nowrap text-dim">
+                  {['Provider', 'Region', 'Contract', 'Fabric', 'Node (GPUs)', 'Availability', 'Observed', '$/GPU-hr'].map((h, i) => <th key={h} title={h === 'Observed' ? 'Status as the eyebrow unless marked' : undefined} className={cx('px-3 font-medium', i === 7 || i === 4 ? 'text-right' : 'text-left')}>{h}</th>)}
                 </tr>
               </thead>
               <tbody>
                 {offers.map((o) => {
                   const p = providerById(o.provider)!
+                  const kind = o.note ?? p.type
                   return (
-                    <tr key={o.id} onClick={() => inspect({ kind: 'provider', id: p.id, label: p.name })} title={o.detail} className="cursor-pointer border-b border-line/60 hover:bg-hover">
-                      <td className="px-4 py-2">{p.name} <span className="font-mono text-[9.5px] text-dim">{o.note ?? p.type}</span></td>
-                      <td className="px-4 py-2 text-mute">{offerRegionName(o)}</td>
-                      <td className="px-4 py-2 font-mono text-[11px]">{o.contract}</td>
-                      <td className="px-4 py-2 font-mono text-[11px] text-mute">{o.interconnect}</td>
-                      <td className="num px-4 py-2 text-mute">{o.nodeSize}×</td>
-                      <td className="px-4 py-2"><span className={cx('font-mono text-[10.5px]', o.available === 'Available' && 'text-up', o.available === 'Limited' && 'text-warn', o.available === 'Sold out' && 'text-down', o.available === 'Waitlist' && 'text-mute')}>{o.available}</span></td>
-                      <td className="px-4 py-2 font-mono text-[11px] text-mute">{o.sla}</td>
-                      <td className="px-4 py-2 font-mono text-[11px] text-mute">{o.egress}</td>
-                      <td className="px-4 py-2"><span className="flex items-center gap-1.5">{o.freshness !== offersFresh && <Fresh f={o.freshness} />}<span className="font-mono text-[10px] text-dim">{o.observed}</span></span></td>
-                      <td className="num px-4 py-2 text-right text-[13px]">${o.price.toFixed(2)}</td>
+                    <tr key={o.id} onClick={() => inspect({ kind: 'provider', id: p.id, label: p.name })} title={o.detail} className="h-9 cursor-pointer border-b border-line-soft hover:bg-hover">
+                      <td className="px-3 py-1.5 whitespace-nowrap">{p.name}{!p.name.toLowerCase().includes(kind.toLowerCase()) && <> <span className="text-[10.5px] text-dim">{kind}</span></>}</td>
+                      <td className="px-3 py-1.5 whitespace-nowrap text-mute">{offerRegionName(o).split(' (')[0]}</td>
+                      <td className="px-3 py-1.5 whitespace-nowrap">{o.contract}</td>
+                      <td className="px-3 py-1.5 whitespace-nowrap text-mute">{o.interconnect}</td>
+                      <td className="num px-3 py-1.5 text-right text-mute">{o.nodeSize}</td>
+                      <td className="px-3 py-1.5"><span className={cx('text-[11.5px]', o.available === 'Available' && 'text-up', o.available === 'Limited' && 'text-warn', o.available === 'Sold out' && 'text-down', o.available === 'Waitlist' && 'text-mute')}>{o.available}</span></td>
+                      <td className="px-3 py-1.5"><span className="flex items-center gap-1.5 whitespace-nowrap"><span className="num text-[11px] text-dim">{o.observed}</span>{o.freshness !== offersFresh && <Fresh f={o.freshness} />}</span></td>
+                      <td className="num px-3 py-1.5 text-right text-[13px]">{o.price.toFixed(2)}</td>
                     </tr>
                   )
                 })}
@@ -207,6 +219,7 @@ export default function Markets() {
           </div>
         )}
       </Panel>
+      <Notes items={NOTES} />
       <div className="mt-3 flex justify-end"><Btn size="sm" variant="ghost" onClick={() => navigate('procurement', { gpu })}>Plan a procurement with these offers <ArrowRight size={12} /></Btn></div>
     </div>
   )
@@ -234,7 +247,7 @@ function Strip({ offers, onPick }: { offers: Offer[]; onPick: (o: Offer) => void
   const color = (o: Offer) => { const t = providerById(o.provider)!.type; return t === 'Hyperscaler' ? 'var(--color-cat1)' : t === 'Neocloud' ? 'var(--color-cat2)' : 'var(--color-cat3)' }
   return (
     <div ref={ref}>
-      <svg width={w} height={plotH + 22} role="img" aria-label="Offer prices by contract type, dollars per GPU-hour">
+      <svg width={w} height={plotH + 22} role="img" aria-label="Offer prices by contract type, dollars per GPU-hour. Click a dot to inspect the provider.">
         {ticks.map((v) => (
           <g key={v}>
             <line x1={sx(v)} x2={sx(v)} y1={0} y2={plotH} stroke="var(--color-line)" strokeDasharray="2 4" />
@@ -250,7 +263,7 @@ function Strip({ offers, onPick }: { offers: Offer[]; onPick: (o: Offer) => void
           const med = sorted.length ? (sorted[mid] + sorted[sorted.length - 1 - mid]) / 2 : null
           return (
             <g key={row}>
-              <text x={0} y={cy + 3.5} className="fill-mute font-mono" fontSize={10.5}>{row}<tspan className="fill-dim" fontSize={9.5} dx={6}>{inRow.length}</tspan></text>
+              <text x={0} y={cy + 3.5} className="fill-mute" fontSize={11}>{row}<tspan className="fill-dim font-mono" fontSize={9.5} dx={6}>{inRow.length}</tspan></text>
               <line x1={pad} x2={w - 20} y1={cy} y2={cy} stroke="var(--color-line)" strokeOpacity={0.6} />
               {med != null && (
                 <line x1={sx(med)} x2={sx(med)} y1={cy - rowH / 2 + 3} y2={cy + rowH / 2 - 3} stroke="var(--color-bone)" strokeOpacity={0.35} strokeWidth={1.5}>
@@ -269,13 +282,12 @@ function Strip({ offers, onPick }: { offers: Offer[]; onPick: (o: Offer) => void
           )
         })}
       </svg>
-      <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[10px] text-mute">
+      <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-mute">
         <span className="flex items-center gap-1.5"><span className="size-2.5 rounded-full bg-cat1" />Hyperscaler (list)</span>
         <span className="flex items-center gap-1.5"><span className="size-2.5 rounded-full bg-cat2" />Neocloud</span>
         <span className="flex items-center gap-1.5"><span className="size-2.5 rounded-full bg-cat3" />Marketplace</span>
         <span className="flex items-center gap-1.5"><span className="size-2.5 rounded-full border-[1.5px] border-mute" />Sold out</span>
         <span className="flex items-center gap-1.5"><span className="h-2.5 w-[1.5px] bg-bone/40" />Median</span>
-        <span className="ml-auto text-dim">Click a dot to inspect the provider</span>
       </div>
     </div>
   )
@@ -296,9 +308,9 @@ function WorkloadBox() {
   }, [text])
   const opts = OFFERS.filter((o) => o.gpu === parsed.gpu && (!parsed.ib || o.interconnect === 'InfiniBand 3.2T') && o.available !== 'Sold out' && o.contract !== '1-yr reserved').sort((a, b) => a.price - b.price).slice(0, 3)
   return (
-    <Panel title="Describe a workload" eyebrow={<><TruthTag truth="fct" compact /> Rental recommendation</>} right={<span className="font-mono text-[10px] text-dim">Not an equity trade</span>}>
-      <textarea value={text} onChange={(e) => { setText(e.target.value); setRun(false) }} rows={3} className="w-full resize-none rounded-[4px] border border-line2 bg-ink p-2.5 text-[12px] leading-snug outline-none focus:border-fct/40" />
-      <div className="mt-1.5 font-mono text-[10px] text-dim">Parsed: {parsed.n} × {GPUS.find((g) => g.id === parsed.gpu)!.name} · {parsed.weeks} wk · {parsed.ib ? 'InfiniBand required' : 'any fabric'}</div>
+    <Panel title="Describe a workload" eyebrow={<><TruthTag truth="fct" compact /> Rental recommendation</>} right={<span className="text-[11px] text-dim">Not an equity trade</span>}>
+      <textarea value={text} onChange={(e) => { setText(e.target.value); setRun(false) }} rows={3} className="w-full resize-none rounded-[4px] border border-line2 bg-ink p-2.5 text-[12px] leading-snug outline-none focus:border-mute" />
+      <div className="mt-1.5 text-[11px] text-dim">Parsed: {parsed.n} × {GPUS.find((g) => g.id === parsed.gpu)!.name} · {parsed.weeks} wk · {parsed.ib ? 'InfiniBand required' : 'any fabric'}</div>
       <Btn size="sm" variant="primary" className="mt-2" onClick={() => setRun(true)}>Compare options</Btn>
       {run && (
         <div className="fade-in mt-3 space-y-1.5">
@@ -307,9 +319,9 @@ function WorkloadBox() {
             const total = o.price * parsed.n * parsed.weeks * 168
             return (
               <div key={o.id} className="rounded-[4px] border border-line p-2.5">
-                <div className="flex items-baseline justify-between gap-3 text-[12px]"><span className="min-w-0"><span className="mr-1.5 font-mono text-dim">{i + 1}</span><span className="font-medium text-bone">{providerById(o.provider)!.name}</span><span className="text-mute"> · {offerRegionShort(o)} · {o.contract}</span></span><span className="num shrink-0 font-semibold text-bone" title="Estimated total for the parsed workload">${Math.round(total / 1000)}k</span></div>
-                <div className="mt-0.5 flex flex-wrap gap-x-2 font-mono text-[10px] text-dim">
-                  <span>${o.price.toFixed(2)}/GPU-hr</span>
+                <div className="flex items-baseline justify-between gap-3 text-[12px]"><span className="min-w-0"><span className="num mr-1.5 text-dim">{i + 1}</span><span className="font-medium text-bone">{providerById(o.provider)!.name}</span><span className="text-mute"> · {offerRegionShort(o)} · {o.contract}</span></span><span className="num shrink-0 font-semibold text-bone" title="Estimated total for the parsed workload">${Math.round(total / 1000)}k</span></div>
+                <div className="mt-0.5 flex flex-wrap gap-x-2 text-[11px] text-dim">
+                  <span><span className="num">${o.price.toFixed(2)}</span>/GPU-hr</span>
                   <span className={cx('whitespace-nowrap', o.available === 'Available' ? 'text-up' : 'text-warn')}>{o.available}{o.available !== 'Available' && ' · capacity risk'}</span>
                   <span className="whitespace-nowrap">reliability {fmtReliability(providerById(o.provider))}</span>
                   {o.freshness === 'illustrative' && <Fresh f="illustrative" />}

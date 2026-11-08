@@ -11,6 +11,7 @@ import { Row } from '@/components/collapse'
 import { cx, Fn, Fresh, Notes, PageHeader, Panel, Seg, TruthGlyph, TruthTag } from '@/components/ui'
 import { uncAt } from '@/lib/model'
 import { ResearchMetrics } from '@/components/ResearchMetrics'
+import { IcSharpe } from '@/components/ui'
 
 const NOTES = [
   'Hatched band = posterior uncertainty of the hidden state (not measurement error). Shaded = low-information periods.',
@@ -63,6 +64,7 @@ export default function Research() {
       <div className="mb-3 flex items-center justify-between"><h2 className="text-[16px] font-semibold tracking-tight">Forecast tests</h2><Seg value={hz} onChange={setHz} options={[{ id: '1W', label: '1W' }, { id: '1M', label: '1M' }, { id: '3M', label: '3M' }]} /></div>
       <div className="space-y-5">
         <ModelComparison horizon={hz} />
+        <IcSharpe horizon={hz} />
         <ResearchMetrics />
         <Row cols={[1.4, 1]}>
           <ForecastVsActual horizon={hz} />

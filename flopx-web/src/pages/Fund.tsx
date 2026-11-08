@@ -1,5 +1,5 @@
 import { useMemo, useState, type ReactNode } from 'react'
-import { ArrowRight, Check, ChartLine, Pencil, Send, X } from 'lucide-react'
+import { ArrowRight, Check, Pencil, Send, X } from 'lucide-react'
 import { ANOMALY_CARDS, AS_OF, PRESSURE_MODEL, regionById } from '@/data/core'
 import { daysAgo, fmtDM, fmtDMY, weekdaysAgo } from '@/lib/designDates'
 import { backtestSpanLabel, BASKETS, PAPER_START_WK, paperStartLabel, secByTicker, WEEK_DATES, WEEKS } from '@/data/finance'
@@ -16,7 +16,7 @@ import { IndicatorChips, IndicatorMenu } from '@/components/IndicatorMenu'
 import type { IndicatorId } from '@/lib/indicators'
 import type { ChartType } from '@/lib/chartTypes'
 import { BacktestCosts, Failures, ForecastVsActual, ModelComparison, ValidationMatrix } from '@/components/Eval'
-import { AIBlock, Btn, cx, Delta, DirectionTag, Empty, EntityLink, Fresh, Meter, PageHeader, Panel, ResetLayout, Seg, StripCell, Tabs, TruthGlyph, TruthTag, Validation } from '@/components/ui'
+import { AIBlock, Btn, IcSharpe, cx, Delta, DirectionTag, Empty, EntityLink, Fresh, Meter, PageHeader, Panel, ResetLayout, Seg, StripCell, Tabs, TruthGlyph, TruthTag, Validation } from '@/components/ui'
 import { useStore } from '@/lib/store'
 import { Foldable, Row } from '@/components/collapse'
 import { FUND_TESTS as FT, SNAPSHOT } from '@/data/handoff'
@@ -57,7 +57,7 @@ export default function Fund() {
   return (
     <div>
       <PageHeader
-        eyebrow={<span className="inline-flex items-center gap-2"><ChartLine size={12} className="text-dec" />Flagship · HRT · Best use of data for predictions & decision making</span>}
+        eyebrow={<span title={`As of ${AS_OF}`}>Flagship · HRT</span>}
         title={<>Systematic compute fund <span className="text-mute">· CPX-1</span></>}
         sub={<span className="flex flex-wrap items-center gap-1.5">
           {/* The page's own statuses are quiet notes (WF8 #3); the account read, when it differs from them, keeps a chip. */}
@@ -93,8 +93,8 @@ export default function Fund() {
       <Panel variant="strip" id="Key figures" title="Paper performance" className="mb-5">
         <KPI lead label="Paper NAV" value={`$${(nav / 1e6).toFixed(3)}M`} sub={book ? <span>P&L <Delta v={(unreal + realised) / 1000} d={1} suffix="k" /></span> : <Delta v={((nav - NAV0) / NAV0) * 100} d={2} />} truth="dec" />
         <KPI label="1W P&L" value={book ? <span className="text-mute">—</span> : <Delta v={day / 1000} d={1} suffix="k" />} sub={mock ? 'not in the mock book' : live ? 'not in the account read' : <span>{((day / nav) * 100).toFixed(2)}%</span>} />
-        <KPI label="Unrealised" value={<Delta v={unreal / 1000} d={1} suffix="k" />} sub="open positions" />
-        <KPI label="Realised" value={<Delta v={realised / 1000} d={1} suffix="k" />} sub={book ? 'since inception' : 'since paper start'} />
+        <KPI label="Unrealised" value={<Delta v={unreal / 1000} d={1} suffix="k" />} sub="open" />
+        <KPI label="Realised" value={<Delta v={realised / 1000} d={1} suffix="k" />} sub={book ? 'since inception' : 'paper to date'} />
         <KPI label="Cash" value={`$${(cash / 1e6).toFixed(2)}M`} sub={`${nav ? ((cash / nav) * 100).toFixed(0) : '—'}% NAV`} />
         <KPI label="Gross / Net" value={nav ? `${((gross / nav) * 100).toFixed(0)}% / ${((netExp / nav) * 100).toFixed(0)}%` : '—'} sub="exposure" />
         <KPI label="vs SOX · SPX" value={book ? <span className="text-mute">—</span> : <span className="text-[13px]"><Delta v={((nav - NAV0) / NAV0) * 100 - soxRet} d={1} suffix="pp" /> · <Delta v={((nav - NAV0) / NAV0) * 100 - spxRet} d={1} suffix="pp" /></span>} sub={mock ? 'not in the mock book' : live ? 'needs the fund summary read' : 'paper period · 10 wks'} />
@@ -173,7 +173,7 @@ function PortfolioTab() {
         <DecisionRecordPanel rec={rec ?? null} onClose={() => setFund({ record: null })} />
       </Row>
 
-      <Panel title="Positions" eyebrow={<><TruthGlyph truth="dec" size={7} />{book ? <>Paper holdings · {book.email} <Fresh quiet f={book.fresh.freshness} label={book.fresh.label} /></> : <>Paper holdings · model and user-owned <Fresh quiet f="illustrative" /></>}</>} right={!book && positions.length > 0 && (confirmLiq ? <div className="flex items-center gap-2"><span className="text-[11.5px] text-down">Sell/cover all {positions.length} positions?</span><Btn size="sm" variant="danger" onClick={() => { liquidateAll(); setConfirmLiq(false) }}>Confirm liquidate</Btn><Btn size="sm" variant="ghost" onClick={() => setConfirmLiq(false)}>Cancel</Btn></div> : <Btn size="sm" variant="danger" onClick={() => setConfirmLiq(true)}>Liquidate all</Btn>)} bodyClass="p-0">
+      <Panel title="Positions" eyebrow={<span title="Paper holdings, model- and user-owned. Own column: ◆ = CPX-1, U = User" className="inline-flex items-center gap-1.5">Paper holdings · Own: <TruthGlyph truth="dec" size={7} /> CPX-1 · U user {book ? <Fresh quiet f={book.fresh.freshness} label={`${book.email} · ${book.fresh.label}`} /> : <Fresh quiet f="illustrative" />}</span>} right={!book && positions.length > 0 && (confirmLiq ? <div className="flex items-center gap-2"><span className="text-[11.5px] text-down">Sell/cover all {positions.length} positions?</span><Btn size="sm" variant="danger" onClick={() => { liquidateAll(); setConfirmLiq(false) }}>Confirm liquidate</Btn><Btn size="sm" variant="ghost" onClick={() => setConfirmLiq(false)}>Cancel</Btn></div> : <Btn size="sm" variant="danger" onClick={() => setConfirmLiq(true)}>Liquidate all</Btn>)} bodyClass="p-0">
         {holdingsEmpty ? (
           <Empty className="m-4" title="Portfolio empty" body={book ? 'This account holds no paper positions.' : 'All paper positions are closed. CPX-1 will propose new targets at the next rebalance, or you can open a position manually.'} action={book ? undefined : <Btn size="sm" variant="decision" onClick={() => setTicket({ ticker: 'VST' })}>New paper order</Btn>} />
         ) : (
@@ -214,7 +214,7 @@ function PortfolioTab() {
       <StrategiesPanel />
 
       <Row cols={[1, 1]}>
-        <Panel variant="rail" title="Recent orders" eyebrow={<>Paper · simulated execution {book ? (book.ordersError ? <Fresh f="unavailable" label={`Orders read failed: ${book.ordersError}`} /> : <Fresh quiet f={book.fresh.freshness} label={mock ? book.fresh.label : `FLOPX paper desk · ${book.email}`} />) : <Fresh quiet f="illustrative" label="Seed orders: design examples, re-dated" />}</>} bodyClass="p-0"><OrdersList orders={orders.slice(0, 8)} /></Panel>
+        <Panel variant="rail" title="Recent orders" eyebrow={<>Simulated {book ? (book.ordersError ? <Fresh f="unavailable" label={`Orders read failed: ${book.ordersError}`} /> : <Fresh quiet f={book.fresh.freshness} label={mock ? book.fresh.label : `FLOPX paper desk · ${book.email}`} />) : <Fresh quiet f="illustrative" label="Seed orders: design examples, re-dated" />}</>} bodyClass="p-0"><OrdersList orders={orders.slice(0, 8)} /></Panel>
         <Panel variant="rail" title="Strategy target changes" eyebrow={<>CPX-1 · last 30 days <Fresh quiet f="illustrative" label="Design examples, re-dated" /></>}>
             {[
               // The design's worked examples keep their distance from "now" in sessions (0, 0, 1 and 6 weekdays back); see src/lib/designDates.ts.
@@ -566,7 +566,7 @@ function DecisionsTab() {
         })}
       </div>
       </Foldable>
-      <Panel title="Attribution · closed decisions" eyebrow={<>Realised P&L attributed to the originating signal <Fresh quiet f="illustrative" /></>}>
+      <Panel title="Attribution · closed decisions" eyebrow={<>Realised P&L by originating signal <Fresh quiet f="illustrative" /></>}>
         <div className="grid grid-cols-[1fr_80px_90px_100px_1fr] gap-3 border-b border-line pb-1.5 text-[11px] text-dim font-medium"><span>Decision</span><span>Origin</span><span className="text-right">P&L</span><span className="text-right">Signal share</span><span>Note</span></div>
         {[
           { d: `Close AMD (${fmtDM(weekdaysAgo(6))})`, o: 'Model', pnl: 41250, share: '—', note: 'Signal retired: no edge found. P&L is market beta, not skill.' },
@@ -595,6 +595,7 @@ function EvaluationTab() {
       </div>
       </Foldable>
       <ModelComparison horizon={fund.horizon} />
+      <IcSharpe horizon={fund.horizon} />
       <Row cols={[1.4, 1]}>
         <ForecastVsActual horizon={fund.horizon} />
         <BacktestCosts />

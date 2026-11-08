@@ -33,7 +33,7 @@ describe('Trading with the mock book', () => {
     expect(html).toContain('aria-checked="true"')
     // KPI strip, Holdings, Orders, Strategy contribution, Risk exposures, Post-trade review
     expect(labels(html)).toBeGreaterThanOrEqual(6)
-    expect(html).toContain('Trading desk · mock book')
+    expect(html).toContain('Mock book · simulated venue')
     for (const t of MOCK_TICKERS) expect(html).toContain(`>${t}<`)
     expect(html).not.toContain('>VST<')
     expect(html).not.toContain('>CEG<')
@@ -49,8 +49,8 @@ describe('Trading with the mock book', () => {
     expect(html).toContain('aria-checked="false"')
     expect(labels(html)).toBe(0)
     expect(html).toContain('>VST<')
-    expect(html).not.toContain('Trading desk · mock book')
-    expect(html).toContain('paper account FX-0042')
+    expect(html).not.toContain('Mock book · simulated venue')
+    expect(html).toContain('Paper account <span class="num">FX-0042</span>')
   })
   it('signed in with a non-empty paper account: the real book wins, the toggle defaults off', () => {
     held()

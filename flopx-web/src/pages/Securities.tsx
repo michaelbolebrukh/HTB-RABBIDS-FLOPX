@@ -9,8 +9,9 @@ import { ChartTypeMenu } from '@/components/ChartTypeMenu'
 import { IndicatorChips, IndicatorMenu } from '@/components/IndicatorMenu'
 import type { IndicatorId } from '@/lib/indicators'
 import type { ChartType } from '@/lib/chartTypes'
-import { Btn, cx, Delta, Empty, EntityLink, Fresh, freshLabel, HorizonStatus, Panel, ResetLayout, Seg, Spark, TruthTag, Validation } from '@/components/ui'
+import { Btn, cx, Delta, Empty, EntityLink, Fresh, freshLabel, HorizonStatus, PageHeader, Panel, ResetLayout, Seg, Spark, TruthTag, Validation } from '@/components/ui'
 import { useStore } from '@/lib/store'
+import { Foldable, Row } from '@/components/collapse'
 import { closeBadgeOf, W2_LIVE } from '@/live/adapt-w2'
 import { fmtDay } from '@/live/provenance'
 import { QuarterlySection } from '@/components/Fundamentals'
@@ -34,9 +35,8 @@ export default function Securities() {
   const anyObserved = Object.values(badges).some((b) => b.f !== 'illustrative')
   return (
     <div className="grid grid-cols-1 gap-5 xl:grid-cols-[280px_1fr]">
-      <div>
-        {/* The note is short because the column is 280 px: "unless marked" is the row's own chip. */}
-        <div className="eyebrow mb-2 flex flex-wrap items-center gap-x-2 gap-y-0.5"><span className="flex items-center gap-2"><Landmark size={12} />Equities, funds & derivatives</span><Fresh quiet f="illustrative" label={anyObserved ? 'Illustrative unless marked' : undefined} /></div>
+      {/* The quiet note is short because the column is 280 px: "unless marked" is the row's own chip. */}
+      <Foldable id="Instruments" label={<><Landmark size={12} />Equities, funds & derivatives <Fresh quiet f="illustrative" label={anyObserved ? 'Illustrative unless marked' : undefined} /></>}>
         <div className="mb-2 flex flex-wrap gap-1" role="radiogroup" aria-label="Category">
           {GROUPS.map((g) => {
             const c = g === 'All' ? 'var(--color-bone)' : GROUP_COLOR[g]
@@ -53,10 +53,10 @@ export default function Securities() {
         </div>
         <div className="overflow-hidden rounded-md border border-line bg-panel">
           {group !== 'Baskets' && list.map((s) => (
-            <button key={s.ticker} onClick={() => navigate('securities', { t: s.ticker })} className={cx('grid w-full cursor-pointer grid-cols-[52px_1fr_auto] items-center gap-x-2 gap-y-0.5 border-b border-line/60 px-3 py-2 text-left last:border-0', sel === s.ticker ? 'bg-raise' : 'hover:bg-hover')}>
+            <button key={s.ticker} onClick={() => navigate('securities', { t: s.ticker })} className={cx('grid w-full cursor-pointer grid-cols-[52px_1fr_auto] items-center gap-x-2 gap-y-0.5 border-b border-line-soft px-3 py-2 text-left last:border-0', sel === s.ticker ? 'bg-act/[0.06] shadow-[inset_2px_0_0_var(--color-act)]' : 'hover:bg-hover')}>
               <span className="row-span-2 font-mono text-[12px]">{s.ticker}</span>
               <Spark values={s.px.slice(-26)} width={70} height={16} color={GROUP_COLOR[s.group]} />
-              <span className="flex items-baseline justify-end gap-1.5"><span className="num text-[11.5px]">{last(s.px).toFixed(2)}</span><Delta v={chg(s.px)} className="text-[10px]" /></span>
+              <span className="text-right"><span className="num block text-[11.5px]">{last(s.px).toFixed(2)}</span><Delta v={chg(s.px)} className="text-[10px]" /></span>
               {/* Only a row whose close differs from the list's note keeps a chip; it spans the spark and price columns, since "Archived · 06 Nov" does not fit beside the price in a 280 px list. */}
               {badges[s.ticker].f !== 'illustrative' && <span className="col-span-2 col-start-2 justify-self-end" title={badges[s.ticker].title}><Fresh f={badges[s.ticker].f} label={badges[s.ticker].label} className="text-[8.5px]" /></span>}
             </button>
@@ -65,14 +65,14 @@ export default function Securities() {
             <>
               <div className="eyebrow border-b border-line bg-ink px-3 py-1.5">Baskets</div>
               {BASKETS.map((b) => { const sr = basketSeries(b); return (
-                <button key={b.id} onClick={() => navigate('securities', { t: b.id })} className={cx('grid w-full cursor-pointer grid-cols-[1fr_auto] items-center gap-2 border-b border-line/60 px-3 py-2 text-left last:border-0', sel === b.id ? 'bg-raise' : 'hover:bg-hover')}>
+                <button key={b.id} onClick={() => navigate('securities', { t: b.id })} className={cx('grid w-full cursor-pointer grid-cols-[1fr_auto] items-center gap-2 border-b border-line-soft px-3 py-2 text-left last:border-0', sel === b.id ? 'bg-act/[0.06] shadow-[inset_2px_0_0_var(--color-act)]' : 'hover:bg-hover')}>
                   <span className="flex items-center gap-2 text-[12px]">{b.name}<Spark values={sr.slice(-26)} width={44} height={14} color={GROUP_COLOR.Baskets} /></span><Delta v={chg(sr)} className="text-[10.5px]" />
                 </button>
               ) })}
             </>
           )}
         </div>
-      </div>
+      </Foldable>
       {sel.startsWith('b-') ? <BasketView id={sel} /> : <SecurityView t={sel} />}
     </div>
   )
@@ -114,17 +114,15 @@ function SecurityView({ t }: { t: string }) {
     : undefined
   return (
     <div className="space-y-5">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <div className="eyebrow mb-1"><span style={{ color: GROUP_COLOR[s.group] }}>{s.group}</span> · {s.exchange}</div>
-          <h1 className="font-serif text-[34px] leading-none">{s.name} <span className="font-mono text-[18px] text-mute">{s.ticker}</span></h1>
-          <div className="mt-2 flex items-center gap-3"><span className="num text-[24px]">${last(s.px).toFixed(2)}</span><Delta v={chg(s.px)} className="text-[14px]" /><span className="text-[11px] text-dim">1W</span>{observed ? <span title={`${observed.source ?? 'FLOPX'} close ${fmtDay(observed.t)}`}><Fresh f={observed.fresh.freshness} label={`${freshLabel(observed.fresh.freshness)} · close ${fmtDay(observed.t)}`} /></span> : <Fresh f="illustrative" />}{pos && <span className="rounded-[3px] border border-dec/40 px-1.5 font-mono text-[10px] text-dec">PAPER {pos.qty > 0 ? 'LONG' : 'SHORT'} {Math.abs(pos.qty).toLocaleString()}</span>}</div>
-        </div>
-        <div className="flex items-center gap-2"><ResetLayout /><Btn variant="decision" onClick={() => setTicket({ ticker: t })}>Paper trade</Btn></div>
-      </div>
+      <PageHeader
+        eyebrow={<>{s.group} · {s.exchange}</>}
+        title={<>{s.name} <span className="font-mono text-[16px] font-normal text-mute">{s.ticker}</span></>}
+        sub={<span className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1"><span className="num text-[24px]">${last(s.px).toFixed(2)}</span><Delta v={chg(s.px)} className="text-[14px]" /><span className="text-[11px] text-dim">1W</span>{observed ? <span title={`${observed.source ?? 'FLOPX'} close ${fmtDay(observed.t)}`}><Fresh f={observed.fresh.freshness} label={`${freshLabel(observed.fresh.freshness)} · close ${fmtDay(observed.t)}`} /></span> : <Fresh f="illustrative" />}{pos && <span className="text-[11.5px] text-dec">Paper {pos.qty > 0 ? 'long' : 'short'} <span className="num">{Math.abs(pos.qty).toLocaleString()}</span></span>}</span>}
+        right={<span className="flex items-center gap-2"><ResetLayout /><Btn variant="decision" onClick={() => setTicket({ ticker: t })}>Paper trade</Btn></span>}
+      />
 
-      <Panel title="Price history" eyebrow={observed ? `Weekly · ◆ = linked events (click) · closes observed for the last ${lc!.observedWeeks} weeks, earlier closes, OHLC and volume illustrative` : 'Weekly · ◆ = linked events (click) · closes, OHLC and volume illustrative'}
-        right={<div className="flex items-center gap-2"><Seg size="sm" value={range} onChange={setRange} options={Object.keys(RANGES).map((k) => ({ id: k as keyof typeof RANGES, label: k }))} /><IndicatorMenu value={indicators} onChange={setIndicators} /><ChartTypeMenu value={chartType} onChange={setChartType} /></div>}>
+      <Panel title="Price history" eyebrow={observed ? `Weekly · ◆ linked events · closes observed for the last ${lc!.observedWeeks} weeks, OHLC illustrative` : 'Weekly · ◆ linked events · OHLC illustrative'}
+        right={<div className="flex flex-wrap items-center justify-end gap-2"><Seg size="sm" value={range} onChange={setRange} options={Object.keys(RANGES).map((k) => ({ id: k as keyof typeof RANGES, label: k }))} /><IndicatorMenu value={indicators} onChange={setIndicators} /><ChartTypeMenu value={chartType} onChange={setChartType} /></div>}>
         <IndicatorChips value={indicators} onChange={setIndicators} />
         <StockChart
           labels={WEEKS.slice(-n)}
@@ -145,7 +143,7 @@ function SecurityView({ t }: { t: string }) {
         />
       </Panel>
 
-      <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
+      <Row cols={[1, 1, 1]} at="xl">
         <Panel title="Fundamentals" eyebrow={<Fresh quiet f="illustrative" label={rg && lc?.quarterly ? 'Illustrative except rev growth & quarterlies' : rg ? 'Illustrative except rev growth' : lc?.quarterly ? 'Illustrative except quarterlies' : undefined} />}>
           <div className="grid grid-cols-2 gap-3">
             {[['Market cap', s.mcap ? `$${(s.mcap / 1e9).toFixed(0)}B` : '—'], ['P/E (fwd)', s.pe != null ? s.pe.toFixed(0) : 'n/m'], ['EV/Sales', `${s.evSales}×`], ['Rev growth', `${s.revGrowth}%`], ['Gross margin', `${s.grossMargin}%`], ['Short interest', `${s.shortInt}%`]].map(([k, v]) => <div key={k}><div className="text-[11px] text-dim font-medium">{k}</div><div className="num text-[15px]">{v}</div></div>)}
@@ -155,7 +153,7 @@ function SecurityView({ t }: { t: string }) {
           {/* Signed-in readers: the archived WRDS Compustat quarterlies the detail read carries with a token (WF7 #2); nothing for anyone else. */}
           <QuarterlySection quarterly={lc?.quarterly} />
         </Panel>
-        <Panel title="Derivatives" eyebrow={<>Listed options <Fresh quiet f="illustrative" /></>}>
+        <Panel title="Derivatives" eyebrow={<>Listed options · delayed <Fresh quiet f="illustrative" /></>}>
           {s.iv30 == null ? (
             <Empty title="Options data unavailable" body={`No reliable listed-options feed for ${s.ticker}. FLOPX shows nothing rather than estimating implied volatility.`} />
           ) : (
@@ -175,7 +173,7 @@ function SecurityView({ t }: { t: string }) {
             {[['Beta (SPX)', s.beta.toFixed(2)], ['Vol 30d', `${s.vol30}%`], ['Max DD 1Y', `${maxDD.toFixed(1)}%`], ['52w range', `${Math.min(...s.px.slice(-52)).toFixed(0)}–${Math.max(...s.px.slice(-52)).toFixed(0)}`]].map(([k, v]) => <div key={k}><div className="text-[11px] text-dim font-medium">{k}</div><div className="num text-[15px]">{v}</div></div>)}
           </div>
         </Panel>
-      </div>
+      </Row>
 
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
         <Panel title="Compute-market intelligence" eyebrow="Documented ties (solid) vs modelled sensitivities (dashed)" right={<Fresh quiet f="illustrative" />}>
