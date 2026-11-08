@@ -1,2 +1,7 @@
 # AgentPlat packages this default favicon directly from source without LFS hydration.
 favicon.png -filter -diff -merge -text
+# The PWA icons ship the same way (no LFS), or a deploy without LFS hydration serves pointer files.
+apple-touch-icon.png -filter -diff -merge -text
+icon-192.png -filter -diff -merge -text
+icon-512.png -filter -diff -merge -text
+icon-maskable-512.png -filter -diff -merge -text

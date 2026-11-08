@@ -9,6 +9,7 @@ import { WorldMap } from '@/components/WorldMap'
 import { SCALED_LABEL, TimeChart } from '@/components/charts'
 import { Btn, cx, Delta, DirectionTag, Fresh, PageHeader, Panel, Spark, TruthGlyph, Validation } from '@/components/ui'
 import { useStore } from '@/lib/store'
+import { useIsPhone } from '@/lib/usePhone'
 
 /** Driver phrase for a modelled reaction: the region's live cpx reading when FLOPX covers it, else the design phrase marked as an example. */
 export function regionDriver(regionId: string, designPhrase: string): string {
@@ -36,12 +37,13 @@ export default function Overview() {
   const cpiBand = band(GLOBAL_CPI, 2.4)
   const sigH100 = SIGNALS.find((s) => s.id === 'sig-h100')!
   const h100Fig = gpuCardFigures(h100)
+  const phone = useIsPhone()
   const b200Fig = gpuCardFigures(b200)
   const gdhCards = [h100, b200].filter((g) => g.live?.history)
   // KPI cards whose figure is observed or inferred from real inputs; the rest of the six are the design's.
   const realCards = [live && 'Compute Pressure', h100.live && 'H100 rental index', b200.live && 'B200 rental index', ENERGY[0].freshness !== 'illustrative' && 'ERCOT day-ahead'].filter((x): x is string => !!x)
   return (
-    <div>
+    <div className="max-md:[&_[data-fresh]]:whitespace-normal max-md:[&_h1]:line-clamp-none max-md:[&_h1]:text-[25px] max-md:[&_h1]:leading-[31px] max-md:[&_h1_br]:hidden">
       <PageHeader
         eyebrow={<>Global intelligence · briefing · {AS_OF}{!live && <> <Fresh f="illustrative" label="Illustrative briefing" /></>}</>}
         variant="briefing"
@@ -58,11 +60,11 @@ export default function Overview() {
         <Metric label="Effective capacity gap" truth="inf" value={`${(gap / 1000).toFixed(1)} GW`} unit={live && supplyRegions.length ? `${supplyRegions.length} regions` : `by ${horizonLabel(12)}`} delta={live && supplyRegions.length ? null : 0.6} dUnit=" GW" invert onClick={() => { setXray({ layers: ['effective', 'pipeline'], reveal: 100 }); navigate('xray') }} note={live && supplyRegions.length ? 'Inferred · pipeline − est. usable · sample records' : 'Inferred · announced − est. usable'} />
       </Panel>
       {/* One note for the two strips: the cells that are real are named here, and each cell's own foot line says where its figure comes from. */}
-      <div className="-mt-3.5 mb-1.5 text-[10.5px] text-dim">
+      <div className="-mt-3.5 mb-1.5 text-[10.5px] text-dim max-md:mt-0 max-md:text-[12px]">
         <Fresh quiet f="illustrative" label={realCards.length === 0 ? 'Illustrative' : `Illustrative, except ${realCards.join(', ')} (FLOPX data; each card's foot line names its source)`} />
       </div>
       {gdhCards.length > 0 && (
-        <div className="mb-5 text-[10.5px] text-dim">
+        <div className="mb-5 text-[10.5px] text-dim max-md:text-[12px]">
           {gdhCards.map((g) => g.name).join(' and ')} spark{gdhCards.length === 1 ? '' : 's'}: <a href={GDH_URL} target="_blank" rel="noreferrer" className="underline decoration-dotted underline-offset-2 hover:text-mute">{gdhCards[0].live!.history!.attribution}</a> · weekly medians of advertised on-demand asks as monthly means, {gdhCards[0].live!.history!.first} to {gdhCards[0].live!.history!.last}, archived. The 30d change is GetDeploying's where the FLOPX index is younger than 30 days.
         </div>
       )}
@@ -74,8 +76,8 @@ export default function Overview() {
           right={<><Fresh quiet f="illustrative" label={live ? (PRESSURE_MODEL.globalScaled ? SCALED_LABEL : `History before ${MONTHS[NOW_IDX]} and forecast illustrative`) : 'Illustrative'} /><span className="num text-[11px] text-dim">{MONTHS[NOW_IDX]}</span><Btn size="sm" variant="ghost" onClick={() => navigate('xray')}>Open X-Ray <ArrowUpRight size={12} /></Btn></>}
           bodyClass="p-0"
         >
-          <div className="h-[360px]">
-            <WorldMap compact callouts layers={['pressure']} onRegion={(id) => { setXray({ region: id, tab: 'brief' }); navigate('xray') }} minHeight={360} />
+          <div className="h-[360px] max-md:h-[280px]">
+            <WorldMap compact callouts layers={['pressure']} onRegion={(id) => { setXray({ region: id, tab: 'brief' }); navigate('xray') }} minHeight={phone ? 280 : 360} />
           </div>
           <div className="border-t border-line-soft px-4 py-3">
             <TimeChart labels={MONTHS} height={110} nowIdx={NOW_IDX} yFmt={(v) => v.toFixed(0)} series={[{ id: 'cpi', label: 'Global CPI', values: GLOBAL_CPI.map((v, i) => (i <= NOW_IDX ? v : null)), color: 'var(--color-inf)' }, { id: 'fc', label: 'Forecast', values: GLOBAL_CPI.map((v, i) => (i >= NOW_IDX ? v : null)), color: 'var(--color-fct)', style: 'dashed', band: cpiBand }]} />
@@ -100,7 +102,7 @@ export default function Overview() {
               ? { t: 'obs' as const, title: `${exploratory} of ${ranked.length} FLOPX regions read exploratory`, body: 'Fewer than three pressure factors are backed by real inputs; most inputs are still sample data.', onClick: () => navigate('xray'), tag: 'Data issue', real: true }
               : { t: 'obs' as const, title: 'Sydney rental feed stale since 06 Mar', body: 'Provider API change; regional estimate widened.', onClick: () => { setXray({ region: 'au-syd' }); navigate('xray') }, tag: 'Data issue', real: false },
           ].map((x, i) => (
-            <button key={i} onClick={x.onClick} className="group grid w-full cursor-pointer grid-cols-[16px_10px_1fr_auto] items-start gap-2.5 py-2.5 text-left hover:bg-hover">
+            <button key={i} onClick={x.onClick} className="group grid w-full cursor-pointer grid-cols-[16px_10px_1fr_auto] items-start gap-2.5 py-2.5 text-left hover:bg-hover max-md:grid-cols-[16px_10px_1fr] max-md:[&>span:last-child]:col-start-3">
               <span className="num mt-px text-[11px] text-dim">{i + 1}</span>
               <span className="mt-1"><TruthGlyph truth={x.t} size={8} /></span>
               <span><span className="block text-[12.5px] font-medium text-bone">{x.title}</span><span className="block text-[11.5px] text-mute">{x.body}</span></span>
@@ -121,15 +123,15 @@ export default function Overview() {
           <table className="w-full text-[12px]">
             <thead>
               <tr className="h-8 border-b border-line text-left text-[11px] font-medium text-dim">
-                <th className="px-3 font-medium">Signal</th>
+                <th className="px-3 font-medium max-md:sticky max-md:left-0 max-md:z-[1] max-md:bg-panel">Signal</th>
                 <th className="px-3 font-medium">Direction</th>
                 {(['1W', '1M', '3M'] as const).map((h) => <th key={h} className="px-2 font-medium">{h}</th>)}
               </tr>
             </thead>
             <tbody className="divide-y divide-line-soft">
               {SIGNALS.slice(0, 4).map((s) => (
-                <tr key={s.id} onClick={() => { setFund({ tab: 'signals', signal: s.id }); navigate('fund') }} className="h-9 cursor-pointer hover:bg-hover">
-                  <td className="px-3 font-medium whitespace-nowrap text-bone">{s.name}</td>
+                <tr key={s.id} onClick={() => { setFund({ tab: 'signals', signal: s.id }); navigate('fund') }} className="h-9 cursor-pointer hover:bg-hover max-md:h-11">
+                  <td className="px-3 font-medium whitespace-nowrap text-bone max-md:sticky max-md:left-0 max-md:z-[1] max-md:bg-panel">{s.name}</td>
                   <td className="px-3 whitespace-nowrap"><DirectionTag direction={s.direction} asset={s.asset.startsWith('b-') ? 'basket' : s.asset} /></td>
                   {(['1W', '1M', '3M'] as const).map((h) => <td key={h} className="px-2 py-1.5">{s.horizons[h] ? <Validation s={s.horizons[h].status} short /> : <span className="text-dim">—</span>}</td>)}
                 </tr>
@@ -154,7 +156,7 @@ export default function Overview() {
         </Panel>
         <Panel variant="rail" title="Intelligence events" right={<Btn size="sm" variant="ghost" onClick={() => navigate('news')}>All</Btn>}>
           {NEWS.slice(0, 4).map((n) => (
-            <button key={n.id} onClick={() => navigate('news', { id: n.id })} className="w-full cursor-pointer py-2.5 text-left hover:bg-hover">
+            <button key={n.id} onClick={() => navigate('news', { id: n.id })} className="w-full cursor-pointer py-2.5 text-left hover:bg-hover max-md:py-3">
               <div className="flex items-center gap-1.5 text-[11px] text-dim"><span className="num">{n.ago}</span><span>· {n.type}</span><span className={cx(n.verification === 'Single source' && 'text-warn')}>· {n.verification}</span></div>
               <div className="mt-0.5 text-[12px] text-bone">{n.title}</div>
             </button>
@@ -189,7 +191,7 @@ export default function Overview() {
 /** One cell of a metric strip: the lead metric is larger and keeps its sparkline; the rest are plain numbers. */
 function Metric({ label, truth, value, unit, delta, dUnit = '%', spark, color, onClick, note, invert, lead, small }: { label: string; truth: 'obs' | 'inf' | 'dec'; value: string; unit: string; delta: number | null; dUnit?: string; spark?: number[]; color?: string; onClick: () => void; note: string; invert?: boolean; lead?: boolean; small?: boolean }) {
   return (
-    <button onClick={onClick} className={cx('group flex min-w-[160px] cursor-pointer items-start justify-between gap-4 text-left transition-colors hover:bg-hover', lead ? 'flex-[1.6]' : 'flex-1', small ? 'px-4 py-2.5' : 'px-4 py-3')}>
+    <button onClick={onClick} className={cx('group flex min-w-[160px] cursor-pointer items-start justify-between gap-4 text-left transition-colors hover:bg-hover', lead ? 'flex-[1.6] max-md:col-span-2 max-md:border-b max-md:border-line-soft' : 'flex-1 max-md:min-w-0 max-md:gap-2 max-md:border-line-soft', small ? 'px-4 py-2.5 max-md:px-3 max-md:[&:nth-child(even)]:border-l max-md:[&:nth-child(n+3)]:border-t' : 'px-4 py-3', !lead && !small && 'max-md:px-3 max-md:[&:nth-child(odd)]:border-l')}>
       <div className="min-w-0">
         <div className="flex items-center gap-1.5 text-[11px] text-dim"><TruthGlyph truth={truth} size={7} />{label}<ArrowUpRight size={11} className="text-dim opacity-0 transition-opacity group-hover:opacity-100" /></div>
         <div className="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
@@ -210,7 +212,7 @@ function Pathway({ eyebrow, title, body, stats, onClick }: { eyebrow: string; ti
       <div className="eyebrow mb-1">{eyebrow}</div>
       <div className="flex items-center justify-between"><h3 className="text-[18px] font-semibold tracking-tight text-bone">{title}</h3><ArrowRight size={16} className="text-mute transition-transform group-hover:translate-x-1" /></div>
       <p className="mt-1.5 max-w-md text-[12.5px] leading-relaxed text-mute">{body}</p>
-      <div className="mt-3 flex gap-6">{stats.map(([k, v]) => <div key={k}><div className="text-[11px] text-dim">{k}</div><div className="num text-[13px]">{v}</div></div>)}</div>
+      <div className="mt-3 flex gap-6 max-md:flex-wrap max-md:gap-x-5 max-md:gap-y-2">{stats.map(([k, v]) => <div key={k}><div className="text-[11px] text-dim">{k}</div><div className="num text-[13px]">{v}</div></div>)}</div>
     </button>
   )
 }
@@ -220,11 +222,12 @@ type Reaction = { id: string; label?: string; kind: 'security' | 'basket'; px: n
 /** One asset class in Financial reactions: a labelled sub-header, then a row per instrument. */
 function ReactionGroup({ title, rows, wide }: { title: string; rows: Reaction[]; wide?: boolean }) {
   const { inspect } = useStore()
+  const phone = useIsPhone()
   return (
     <div className="pb-1">
       <div className="pt-2 pb-1 text-[11px] font-medium text-dim">{title}</div>
       {rows.map((r) => (
-        <button key={r.id} onClick={() => inspect({ kind: r.kind, id: r.id, label: r.label ?? r.id })} className="grid w-full cursor-pointer items-center gap-3 border-t border-line-soft py-1.5 text-left first-of-type:border-0 hover:bg-hover" style={{ gridTemplateColumns: `${wide ? 170 : 56}px 64px 1fr auto` }}>
+        <button key={r.id} onClick={() => inspect({ kind: r.kind, id: r.id, label: r.label ?? r.id })} className="grid w-full cursor-pointer items-center gap-3 border-t border-line-soft py-1.5 text-left first-of-type:border-0 hover:bg-hover max-md:min-h-11 max-md:gap-2" style={{ gridTemplateColumns: `${wide ? (phone ? 132 : 170) : 56}px 64px 1fr auto` }}>
           <span className={cx('truncate text-[12px]', wide ? 'text-bone' : 'font-mono')}>
             {r.label ?? r.id}
             {wide && <span className="num block truncate text-[10px] text-dim">{r.why}</span>}

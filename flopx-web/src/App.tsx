@@ -1,6 +1,6 @@
-import { useEffect, type ReactNode } from 'react'
+import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { StoreProvider, useStore, type PageId } from '@/lib/store'
-import { Sidebar, Ticker, Toasts, Topbar } from '@/components/Shell'
+import { MoreSheet, PhoneTabBar, PhoneTopbar, Sidebar, Ticker, Toasts, Topbar } from '@/components/Shell'
 import { Inspector } from '@/components/Inspector'
 import { Assistant, DemoGuide, Palette, Ticket } from '@/components/Overlays'
 import Overview from '@/pages/Overview'
@@ -17,6 +17,7 @@ import Handoff from '@/pages/Handoff'
 import Intelligence from '@/pages/Intelligence'
 import Agents from '@/pages/Agents'
 import { ChartStyleProvider } from '@/lib/chartStyle'
+import { useIsPhone } from '@/lib/usePhone'
 
 const PAGES: Record<PageId, () => ReactNode> = {
   overview: Overview,
@@ -47,29 +48,47 @@ function Frame() {
     window.addEventListener('keydown', fn)
     return () => window.removeEventListener('keydown', fn)
   }, [setPalette, setInspector, inspector])
+  // Phone (< 768 px): no sidebar or desktop top bar; a compact header, a swipeable ticker and a bottom
+  // tab bar instead, with More as a full-screen sheet. With `phone` false every element below renders
+  // exactly as it did, so the desktop layout does not move.
+  const phone = useIsPhone()
+  const [more, setMore] = useState(false)
+  const closeMore = useCallback(() => setMore(false), [])
+  useEffect(() => setMore(false), [route.page, phone])
   const Page = PAGES[route.page] ?? Overview
   const full = route.page === 'xray' || route.page === 'agents'
   return (
-    <div className="flex h-full overflow-hidden bg-ink text-bone">
-      <Sidebar />
+    <div className="flex h-full overflow-hidden bg-ink text-bone max-md:pr-[env(safe-area-inset-right)] max-md:pl-[env(safe-area-inset-left)]">
+      {!phone && <Sidebar />}
       <div className="flex min-w-0 flex-1 flex-col">
         {import.meta.env.VITE_DESIGN_PREVIEW === '1' && (
           <div className="border-b border-line bg-raise px-4 py-1 text-center text-[11px] text-mute">
             Design preview: every figure here is the design's illustrative data, not live FLOPX data. Live wiring lands in the next build.
           </div>
         )}
-        <Topbar />
-        <Ticker />
+        {phone ? (
+          <div className="sticky top-0 z-40 shrink-0">
+            <PhoneTopbar onAccount={() => setMore(true)} />
+            <Ticker />
+          </div>
+        ) : (
+          <>
+            <Topbar />
+            <Ticker />
+          </>
+        )}
         <div className="flex min-h-0 flex-1">
           <div className="relative min-w-0 flex-1">
             <main id="main-scroll" className={full ? 'h-full overflow-hidden' : 'h-full overflow-y-auto'}>
-              {full ? <Page /> : <div key={route.page} className="fade-in mx-auto max-w-[1680px] px-6 py-6"><Page /></div>}
+              {full ? <Page /> : <div key={route.page} className="fade-in mx-auto max-w-[1680px] px-6 py-6 max-md:px-3 max-md:py-4"><Page /></div>}
             </main>
             <Inspector />
           </div>
           <Assistant />
         </div>
+        {phone && <PhoneTabBar moreOpen={more} onMore={() => setMore((o) => !o)} />}
       </div>
+      {phone && <MoreSheet open={more} onClose={closeMore} />}
       <Palette />
       <Ticket />
       <DemoGuide />

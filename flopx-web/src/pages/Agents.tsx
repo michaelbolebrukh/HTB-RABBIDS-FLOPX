@@ -1,11 +1,37 @@
 import { useEffect, useRef, useState } from 'react'
-import { ArrowUp, Check, ChevronRight, CircleDot, Diamond, Info, Lock, Send, Sparkles, Wrench, X } from 'lucide-react'
+import { ArrowUp, Check, ChevronRight, CircleDot, Diamond, Info, ListChecks, Lock, Send, Sparkles, Wrench, X } from 'lucide-react'
 import { FactMeta } from '@/components/Overlays'
 import { Btn, cx, Fresh, PageHeader, Panel, TruthTag } from '@/components/ui'
 import { Row } from '@/components/collapse'
 import { AGENT_TOOLS } from '@/data/handoff'
 import { AGENT_SUGGESTED, askFlopx, type Answer } from '@/lib/ask'
 import { useStore } from '@/lib/store'
+import { useIsPhone } from '@/lib/usePhone'
+
+/**
+ * Phone: how far the on-screen keyboard reaches above the bottom of `el` (0 when it is closed or
+ * on desktop). The chat column pads its foot by this much so the composer stays above the keyboard.
+ */
+function useKeyboardOverlap(el: React.RefObject<HTMLElement | null>, on: boolean): number {
+  const [kb, setKb] = useState(0)
+  useEffect(() => {
+    const vv = typeof window === 'undefined' ? null : window.visualViewport
+    if (!on || !vv) { setKb(0); return }
+    const fn = () => {
+      const node = el.current
+      if (!node) return
+      const visibleBottom = vv.offsetTop + vv.height
+      const bottom = node.getBoundingClientRect().bottom
+      const next = Math.max(0, Math.round(bottom - visibleBottom))
+      setKb((cur) => (Math.abs(cur - next) < 2 ? cur : next))
+    }
+    fn()
+    vv.addEventListener('resize', fn)
+    vv.addEventListener('scroll', fn)
+    return () => { vv.removeEventListener('resize', fn); vv.removeEventListener('scroll', fn) }
+  }, [on, el])
+  return kb
+}
 
 type Verdict = 'pending' | 'sent' | 'rejected'
 interface Card { id: number; q: string; a: Answer | null; verdicts: Verdict[] }
@@ -26,6 +52,10 @@ export default function Agents() {
   const threadRef = useRef<HTMLDivElement>(null)
   useEffect(() => { const t = threadRef.current; if (t && cards.length > 1) t.scrollTo({ top: t.scrollHeight, behavior: 'smooth' }) }, [cards.length])
   const askedRef = useRef<string | null>(null)
+  const phone = useIsPhone()
+  const [railOpen, setRailOpen] = useState(false)
+  const outerRef = useRef<HTMLDivElement>(null)
+  const kb = useKeyboardOverlap(outerRef, phone)
 
   // The backend answers: POST /flopx/ask for the intent and routes, then the named target's composed
   // brief. The design's prepared cards stand in, badged illustrative, only when it does not answer.
@@ -52,9 +82,44 @@ export default function Agents() {
   }
 
   const offline = latest?.offline
+  const railContent = (
+    <>
+          <Panel variant="rail" title="Decisions">
+            {log.length === 0 ? (
+              <p className="py-2 text-[12px] text-dim">Nothing sent or rejected yet.</p>
+            ) : (
+              log.map((d) => (
+                  <div key={d.id} className="grid grid-cols-[auto_1fr] gap-x-2 py-1.5 text-[12px]">
+                    <span className={cx('flex items-center gap-1 font-medium', d.verdict === 'sent' ? 'text-up' : 'text-down')}>{d.verdict === 'sent' ? <Check size={11} /> : <X size={11} />}{d.verdict === 'sent' ? 'Sent' : 'Rejected'}</span>
+                    <span className="text-bone/90">{d.label}<span className="block text-[11px] text-dim"><span className="num">{d.at}</span>{d.tool ? <> · <span className="num">{d.tool}</span></> : ''}</span></span>
+                  </div>
+              ))
+            )}
+          </Panel>
+          <details className="group rounded-[2px] border border-line bg-panel">
+            <summary className="flex cursor-pointer list-none items-center gap-1.5 px-4 py-2.5 text-[13px] font-semibold text-bone [&::-webkit-details-marker]:hidden">
+              <ChevronRight size={14} className="text-dim transition-transform group-open:rotate-90" />Available tools<span className="num ml-auto text-[11px] font-normal text-dim">{AGENT_TOOLS.length}</span>
+            </summary>
+            <ul className="border-t border-line-soft">
+              {AGENT_TOOLS.map((t) => {
+                const on = t.id === lastTool
+                return (
+                  <li key={t.id} className={cx('border-b border-line-soft px-4 py-2 last:border-b-0', on && 'bg-raise shadow-[inset_2px_0_0_var(--color-bone)]')}>
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-[12.5px] text-bone">{t.label}</span>
+                      {on && <span className="text-[10.5px] text-mute">Used for latest answer</span>}
+                    </div>
+                    <div className="text-[11.5px] text-dim">{t.desc}</div>
+                  </li>
+                )
+              })}
+            </ul>
+          </details>
+    </>
+  )
   const offlineTitle = `The FLOPX backend did not answer (${offline}); the design's prepared cards stand in and are badged illustrative.`
   return (
-    <div className="fade-in mx-auto flex h-full max-w-[1680px] flex-col px-6 pt-6">
+    <div ref={outerRef} className="fade-in mx-auto flex h-full max-w-[1680px] flex-col px-6 pt-6 max-md:px-3 max-md:pt-3" style={phone && kb > 0 ? { paddingBottom: kb } : undefined}>
       <PageHeader
         title="Ask FLOPX"
         sub="An agent answers from engine tools. A person decides."
@@ -62,11 +127,17 @@ export default function Agents() {
           ? <span title={offlineTitle}><Fresh f="illustrative" label="Offline · prepared cards" /></span>
           : <span title={LIVE_TITLE}><Fresh f="live" label="FLOPX backend · grammar + composed brief" /></span>}
       />
+      {/* Phone: the desktop's Decisions and Available tools rail opens as a sheet from here. */}
+      <div className="-mt-2 mb-1 flex justify-end md:hidden">
+        <button type="button" onClick={() => setRailOpen(true)} aria-haspopup="dialog" className="flex min-h-11 cursor-pointer items-center gap-1.5 rounded-full border border-line px-3.5 text-[13px] text-mute">
+          <ListChecks size={15} />Decisions and tools{log.length > 0 && <span className="num text-[12px] text-bone">{log.length}</span>}
+        </button>
+      </div>
 
       <Row cols={[1, '300px']} className="min-h-0 flex-1 xl:grid-rows-[minmax(0,1fr)]">
         <div className="mx-auto flex h-full min-h-0 w-full max-w-[760px] flex-col">
           {cards.length === 0 && (
-            <div className="py-16 text-center">
+            <div className="py-16 text-center max-md:py-8">
               <div className="text-[20px] font-semibold text-bone">What do you want to know?</div>
               <div className="mt-1 text-[12.5px] text-dim">Ask in plain words; one engine tool answers, with its source.</div>
             </div>
@@ -94,7 +165,7 @@ export default function Agents() {
                   </div>
 
                   <details className="group mt-3">
-                    <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 text-[13.5px] text-dim transition-colors hover:text-mute [&::-webkit-details-marker]:hidden">
+                    <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 text-[13.5px] text-dim transition-colors hover:text-mute [&::-webkit-details-marker]:hidden max-md:min-h-11">
                       {tool ? <>Used {tool.label}</> : a.engine ? <>Engine <span className="font-mono">{a.engine}</span></> : a.offline ? <span className="text-warn">Offline · prepared card</span> : <span className="text-warn">No tool matched</span>}
                       {a.facts.length > 0 && <span>· {a.facts.length} {a.facts.length === 1 ? 'fact' : 'facts'}</span>}
                       <ChevronRight size={14} className="transition-transform group-open:rotate-90" />
@@ -134,7 +205,7 @@ export default function Agents() {
                         <Diamond size={14} className="shrink-0 fill-dec text-dec" />
                         <span className="text-mute">Proposed action <span className="text-bone">{act.label}</span></span>
                         {v === 'pending' ? (
-                          <span className="ml-auto flex gap-1.5">
+                          <span className="ml-auto flex gap-1.5 max-md:w-full max-md:justify-end">
                             <Btn size="sm" variant="primary" onClick={() => decide(card, a, i, 'sent')}><Send size={11} /> Send</Btn>
                             <Btn size="sm" variant="danger" onClick={() => decide(card, a, i, 'rejected')}><X size={11} /> Reject</Btn>
                           </span>
@@ -149,16 +220,16 @@ export default function Agents() {
             })}
           </div>
 
-          <div className="shrink-0 pb-4 pt-2">
+          <div className="shrink-0 pb-4 pt-2 max-md:pb-2">
             {!q && (
               <div className="mb-2 flex gap-1.5 overflow-x-auto [scrollbar-width:none]">
                 {AGENT_SUGGESTED.slice(0, 5).map((s) => (
                   <button key={s} type="button" onClick={() => ask(s)}
-                    className="shrink-0 cursor-pointer rounded-full border border-line px-3 py-1 text-[12px] whitespace-nowrap text-dim transition-colors hover:border-line2 hover:text-bone">{s}</button>
+                    className="shrink-0 cursor-pointer rounded-full border border-line px-3 py-1 text-[12px] whitespace-nowrap text-dim transition-colors hover:border-line2 hover:text-bone max-md:min-h-11 max-md:text-[13px]">{s}</button>
                 ))}
               </div>
             )}
-            <div className="mx-5 flex items-center gap-2.5 rounded-t-xl border border-b-0 border-line bg-panel px-4 py-2 text-[12.5px]">
+            <div className="mx-5 flex items-center gap-2.5 rounded-t-xl border border-b-0 border-line bg-panel px-4 py-2 text-[12.5px] max-md:mx-3 max-md:px-3">
               <CircleDot size={14} className="shrink-0 text-mute" />
               {offline ? (
                 <>
@@ -175,16 +246,16 @@ export default function Agents() {
               )}
             </div>
             <form onSubmit={(e) => { e.preventDefault(); ask(q) }}
-              className="rounded-2xl border border-line bg-panel px-5 pb-2.5 pt-3.5 transition-colors focus-within:border-line2">
+              className="rounded-2xl border border-line bg-panel px-5 pb-2.5 pt-3.5 transition-colors focus-within:border-line2 max-md:px-4 max-md:pb-2 max-md:pt-2.5">
               <textarea value={q} onChange={(e) => setQ(e.target.value)} rows={1} aria-label="Question"
                 onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); ask(q) } }}
                 placeholder="Ask about token prices, procurement, scarcity, power…"
-                className="block w-full resize-none bg-transparent text-[15px] leading-6 text-bone placeholder:text-dim focus:outline-none" />
-              <div className="mt-3 flex items-center gap-5 text-[13px] text-mute">
+                className="block w-full resize-none bg-transparent text-[15px] leading-6 text-bone placeholder:text-dim focus:outline-none max-md:min-h-11 max-md:py-2.5 max-md:text-[16px]" />
+              <div className="mt-3 flex items-center gap-5 text-[13px] text-mute max-md:mt-1.5 max-md:gap-3 max-md:text-[12px]">
                 <span className="flex items-center gap-1.5"><Wrench size={14} className="text-dim" />Auto tool</span>
                 <span className="flex items-center gap-1.5"><Lock size={14} className="text-dim" />Actions on Send only</span>
                 <button type="submit" disabled={!q.trim()} aria-label="Ask"
-                  className="ml-auto grid size-9 cursor-pointer place-items-center rounded-full bg-bone text-ink transition-colors disabled:cursor-default disabled:bg-raise disabled:text-dim">
+                  className="ml-auto grid size-9 cursor-pointer place-items-center rounded-full bg-bone text-ink transition-colors disabled:cursor-default disabled:bg-raise disabled:text-dim max-md:size-11">
                   <ArrowUp size={17} strokeWidth={2.25} />
                 </button>
               </div>
@@ -193,39 +264,23 @@ export default function Agents() {
         </div>
 
         <div className="hidden min-h-0 space-y-5 overflow-y-auto xl:block">
-          <Panel variant="rail" title="Decisions">
-            {log.length === 0 ? (
-              <p className="py-2 text-[12px] text-dim">Nothing sent or rejected yet.</p>
-            ) : (
-              log.map((d) => (
-                  <div key={d.id} className="grid grid-cols-[auto_1fr] gap-x-2 py-1.5 text-[12px]">
-                    <span className={cx('flex items-center gap-1 font-medium', d.verdict === 'sent' ? 'text-up' : 'text-down')}>{d.verdict === 'sent' ? <Check size={11} /> : <X size={11} />}{d.verdict === 'sent' ? 'Sent' : 'Rejected'}</span>
-                    <span className="text-bone/90">{d.label}<span className="block text-[11px] text-dim"><span className="num">{d.at}</span>{d.tool ? <> · <span className="num">{d.tool}</span></> : ''}</span></span>
-                  </div>
-              ))
-            )}
-          </Panel>
-          <details className="group rounded-[2px] border border-line bg-panel">
-            <summary className="flex cursor-pointer list-none items-center gap-1.5 px-4 py-2.5 text-[13px] font-semibold text-bone [&::-webkit-details-marker]:hidden">
-              <ChevronRight size={14} className="text-dim transition-transform group-open:rotate-90" />Available tools<span className="num ml-auto text-[11px] font-normal text-dim">{AGENT_TOOLS.length}</span>
-            </summary>
-            <ul className="border-t border-line-soft">
-              {AGENT_TOOLS.map((t) => {
-                const on = t.id === lastTool
-                return (
-                  <li key={t.id} className={cx('border-b border-line-soft px-4 py-2 last:border-b-0', on && 'bg-raise shadow-[inset_2px_0_0_var(--color-bone)]')}>
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-[12.5px] text-bone">{t.label}</span>
-                      {on && <span className="text-[10.5px] text-mute">Used for latest answer</span>}
-                    </div>
-                    <div className="text-[11.5px] text-dim">{t.desc}</div>
-                  </li>
-                )
-              })}
-            </ul>
-          </details>
+          {railContent}
         </div>
       </Row>
+
+      {/* Phone: the rail as a bottom sheet over the chat, the same content as the desktop column. */}
+      {phone && railOpen && (
+        <div className="fixed inset-0 z-[60] flex flex-col justify-end md:hidden" role="dialog" aria-modal="true" aria-label="Decisions and tools">
+          <div className="absolute inset-0 bg-ink/60" onClick={() => setRailOpen(false)} />
+          <div className="relative max-h-[80dvh] overflow-y-auto rounded-t-xl border border-b-0 border-line2 bg-ink px-3 pt-2 pb-[calc(env(safe-area-inset-bottom)+12px)] shadow-2xl">
+            <div className="mb-1 flex items-center justify-between">
+              <span className="text-[14px] font-semibold text-bone">Decisions and tools</span>
+              <button type="button" onClick={() => setRailOpen(false)} aria-label="Close" className="grid size-11 cursor-pointer place-items-center text-mute"><X size={16} /></button>
+            </div>
+            <div className="space-y-5">{railContent}</div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

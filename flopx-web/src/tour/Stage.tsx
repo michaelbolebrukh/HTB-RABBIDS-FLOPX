@@ -28,6 +28,67 @@ const FIND_GRACE_MS = 1400
 const MIN_SPOT_W = 24
 
 const isMobile = (w: number) => w < MOBILE_MAX_W
+/** A swipe on the phone sheet or rail moves a beat when it travels this far, mostly sideways. */
+export const SWIPE_MIN_PX = 48
+
+/**
+ * The phone's fixed chrome: the bottom edge of anything fixed or sticky along the top of the screen
+ * (the shell's header) and the top edge of anything fixed along the bottom (the shell's tab bar).
+ * Read from the elements actually painted at the screen's top and bottom centre, so the stage needs no
+ * selector agreement with the shell; the stage's own rail and sheet are skipped.
+ */
+export function phoneChrome(): { top: number; bottom: number } {
+  if (typeof document === 'undefined' || typeof document.elementsFromPoint !== 'function') return { top: 0, bottom: 0 }
+  const w = window.innerWidth, h = window.innerHeight
+  const fixedAncestor = (e: Element | null): Element | null => {
+    for (let p = e; p && p !== document.body; p = p.parentElement) {
+      if (p.closest('[data-tour-stage]')) return null
+      const pos = getComputedStyle(p).position
+      if (pos === 'fixed' || pos === 'sticky') return p
+    }
+    return null
+  }
+  let top = 0, bottom = 0
+  const tagged = document.querySelector('[data-tabbar]')
+  if (tagged) { const r = tagged.getBoundingClientRect(); if (r.height > 0 && r.top < h) bottom = Math.max(0, h - r.top) }
+  for (const e of document.elementsFromPoint(w / 2, h - 2)) { const f = fixedAncestor(e); if (f) { const r = f.getBoundingClientRect(); if (r.height < h * 0.3) bottom = Math.max(bottom, h - r.top) } break }
+  for (const e of document.elementsFromPoint(w / 2, 2)) { const f = fixedAncestor(e); if (f) { const r = f.getBoundingClientRect(); if (r.height < h * 0.3) top = Math.max(0, r.bottom) } break }
+  return { top, bottom }
+}
+
+/** The scroll containers around an element, innermost first, ending with the page itself. */
+function scrollChain(el: Element): Element[] {
+  const out: Element[] = []
+  for (let p = el.parentElement; p && p !== document.body && p !== document.documentElement; p = p.parentElement) {
+    const o = getComputedStyle(p).overflowY
+    if ((o === 'auto' || o === 'scroll' || o === 'overlay') && p.scrollHeight > p.clientHeight + 1) out.push(p)
+  }
+  const page = document.scrollingElement
+  if (page && page.scrollHeight > page.clientHeight + 1) out.push(page)
+  return out
+}
+
+/**
+ * Phone: bring a target into the band between the header and the sheet, innermost scroller first,
+ * instantly (nested smooth scrolls cannot be measured mid-flight). A target that fits is centred in
+ * the band; a taller one has its top put just under the header so its top part is lit.
+ */
+export function bringIntoBand(el: Element, bandTop: number, bandBottom: number): void {
+  try {
+    const r0 = el.getBoundingClientRect()
+    if (r0.left < 0 || r0.right > window.innerWidth) el.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'auto' })
+  } catch { /* ignore */ }
+  const bandH = Math.max(1, bandBottom - bandTop)
+  for (const sc of scrollChain(el)) {
+    const r = el.getBoundingClientRect()
+    const want = r.height <= bandH - 16 ? bandTop + (bandH - r.height) / 2 : bandTop + 8
+    const delta = r.top - want
+    if (Math.abs(delta) < 2) return
+    const before = sc.scrollTop
+    sc.scrollTop = before + delta
+    if (Math.abs(sc.scrollTop - before - delta) < 2) return
+  }
+}
 
 /**
  * Resolve a beat's target against the live DOM. Specs are tried in order and the first that exists
@@ -46,6 +107,7 @@ export function resolveTarget(specs: TargetSpec[] | null, root: ParentNode = doc
 
 /** One spec -> its element, or null when it matches nothing rendered with a size. */
 function resolveOne(spec: TargetSpec, root: ParentNode): Element | null {
+  if (spec.phone && !(typeof window !== 'undefined' && isMobile(window.innerWidth))) return null
   let els: Element[]
   try { els = Array.from(root.querySelectorAll(spec.sel)) } catch { return null }
   els = els.filter((e) => !e.closest('[data-tour-stage]'))
@@ -209,6 +271,23 @@ export function TourStage() {
     return () => document.documentElement.removeAttribute('data-tour')
   }, [!!tour])
 
+  // Phone: the sheet covers far more than the desktop rail's 96 px of extra room (index.css), so a
+  // panel at the foot of a page could never be scrolled up into the band above it. While a tour runs
+  // on a phone the page column's last block gets bottom room for the sheet and rail (re-applied as
+  // pages change under the tour, since each navigation mounts a new block); restored on exit.
+  const roomRef = useRef<{ el: HTMLElement; prev: string } | null>(null)
+  const ensureRoom = useCallback((on: boolean) => {
+    const main = document.getElementById('main-scroll')
+    const last = on && main && /(auto|scroll)/.test(getComputedStyle(main).overflowY) ? (main.lastElementChild as HTMLElement | null) : null
+    const cur = roomRef.current
+    if (cur && cur.el !== last) { cur.el.style.paddingBottom = cur.prev; roomRef.current = null }
+    if (last && !roomRef.current) {
+      roomRef.current = { el: last, prev: last.style.paddingBottom }
+      last.style.paddingBottom = `${Math.round(window.innerHeight * 0.6)}px`
+    }
+  }, [])
+  useEffect(() => { if (!tour || !mobile) ensureRoom(false); return () => ensureRoom(false) }, [!!tour, mobile, ensureRoom])
+
   // Put the app on the beat's screen when the beat changes; the beat may hand back a cleanup.
   useEffect(() => {
     if (!tour || !beat) return
@@ -247,6 +326,10 @@ export function TourStage() {
 
   // Find and follow the target: poll (pages render after navigation, live data lands later), plus resize and scroll.
   const [rect, setRect] = useState<Rect | null>(null)
+  /** Phone: the height of the shell's bottom tab bar, which the rail sits on top of (0 at desktop widths). */
+  const [tabBarH, setTabBarH] = useState(0)
+  // Phone: a horizontal swipe on the sheet or the rail moves between beats.
+  const swipe = useRef<{ x: number; y: number } | null>(null)
   const [fallback, setFallback] = useState(false)
   const [lost, setLost] = useState(false)
   const lastScroll = useRef(0)
@@ -301,6 +384,40 @@ export function TourStage() {
         const clip = settled.clip ?? (sc && main && sc === (main as unknown as Scroller) ? main.getBoundingClientRect() : null)
         const visible = (clip ? clipBox(r, clip) : r) as DOMRect
         // 2. The viewport: bring the target into the area above the rail (a tall one to the top of the page).
+        let nextRect: Rect
+        let fb = false
+        if (isMobile(window.innerWidth)) {
+          // Phone: the shell gives the page the full width, so the beat's own target is scrolled into
+          // the band between the header and the sheet and lit there. The page section stands in only
+          // when the target is too thin to light or nothing of it can be brought into the band.
+          ensureRoom(true)
+          const chrome = phoneChrome()
+          setTabBarH((cur) => (Math.abs(cur - chrome.bottom) < 0.5 ? cur : chrome.bottom))
+          const bandTop = chrome.top + 4
+          const bandBottom = window.innerHeight - reserved
+          const vis = (box: Box) => { const c = clipBox(box, { left: 0, top: bandTop, right: window.innerWidth, bottom: bandBottom, width: window.innerWidth, height: bandBottom - bandTop }); return c }
+          // A target inside the fixed chrome itself (the ticker in the phone header) is lit where it is.
+          // Only what sits in the header's band counts: a sticky table head lower down is scrolled like anything else.
+          const inChrome = visible.bottom <= chrome.top + 1 && (() => { for (let p: Element | null = el; p && p !== document.body; p = p.parentElement) { const pos = getComputedStyle(p).position; if ((pos === 'fixed' || pos === 'sticky') && p.getBoundingClientRect().height < window.innerHeight * 0.3) return true } return false })()
+          let seen = inChrome ? visible : vis(visible)
+          const fits = (b: Box) => b.top >= bandTop - 1 && b.bottom <= bandBottom + 1
+          const tallTop = (b: Box) => b.height > (bandBottom - bandTop) - 16 && b.top >= bandTop - 1 && b.top <= bandTop + 24
+          if (!inChrome && !(fits(visible) || tallTop(visible)) && (first || sinceScroll > RESCROLL_MS)) {
+            lastScroll.current = performance.now()
+            bringIntoBand(el, bandTop, bandBottom)
+            r = el.getBoundingClientRect()
+            const clip2 = settled.clip ?? null
+            seen = vis(clip2 ? clipBox(r, clip2) : r)
+          }
+          first = false
+          const overlapH = inChrome ? Math.min(seen.bottom, bandBottom) - Math.max(seen.top, 0) : Math.min(seen.bottom, bandBottom) - Math.max(seen.top, bandTop)
+          if (r.width < MIN_SPOT_W || overlapH < 12) {
+            nextRect = toRect(main ? main.getBoundingClientRect() : r)
+            fb = true
+          } else {
+            nextRect = { x: seen.left, y: seen.top, w: seen.width, h: seen.height }
+          }
+        } else {
         const tall = wantsTop(visible, reserved)
         const mainTop = main?.getBoundingClientRect().top ?? 0
         if ((!inView(visible, reserved) && sinceScroll > RESCROLL_MS) || (first && tall && visible.top > mainTop + 40 && !isMobile(window.innerWidth))) {
@@ -308,12 +425,7 @@ export function TourStage() {
           try { el.scrollIntoView({ block: tall ? 'start' : 'center', inline: 'nearest', behavior: prefersReducedMotion() ? 'auto' : 'smooth' }) } catch { /* ignore */ }
         }
         first = false
-        let nextRect = toRect(visible)
-        let fb = false
-        if (isMobile(window.innerWidth) && (r.width < MIN_SPOT_W || !inView(r, reserved))) {
-          // The design's 174 px content column cannot show most targets on a phone: light the page section instead.
-          const main = document.getElementById('main-scroll')
-          if (main) { nextRect = toRect(main.getBoundingClientRect()); fb = true }
+        nextRect = toRect(visible)
         }
         setFallback(fb)
         setRect((cur) => (same(cur, nextRect) ? cur : nextRect))
@@ -396,6 +508,15 @@ export function TourStage() {
   const step = useCallback((d: 1 | -1) => setTour((s) => (s ? (d > 0 ? next({ ...s, playing: false }, TOURS[s.id].beats.length) : prev({ ...s, playing: false })) : s)), [setTour])
 
   if (!tour || !t || !beat) return null
+  const onTouchStart = (e: React.TouchEvent) => { const p = e.touches[0]; swipe.current = p ? { x: p.clientX, y: p.clientY } : null }
+  const onTouchEnd = (e: React.TouchEvent) => {
+    const s0 = swipe.current, p = e.changedTouches[0]
+    swipe.current = null
+    if (!s0 || !p) return
+    const dx = p.clientX - s0.x, dy = p.clientY - s0.y
+    if (Math.abs(dx) >= SWIPE_MIN_PX && Math.abs(dx) > Math.abs(dy) * 1.5) step(dx < 0 ? 1 : -1)
+  }
+  const touch = mobile ? { onTouchStart, onTouchEnd } : {}
   const phases = phasesOf(t.beats)
   const ph = phaseOf(beat.phase)
   const toneVar = t.tone === 'inf' ? 'var(--color-inf)' : t.tone === 'dec' ? 'var(--color-dec)' : 'var(--color-fct)'
@@ -420,17 +541,17 @@ export function TourStage() {
       )}
 
       {/* The card (a bottom sheet below 768 px) */}
-      <div ref={cardRef} className={cx('tour-card pointer-events-auto flex flex-col', sheet && 'tour-sheet')} style={cardStyle} role="dialog" aria-label={`${t.name} walkthrough, beat ${tour.beat + 1} of ${n}: ${beat.title}`}>
+      <div ref={cardRef} {...touch} className={cx('tour-card pointer-events-auto flex flex-col', sheet && 'tour-sheet')} style={cardStyle} role="dialog" aria-label={`${t.name} walkthrough, beat ${tour.beat + 1} of ${n}: ${beat.title}`}>
         <div key={beatKey} className={cx('tour-card-in flex min-h-0 flex-1 flex-col overflow-hidden border border-line2 bg-panel/95 shadow-2xl backdrop-blur', sheet ? 'rounded-t-lg border-b-0' : 'rounded-lg')} style={{ borderTopColor: toneVar }}>
           <div ref={headRef} className={cx('flex shrink-0 items-start justify-between gap-3 border-b border-line px-4', sheet ? 'py-2' : 'py-3')}>
             <div className="min-w-0">
               <div className={cx('mb-0.5 flex items-center gap-2 font-mono text-[0.78em] tracking-wider uppercase', toneText)}><span className="num">{String(ph.n).padStart(2, '0')}</span><span>{ph.label}</span><span className="text-dim">· {t.name}</span></div>
               <h2 className={cx('font-serif leading-tight tracking-tight text-bone', sheet ? 'text-[1.3em]' : 'text-[1.55em]')}>{beat.title}</h2>
-              {sheet && <div className="mt-0.5 text-[0.8em] text-dim">Best viewed on a desktop: the design has no phone layout, so {fallback ? 'the page section stands in for the spotlight' : 'the card sits below the spotlight'}.</div>}
+              {sheet && <div className="mt-0.5 text-[12px] text-dim">Swipe left or right to move between beats.{fallback ? ' This beat\'s element is not on screen here, so its page stands in.' : ''}</div>}
             </div>
             <div className="flex shrink-0 items-center gap-1.5">
               <span className="num text-[0.85em] text-dim">{tour.beat + 1}/{n}</span>
-              <button onClick={() => setTour(null)} className="cursor-pointer rounded-[3px] p-1 text-dim hover:bg-hover hover:text-bone" aria-label="Exit walkthrough" title="Exit (Esc)"><X size={14} /></button>
+              <button onClick={() => setTour(null)} className="cursor-pointer rounded-[3px] p-1 text-dim hover:bg-hover hover:text-bone max-md:grid max-md:size-11 max-md:place-items-center max-md:p-0" aria-label="Exit walkthrough" title="Exit (Esc)"><X size={14} /></button>
             </div>
           </div>
           <div ref={bodyRef} className="tour-card-body min-h-0 flex-1 overflow-y-auto px-4 py-3">
@@ -439,22 +560,22 @@ export function TourStage() {
           <div ref={footRef} className="flex shrink-0 items-center justify-between gap-2 border-t border-line px-4 py-2">
             <span className="hidden items-center gap-1.5 font-mono text-[0.72em] text-dim md:flex"><Kbd>←</Kbd><Kbd>→</Kbd> beats <Kbd>space</Kbd> play <Kbd>P</Kbd> present <Kbd>esc</Kbd> exit</span>
             <div className="flex items-center gap-1.5">
-              <button onClick={() => step(-1)} disabled={tour.beat === 0} className="flex h-7 cursor-pointer items-center rounded-[4px] border border-line2 px-2 text-[0.85em] text-bone hover:bg-hover disabled:cursor-not-allowed disabled:opacity-40" aria-label="Previous beat"><ChevronLeft size={13} /></button>
+              <button onClick={() => step(-1)} disabled={tour.beat === 0} className="flex h-7 cursor-pointer items-center rounded-[4px] border border-line2 px-2 text-[0.85em] text-bone hover:bg-hover disabled:cursor-not-allowed disabled:opacity-40 max-md:h-11 max-md:min-w-11 max-md:justify-center" aria-label="Previous beat"><ChevronLeft size={13} /></button>
               {tour.beat < n - 1
-                ? <button onClick={() => step(1)} className="flex h-7 cursor-pointer items-center gap-1 rounded-[4px] bg-bone px-2.5 text-[0.85em] font-medium text-ink hover:bg-white" aria-label="Next beat">Next <ChevronRight size={13} /></button>
-                : <button onClick={() => setTour(null)} className="flex h-7 cursor-pointer items-center gap-1 rounded-[4px] bg-bone px-2.5 text-[0.85em] font-medium text-ink hover:bg-white">Finish</button>}
+                ? <button onClick={() => step(1)} className="flex h-7 cursor-pointer items-center gap-1 rounded-[4px] bg-bone px-2.5 text-[0.85em] font-medium text-ink hover:bg-white max-md:h-11 max-md:px-4" aria-label="Next beat">Next <ChevronRight size={13} /></button>
+                : <button onClick={() => setTour(null)} className="flex h-7 cursor-pointer items-center gap-1 rounded-[4px] bg-bone px-2.5 text-[0.85em] font-medium text-ink hover:bg-white max-md:h-11 max-md:px-4">Finish</button>}
             </div>
           </div>
         </div>
       </div>
 
       {/* Progress rail (collapsed to "beat n of N" and the phase below 768 px) */}
-      <div className={cx('pointer-events-auto fixed inset-x-0 bottom-0 z-[76] flex justify-center', mobile ? 'px-0 pb-0' : 'px-4 pb-3')}>
+      <div {...touch} className={cx('pointer-events-auto fixed inset-x-0 bottom-0 z-[76] flex justify-center', mobile ? 'px-0 pb-0' : 'px-4 pb-3')} style={mobile ? { bottom: tabBarH, paddingBottom: tabBarH > 0 ? 0 : 'env(safe-area-inset-bottom)' } : undefined}>
         <div ref={railRef} className={cx('flex w-full flex-col gap-1.5 border border-line2 bg-ink/92 shadow-2xl backdrop-blur', mobile ? 'rounded-none border-x-0 border-b-0 px-3 py-1.5' : 'max-w-[1100px] rounded-lg px-4 py-2')} role="toolbar" aria-label="Walkthrough progress">
           <div className="flex items-center gap-3">
             <span className={cx('flex shrink-0 items-center gap-2 font-mono text-[0.8em] tracking-wider', toneText)}><span aria-hidden className="size-[7px] rounded-[1.5px]" style={{ background: toneVar }} />{mobile ? t.name : t.name.toUpperCase()}</span>
             {mobile ? (
-              <span className="min-w-0 flex-1 truncate text-[0.8em] text-mute"><span className="num text-bone">beat {tour.beat + 1} of {n}</span> · {ph.label}</span>
+              <span className="min-w-0 flex-1 truncate text-[12px] text-mute"><span className="num text-bone">beat {tour.beat + 1} of {n}</span> · {ph.label}</span>
             ) : (
               <div className="flex min-w-0 flex-1 items-center gap-1 overflow-hidden">
                 {phases.map((p) => {
@@ -471,9 +592,9 @@ export function TourStage() {
               </div>
             )}
             <div className="flex items-center gap-1">
-              <button onClick={() => setTour((st) => (st ? togglePlay(st) : st))} className="flex h-7 cursor-pointer items-center gap-1 rounded-[4px] border border-line2 px-2 text-[0.8em] text-bone hover:bg-hover" aria-pressed={playing} title="Autoplay (space)">{playing ? <Pause size={12} /> : <Play size={12} />}{!mobile && (playing ? 'Pause' : 'Play')}</button>
+              <button onClick={() => setTour((st) => (st ? togglePlay(st) : st))} className="flex h-7 cursor-pointer items-center gap-1 rounded-[4px] border border-line2 px-2 text-[0.8em] text-bone hover:bg-hover max-md:h-11 max-md:min-w-11 max-md:justify-center" aria-pressed={playing} title="Autoplay (space)" {...(mobile ? { 'aria-label': playing ? 'Pause autoplay' : 'Play autoplay' } : {})}>{playing ? <Pause size={12} /> : <Play size={12} />}{!mobile && (playing ? 'Pause' : 'Play')}</button>
               {!mobile && <button onClick={() => setTour((st) => (st ? togglePresent(st) : st))} className={cx('flex h-7 cursor-pointer items-center gap-1 rounded-[4px] border px-2 text-[0.8em] hover:bg-hover', present ? 'border-bone text-bone' : 'border-line2 text-mute')} aria-pressed={present} title="Present: larger type for a projector (P)">{present ? <Minimize2 size={12} /> : <Maximize2 size={12} />}Present</button>}
-              <button onClick={() => setTour(null)} className="flex h-7 cursor-pointer items-center rounded-[4px] px-1.5 text-dim hover:text-bone" aria-label="Exit walkthrough"><X size={13} /></button>
+              <button onClick={() => setTour(null)} className="flex h-7 cursor-pointer items-center rounded-[4px] px-1.5 text-dim hover:text-bone max-md:h-11 max-md:min-w-11 max-md:justify-center" aria-label="Exit walkthrough"><X size={13} /></button>
             </div>
           </div>
           {!mobile && (

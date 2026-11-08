@@ -352,3 +352,36 @@ html[data-tour] #main-scroll > :last-child { padding-bottom: 96px; }
 .flopx-map .maplibregl-ctrl-attrib-button { filter: invert(var(--map-icon-invert, 0.6)); opacity: 0.7; }
 :root[data-blend='light'] .flopx-map .maplibregl-ctrl-attrib-button { filter: none; }
 .flopx-map .maplibregl-cooperative-gesture-screen { background: color-mix(in oklab, var(--color-ink) 70%, transparent); color: var(--color-bone); font-size: 13px; }
+
+/* ---------------- Phone (< 768 px; the complement of Tailwind's md:) ----------------
+   Only phone rules live here, so the desktop layout signed off for the demo cannot move. The shell's
+   phone chrome (src/components/Shell.tsx: PhoneTopbar, PhoneTabBar, MoreSheet) uses the safe-area
+   utilities, which clear the notch, the status bar (viewport-fit=cover) and the home indicator. */
+@media (max-width: 767.98px) {
+  /* The dynamic viewport, so the tab bar sits on the visible bottom edge as Safari's toolbars come and go. */
+  html,
+  body,
+  #root {
+    height: 100dvh;
+  }
+  body {
+    overscroll-behavior: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  .pt-safe { padding-top: env(safe-area-inset-top); }
+  .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+  .pl-safe { padding-left: env(safe-area-inset-left); }
+  .pr-safe { padding-right: env(safe-area-inset-right); }
+  .no-scrollbar { scrollbar-width: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  /* More sheet: the shared desktop controls (theme, chart style, map colours, sign-in) at touch size. */
+  .m-touch-controls > div > button,
+  .m-touch-controls > button,
+  .m-touch-controls > span { min-height: 44px; font-size: 13px; }
+  .m-touch-controls > [role='radiogroup'] { height: 44px; }
+  .m-touch-controls > span button { min-height: 44px; }
+  /* The clock and engine snapshot are 11 px in the desktop top bar; 12 px is the phone floor. */
+  .m-sheet-meta span { font-size: 12px; }
+}

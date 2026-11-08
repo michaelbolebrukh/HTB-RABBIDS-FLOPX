@@ -89,14 +89,14 @@ export function ResearchMetricsView({ payload }: { payload: ResearchMetricsPaylo
   const icNote = cs?.find((r) => r.note)?.note
   const sharpeNote = tr?.find((r) => r.note)?.note
   return (
-    <Panel title="Rank skill and a tradable Sharpe" eyebrow={<>IC across tickers · sign-of-forecast trade · how much history {badge}</>} right={present && cov ? <span className="font-mono text-[10px] text-dim">{cov.length} tickers · {horizons.map(hzLabel).join(' · ')}</span> : null}>
+    <Panel bodyClass="max-md:overflow-x-auto" title="Rank skill and a tradable Sharpe" eyebrow={<>IC across tickers · sign-of-forecast trade · how much history {badge}</>} right={present && cov ? <span className="font-mono text-[10px] text-dim">{cov.length} tickers · {horizons.map(hzLabel).join(' · ')}</span> : null}>
       {!payload ? (
         <div className="py-3 font-mono text-[11px] text-dim">{NOT_LOADED}</div>
       ) : !present ? (
         <div className="py-3 text-[12px] text-mute">{NOT_IN_PAYLOAD}</div>
       ) : (
         <>
-          <div className="grid grid-cols-[auto_1.6fr_repeat(6,minmax(0,1fr))] gap-x-3 border-b border-line pb-1.5 text-[11px] text-dim font-medium">
+          <div className="grid grid-cols-[auto_1.6fr_repeat(6,minmax(0,1fr))] gap-x-3 max-md:min-w-[620px] border-b border-line pb-1.5 text-[11px] text-dim font-medium">
             <span>h</span><span>Model</span><span className="text-right">IC (mean)</span><span className="text-right">t</span><span className="text-right">dates · 5+</span><span className="text-right">Sharpe</span><span className="text-right">trades</span><span className="text-right">hit</span>
           </div>
           {horizons.flatMap((h) =>
@@ -105,7 +105,7 @@ export function ResearchMetricsView({ payload }: { payload: ResearchMetricsPaylo
               const t = trAt(h, m)
               const scored = (c?.nDates ?? 0) > 0 || (t?.nTrades ?? 0) > 0
               return (
-                <div key={`${h}-${m}`} className={cx('grid grid-cols-[auto_1.6fr_repeat(6,minmax(0,1fr))] items-center gap-x-3 border-b border-line/60 py-2 text-[12px]', !scored && 'opacity-60')} data-row={`${h}-${m}`}>
+                <div key={`${h}-${m}`} className={cx('grid grid-cols-[auto_1.6fr_repeat(6,minmax(0,1fr))] items-center gap-x-3 max-md:min-w-[620px] border-b border-line/60 py-2 text-[12px]', !scored && 'opacity-60')} data-row={`${h}-${m}`}>
                   <span className="font-mono text-[10px] text-dim">{hzLabel(h)}</span>
                   <span>{MODEL_LABEL[m] ?? m}</span>
                   <span className="num text-right">{fmtIc(c?.meanIc)}</span>
@@ -123,11 +123,11 @@ export function ResearchMetricsView({ payload }: { payload: ResearchMetricsPaylo
             {sharpeNote && <div>Sharpe: {sharpeNote}.</div>}
           </div>
           <div className="mt-4 mb-1 text-[11px] font-medium text-dim">Enough history? What each ticker was scored on</div>
-          <div className="grid grid-cols-[auto_1.4fr_repeat(3,minmax(0,1fr))_1.6fr] gap-x-3 border-b border-line pb-1.5 text-[11px] text-dim font-medium">
+          <div className="grid grid-cols-[auto_1.4fr_repeat(3,minmax(0,1fr))_1.6fr] gap-x-3 max-md:min-w-[620px] border-b border-line pb-1.5 text-[11px] text-dim font-medium">
             <span>Ticker</span><span>Closes</span><span className="text-right">trading days</span><span className="text-right">years</span><span className="text-right">origins 1d</span><span className="text-right">origins by horizon</span>
           </div>
           {cov.map((c) => (
-            <div key={c.ticker} className="grid grid-cols-[auto_1.4fr_repeat(3,minmax(0,1fr))_1.6fr] items-center gap-x-3 border-b border-line/60 py-1.5 text-[12px]" data-ticker={c.ticker}>
+            <div key={c.ticker} className="grid grid-cols-[auto_1.4fr_repeat(3,minmax(0,1fr))_1.6fr] items-center gap-x-3 max-md:min-w-[620px] border-b border-line/60 py-1.5 text-[12px]" data-ticker={c.ticker}>
               <span className="font-mono">{c.ticker}</span>
               <span className="font-mono text-[10.5px] text-mute">{fmtDay(c.firstClose)} → {fmtDay(c.lastClose)}</span>
               <span className="num text-right">{c.tradingDays}</span>

@@ -3,6 +3,7 @@ import { scaleLinear } from 'd3-scale'
 import { area as d3area, line as d3line } from 'd3-shape'
 import { cx } from './ui'
 import { useChartStyle } from '../lib/chartStyle'
+import { useIsPhone } from '../lib/usePhone'
 
 export function useWidth<T extends HTMLElement>() {
   const ref = useRef<T>(null)
@@ -140,7 +141,11 @@ export function TimeChart({
   const [ref, w] = useWidth<HTMLDivElement>()
   const cs = useChartStyle()
   const [hover, setHover] = useState<number | null>(null)
-  const pad = { l: 46, r: directLabels ? 96 : 14, t: 14, b: xAxis ? 22 : 6 }
+  // Phone: a full-size chart keeps a readable plot height once the width shrinks; deliberate mini charts (< 100px) keep theirs.
+  const phone = useIsPhone()
+  if (phone && height >= 100 && height < 140) height = 140
+  // Phone: 12px axis text needs a little more room under the plot so the lowest y label clears the x labels.
+  const pad = { l: 46, r: directLabels ? 96 : 14, t: 14, b: xAxis ? (phone ? 28 : 22) : 6 }
   const n = labels.length
   const [lo0, hi0] = useMemo(() => {
     if (yDomain) return yDomain
@@ -165,7 +170,7 @@ export function TimeChart({
   const xScale = scaleLinear().domain([0, Math.max(1, n - 1)]).range([pad.l, w - pad.l - pad.r + pad.l])
   const sx = (i: number) => xScale(i)
   const sy = (v: number) => yScale(v)
-  const every = xTickEvery ?? Math.max(1, Math.ceil(n / Math.max(3, Math.round(Math.floor(w / 90) * cs.tickScale))))
+  const every = xTickEvery ?? Math.max(1, Math.ceil(n / Math.max(3, Math.round(Math.floor(w / (phone ? 110 : 90)) * cs.tickScale))))
   const isVal = (v: number | null | undefined) => clean(v) != null
   const lineGen = d3line<number | null>().defined(isVal).x((_, i) => sx(i)).y((v) => sy(v as number)).curve(cs.curveFactory)
   const areaGen = d3area<number | null>().defined(isVal).x((_, i) => sx(i)).y0(sy(lo)).y1((v) => sy(v as number)).curve(cs.curveFactory)
@@ -177,6 +182,14 @@ export function TimeChart({
     const r = (e.currentTarget as SVGSVGElement).getBoundingClientRect()
     const x = e.clientX - r.left
     const i = Math.round(((x - pad.l) / (w - pad.l - pad.r)) * (n - 1))
+    setHover(Math.max(0, Math.min(n - 1, i)))
+  }
+  // Touch: tap a point (or slide along the chart) to read it; the readout stays until the next tap.
+  const onTouch = (e: React.TouchEvent<SVGSVGElement>) => {
+    const t = e.touches[0]
+    if (!t) return
+    const r = e.currentTarget.getBoundingClientRect()
+    const i = Math.round(((t.clientX - r.left - pad.l) / (w - pad.l - pad.r)) * (n - 1))
     setHover(Math.max(0, Math.min(n - 1, i)))
   }
   const pid = useMemo(() => `h${Math.random().toString(36).slice(2, 8)}`, [])
@@ -193,7 +206,7 @@ export function TimeChart({
           ))}
         </div>
       )}
-      <svg width={w} height={height} onMouseMove={onMove} onMouseLeave={() => setHover(null)} onClick={() => active != null && onCursor?.(active)} className={onCursor ? 'cursor-crosshair' : ''}>
+      <svg width={w} height={height} onMouseMove={onMove} onMouseLeave={() => setHover(null)} onTouchStart={onTouch} onTouchMove={onTouch} onClick={() => active != null && onCursor?.(active)} className={cx(onCursor ? 'cursor-crosshair' : '', 'max-md:touch-pan-y')}>
         <defs>
           <pattern id={`${pid}-hatch`} width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
             <line x1="0" y1="0" x2="0" y2="6" stroke="var(--color-fct)" strokeOpacity="0.09" strokeWidth="2" />
@@ -212,7 +225,7 @@ export function TimeChart({
         {shade?.map(([a, b, label], k) => (
           <g key={k}>
             <rect x={sx(a) - 2} y={pad.t} width={Math.max(4, sx(b) - sx(a) + 4)} height={height - pad.t - pad.b} fill="var(--color-warn)" fillOpacity={0.06} />
-            <text x={sx(a)} y={pad.t + 9} className={`fill-warn ${cs.fontClass}`} fontSize={8.5} opacity={0.8}>{label}</text>
+            <text x={sx(a)} y={phone ? pad.t + 13 + k * 14 : pad.t + 9} className={`fill-warn ${cs.fontClass}`} fontSize={phone ? 10 : 8.5} opacity={0.8}>{label}</text>
           </g>
         ))}
         {/* forecast zone */}

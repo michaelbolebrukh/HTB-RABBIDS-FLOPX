@@ -146,7 +146,7 @@ export function ChartTypeMenu({ value, onChange }: { value: ChartType; onChange:
         aria-haspopup="menu"
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
-        className="inline-flex h-[26px] cursor-pointer items-center gap-1.5 rounded-[4px] border border-line2 bg-panel px-2 font-mono text-[11.5px] tracking-wide text-bone transition-colors hover:bg-hover"
+        className="inline-flex h-[26px] cursor-pointer items-center gap-1.5 rounded-[4px] border border-line2 bg-panel px-2 font-mono text-[11.5px] tracking-wide text-bone transition-colors hover:bg-hover max-md:h-11"
       >
         {ICONS[value]}
         <span>{current?.label}</span>

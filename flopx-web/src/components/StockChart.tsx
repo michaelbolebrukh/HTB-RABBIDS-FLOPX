@@ -164,9 +164,11 @@ export function StockChart({
         <span className="text-down"><span className="text-dim">DD</span> {drawdown[at].toFixed(1)}%</span>
       </div>
 
-      <svg width={w} height={H} className="block overflow-visible"
+      <svg width={w} height={H} className="block overflow-visible max-md:touch-pan-y"
         onMouseMove={(e) => { const x = e.clientX - e.currentTarget.getBoundingClientRect().left; setHover(x >= 0 && x <= plotW ? Math.min(n - 1, Math.max(0, Math.floor(x / step))) : null) }}
-        onMouseLeave={() => setHover(null)}>
+        onMouseLeave={() => setHover(null)}
+        onTouchStart={(e) => { const t = e.touches[0]; if (!t) return; const x = t.clientX - e.currentTarget.getBoundingClientRect().left; setHover(x >= 0 && x <= plotW ? Math.min(n - 1, Math.max(0, Math.floor(x / step))) : null) }}
+        onTouchMove={(e) => { const t = e.touches[0]; if (!t) return; const x = t.clientX - e.currentTarget.getBoundingClientRect().left; setHover(x >= 0 && x <= plotW ? Math.min(n - 1, Math.max(0, Math.floor(x / step))) : null) }}>
         {pane(pTop, priceH, isLine ? `${priceLabel} · vs benchmarks` : `${priceLabel} · ${typeLabel}`, false)}
         {paneInds.map(({ def }, k) => <g key={def.id}>{pane(indTop(k), IND_H, def.short, k % 2 === 0)}</g>)}
         {pane(vTop, volH, volumeLabel, true)}

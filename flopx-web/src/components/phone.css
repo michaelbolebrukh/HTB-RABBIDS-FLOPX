@@ -1,0 +1,102 @@
+/*
+ * Phone-only rules for the shared primitives (m-prims). Everything here sits inside the phone media query,
+ * the exact complement of Tailwind's `md:` (see src/lib/usePhone.ts), so widths of 768px and up are untouched.
+ */
+@media (max-width: 767.98px) {
+
+  /* WF13: a quiet status label may wrap on a phone (the 12 px floor made long catalog stamps overflow
+     at 360 px), and a footnote marker gets a 44x44 hit area without moving the glyph. */
+  [data-fresh="quiet"] {
+    white-space: normal;
+  }
+  sup[tabindex] {
+    position: relative;
+  }
+  /* the marker's hit area must never widen the page: the page column clips horizontally on a phone */
+  #main-scroll,
+  main {
+    overflow-x: clip;
+  }
+  sup[tabindex]::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 44px;
+    height: 44px;
+    transform: translate(-50%, -50%);
+  }
+  /* Tables: scroll inside their own box, never the page, with the first column pinned. The box is the
+     table's direct parent, whatever the page wrapped it in. Deliberately unlayered: declaring a cascade
+     layer here would come first in the bundle and reorder Tailwind's layers on desktop too. */
+  :has(> table) {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+  }
+  table :is(th, td):first-child {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background-color: var(--color-panel);
+    box-shadow: 1px 0 0 var(--color-line-soft);
+  }
+
+  /* Text floor: nothing a reader has to read sits below 12px on a phone. */
+  :is(.text-\[8\.5px\], .text-\[9px\], .text-\[9\.5px\], .text-\[10px\], .text-\[10\.5px\], .text-\[11px\], .text-\[11\.5px\]):not([class*='max-md:text-[']) {
+    font-size: 12px;
+  }
+  /* The eyebrow label style is 11px on desktop; doubled class so it beats any single-class size. */
+  .eyebrow.eyebrow {
+    font-size: 12px;
+  }
+  /* Relative sizes inside small parents: never below the floor, never smaller than they were. */
+  .text-\[0\.72em\] { font-size: max(12px, 0.72em); }
+  .text-\[0\.75em\] { font-size: max(12px, 0.75em); }
+  .text-\[0\.78em\] { font-size: max(12px, 0.78em); }
+  .text-\[0\.8em\] { font-size: max(12px, 0.8em); }
+  .text-\[0\.82em\] { font-size: max(12px, 0.82em); }
+  .text-\[0\.84em\] { font-size: max(12px, 0.84em); }
+  .text-\[0\.85em\] { font-size: max(12px, 0.85em); }
+  .text-\[0\.86em\] { font-size: max(12px, 0.86em); }
+  .text-\[0\.88em\] { font-size: max(12px, 0.88em); }
+  .text-\[0\.9em\] { font-size: max(12px, 0.9em); }
+  .text-\[0\.92em\] { font-size: max(12px, 0.92em); }
+  .text-\[0\.95em\] { font-size: max(12px, 0.95em); }
+  /* Chart text: the charts draw at device pixels (width={w}, no viewBox scaling), so a CSS size here is
+     the size on screen. The presentation attribute loses to any CSS declaration. */
+  svg :is(text, tspan):is([font-size='8'], [font-size='8.5'], [font-size='9'], [font-size='9.5'], [font-size='10'], [font-size='10.5'], [font-size='11'], [font-size='11.5']) {
+    font-size: 12px;
+  }
+
+  /* Sliders: a 44px touch track; the 3px rail and the thumb stay centred inside it. */
+  .range.range {
+    height: 44px;
+  }
+
+  /* Bottom sheets: dialogs, the Ask FLOPX panel, the inspector and menus rise from the bottom edge. */
+  .m-sheet.m-sheet {
+    border-top-left-radius: 14px;
+    border-top-right-radius: 14px;
+    animation: m-sheet-up 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .m-sheet-backdrop {
+    animation: m-fade 160ms ease-out;
+  }
+}
+
+@media (max-width: 767.98px) and (prefers-reduced-motion: reduce) {
+  .m-sheet.m-sheet,
+  .m-sheet-backdrop {
+    animation: none;
+  }
+}
+
+@keyframes m-sheet-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+@keyframes m-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

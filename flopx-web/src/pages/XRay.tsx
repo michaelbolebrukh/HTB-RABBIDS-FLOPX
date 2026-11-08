@@ -12,6 +12,7 @@ import { PRESSURE_BAND_WORDS, pressureAt, pressureColor, pressureWord, scenarioI
 import { useStore, type XLayer } from '@/lib/store'
 import { activePerspective, perspectiveValue } from '@/lib/powerMap'
 import { derived, SNAPSHOT, XRAY_CAPACITY as XC } from '@/data/handoff'
+import { useIsPhone } from '@/lib/usePhone'
 
 const LAYERS: { id: XLayer; label: string; truth: 'obs' | 'inf' | 'dec'; desc: string }[] = [
   { id: 'pressure', label: 'Compute pressure', truth: 'inf', desc: 'Inferred scarcity with uncertainty rings' },
@@ -35,6 +36,8 @@ export default function XRay() {
   const open = (p: Pane) => !collapsed.includes(p)
   const toggle = (p: Pane) => setCollapsed((c) => (c.includes(p) ? c.filter((x) => x !== p) : [...c, p]))
   const region = xray.region ? regionById(xray.region)! : null
+  const phone = useIsPhone()
+  if (phone) return <XRayPhone />
 
   return (
     <div className="flex h-full flex-col">
@@ -95,6 +98,106 @@ export default function XRay() {
   )
 }
 
+/**
+ * Phone layout (< 768px): one scrolling column instead of three. Map first at full width with the
+ * perspectives as a scrollable chip row above it, the timeline as a full-width touch slider, the
+ * reveal / legend / coverage rail folded below, then the region list. A selected region opens as a
+ * bottom sheet over the page. Desktop never renders this.
+ */
+function XRayPhone() {
+  const { xray, setXray } = useStore()
+  const [brief, setBrief] = useState(false)
+  const [capacity, setCapacity] = useState(false)
+  const [rail, setRail] = useState(false)
+  const region = xray.region && !xray.compareOpen ? regionById(xray.region) ?? null : null
+  useEffect(() => {
+    if (!region) return
+    const fn = (e: KeyboardEvent) => { if (e.key === 'Escape') setXray({ region: null, project: null }) }
+    window.addEventListener('keydown', fn)
+    return () => window.removeEventListener('keydown', fn)
+  }, [region, setXray])
+  const foldBtn = 'flex min-h-11 w-full cursor-pointer items-center justify-between gap-2 border-b border-line px-4 text-left text-[13px] font-medium text-bone'
+  return (
+    <div data-demo="xray-phone" className="h-full overflow-y-auto overscroll-y-contain [&_[data-fresh]]:whitespace-normal">
+      <div className="border-b border-line px-4 pt-3 pb-2.5">
+        <div className="flex items-center gap-2">
+          <ScanLine size={16} className="shrink-0 text-inf" />
+          <h1 className="text-[20px] leading-tight font-semibold tracking-tight">Compute Economy X-Ray</h1>
+        </div>
+        <div className="mt-1 text-[12px] text-dim">Inferred hidden state of global compute · model {PRESSURE_MODEL.method ?? 'v0.7 (illustrative)'}</div>
+        <div className="mt-2.5 flex flex-wrap gap-2">
+          <Btn size="sm" className="min-h-11 px-3" variant={brief ? 'subtle' : 'outline'} aria-expanded={brief} onClick={() => setBrief((b) => !b)}>{brief ? <ChevronUp size={12} /> : <ChevronDown size={12} />} 60-second brief</Btn>
+          <Btn size="sm" className="min-h-11 px-3" variant={xray.compareOpen ? 'primary' : 'outline'} onClick={() => setXray((x) => ({ compareOpen: !x.compareOpen, compare: x.compare.length ? x.compare : [x.region ?? 'us-tx', 'no-nordics'].filter((v, i, a) => a.indexOf(v) === i).slice(0, 2) }))}><GitCompareArrows size={13} /> Compare</Btn>
+          <Btn size="sm" className="min-h-11 px-3" variant="ghost" onClick={() => { setBrief(false); setCapacity(false); setRail(false); setXray({ layers: ['pressure', 'pipeline'], reveal: 100, t: NOW_IDX, region: null, project: null, scenario: null, compareOpen: false, tab: 'brief' }) }}><RotateCcw size={12} /> Reset</Btn>
+        </div>
+      </div>
+      <Drawer open={brief}><JudgeBrief /></Drawer>
+      <button type="button" aria-expanded={capacity} onClick={() => setCapacity((c) => !c)} className={foldBtn}>
+        <span className="flex items-center gap-2"><TruthTag truth="obs" compact />Hidden capacity and region ranks</span>{capacity ? <ChevronUp size={14} className="text-mute" /> : <ChevronDown size={14} className="text-mute" />}
+      </button>
+      <Drawer open={capacity}><CapacityStrip /></Drawer>
+      <div role="group" aria-label="Perspectives, combine freely" className="flex gap-2 overflow-x-auto border-b border-line px-3 py-2 [scrollbar-width:none]">
+        {LAYERS.map((l) => {
+          const on = xray.layers.includes(l.id)
+          return (
+            <button key={l.id} type="button" aria-pressed={on} title={l.desc} onClick={() => setXray((x) => ({ layers: x.layers.includes(l.id) ? x.layers.filter((y) => y !== l.id) : [...x.layers, l.id] }))}
+              className={cx('flex min-h-11 shrink-0 cursor-pointer items-center gap-2 rounded-full border px-3.5 text-[13px] whitespace-nowrap transition-colors', on ? 'border-bone bg-raise text-bone' : 'border-line2 text-mute')}>
+              <TruthGlyph truth={l.truth} size={7} />{l.label}
+            </button>
+          )
+        })}
+        {(() => {
+          const on = xray.t > NOW_IDX
+          return (
+            <button type="button" aria-pressed={on} onClick={() => setXray({ t: on ? NOW_IDX : Math.min(38, NOW_IDX + 6) })}
+              className={cx('flex min-h-11 shrink-0 cursor-pointer items-center gap-2 rounded-full border px-3.5 text-[13px] whitespace-nowrap transition-colors', on ? 'border-bone bg-raise text-bone' : 'border-line2 text-mute')}>
+              <TruthGlyph truth="fct" size={7} />Forecast{on && <span className="num text-dim">+{xray.t - NOW_IDX}M</span>}
+            </button>
+          )
+        })()}
+      </div>
+      <div className="relative h-[min(58vh,460px)] min-h-[300px] bg-[radial-gradient(ellipse_at_center,var(--color-ocean)_0%,var(--color-ocean-edge)_75%)]">
+        <WorldMap
+          layers={xray.layers}
+          reveal={xray.reveal}
+          t={xray.t}
+          selected={xray.region}
+          selectedProject={xray.project}
+          compare={xray.compareOpen ? xray.compare : []}
+          scenario={xray.scenario}
+          minHeight={300}
+          onRegion={(id) => {
+            if (xray.compareOpen) setXray((x) => ({ compare: x.compare.includes(id) ? x.compare : [x.compare[1] ?? x.compare[0], id].filter(Boolean).slice(-2) as string[] }))
+            else setXray((x) => ({ region: id, project: null, tab: x.region === id ? x.tab : 'brief' }))
+          }}
+          onProject={(id) => setXray({ region: projectById(id)!.region, project: id, tab: 'pipeline' })}
+        />
+        <MapOverlays status />
+      </div>
+      {xray.compareOpen && <ComparePanel />}
+      <TimeScrubber />
+      <button type="button" aria-expanded={rail} onClick={() => setRail((r) => !r)} className={cx(foldBtn, 'border-t')}>
+        <span>Reveal, legend and coverage</span>{rail ? <ChevronUp size={14} className="text-mute" /> : <ChevronDown size={14} className="text-mute" />}
+      </button>
+      <Drawer open={rail}><LeftRail /></Drawer>
+      <GlobalPanel />
+      <div className="h-[env(safe-area-inset-bottom)]" />
+      {region && (
+        <div className="fixed inset-0 z-[70]" role="dialog" aria-modal="true" aria-label={region.name}>
+          <button type="button" aria-label="Close region" onClick={() => setXray({ region: null, project: null })} className="m-sheet-backdrop absolute inset-0 cursor-default bg-black/50" />
+          <div className="m-sheet absolute inset-x-0 bottom-0 flex max-h-[86dvh] flex-col overflow-hidden rounded-t-xl border-t border-line2 bg-panel pb-[env(safe-area-inset-bottom)] shadow-2xl">
+            <div className="relative flex h-11 shrink-0 items-center justify-center">
+              <span className="h-1 w-10 rounded-full bg-line2" aria-hidden />
+              <button type="button" aria-label="Close region" onClick={() => setXray({ region: null, project: null })} className="absolute top-0 right-1 grid size-11 cursor-pointer place-items-center text-mute hover:text-bone"><X size={16} /></button>
+            </div>
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain"><RightPanel region={region} /></div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 /** Slides a side column shut to zero width and back. Content stays mounted at full width and is clipped; the edge chevron stays visible. */
 function SideDrawer({ side, width, label, open, onToggle, children }: { side: 'left' | 'right'; width: number; label: string; open: boolean; onToggle: () => void; children: ReactNode }) {
   return (
@@ -131,12 +234,12 @@ function JudgeBrief() {
       : { k: 'Visible now', truth: 'fct', title: 'Texas is the binding bottleneck', body: <>TX pressure jumped +14 pts in 6 weeks as 600 MW slipped to Q4. That affects H100 premia, power names and the fund’s VST position. <Fresh quiet f="illustrative" /></> },
   ]
   return (
-    <div className="grid shrink-0 grid-cols-3 border-b border-line bg-panel/60">
+    <div className="grid shrink-0 grid-cols-3 border-b border-line bg-panel/60 max-md:grid-cols-1">
       {cols.map((c, i) => (
-        <div key={c.k} className={cx('relative px-5 py-3', i < 2 && 'border-r border-line')}>
+        <div key={c.k} className={cx('relative px-5 py-3 max-md:px-4', i < 2 && 'border-r border-line max-md:border-r-0 max-md:border-b')}>
           <div className="mb-1 flex items-center gap-2"><span className="num text-[10px] text-dim">0{i + 1}</span><TruthTag truth={c.truth} compact /><span className="eyebrow">{c.k}</span></div>
           <div className="text-[13px] font-semibold text-bone">{c.title}</div>
-          <div className="mt-0.5 text-[11.5px] leading-snug text-mute">{c.body}</div>
+          <div className="mt-0.5 text-[11.5px] leading-snug text-mute max-md:text-[12.5px]">{c.body}</div>
         </div>
       ))}
     </div>
@@ -149,7 +252,7 @@ function CapacityStrip() {
   const supplyLive = REGIONS.filter((r) => r.live?.supply)
   const ranks = rankRows(live, XC.ranks)
   return (
-    <div className="flex flex-wrap items-center gap-x-6 gap-y-1 border-b border-line bg-panel/60 px-5 py-2">
+    <div className="flex flex-wrap items-center gap-x-6 gap-y-1 border-b border-line bg-panel/60 px-5 py-2 max-md:gap-y-2 max-md:px-4 max-md:py-3">
       <span className="flex items-center gap-2"><TruthTag truth="obs" compact /><span className="eyebrow">Hidden capacity</span><Fresh quiet f="historical" label={SNAPSHOT.short} /></span>
       <span className="flex min-w-[220px] flex-1 items-center gap-2" title={`${XC.trackedGW} GW frontier AI data-centre capacity across ${XC.sites} sites. ${XC.source}`}>
         <span className="num text-[11px] text-bone">{XC.energizedGW} GW</span>
@@ -166,7 +269,7 @@ function CapacityStrip() {
         </span>
       )}
       {/* Region ranks: the live cpx-v1 scores (same cells as the table below) once /flopx/pressure has landed; the 7 Nov hand-off's Epoch-region figures, badged, until then. */}
-      <span className="flex items-center gap-3" title={ranks.live ? `Top FLOPX regions by ${PRESSURE_MODEL.method ?? 'cpx-v1'} H100 pressure, ${live.length} regions covered` : `7 Nov hand-off: Compute Pressure Index, ${XC.pillars} pillars across ${XC.regions} Epoch regions (not the FLOPX hubs in the table below)`}>
+      <span className="flex items-center gap-3 max-md:flex-wrap max-md:gap-y-1" title={ranks.live ? `Top FLOPX regions by ${PRESSURE_MODEL.method ?? 'cpx-v1'} H100 pressure, ${live.length} regions covered` : `7 Nov hand-off: Compute Pressure Index, ${XC.pillars} pillars across ${XC.regions} Epoch regions (not the FLOPX hubs in the table below)`}>
         {!ranks.live && <Fresh quiet f="illustrative" label="7 Nov hand-off regions" />}
         {ranks.rows.map((r) => (
           <span key={r.region} className="flex items-center gap-1.5" title={`${r.region}: ${r.cpi}${r.lo != null && r.hi != null ? ` (${r.lo}–${r.hi})` : ''}${r.band ? ` · ${r.band}` : ''}`}>
@@ -203,7 +306,7 @@ function LeftRail() {
   }
   const counts = { good: REGIONS.filter((r) => r.live && r.quality === 'good').length, stale: REGIONS.filter((r) => r.live && r.quality === 'stale').length, sparse: REGIONS.filter((r) => r.live && (r.quality === 'sparse' || r.quality === 'experimental')).length, none: REGIONS.filter((r) => r.quality === 'none').length, illustrative: REGIONS.filter((r) => !r.live && r.quality !== 'none').length }
   return (
-    <div className="flex w-[232px] shrink-0 flex-col overflow-y-auto border-r border-line bg-ink">
+    <div className="flex w-[232px] shrink-0 flex-col overflow-y-auto border-r border-line bg-ink max-md:w-full max-md:overflow-visible max-md:border-r-0">
       <div className="border-b border-line p-4">
         <div className="mb-2 flex items-baseline justify-between">
           <span className="eyebrow">Reveal</span>
@@ -214,7 +317,7 @@ function LeftRail() {
             const on = to === 0 ? xray.reveal <= 50 : xray.reveal > 50
             return (
               <button key={label} role="radio" aria-checked={on} onClick={() => revealAnim(to)} title={to === 0 ? 'Fade inferred state; show only what is directly observable' : 'Combine fragments into the inferred state'}
-                className={cx('flex cursor-pointer items-center justify-center gap-1.5 rounded-[3px] py-1 text-[11.5px] transition-colors', on ? 'bg-raise text-bone' : 'text-dim hover:text-mute')}>
+                className={cx('flex cursor-pointer items-center justify-center gap-1.5 rounded-[3px] py-1 text-[11.5px] transition-colors max-md:min-h-11 max-md:text-[13px]', on ? 'bg-raise text-bone' : 'text-dim hover:text-mute')}>
                 <TruthGlyph truth={truth} size={6} />{label}
               </button>
             )
@@ -299,7 +402,7 @@ function MapOverlays({ status }: { status: boolean }) {
           </div>
         )}
       </div>
-      <div aria-hidden={!status} className={cx('pointer-events-none absolute right-10 bottom-2 flex items-center gap-3 rounded-[4px] border border-line bg-ink/80 px-2.5 py-1.5 text-[10.5px] text-dim backdrop-blur transition-opacity duration-300', !status && 'opacity-0')}>
+      <div aria-hidden={!status} className={cx('pointer-events-none absolute right-10 bottom-2 flex items-center gap-3 rounded-[4px] border border-line bg-ink/80 px-2.5 py-1.5 text-[10.5px] text-dim backdrop-blur transition-opacity duration-300 max-md:right-[60px] max-md:bottom-6 max-md:gap-2 max-md:text-[12px]', !status && 'opacity-0')}>
         <span className="flex items-center gap-1.5"><TruthGlyph truth="obs" size={7} />Observed {Math.round(25 + 0.75 * (100 - xray.reveal))}%</span>
         <span className="flex items-center gap-1.5"><TruthGlyph truth="inf" size={7} />Inferred {xray.layers.includes('pressure') ? xray.reveal : 0}%</span>
       </div>
@@ -310,6 +413,7 @@ function MapOverlays({ status }: { status: boolean }) {
 function TimeScrubber() {
   const { xray, setXray } = useStore()
   const [playing, setPlaying] = useState(false)
+  const phone = useIsPhone()
   useEffect(() => {
     if (!playing) return
     const id = setInterval(() => setXray((x) => { if (x.t >= 38) { setPlaying(false); return {} } return { t: x.t + 1 } }), 450)
@@ -318,9 +422,9 @@ function TimeScrubber() {
   const pct = (i: number) => (i / 38) * 100
   return (
     <div className="@container shrink-0 border-t border-line bg-ink px-4 pt-2.5 pb-3">
-      <div className="mb-2 flex items-center justify-between gap-3">
+      <div className="mb-2 flex items-center justify-between gap-3 max-md:flex-wrap max-md:gap-y-2">
         <div className="flex min-w-0 items-center gap-2 whitespace-nowrap">
-          <button onClick={() => { if (xray.t >= 38) setXray({ t: 0 }); setPlaying((p) => !p) }} className="flex size-7 cursor-pointer items-center justify-center rounded-full border border-line2 text-bone hover:bg-hover" aria-label={playing ? 'Pause' : 'Play timeline'}>{playing ? <Pause size={12} /> : <Play size={12} />}</button>
+          <button onClick={() => { if (xray.t >= 38) setXray({ t: 0 }); setPlaying((p) => !p) }} className="flex size-7 cursor-pointer items-center justify-center rounded-full border border-line2 text-bone hover:bg-hover max-md:size-11" aria-label={playing ? 'Pause' : 'Play timeline'}>{playing ? <Pause size={12} /> : <Play size={12} />}</button>
           <span className="num shrink-0 text-[13px] text-bone">{MONTHS[xray.t]}</span>
           {xray.t > NOW_IDX ? (
             <span className="flex min-w-0 items-center gap-3 text-[11px] text-mute">
@@ -335,17 +439,21 @@ function TimeScrubber() {
             <span className="text-[11px] text-dim">{xray.t === NOW_IDX ? 'Latest' : `${NOW_IDX - xray.t}M ago`}</span>
           )}
         </div>
+        {phone ? <div className="w-full overflow-x-auto [scrollbar-width:none] [&_button]:min-h-11 [&_button]:min-w-11">
         <Seg size="sm" value={String(xray.t - NOW_IDX)} onChange={(v) => setXray({ t: NOW_IDX + +v })} options={[{ id: '-12', label: '−12M' }, { id: '-6', label: '−6M' }, { id: '0', label: 'NOW' }, { id: '1', label: '+1M' }, { id: '3', label: '+3M' }, { id: '6', label: '+6M' }, { id: '12', label: '+12M' }]} />
+        </div> : (
+        <Seg size="sm" value={String(xray.t - NOW_IDX)} onChange={(v) => setXray({ t: NOW_IDX + +v })} options={[{ id: '-12', label: '−12M' }, { id: '-6', label: '−6M' }, { id: '0', label: 'NOW' }, { id: '1', label: '+1M' }, { id: '3', label: '+3M' }, { id: '6', label: '+6M' }, { id: '12', label: '+12M' }]} />
+        )}
       </div>
-      <div className="relative h-8">
-        <div className="absolute inset-x-0 top-3.5 h-1 bg-line" />
-        <div className="absolute top-3.5 h-1 bg-mute/45" style={{ left: 0, width: `${pct(NOW_IDX)}%` }} />
-        <div className="absolute top-3.5 h-1 bg-fct/25" style={{ left: `${pct(NOW_IDX)}%`, right: 0 }} />
-        <div className="absolute top-2 h-4 w-px bg-bone/70" style={{ left: `${pct(NOW_IDX)}%` }} />
-        <span className="absolute -top-1 -translate-x-1/2 text-[10px] font-medium text-mute" style={{ left: `${pct(NOW_IDX)}%` }}>Now</span>
-        {MONTHS.map((m, i) => (i % 3 === 0 ? <span key={i} className="absolute top-6 -translate-x-1/2 font-mono text-[8.5px] whitespace-nowrap text-dim" style={{ left: `${pct(i)}%` }}>{m}</span> : null))}
-        <input type="range" min={0} max={38} value={xray.t} onChange={(e) => setXray({ t: +e.target.value })} className="absolute inset-x-0 top-1.5 h-5 w-full cursor-pointer opacity-0" aria-label="Time" />
-        <div className={cx('pointer-events-none absolute top-1.5 h-5 w-[3px] -translate-x-1/2 rounded-[1px]', xray.t > NOW_IDX ? 'bg-fct' : 'bg-bone')} style={{ left: `${pct(xray.t)}%` }} />
+      <div className="relative h-8 max-md:mx-2 max-md:h-14">
+        <div className="absolute inset-x-0 top-3.5 h-1 bg-line max-md:top-6 max-md:h-1.5" />
+        <div className="absolute top-3.5 h-1 bg-mute/45 max-md:top-6 max-md:h-1.5" style={{ left: 0, width: `${pct(NOW_IDX)}%` }} />
+        <div className="absolute top-3.5 h-1 bg-fct/25 max-md:top-6 max-md:h-1.5" style={{ left: `${pct(NOW_IDX)}%`, right: 0 }} />
+        <div className="absolute top-2 h-4 w-px bg-bone/70 max-md:top-4 max-md:h-5" style={{ left: `${pct(NOW_IDX)}%` }} />
+        <span className="absolute -top-1 -translate-x-1/2 text-[10px] font-medium text-mute max-md:top-0 max-md:text-[12px] max-md:leading-none" style={{ left: `${pct(NOW_IDX)}%` }}>Now</span>
+        {MONTHS.map((m, i) => (i % (phone ? 9 : 3) === 0 ? <span key={i} className="absolute top-6 -translate-x-1/2 font-mono text-[8.5px] whitespace-nowrap text-dim max-md:top-10 max-md:text-[12px] max-md:leading-none" style={{ left: `${pct(i)}%` }}>{m}</span> : null))}
+        <input type="range" min={0} max={38} value={xray.t} onChange={(e) => setXray({ t: +e.target.value })} className="absolute inset-x-0 top-1.5 h-5 w-full cursor-pointer opacity-0 max-md:top-1.5 max-md:h-10 max-md:touch-pan-y" aria-label="Time" />
+        <div className={cx('pointer-events-none absolute top-1.5 h-5 w-[3px] -translate-x-1/2 rounded-[1px] max-md:top-3 max-md:h-8 max-md:w-2 max-md:rounded-full max-md:shadow-[0_0_0_2px_var(--color-ink)]', xray.t > NOW_IDX ? 'bg-fct' : 'bg-bone')} style={{ left: `${pct(xray.t)}%` }} />
       </div>
     </div>
   )
@@ -364,35 +472,35 @@ function RightPanel({ region }: { region: Region | null }) {
     { id: 'whatif', label: 'What-if' },
   ]
   return (
-    <div className="flex w-[420px] shrink-0 flex-col border-l border-line bg-panel">
-      <div className="border-b border-line px-5 pt-4 pb-3">
+    <div className="flex w-[420px] shrink-0 flex-col border-l border-line bg-panel max-md:w-full max-md:border-l-0">
+      <div className="border-b border-line px-5 pt-4 pb-3 max-md:px-4">
         <div className="flex items-start justify-between">
           <div>
-            <button onClick={() => setXray({ region: null, project: null })} className="eyebrow mb-1 cursor-pointer hover:text-mute">← Global</button>
+            <button onClick={() => setXray({ region: null, project: null })} className="eyebrow mb-1 cursor-pointer hover:text-mute max-md:-my-3 max-md:min-h-11">← Global</button>
             <h2 className="text-[22px] leading-tight font-semibold tracking-tight">{region.name}</h2>
             <div className="mt-1.5 flex flex-wrap items-center gap-1.5 text-[11px] text-dim">{region.marketplace} · grid {region.grid.toUpperCase()}{region.quality !== 'good' && <Fresh f={region.quality === 'stale' ? 'stale' : region.quality === 'none' ? 'unavailable' : 'experimental'} label={`${region.quality} coverage`} />}{!region.live ? <Fresh quiet f="illustrative" label="Illustrative · no FLOPX data" /> : !region.live.pressure?.realSlots[xray.t] && <Fresh quiet f="illustrative" label={region.live.pressure?.scaled ? `${MONTHS[xray.t]} scaled to today's reading, illustrative` : `${MONTHS[xray.t]} illustrative`} />}</div>
           </div>
-          <button onClick={() => ask(`Why is compute pressure ${pressureWord(p).toLowerCase()} in ${region.name}?`)} className="cursor-pointer rounded-[4px] border border-line2 p-1.5 text-mute hover:bg-hover hover:text-bone" aria-label="Ask about region"><MessageSquareText size={14} /></button>
+          <button onClick={() => ask(`Why is compute pressure ${pressureWord(p).toLowerCase()} in ${region.name}?`)} className="cursor-pointer rounded-[4px] border border-line2 p-1.5 text-mute hover:bg-hover hover:text-bone max-md:p-3.5" aria-label="Ask about region"><MessageSquareText size={14} /></button>
         </div>
         {p != null && (
           <div className="mt-3 flex items-end gap-4">
-            <div>
+            <div className="max-md:shrink-0">
               <TruthTag truth={xray.t > NOW_IDX ? 'fct' : 'inf'} />
-              <div className="num mt-0.5 text-[34px] leading-none" style={{ color: pressureColor(p) }}>{p.toFixed(0)}<span className="ml-1.5 text-[13px] text-mute" title={region.live ? `The ± band is illustrative: ${PRESSURE_MODEL.method} publishes coverage (${region.live.pressure?.label}), not a numeric band` : undefined}>± {u.toFixed(0)}</span></div>
+              <div className="num mt-0.5 text-[34px] leading-none" style={{ color: pressureColor(p) }}>{p.toFixed(0)}<span className="ml-1.5 text-[13px] text-mute max-md:whitespace-nowrap" title={region.live ? `The ± band is illustrative: ${PRESSURE_MODEL.method} publishes coverage (${region.live.pressure?.label}), not a numeric band` : undefined}>± {u.toFixed(0)}</span></div>
               <div className="mt-0.5 text-[11px] text-mute">{pressureWord(p)} · {MONTHS[xray.t]}</div>
             </div>
             <TimeChart labels={MONTHS} height={70} nowIdx={NOW_IDX} hideForecastZone series={[{ id: 'p', label: 'CPI', values: region.pressure.map((v, i) => (i <= NOW_IDX ? v : null)), color: 'var(--color-inf)' }, { id: 'f', label: 'Forecast', values: region.pressure.map((v, i) => (i >= NOW_IDX ? pressureAt(region, i, xray.scenario) : null)), color: 'var(--color-fct)', style: 'dashed', band: { lo: region.pressure.map((_, i) => (i >= NOW_IDX ? pressureAt(region, i, xray.scenario)! - uncAt(region, i, xray.scenario) : null)), hi: region.pressure.map((_, i) => (i >= NOW_IDX ? pressureAt(region, i, xray.scenario)! + uncAt(region, i, xray.scenario) : null)) } }]} cursor={xray.t} onCursor={(i) => setXray({ t: i })} className="flex-1 [&_text]:hidden" />
           </div>
         )}
       </div>
-      <div className="flex gap-4 border-b border-line px-5">
+      <div className="flex gap-4 border-b border-line px-5 max-md:overflow-x-auto max-md:px-4 max-md:[scrollbar-width:none]">
         {tabs.map((t) => (
-          <button key={t.id} onClick={() => setXray({ tab: t.id })} className={cx('-mb-px cursor-pointer border-b-2 py-2 text-[12px] font-medium', xray.tab === t.id ? 'border-bone text-bone' : 'border-transparent text-dim hover:text-mute')}>
+          <button key={t.id} onClick={() => setXray({ tab: t.id })} className={cx('-mb-px cursor-pointer border-b-2 py-2 text-[12px] font-medium max-md:shrink-0 max-md:py-3.5 max-md:text-[13px]', xray.tab === t.id ? 'border-bone text-bone' : 'border-transparent text-dim hover:text-mute')}>
             {t.label}{t.id === 'brief' && region.anomaly && <span className="ml-1 inline-block size-1.5 rounded-full bg-inf align-middle" />}
           </button>
         ))}
       </div>
-      <div className="flex-1 overflow-y-auto px-5 py-4">
+      <div className="flex-1 overflow-y-auto px-5 py-4 max-md:overflow-visible max-md:px-4">
         {region.quality === 'none' ? (
           <div className="rounded-md border border-dashed border-line2 p-5 text-center">
             <div className="mb-1 text-[13px] font-semibold">No data region</div>
@@ -421,12 +529,12 @@ function GlobalPanel() {
   const persp = activePerspective(xray.layers)
   if (persp !== 'pressure') ranked.sort((a, b) => perspectiveValue(b.r, persp).sort - perspectiveValue(a.r, persp).sort)
   return (
-    <div className="flex w-[420px] shrink-0 flex-col border-l border-line bg-panel">
-      <div className="border-b border-line px-5 py-4">
+    <div className="flex w-[420px] shrink-0 flex-col border-l border-line bg-panel max-md:w-full max-md:border-l-0">
+      <div className="border-b border-line px-5 py-4 max-md:px-4">
         <div className="eyebrow mb-1 flex items-center gap-2">Global view · {MONTHS[xray.t]}{PRESSURE_MODEL.globalReal && <Fresh quiet f="illustrative" label={PRESSURE_MODEL.globalScaled ? SCALED_SHORT_LABEL : `History before ${MONTHS[NOW_IDX]} illustrative`} />}</div>
         <h2 className="text-[22px] leading-tight font-semibold tracking-tight" title="Select a region on the map or below to drill into observed evidence and inferred pressure.">Where is compute scarce?</h2>
       </div>
-      <div className="border-b border-line px-5 py-3">
+      <div className="border-b border-line px-5 py-3 max-md:px-4">
         <div className="eyebrow mb-2 flex items-center gap-2"><span className="size-1.5 rounded-full bg-inf" />Anomalies detected{!PRESSURE_MODEL.anomaliesLive && <Fresh quiet f="illustrative" />}{PRESSURE_MODEL.anomaliesLive && ANOMALY_CARDS.length > cards.length && <span className="font-mono text-[9.5px] normal-case tracking-normal text-dim">showing {cards.length} of {ANOMALY_CARDS.length}, most severe first</span>}</div>
         {PRESSURE_MODEL.anomaliesLive ? (
           cards.length ? cards.map((c, i) => (
@@ -448,18 +556,18 @@ function GlobalPanel() {
           </>
         )}
       </div>
-      <div className="flex-1 overflow-y-auto px-5 py-3">
+      <div className="flex-1 overflow-y-auto px-5 py-3 max-md:overflow-visible max-md:px-4">
         <div className="eyebrow mb-2 grid grid-cols-[1fr_60px_56px_44px] gap-2"><span>Region</span><span>24M</span><span className="text-right">{PERSPECTIVE_COL[persp]}</span><span className="text-right">{persp === 'pressure' ? 'Δ2M' : ''}</span></div>
         {ranked.map(({ r, p, d }) => (
-          <button key={r.id} onClick={() => setXray({ region: r.id, tab: 'brief' })} className="grid w-full cursor-pointer grid-cols-[1fr_60px_56px_44px] items-center gap-2 border-b border-line/60 py-2 text-left hover:bg-hover">
-            <span className="flex min-w-0 items-center gap-1.5 text-[12px]"><span className="truncate">{r.name}</span>{!r.live ? <span className="shrink-0 text-[11px] text-dim font-medium">Illustrative</span> : r.quality !== 'good' && <span className="shrink-0 text-[11px] text-warn font-medium capitalize">{r.quality}</span>}</span>
+          <button key={r.id} onClick={() => setXray({ region: r.id, tab: 'brief' })} className="grid w-full cursor-pointer grid-cols-[1fr_60px_56px_44px] items-center gap-2 border-b border-line/60 py-2 text-left hover:bg-hover max-md:min-h-11">
+            <span className="flex min-w-0 items-center gap-1.5 text-[12px]"><span className="truncate max-md:line-clamp-2 max-md:whitespace-normal">{r.name}</span>{!r.live ? <span className="shrink-0 text-[11px] text-dim font-medium">Illustrative</span> : r.quality !== 'good' && <span className="shrink-0 text-[11px] text-warn font-medium capitalize">{r.quality}</span>}</span>
             <Spark values={r.pressure.slice(0, NOW_IDX + 1)} width={60} height={16} color="var(--color-inf)" />
             {persp === 'pressure' ? <span className="num text-right text-[12px]" style={{ color: pressureColor(p) }}>{p.toFixed(0)}<span className="text-[9.5px] text-dim">±{uncAt(r, xray.t).toFixed(0)}</span></span>
               : (() => { const v = perspectiveValue(r, persp); return <span className="num col-span-2 text-right text-[12px]" title={v.note}>{v.value ?? <span className="text-dim">n/a</span>}<span className="block text-[9.5px] leading-tight text-dim">{v.note}</span></span> })()}
             {persp !== 'pressure' ? null : d == null ? <span className="num text-right text-[11px] text-dim" title="Only the current month is a FLOPX reading so far">n/a</span> : <Delta v={d} d={0} suffix="" className="text-right text-[11px]" />}
           </button>
         ))}
-        <button onClick={() => setXray({ region: 'za-jnb' })} className="grid w-full cursor-pointer grid-cols-[1fr_auto] py-2 text-left text-[12px] text-dim hover:bg-hover"><span>Johannesburg</span><span className="text-[11px]">No data</span></button>
+        <button onClick={() => setXray({ region: 'za-jnb' })} className="grid w-full cursor-pointer grid-cols-[1fr_auto] py-2 text-left text-[12px] text-dim hover:bg-hover max-md:min-h-11"><span>Johannesburg</span><span className="text-[11px]">No data</span></button>
       </div>
     </div>
   )
@@ -752,7 +860,7 @@ function ComparePanel() {
   const [a, b] = [regionById(xray.compare[0] ?? 'us-tx')!, regionById(xray.compare[1] ?? 'no-nordics')!]
   const opts = REGIONS.map((r) => ({ id: r.id, label: r.short }))
   return (
-    <div className="slide-in @container absolute inset-x-3 bottom-[76px] z-20 max-h-[calc(100%-88px)] overflow-y-auto rounded-lg border border-line2 bg-ink/95 shadow-2xl backdrop-blur">
+    <div className="slide-in @container absolute inset-x-3 bottom-[76px] z-20 max-h-[calc(100%-88px)] overflow-y-auto rounded-lg border border-line2 bg-ink/95 shadow-2xl backdrop-blur max-md:static max-md:mx-3 max-md:my-3 max-md:max-h-none max-md:shadow-none">
       <div className="flex items-start justify-between gap-3 border-b border-line px-4 py-2">
         <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-2">
           <GitCompareArrows size={14} className="shrink-0 text-mute" />

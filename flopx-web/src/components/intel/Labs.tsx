@@ -51,12 +51,12 @@ export function PriceLadder() {
       right={<Seg size="sm" value={sort} onChange={setSort} options={[{ id: 'median', label: 'By median' }, { id: 'models', label: 'By models' }]} />}
     >
       <div className="overflow-x-auto">
-        <div className="min-w-[420px]">
+        <div className="min-w-[420px] max-md:min-w-[560px]">
           <div className={cx(LADDER_COLS, 'mb-1 text-[11px] font-medium text-dim')}>
             <span>Lab</span>
             <div ref={ref}>
               <svg width={w} height={12} className="block overflow-visible">
-                {TICKS.map((t) => <text key={t} x={x(t)} y={9} textAnchor="middle" className={`fill-dim ${fontClass}`} fontSize={9}>{tickLabel(t)}</text>)}
+                {TICKS.map((t, i) => <text key={t} x={x(t)} y={9} textAnchor="middle" className={`fill-dim ${fontClass}${i % 2 ? ' max-md:hidden' : ''}`} fontSize={9}>{tickLabel(t)}</text>)}
               </svg>
             </div>
             <span className="text-right">Models</span>
@@ -72,7 +72,7 @@ export function PriceLadder() {
                 onClick={() => setSel(on ? null : r.lab)}
                 title={`${r.lab}: show cheapest and dearest model`}
                 aria-pressed={on}
-                className={cx(LADDER_COLS, 'w-full cursor-pointer rounded-[3px] border-b border-line-soft text-left transition-colors last:border-0', on ? 'bg-raise' : 'hover:bg-hover')}
+                className={cx(LADDER_COLS, 'w-full cursor-pointer rounded-[3px] border-b border-line-soft text-left transition-colors last:border-0 max-md:min-h-11', on ? 'bg-raise' : 'hover:bg-hover')}
                 style={{ height: ROW_H }}
               >
                 <span className={cx('truncate pl-1 text-[11.5px]', on ? 'text-bone' : 'text-mute')}>{r.lab}</span>
@@ -165,7 +165,7 @@ export function ClosedVsOpen() {
             )
           })}
           <line x1={pad.l} x2={w - pad.r} y1={axisY} y2={axisY} stroke="var(--color-line2)" />
-          {TICKS.map((t) => <text key={t} x={x(t)} y={axisY + 12} textAnchor="middle" className={`fill-dim ${fontClass}`} fontSize={9}>{tickLabel(t)}</text>)}
+          {TICKS.map((t, i) => <text key={t} x={x(t)} y={axisY + 12} textAnchor="middle" className={`fill-dim ${fontClass}${i % 2 ? ' max-md:hidden' : ''}`} fontSize={9}>{tickLabel(t)}</text>)}
         </svg>
       </div>
       <p className="mt-2 text-[12px] leading-relaxed text-mute">

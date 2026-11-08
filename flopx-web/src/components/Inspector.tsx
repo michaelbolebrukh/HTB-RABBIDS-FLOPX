@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { useRef, type ReactNode } from 'react'
 import { ArrowUpRight, MessageSquareText, X } from 'lucide-react'
 import { fmtPct, fmtReliability, GPUS, gpuById, horizonLabel, MONTHS, NOW_IDX, OFFERS, providerById, regionById, REGIONS, type EntityKind } from '@/data/core'
 import { offerRegionShort } from '@/live/gpu'
@@ -7,7 +7,8 @@ import { BASKETS, basketSeries, chg, last, NEWS, PRED, secByTicker } from '@/dat
 import { signalById, SIGNALS } from '@/data/fund'
 import { pressureAt, pressureColor, pressureWord, uncAt } from '@/lib/model'
 import { useStore, type EntityRef } from '@/lib/store'
-import { Btn, cx, Delta, EntityLink, Fresh, Source, Spark, TruthGlyph, TruthTag, Validation } from './ui'
+import { useIsPhone } from '@/lib/usePhone'
+import { Btn, cx, Delta, EntityLink, Fresh, SHEET_CLOSE, SHEET_FULL, SheetBackdrop, SheetHandle, Source, Spark, TruthGlyph, TruthTag, Validation } from './ui'
 
 const KIND_LABEL: Record<EntityKind, string> = { region: 'Region', gpu: 'GPU category', provider: 'Provider', project: 'Data-centre project', energy: 'Energy market', security: 'Security', basket: 'Basket', signal: 'Strategy signal', news: 'Event', theme: 'Theme' }
 
@@ -29,6 +30,8 @@ const ref = (kind: EntityKind, id: string, label: string): EntityRef => ({ kind,
 
 export function Inspector() {
   const { inspector, setInspector, navigate, setXray, ask, setTicket, setFund, positions } = useStore()
+  const phone = useIsPhone()
+  const sheetRef = useRef<HTMLElement>(null)
   if (!inspector) return null
   const { kind, id } = inspector
   let body: ReactNode = null
@@ -243,19 +246,24 @@ export function Inspector() {
     body = t ? <><p className="mb-3 text-[12.5px] text-bone/90">{t.text}</p>{t.links.map((l) => <div key={l.id}><EntityLink r={l} /></div>)}</> : null
   }
 
+  const close = () => setInspector(null)
   return (
-    <aside className="slide-in absolute inset-y-0 right-0 z-40 flex w-[440px] flex-col border-l border-line2 bg-panel shadow-[-24px_0_48px_rgba(30,27,22,0.18)]">
-      <header className="flex items-start justify-between gap-3 border-b border-line px-5 py-4">
+    <>
+    {phone && <SheetBackdrop onClose={close} />}
+    <aside ref={sheetRef} className={cx('slide-in absolute inset-y-0 right-0 z-40 flex w-[440px] flex-col border-l border-line2 bg-panel shadow-[-24px_0_48px_rgba(30,27,22,0.18)]', SHEET_FULL, phone && 'm-sheet')}>
+      {phone && <SheetHandle sheet={sheetRef} onClose={close} />}
+      <header className="flex items-start justify-between gap-3 border-b border-line px-5 py-4 max-md:px-4 max-md:pt-1 max-md:pb-3">
         <div className="min-w-0">
           <div className="eyebrow mb-1">{KIND_LABEL[kind]}</div>
           <h2 className="text-[20px] leading-tight font-semibold tracking-tight text-bone">{title}</h2>
           {sub && <div className="mt-1 text-[11px] text-dim">{sub}</div>}
         </div>
-        <button onClick={() => setInspector(null)} className="cursor-pointer rounded p-1 text-dim hover:bg-hover hover:text-bone" aria-label="Close inspector"><X size={16} /></button>
+        <button onClick={() => setInspector(null)} className={cx('cursor-pointer rounded p-1 text-dim hover:bg-hover hover:text-bone', SHEET_CLOSE)} aria-label="Close inspector"><X size={16} /></button>
       </header>
-      <div className="flex-1 overflow-y-auto px-5 py-4">{body}</div>
-      {actions && <footer className="flex flex-wrap gap-2 border-t border-line px-5 py-3">{actions}</footer>}
+      <div className="flex-1 overflow-y-auto px-5 py-4 max-md:min-h-0 max-md:overscroll-contain max-md:px-4 max-md:[&_svg[aria-hidden]]:max-w-full">{body}</div>
+      {actions && <footer className="flex flex-wrap gap-2 border-t border-line px-5 py-3 max-md:px-4">{actions}</footer>}
     </aside>
+    </>
   )
 }
 

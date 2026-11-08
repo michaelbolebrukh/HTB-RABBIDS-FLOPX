@@ -12,6 +12,7 @@ import { continentLeaders, type Continent } from '@/lib/continents'
 import type { Scenario, XLayer } from '@/lib/store'
 import { monoWidth, place, type Box } from '@/lib/labels'
 import { basemapStyle, globeFitZoom, nearestCopy, readBasemapColors, type MapProjection } from '@/lib/basemap'
+import { useIsPhone } from '@/lib/usePhone'
 
 setWorkerUrl(mapWorkerUrl)
 
@@ -63,6 +64,7 @@ export function WorldMap({ layers, reveal = 100, t = NOW_IDX, selected, selected
   modeRef.current = mode
   const globe = mode === 'globe'
   const [cam, setCam] = useState<Camera | null>(null)
+  const phone = useIsPhone()
 
   /** Home camera for a projection: the whole globe, or the flat map fitted to FLAT_BOUNDS. */
   const home = (map: GLMap, m: MapProjection) => {
@@ -168,14 +170,14 @@ export function WorldMap({ layers, reveal = 100, t = NOW_IDX, selected, selected
   /** Pressure ring radius: grows with capacity and inferred pressure. */
   const ringOf = (r: Region, p: number) => rOf(r) * (0.5 + (p / 100) * 0.75)
   const summary = facilities === 'summary'
-  const labels = layoutLabels({ regions, pt, rOf, has, valOf, selected: selected ?? null, compare, compact: !!compact, t, scenario, w: size.w, h: size.h, summary })
+  const labels = layoutLabels({ regions, pt, rOf, has, valOf, selected: selected ?? null, compare, compact: !!compact, t, scenario, w: size.w, h: size.h, summary, ...(phone ? { phone: { gap: zoom - homeZoom < 1 ? 6 : zoom - homeZoom < 2 ? 4 : 2 } } : {}) })
   const hoverRegion = hover ? regions.find((r) => r.id === hover) : undefined
   return (
     <div ref={ref} className="relative h-full w-full overflow-hidden" style={{ minHeight }}>
       {/* MapLibre's stylesheet makes its container position: relative, so the sizing lives on a wrapper. */}
       <div className="absolute inset-0"><div ref={mapEl} className="flopx-map h-full w-full" /></div>
       {/* OpenStreetMap's licence requires visible credit; a quiet line instead of MapLibre's control. */}
-      <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer" className="absolute bottom-1 left-1.5 z-10 text-[9.5px] text-dim/70 hover:text-mute">© OpenStreetMap</a>
+      <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer" className="absolute bottom-1 left-1.5 z-10 text-[9.5px] text-dim/70 hover:text-mute max-md:flex max-md:min-h-11 max-md:items-end">© OpenStreetMap</a>
       <svg width={size.w} height={size.h} className="pointer-events-none absolute inset-0 block">
         <defs>
           <pattern id="nodata" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
@@ -247,7 +249,7 @@ export function WorldMap({ layers, reveal = 100, t = NOW_IDX, selected, selected
           const hovered = hover === r.id
           return (
             <g key={r.id} className="pointer-events-auto cursor-pointer" onClick={() => clickRegion(r.id)} onMouseEnter={() => setHover(r.id)} onMouseLeave={() => setHover(null)}>
-              <circle cx={x} cy={y} r={Math.max(14, rOf(r) * 0.8)} fill="transparent" />
+              <circle cx={x} cy={y} r={Math.max(phone ? 20 : 14, rOf(r) * 0.8)} fill="transparent" />
               {none ? (
                 <g>
                   <circle cx={x} cy={y} r={10 * scale} fill="url(#nodata)" stroke="var(--color-dim)" strokeDasharray="2 2" />
@@ -329,7 +331,8 @@ export function WorldMap({ layers, reveal = 100, t = NOW_IDX, selected, selected
         {has('pressure') && callouts && (() => {
           const taken: Box[] = [...labels.values()].flatMap((L) => [L.name, L.rental, L.ties?.box].filter((b): b is Box => !!b))
           regions.forEach((r) => { const [x, y] = pt(r.lon, r.lat); taken.push({ x: x - 4, y: y - 4, w: 8, h: 8 }) })
-          taken.push({ x: 0, y: 0, w: 150, h: 64 }, { x: size.w - 100, y: 0, w: 100, h: 32 }, { x: size.w - 230, y: size.h - 40, w: 230, h: 40 })
+          if (phone) taken.push({ x: 0, y: 0, w: 150, h: 64 }, { x: size.w - 132, y: 0, w: 132, h: 56 }, { x: size.w - 230, y: size.h - 40, w: 230, h: 40 }, { x: size.w - 56, y: size.h - 152, w: 56, h: 152 })
+          else taken.push({ x: 0, y: 0, w: 150, h: 64 }, { x: size.w - 100, y: 0, w: 100, h: 32 }, { x: size.w - 230, y: size.h - 40, w: 230, h: 40 })
           const leaders = continentLeaders(regions.filter((r) => r.quality !== 'none'), (r) => { const p = pressureAt(r, t, scenario); return p == null ? null : ringOf(r, p) })
           return leaders.map(({ continent, region: r }) => {
             const [x, y] = pt(r.lon, r.lat)
@@ -363,18 +366,18 @@ export function WorldMap({ layers, reveal = 100, t = NOW_IDX, selected, selected
         })()}
       </svg>
       <button type="button" onClick={toggle} aria-pressed={globe} title={globe ? 'Switch to flat map' : 'Switch to globe (drag to rotate)'}
-        className="absolute right-2 top-2 z-10 flex overflow-hidden rounded-[3px] border border-line2 bg-panel/90 text-[11px] backdrop-blur font-medium">
-        <span className={`px-2 py-1 ${!globe ? 'bg-raise text-bone' : 'text-dim hover:text-mute'}`}>Flat</span>
-        <span className={`px-2 py-1 ${globe ? 'bg-raise text-bone' : 'text-dim hover:text-mute'}`}>Globe</span>
+        className="absolute right-2 top-2 z-10 flex overflow-hidden rounded-[3px] border border-line2 bg-panel/90 text-[11px] backdrop-blur font-medium max-md:text-[12px]">
+        <span className={`px-2 py-1 max-md:flex max-md:min-h-11 max-md:items-center max-md:px-3 ${!globe ? 'bg-raise text-bone' : 'text-dim hover:text-mute'}`}>Flat</span>
+        <span className={`px-2 py-1 max-md:flex max-md:min-h-11 max-md:items-center max-md:px-3 ${globe ? 'bg-raise text-bone' : 'text-dim hover:text-mute'}`}>Globe</span>
       </button>
       <div className="absolute bottom-2 right-2 z-10 flex flex-col overflow-hidden rounded-[3px] border border-line2 bg-panel/90 font-mono text-[12px] leading-none backdrop-blur" title="Zoom (or pinch / ⌘ + scroll)">
         <button type="button" aria-label="Zoom in" onClick={() => map?.zoomIn()} disabled={zoom >= ZOOM_MAX - 0.01}
-          className="grid h-6 w-6 place-items-center text-mute hover:bg-raise hover:text-bone disabled:text-dim disabled:hover:bg-transparent">+</button>
+          className="grid h-6 w-6 place-items-center text-mute hover:bg-raise hover:text-bone disabled:text-dim disabled:hover:bg-transparent max-md:size-11 max-md:text-[16px]">+</button>
         <button type="button" aria-label="Zoom out" onClick={() => map?.zoomOut()} disabled={zoom <= homeZoom - 0.49}
-          className="grid h-6 w-6 place-items-center border-t border-line2 text-mute hover:bg-raise hover:text-bone disabled:text-dim disabled:hover:bg-transparent">−</button>
+          className="grid h-6 w-6 place-items-center border-t border-line2 text-mute hover:bg-raise hover:text-bone disabled:text-dim disabled:hover:bg-transparent max-md:size-11 max-md:text-[16px]">−</button>
         {zoom > homeZoom + 0.05 && (
           <button type="button" aria-label="Reset view" onClick={() => map && goHome(map, mode, true)}
-            className="grid h-6 w-6 place-items-center border-t border-line2 text-[10px] text-mute hover:bg-raise hover:text-bone">⟲</button>
+            className="grid h-6 w-6 place-items-center border-t border-line2 text-[10px] text-mute hover:bg-raise hover:text-bone max-md:size-11 max-md:text-[14px]">⟲</button>
         )}
       </div>
       {hover && vis(REGIONS.find((x) => x.id === hover)!.lon, REGIONS.find((x) => x.id === hover)!.lat) && <HoverCard r={REGIONS.find((x) => x.id === hover)!} t={t} scenario={scenario} xy={pt(REGIONS.find((x) => x.id === hover)!.lon, REGIONS.find((x) => x.id === hover)!.lat)} w={size.w} />}
@@ -430,14 +433,18 @@ interface RegionLabels {
  * everything dropped is still in the hover card. The selected region's labels
  * always show, at their preferred slot if nothing fits.
  */
-function layoutLabels({ regions, pt, rOf, has, valOf, selected, compare, compact, t, scenario, w, h, summary = false }: {
+function layoutLabels({ regions, pt, rOf, has, valOf, selected, compare, compact, t, scenario, w, h, summary = false, phone }: {
   regions: Region[]; pt: (lon: number, lat: number) => [number, number]; rOf: (r: Region) => number; has: (l: XLayer) => boolean; valOf: (r: Region) => { text: string } | null
   selected: string | null; compare: string[]; compact: boolean; t: number; scenario: Scenario | null; w: number; h: number; summary?: boolean
+  /** Phone only: the touch-sized map controls reserve more room, and labels keep a wider gap near world zoom so fewer of them fit (they thin out rather than collide). */
+  phone?: { gap: number }
 }): Map<string, RegionLabels> {
   const out = new Map<string, RegionLabels>(regions.map((r) => [r.id, {}]))
   if (compact) return out
   // Reserve the dots, compare badges and the map's own controls (Flat/Globe top-right, zoom bottom-right, map credit bottom-left).
-  const placed: Box[] = [{ x: w - 100, y: 0, w: 100, h: 32 }, { x: w - 34, y: h - 90, w: 34, h: 90 }, { x: 0, y: h - 16, w: 96, h: 16 }]
+  const placed: Box[] = phone
+    ? [{ x: w - 132, y: 0, w: 132, h: 56 }, { x: w - 56, y: h - 152, w: 56, h: 152 }, { x: 0, y: h - 16, w: 96, h: 16 }]
+    : [{ x: w - 100, y: 0, w: 100, h: 32 }, { x: w - 34, y: h - 90, w: 34, h: 90 }, { x: 0, y: h - 16, w: 96, h: 16 }]
   const xy = new Map(regions.map((r) => [r.id, pt(r.lon, r.lat)]))
   for (const r of regions) {
     const [x, y] = xy.get(r.id)!
@@ -447,7 +454,7 @@ function layoutLabels({ regions, pt, rOf, has, valOf, selected, compare, compact
   const order = [...regions].sort((a, b) => Number(b.id === selected) - Number(a.id === selected) || b.opMW - a.opMW)
   const at = (r: Region) => xy.get(r.id)!
   const put = (r: Region, cands: Box[]) => {
-    const got = place(placed, cands, w, h)
+    const got = phone ? place(placed, cands, w, h, phone.gap) : place(placed, cands, w, h)
     if (got || r.id !== selected) return got
     placed.push(cands[0])
     return cands[0]
@@ -500,7 +507,7 @@ function layoutLabels({ regions, pt, rOf, has, valOf, selected, compare, compact
     ]
     const full = tk.slice(0, 3)
     const fullW = full.length * (TIE_W + 2) - 2 + (tk.length > 3 ? 4 + monoWidth(String(tk.length - 3).length + 1, 8.5) : 0)
-    const fb = place(placed, slots(fullW), w, h)
+    const fb = phone ? place(placed, slots(fullW), w, h, phone.gap) : place(placed, slots(fullW), w, h)
     if (fb) { out.get(r.id)!.ties = { box: fb, shown: full, more: tk.length - full.length }; continue }
     if (tk.length > 1) {
       const cb = put(r, slots(TIE_W + 4 + monoWidth(String(tk.length - 1).length + 1, 8.5)))

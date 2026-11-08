@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, type ButtonHTMLAttributes, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, useRef, useState, type ButtonHTMLAttributes, type ReactNode, type RefObject } from 'react'
 import { Info, RotateCcw, Sparkles } from 'lucide-react'
 import type { Freshness, Truth } from '@/data/core'
 import type { HorizonId, ValidationStatus } from '@/data/fund'
@@ -7,6 +7,7 @@ import { collapse, panelKey, useCollapsed } from '@/lib/layout'
 import { fetchJson } from '@/live/client'
 import type { ResearchMetricsPayload } from './ResearchMetrics'
 import { Drawer, FoldButton, SideFoldButton, useRegisterInRow, useRowSlot } from './collapse'
+import './phone.css'
 
 export function cx(...c: (string | false | null | undefined)[]) {
   return c.filter(Boolean).join(' ')
@@ -229,7 +230,7 @@ const CALLOUT: Record<CalloutTone, string> = {
 }
 const BODY: Record<PanelVariant, string> = {
   canvas: 'p-4',
-  strip: 'flex flex-wrap divide-x divide-line-soft',
+  strip: 'flex flex-wrap divide-x divide-line-soft max-md:grid max-md:grid-cols-2 max-md:divide-x-0',
   rail: cx('py-1', RULED),
   callout: 'px-4 pb-3 pt-1',
 }
@@ -273,22 +274,22 @@ export function Panel({ title, eyebrow, right, children, className, bodyClass, t
   return (
     <section className={cx('min-w-0', SURFACE[variant], variant === 'callout' && CALLOUT[tone], className, !open && 'self-start')}>
       {(title || eyebrow || right) && (
-        <header className={cx('group/ph flex min-h-10 items-center justify-between gap-3 py-1.5 max-md:flex-wrap', rail ? 'px-0' : 'px-4',
+        <header className={cx('group/ph flex min-h-10 items-center justify-between gap-3 py-1.5 max-md:flex-wrap', rail ? 'px-0' : 'px-4 max-md:px-3',
           ruled && 'border-b transition-[border-color] duration-300', ruled && (open ? (rail ? 'border-line' : 'border-line-soft') : 'border-transparent'))}>
           <div className="flex min-w-0 flex-1 items-baseline gap-2">
             {title && (swap
-              ? <div className="flex shrink-0 items-center gap-2 self-center">{truth && <TruthGlyph truth={truth} />}{swap}</div>
+              ? <div className="flex shrink-0 items-center gap-2 self-center max-md:min-w-0 max-md:max-w-full max-md:shrink">{truth && <TruthGlyph truth={truth} />}{swap}</div>
               : (
                 <h3 className="flex min-w-0 max-w-full shrink-0 items-center gap-2 text-[13px] leading-[18px] font-semibold tracking-tight text-bone">
                   {truth && <TruthGlyph truth={truth} />}
                   <span className="min-w-0 truncate">{title}</span>
                 </h3>
               ))}
-            {eyebrow && <div onMouseEnter={fullTextTitle} className={cx('min-w-0 flex-1 truncate leading-4 [&>*]:mr-1.5 [&>*]:align-[-1px]', title ? 'text-[11.5px] text-dim' : 'text-[12px] font-medium text-mute')}>{eyebrow}</div>}
+            {eyebrow && <div onMouseEnter={fullTextTitle} className={cx('min-w-0 flex-1 truncate leading-4 [&>*]:mr-1.5 [&>*]:align-[-1px] max-md:line-clamp-2 max-md:whitespace-normal max-md:break-words', title ? 'text-[11.5px] text-dim' : 'text-[12px] font-medium text-mute')}>{eyebrow}</div>}
           </div>
           {(right || canFold) && (
             <div className="flex shrink-0 items-center gap-1 max-md:ml-auto max-md:min-w-0 max-md:shrink max-md:flex-wrap max-md:justify-end">
-              {open && right && <div className="mr-1 flex min-w-0 items-center gap-2 max-md:flex-wrap">{right}</div>}
+              {open && right && <div className="mr-1 flex min-w-0 items-center gap-2 max-md:flex-wrap max-md:[&>*]:min-w-0 max-md:[&>*]:max-w-full max-md:[&>*]:flex-wrap">{right}</div>}
               {sideFold && <SideFoldButton side={slot.side} label={pid.toLowerCase()} onClick={slot.fold} />}
               {canFold && <FoldButton open={open} label={pid.toLowerCase()} onClick={() => collapse.toggle(page as string, pid)} />}
             </div>
@@ -306,9 +307,9 @@ export function Panel({ title, eyebrow, right, children, className, bodyClass, t
  */
 export function StripCell({ label, sub, lead, className, children }: { label: ReactNode; sub?: ReactNode; lead?: boolean; className?: string; children: ReactNode }) {
   return (
-    <div className={cx('min-w-[140px] px-4 py-3', lead ? 'flex-[1.6]' : 'flex-1', className)}>
+    <div className={cx('min-w-[140px] px-4 py-3 max-md:min-w-0 max-md:border-line-soft max-md:px-3 max-md:[&:nth-child(even)]:border-l max-md:[&:nth-child(n+3)]:border-t', lead ? 'flex-[1.6]' : 'flex-1', className)}>
       <div className="truncate text-[11px] leading-4 text-dim">{label}</div>
-      <div className={cx('num mt-1 text-bone', lead ? 'text-[28px] leading-8' : 'text-[19px] leading-6')}>{children}</div>
+      <div className={cx('num mt-1 text-bone max-md:break-words', lead ? 'text-[28px] leading-8 max-md:text-[24px] max-md:leading-7' : 'text-[19px] leading-6')}>{children}</div>
       {sub && <div className="mt-1 text-[11px] leading-4 text-mute">{sub}</div>}
     </div>
   )
@@ -334,6 +335,7 @@ export function Btn({ variant = 'outline', size = 'md', className, children, ...
       className={cx(
         'inline-flex items-center justify-center gap-1.5 rounded-[3px] font-medium transition-colors duration-[120ms] disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mute whitespace-nowrap cursor-pointer',
         size === 'sm' ? 'h-7 px-2.5 text-[11.5px]' : 'h-8 px-3 text-[12.5px]',
+        'max-md:h-11 max-md:px-3.5 max-md:text-[13px]',
         variant === 'primary' && 'bg-bone text-ink hover:bg-bone/90',
         variant === 'outline' && 'border border-line2 text-bone hover:bg-hover',
         variant === 'ghost' && 'text-mute hover:bg-hover hover:text-bone',
@@ -350,7 +352,7 @@ export function Btn({ variant = 'outline', size = 'md', className, children, ...
 
 export function Seg<T extends string>({ value, options, onChange, size = 'md', className }: { value: T; options: { id: T; label: ReactNode; title?: string }[]; onChange: (v: T) => void; size?: 'sm' | 'md'; className?: string }) {
   return (
-    <div className={cx('inline-flex max-w-full items-stretch overflow-x-auto rounded-[3px] border border-line bg-ink p-[2px] [scrollbar-width:none]', size === 'sm' ? 'h-6' : 'h-7', className)} role="tablist">
+    <div className={cx('inline-flex max-w-full items-stretch overflow-x-auto rounded-[3px] border border-line bg-ink p-[2px] [scrollbar-width:none]', size === 'sm' ? 'h-6' : 'h-7', 'max-md:h-[46px] max-md:p-0', className)} role="tablist">
       {options.map((o) => (
         <button
           key={o.id}
@@ -358,7 +360,7 @@ export function Seg<T extends string>({ value, options, onChange, size = 'md', c
           role="tab"
           aria-selected={value === o.id}
           onClick={() => onChange(o.id)}
-          className={cx('flex shrink-0 cursor-pointer items-center rounded-[2px] border font-medium whitespace-nowrap transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-mute', size === 'sm' ? 'px-2 text-[11px]' : 'px-2.5 text-[12px]', value === o.id ? 'border-line2 bg-hover text-bone' : 'border-transparent text-dim hover:text-mute')}
+          className={cx('flex shrink-0 cursor-pointer items-center rounded-[2px] border font-medium whitespace-nowrap transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-mute', size === 'sm' ? 'px-2 text-[11px]' : 'px-2.5 text-[12px]', 'max-md:min-w-11 max-md:justify-center max-md:px-3 max-md:text-[13px]', value === o.id ? 'border-line2 bg-hover text-bone' : 'border-transparent text-dim hover:text-mute')}
         >
           {o.label}
         </button>
@@ -371,7 +373,7 @@ export function Tabs<T extends string>({ value, tabs, onChange, className }: { v
   return (
     <div className={cx('flex gap-5 border-b border-line max-md:flex-wrap max-md:gap-x-4 max-md:gap-y-1', className)} role="tablist">
       {tabs.map((t) => (
-        <button key={t.id} role="tab" aria-selected={value === t.id} onClick={() => onChange(t.id)} className={cx('-mb-px cursor-pointer border-b-2 pb-2.5 pt-1 text-[13px] font-medium transition-colors', value === t.id ? 'border-bone text-bone' : 'border-transparent text-dim hover:text-mute')}>
+        <button key={t.id} role="tab" aria-selected={value === t.id} onClick={() => onChange(t.id)} className={cx('-mb-px cursor-pointer border-b-2 pb-2.5 pt-1 text-[13px] font-medium transition-colors max-md:min-h-11', value === t.id ? 'border-bone text-bone' : 'border-transparent text-dim hover:text-mute')}>
           {t.label}
           {t.count != null && <span className="num ml-1.5 text-[10px] text-dim">{t.count}</span>}
         </button>
@@ -486,7 +488,7 @@ export function PageHeader({ eyebrow, title, sub, about, right, variant = 'works
         {sub && !about && <p className={cx('max-w-[760px] text-[13px] leading-5 text-mute', briefing ? 'mt-2' : 'mt-1')}>{sub}</p>}
         {about && (
           <details className={cx('group max-w-[760px] text-[13px] leading-5 text-mute', briefing ? 'mt-2' : 'mt-1')}>
-            <summary className="inline cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+            <summary className="inline cursor-pointer list-none [&::-webkit-details-marker]:hidden max-md:block max-md:min-h-11">
               {sub}
               <span className="ml-1.5 inline-flex translate-y-[2px] items-center text-dim hover:text-bone group-open:text-bone" title="About this page" aria-label="About this page"><Info size={13} /></span>
             </summary>
@@ -550,12 +552,12 @@ export function IcSharpeView({ payload, horizon }: { payload: ResearchMetricsPay
   const sampleOnly = kinds.size === 0 || (kinds.size === 1 && kinds.has('sample'))
   const badge = payload === undefined ? <Fresh quiet f="unavailable" label="not loaded · awaiting the FLOPX evaluation" /> : present ? <Fresh quiet f={sampleOnly ? 'illustrative' : 'historical'} label={sampleOnly ? 'Research number · sample closes' : 'Research number · observed closes'} /> : <Fresh quiet f="unavailable" label="Not in this payload" />
   return (
-    <Panel title="Rank skill and Sharpe by model" eyebrow={<>IC across tickers · sign-of-forecast trade {badge}</>} right={<span className="text-[11px] text-dim">{horizon} horizon · {days} trading days</span>}>
+    <Panel bodyClass="max-md:overflow-x-auto" title="Rank skill and Sharpe by model" eyebrow={<>IC across tickers · sign-of-forecast trade {badge}</>} right={<span className="text-[11px] text-dim">{horizon} horizon · {days} trading days</span>}>
       {!present ? (
         <div className="py-3 text-[12px] text-mute" data-ic-sharpe="gap">{payload === undefined ? 'Loading the research evaluation.' : payload === null ? 'The research evaluation did not answer, so no IC or Sharpe is shown.' : IC_SHARPE_GAP}</div>
       ) : (
         <>
-          <div className="grid h-8 grid-cols-[1.6fr_repeat(4,minmax(0,1fr))] items-center gap-x-3 border-b border-line text-[11px] font-medium text-dim">
+          <div className="grid h-8 grid-cols-[1.6fr_repeat(4,minmax(0,1fr))] items-center gap-x-3 border-b border-line text-[11px] font-medium text-dim max-md:min-w-[480px] max-md:[&>:first-child]:sticky max-md:[&>:first-child]:left-0 max-md:[&>:first-child]:z-[1] max-md:[&>:first-child]:bg-panel">
             <span>Model</span><span className="text-right">IC</span><span className="text-right">t · dates</span><span className="text-right">Sharpe</span><span className="text-right">trades</span>
           </div>
           {IC_MODELS.map((m, i) => {
@@ -563,7 +565,7 @@ export function IcSharpeView({ payload, horizon }: { payload: ResearchMetricsPay
             const t = tr!.find((r) => r.horizonDays === days && r.model === m.id)
             const scored = (c?.nDates ?? 0) > 0 || (t?.nTrades ?? 0) > 0
             return (
-              <div key={m.id} data-row={`${days}-${m.id}`} className={cx('grid grid-cols-[1.6fr_repeat(4,minmax(0,1fr))] items-center gap-x-3 border-b border-line-soft py-1.5', !scored && 'opacity-70')}>
+              <div key={m.id} data-row={`${days}-${m.id}`} className={cx('grid grid-cols-[1.6fr_repeat(4,minmax(0,1fr))] items-center gap-x-3 border-b border-line-soft py-1.5 max-md:min-w-[480px] max-md:[&>:first-child]:sticky max-md:[&>:first-child]:left-0 max-md:[&>:first-child]:z-[1] max-md:[&>:first-child]:bg-panel', !scored && 'opacity-70')}>
                 <span className="text-[12px]"><span className="num mr-2 text-[10.5px] text-dim">{String.fromCharCode(65 + i)}</span>{m.label}</span>
                 <span className="num text-right text-[12px]">{c?.meanIc == null ? '\u2014' : sgn(c.meanIc, 3)}</span>
                 <span className="num text-right text-[11px] text-mute">{c && c.nDates > 0 ? `${c.tStat == null ? '\u2014' : `t ${c.tStat.toFixed(2)}`} · ${c.nDates}` : 'not scored'}</span>
@@ -581,4 +583,47 @@ export function IcSharpeView({ payload, horizon }: { payload: ResearchMetricsPay
 /** Fetches (shared) and renders IcSharpeView. */
 export function IcSharpe({ horizon }: { horizon: HorizonId }) {
   return <IcSharpeView payload={useResearchEval()} horizon={horizon} />
+}
+
+// ---------------- Phone bottom sheets (m-prims) ----------------
+// Dialogs, the Ask FLOPX panel, the inspector and the top-bar menus become bottom sheets under 768px. Each piece
+// below is phone-only: the class strings are all `max-md:` variants and the elements render only when
+// useIsPhone() is true, so the desktop markup stays byte for byte what it was.
+
+/** A full-height sheet: fixed to the viewport, the full width, its top just under the safe area. */
+export const SHEET_FULL = 'max-md:fixed max-md:inset-x-0 max-md:bottom-0 max-md:top-[max(12px,env(safe-area-inset-top))] max-md:right-0 max-md:left-0 max-md:z-[95] max-md:h-auto max-md:max-h-none max-md:w-full max-md:max-w-none max-md:rounded-b-none max-md:border-x-0 max-md:border-b-0 max-md:border-t max-md:border-line2 max-md:pb-[env(safe-area-inset-bottom)] max-md:shadow-[0_-12px_32px_rgba(0,0,0,0.35)]'
+/** A content-height sheet for menus and popovers, capped at most of the screen and scrolling inside. */
+export const SHEET_MENU = 'max-md:fixed max-md:inset-x-0 max-md:top-auto max-md:right-0 max-md:bottom-0 max-md:left-0 max-md:z-[96] max-md:max-h-[85dvh] max-md:w-full max-md:overflow-y-auto max-md:rounded-b-none max-md:border-x-0 max-md:border-b-0 max-md:pb-[calc(16px+env(safe-area-inset-bottom))] max-md:shadow-[0_-12px_32px_rgba(0,0,0,0.35)]'
+/** Grows an existing close button to a 44x44 touch target on a phone without moving its glyph. */
+export const SHEET_CLOSE = 'max-md:flex max-md:size-11 max-md:items-center max-md:justify-center max-md:-my-2 max-md:-mr-2.5'
+
+/** Dims the page behind a phone sheet; a tap on it closes the sheet. */
+export function SheetBackdrop({ onClose, z = 'z-[94]' }: { onClose: () => void; z?: string }) {
+  return <div aria-hidden="true" data-sheet-backdrop className={cx('m-sheet-backdrop fixed inset-0 bg-black/55 md:hidden', z)} onClick={onClose} />
+}
+
+/** Drag handle on top of a phone sheet: drag it down past 96px (or flick) to close, release earlier to snap back. */
+export function SheetHandle({ sheet, onClose }: { sheet: RefObject<HTMLElement | null>; onClose: () => void }) {
+  const drag = useRef<{ y: number; t: number } | null>(null)
+  const move = (dy: number) => { const el = sheet.current; if (el) el.style.transform = dy > 0 ? `translateY(${dy}px)` : '' }
+  const end = (y: number | null) => {
+    const d = drag.current
+    drag.current = null
+    const el = sheet.current
+    if (el) el.style.transition = 'transform 180ms ease-out'
+    if (!d || y == null) return move(0)
+    const dy = y - d.y
+    const fast = dy > 40 && dy / Math.max(1, performance.now() - d.t) > 0.6
+    if (dy > 96 || fast) onClose()
+    else move(0)
+  }
+  return (
+    <div data-sheet-handle aria-hidden="true" className="flex h-6 w-full shrink-0 cursor-grab touch-none items-center justify-center md:hidden"
+      onPointerDown={(e) => { drag.current = { y: e.clientY, t: performance.now() }; e.currentTarget.setPointerCapture(e.pointerId); const el = sheet.current; if (el) el.style.transition = 'none' }}
+      onPointerMove={(e) => { if (drag.current) move(e.clientY - drag.current.y) }}
+      onPointerUp={(e) => end(e.clientY)}
+      onPointerCancel={() => end(null)}>
+      <span className="h-1 w-10 rounded-full bg-line2" />
+    </div>
+  )
 }

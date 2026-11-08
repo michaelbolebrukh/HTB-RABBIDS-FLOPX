@@ -25,7 +25,7 @@ export const money = (v: number) => (v >= 1000 ? `$${Math.round(v).toLocaleStrin
 const vsFair = (e: EndpointRow) => { const r = FIT_ROW.get(e); return r ? (blended(e) / r.fair - 1) * 100 : null }
 const samePrec = (s: Spread) => (s.samePrecision ? `${times(s.samePrecision.spread)} ${s.samePrecision.bits} bit` : '—')
 
-const INPUT = 'h-7 rounded-[4px] border border-line2 bg-ink px-2 text-[11.5px] tabular-nums text-bone outline-none focus:border-mute'
+const INPUT = 'h-7 rounded-[4px] border border-line2 bg-ink px-2 text-[11.5px] tabular-nums text-bone outline-none focus:border-mute max-md:h-11'
 const TH = 'h-8 px-2 text-left text-[11px] font-medium text-dim whitespace-nowrap'
 const TD = 'px-2 py-1.5 whitespace-nowrap'
 
@@ -46,9 +46,10 @@ export function SpreadLadder({ onRoute }: { onRoute: (modelId: string) => void }
   const lo = Math.log(Math.min(0.03, Math.min(...prices) / 1.15)), hi = Math.log(Math.max(10, Math.max(...prices) * 1.05))
   const pad = 6
   const x = (v: number) => pad + ((Math.log(v) - lo) / (hi - lo)) * Math.max(1, tw - 2 * pad)
-  const grid = 'grid grid-cols-[minmax(0,11rem)_minmax(0,1fr)_3.25rem_5.5rem] items-center gap-x-3'
+  const grid = 'grid grid-cols-[minmax(0,11rem)_minmax(0,1fr)_3.25rem_5.5rem] items-center gap-x-3 max-md:min-w-[560px]'
   return (
     <Panel
+      bodyClass="max-md:overflow-x-auto"
       title="Spread ladder"
       eyebrow="Blended $/M · log scale"
       right={<Seg size="sm" value={view} onChange={setView} options={[{ id: 'top', label: 'Top 12' }, { id: 'all', label: `All ${SPREADS.length} models` }]} />}
@@ -75,7 +76,7 @@ export function SpreadLadder({ onRoute }: { onRoute: (modelId: string) => void }
               key={s.model}
               onClick={() => onRoute(s.model)}
               title={`Route ${name(s.model)}`}
-              className={cx(grid, 'w-full cursor-pointer border-b border-line-soft py-[3px] text-left hover:bg-hover')}
+              className={cx(grid, 'w-full cursor-pointer border-b border-line-soft py-[3px] text-left hover:bg-hover max-md:min-h-11')}
             >
               <span className="flex min-w-0 items-baseline gap-1 text-[11.5px] text-bone"><span className="truncate">{name(s.model)}</span><span className="num shrink-0 text-[9.5px] text-dim">{s.hosts}</span></span>
               <svg width={tw} height={18} className="block overflow-visible">
@@ -165,8 +166,8 @@ export function TokenProcurement({ model, onModel }: { model: string; onModel: (
         </label>
       </div>
       <div className="mt-2.5 flex flex-wrap gap-x-5 gap-y-1 text-[11.5px] text-mute">
-        <label className="flex cursor-pointer items-center gap-1.5"><input type="checkbox" className="accent-[var(--color-bone)]" checked={standardOnly} onChange={(e) => setStandardOnly(e.target.checked)} />Standard tier only</label>
-        <label className="flex cursor-pointer items-center gap-1.5"><input type="checkbox" className="accent-[var(--color-bone)]" checked={tools} onChange={(e) => setTools(e.target.checked)} />Needs tool calling</label>
+        <label className="flex cursor-pointer items-center gap-1.5 max-md:min-h-11"><input type="checkbox" className="accent-[var(--color-bone)]" checked={standardOnly} onChange={(e) => setStandardOnly(e.target.checked)} />Standard tier only</label>
+        <label className="flex cursor-pointer items-center gap-1.5 max-md:min-h-11"><input type="checkbox" className="accent-[var(--color-bone)]" checked={tools} onChange={(e) => setTools(e.target.checked)} />Needs tool calling</label>
       </div>
 
       {best ? (
@@ -342,7 +343,7 @@ function Waterfall({ terms, unexplained, gap, check }: { terms: [string, number]
       <div className={cx(cols, 'mb-1 text-[10.5px] text-dim')}>
         <span>Log points</span>
         <div className="relative h-3.5">
-          {ticks.map((t) => <span key={t} className="num absolute -translate-x-1/2" style={{ left: `${pos(t)}%` }}>{t === 0 ? '0' : t}</span>)}
+          {ticks.map((t, i) => <span key={t} className={cx('num absolute -translate-x-1/2', i % 2 === 1 && t !== 0 && 'max-md:hidden')} style={{ left: `${pos(t)}%` }}>{t === 0 ? '0' : t}</span>)}
         </div>
         <span className="text-right">share</span>
       </div>
@@ -543,7 +544,7 @@ export function EndpointTable({ model }: { model: string }) {
         </table>
       </div>
       {eps.length > LIMIT && (
-        <button type="button" onClick={() => setAll((v) => !v)} className="mt-2 w-full cursor-pointer rounded-[4px] border border-line py-1.5 text-[11.5px] text-mute transition-colors hover:bg-hover hover:text-bone">
+        <button type="button" onClick={() => setAll((v) => !v)} className="mt-2 w-full cursor-pointer rounded-[4px] border border-line py-1.5 max-md:min-h-11 text-[11.5px] text-mute transition-colors hover:bg-hover hover:text-bone">
           {all ? `Show cheapest ${LIMIT}` : `Show all ${eps.length} endpoints`}
         </button>
       )}

@@ -42,14 +42,14 @@ export default function Trading() {
         title="Paper portfolio & execution"
         sub="Paper holdings, tickets, orders and post-trade review. Nothing here is live."
         about="Model recommendations, user actions and completed paper fills are always labelled separately. Nothing here is a live trade."
-        right={<><MockToggle on={showMock} onChange={setShowMock} /><Btn variant="decision" onClick={() => setTicket({ ticker: 'VST' })}><Plus size={14} /> New paper order</Btn></>}
+        right={<><MockToggle on={showMock} onChange={setShowMock} /><Btn variant="decision" className="max-md:h-11" onClick={() => setTicket({ ticker: 'VST' })}><Plus size={14} /> New paper order</Btn></>}
       />
       {acct.status === 'failed' && (
         <div className="mb-5 rounded-md border border-warn/35 bg-warn/[0.04] px-4 py-3 text-[12.5px] text-warn">
           The paper account for <span className="font-mono">{acct.email}</span> could not be read: {acct.error}. {mock ? 'The figures below are the mock book, not this account\'s.' : "The figures below are the design's illustrative account, not this account's."}
         </div>
       )}
-      {mock && <MockNote className="mb-1.5" />}
+      {mock && <MockNote className="mb-1.5 max-md:whitespace-normal max-md:text-[12px]" />}
       <Panel variant="strip" id="Account" title="Account" className="mb-5">
         {[
           ['NAV', `$${(nav / 1e6).toFixed(3)}M`, book ? <span key="d">P&amp;L <Delta v={(book.account.realised + book.account.unrealised) / 1000} d={1} suffix="k" /></span> : <Delta key="d" v={((nav - NAV0) / NAV0) * 100} d={2} />],
@@ -65,7 +65,7 @@ export default function Trading() {
         </button>
       </Panel>
 
-      <Panel className="mb-5" title="Holdings" eyebrow={<span title="Reduce, close or ticket a position" className="inline-flex items-center gap-1.5">Paper positions · Own: <TruthGlyph truth="dec" size={7} /> CPX-1 · U user{book && <> <Fresh quiet f={book.fresh.freshness} label={`${book.email} · ${book.fresh.label}`} /></>}</span>} bodyClass="p-0">
+      <Panel className="mb-5" title="Holdings" eyebrow={<span title="Reduce, close or ticket a position" className="inline-flex items-center gap-1.5">Paper positions · Own: <TruthGlyph truth="dec" size={7} /> CPX-1 · U user{book && <> <Fresh quiet f={book.fresh.freshness} label={`${book.email} · ${book.fresh.label}`} /></>}</span>} bodyClass="p-0 max-md:p-0">
         {holdingsEmpty ? <Empty className="m-4" title="Portfolio empty" body={book ? 'This account holds no paper positions.' : 'No paper positions. Open one with a ticket or approve a CPX-1 proposal in the Fund.'} action={book ? undefined : <Btn size="sm" variant="decision" onClick={() => setTicket({ ticker: 'VST' })}>New paper order</Btn>} /> : <PositionsTable live={book?.account.positions} liveNav={book?.account.nav} onReduce={reducePosition} onTicket={(t) => setTicket({ ticker: t })} onInspect={(t) => inspect({ kind: 'security', id: t, label: t })} />}
       </Panel>
 
@@ -86,15 +86,15 @@ export default function Trading() {
         </div>
       </Row>
 
-      <Panel title="Post-trade review" eyebrow={<>Fill vs arrival · simulated {mock ? <Fresh quiet f="illustrative" label={mockDeskLabel} /> : live && <Fresh quiet f="illustrative" label="Arrival prices illustrative" />}</>} bodyClass="p-0">
-        <div className="grid h-8 grid-cols-[90px_70px_1fr_90px_90px_90px_1fr] items-center gap-3 border-b border-line px-4 text-[11px] font-medium text-dim"><span>Order</span><span>Ticker</span><span>Origin</span><span className="text-right">Fill ($)</span><span className="text-right">Arrival ($)</span><span className="text-right">Slippage</span><span>Review</span></div>
+      <Panel title="Post-trade review" eyebrow={<>Fill vs arrival · simulated {mock ? <Fresh quiet f="illustrative" label={mockDeskLabel} /> : live && <Fresh quiet f="illustrative" label="Arrival prices illustrative" />}</>} bodyClass="p-0 max-md:overflow-x-auto max-md:p-0">
+        <div className="grid h-8 grid-cols-[90px_70px_1fr_90px_90px_90px_1fr] items-center gap-3 border-b border-line px-4 text-[11px] font-medium text-dim max-md:w-max max-md:min-w-full max-md:grid-cols-[90px_70px_120px_80px_80px_70px_120px] max-md:pl-0"><span className="max-md:sticky max-md:left-0 max-md:z-[1] max-md:flex max-md:h-full max-md:items-center max-md:bg-panel max-md:pl-4">Order</span><span>Ticker</span><span>Origin</span><span className="text-right">Fill ($)</span><span className="text-right">Arrival ($)</span><span className="text-right">Slippage</span><span>Review</span></div>
         {fills.length === 0 && <div className="p-4 text-[12px] text-mute">No fills yet.</div>}
         {fills.map((o) => {
           const arrival = mock ? mockPx(o.ticker) : lastPx(o.ticker)
           const slip = ((o.fillPx! - arrival) / arrival) * 10000 * (o.side === 'Buy' || o.side === 'Cover' ? 1 : -1)
           return (
-            <div key={o.id} className="grid grid-cols-[90px_70px_1fr_90px_90px_90px_1fr] items-center gap-3 border-b border-line-soft px-4 py-2 text-[12px]">
-              <span className="font-mono text-[10.5px] text-dim">{o.id}</span><span className="font-mono">{o.ticker}</span>
+            <div key={o.id} className="grid grid-cols-[90px_70px_1fr_90px_90px_90px_1fr] items-center gap-3 border-b border-line-soft px-4 py-2 text-[12px] max-md:w-max max-md:min-w-full max-md:grid-cols-[90px_70px_120px_80px_80px_70px_120px] max-md:pl-0">
+              <span className="font-mono text-[10.5px] text-dim max-md:sticky max-md:left-0 max-md:z-[1] max-md:-my-2 max-md:self-stretch max-md:flex max-md:items-center max-md:bg-panel max-md:pl-4 max-md:text-[12px]">{o.id}</span><span className="font-mono">{o.ticker}</span>
               <span className={cx('text-[11.5px]', o.origin === 'Model' ? 'text-dec' : 'text-mute')}>{o.origin === 'Model' ? `Model${o.note ? ` · ${o.note}` : ''}` : 'User'}</span>
               <span className="num text-right">{o.fillPx!.toFixed(2)}</span><span className="num text-right text-mute">{arrival.toFixed(2)}</span>
               <span className={cx('num text-right', Math.abs(slip) > 50 ? 'text-warn' : 'text-mute')}>{Math.abs(slip) > 200 ? 'n/a' : slip.toFixed(1)}</span>

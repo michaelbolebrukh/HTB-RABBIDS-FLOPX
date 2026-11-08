@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { useEffect, type ReactNode } from 'react'
 import { AlertTriangle, ArrowRight, Ban } from 'lucide-react'
 import type { Freshness, Truth } from '@/data/core'
 import { MONTHS, NOW_IDX, regionById } from '@/data/core'
@@ -6,6 +6,19 @@ import { OrderStatus } from './Fund'
 import { Foldable, Row } from '@/components/collapse'
 import { Btn, cx, Empty, Fresh, PageHeader, Panel, TRUTH, TruthGlyph, TruthTag, Validation } from '@/components/ui'
 import { useStore, type Store } from '@/lib/store'
+import { collapse, isCollapsed } from '@/lib/layout'
+import { isPhoneNow } from '@/lib/usePhone'
+
+/** Phone: the page runs to several screens, so its two longest foldables start folded, once per session (the reader's own toggles then stand). */
+const PHONE_FOLDED = ['State gallery', 'Chain stages']
+const PHONE_FOLD_MARK = 'flopx.m.handoff-folded'
+function usePhoneDefaultFolds() {
+  useEffect(() => {
+    if (!isPhoneNow()) return
+    try { if (sessionStorage.getItem(PHONE_FOLD_MARK)) return; sessionStorage.setItem(PHONE_FOLD_MARK, '1') } catch { return }
+    for (const id of PHONE_FOLDED) if (!isCollapsed('handoff', id)) collapse.toggle('handoff', id)
+  }, [])
+}
 import { CLAIMS, NEVER_CLAIM, SNAPSHOT } from '@/data/handoff'
 
 const ENCODING: Record<Truth, { line: ReactNode; colour: string; mark: string; stroke: string; must: string; examples: string }> = {
@@ -77,12 +90,29 @@ const SPECS: { area: string; items: [string, string][] }[] = [
 
 export default function Handoff() {
   const store = useStore()
+  usePhoneDefaultFolds()
   return (
     <div>
       <PageHeader eyebrow="System · design handoff" title="Truth system" sub="Every number or mark in FLOPX belongs to one of four truth categories, each encoded in colour, shape and line." about={<>Each category has a redundant encoding in colour, shape and line style, so the meaning survives greyscale, colour-blindness and a 30-second glance. <b className="font-medium text-bone">Hue means a truth category or a direction; orange marks only your current selection</b>; category colours appear only inside charts that carry a legend.</>} />
 
       <Foldable label="Truth categories" className="mb-6">
-      <div className="overflow-x-auto rounded-md border border-line bg-panel">
+      {/* Phone: the categories table reflows to one card per category, every column kept as a labelled line. */}
+      <div data-truth-cards className="grid grid-cols-1 gap-2 md:hidden">
+        {(Object.keys(TRUTH) as Truth[]).map((t) => (
+          <div key={t} className="rounded-md border border-line bg-panel p-3">
+            <div className="flex items-center gap-2"><TruthGlyph truth={t} size={14} /><span className="text-[16px] font-semibold tracking-tight" style={{ color: TRUTH[t].color }}>{TRUTH[t].label}</span></div>
+            <div className="mt-1 text-[12.5px] text-bone/90">{TRUTH[t].desc}</div>
+            <dl className="mt-2 grid grid-cols-[84px_minmax(0,1fr)] gap-x-3 gap-y-1 text-[12.5px]">
+              <dt className="text-dim">Colour</dt><dd className="text-mute">{ENCODING[t].colour}</dd>
+              <dt className="text-dim">Mark</dt><dd className="text-mute">{ENCODING[t].mark}</dd>
+              <dt className="text-dim">Line</dt><dd className="text-mute"><svg width="44" height="10" className="mr-2 inline-block align-middle">{ENCODING[t].line}</svg>{ENCODING[t].stroke}</dd>
+              <dt className="text-dim">Must show</dt><dd className="text-mute">Always: {ENCODING[t].must}</dd>
+              <dt className="text-dim">e.g.</dt><dd className="text-dim">{ENCODING[t].examples}</dd>
+            </dl>
+          </div>
+        ))}
+      </div>
+      <div className="overflow-x-auto rounded-md border border-line bg-panel max-md:hidden">
         <table className="w-full text-[12px]">
           <thead>
             <tr className="h-8 border-b border-line text-left text-[11px] font-medium text-dim">
@@ -110,21 +140,21 @@ export default function Handoff() {
 
       <Row cols={[1, 1]} className="mb-6">
         <Panel title="Data status" eyebrow="Independent of truth category">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-3 max-md:grid-cols-1">
             {([
               ['live', 'Streaming, < 5 min old'], ['delayed', 'Licensed delay (e.g. 15 min)'], ['historical', 'Point-in-time record'], ['stale', 'Expected update missed'],
               ['unavailable', 'Source down or never covered'], ['experimental', 'Model or coverage in trial'], ['simulated', 'Paper execution, not real'], ['illustrative', 'Fictional design data'],
-            ] as [Freshness, string][]).map(([f, d]) => <div key={f} className="flex items-center gap-3"><Fresh f={f} className="w-[110px] justify-center" /><span className="text-[11.5px] text-mute">{d}</span></div>)}
+            ] as [Freshness, string][]).map(([f, d]) => <div key={f} className="flex items-center gap-3"><Fresh f={f} className="w-[110px] justify-center" /><span className="text-[11.5px] text-mute max-md:text-[12.5px]">{d}</span></div>)}
           </div>
           <p className="mt-3 text-[11.5px] text-mute">A figure with no status label is real: observed or reported, with its source. A panel whose rows all share one status says so once, in its eyebrow or foot, as a muted note (<Fresh quiet f="illustrative" />); a row that differs from the rest keeps its own chip. The bordered chip is kept for a single headline figure.</p>
         </Panel>
         <Panel title="Validation status" eyebrow="For every forecast at every horizon">
           <div className="space-y-2.5">
-            {([['validated', 'Beats baseline out-of-sample with ≥ 12 independent windows; CI excludes zero.'], ['exploratory', 'Promising but under-sampled. Sized at half or less, manual approval required.'], ['insufficient', 'Too little history. Shown for research, never used for sizing.'], ['no-edge', 'Tested and rejected. Kept visible so it isn’t re-discovered.']] as const).map(([s, d]) => <div key={s} className="flex items-center gap-3"><span className="w-[160px]"><Validation s={s} /></span><span className="text-[11.5px] text-mute">{d}</span></div>)}
+            {([['validated', 'Beats baseline out-of-sample with ≥ 12 independent windows; CI excludes zero.'], ['exploratory', 'Promising but under-sampled. Sized at half or less, manual approval required.'], ['insufficient', 'Too little history. Shown for research, never used for sizing.'], ['no-edge', 'Tested and rejected. Kept visible so it isn’t re-discovered.']] as const).map(([s, d]) => <div key={s} className="flex items-center gap-3"><span className="w-[160px] max-md:w-[132px] max-md:shrink-0"><Validation s={s} /></span><span className="text-[11.5px] text-mute max-md:text-[12.5px]">{d}</span></div>)}
           </div>
           <p className="mt-3 text-[11.5px] text-mute">Validation icons are one ring in the badge’s colour, filled by how much evidence there is, so each status reads by fill alone: full = validated, half = exploratory, quarter = insufficient history, empty = no edge.</p>
           <div className="mt-4 border-t border-line pt-3">
-            <div className="eyebrow mb-1.5">Relationships</div>
+            <div className="eyebrow mb-1.5 max-md:text-[12px]">Relationships</div>
             <div className="flex items-center gap-3 text-[11.5px] text-mute"><span className="inline-block h-px w-6 bg-bone" />Documented tie (filing, press): fact</div>
             <div className="mt-1 flex items-center gap-3 text-[11.5px] text-mute"><span className="inline-block w-6 border-t border-dashed border-inf" />Modelled sensitivity (β, R²): association, never shown as causal</div>
           </div>
@@ -133,7 +163,17 @@ export default function Handoff() {
 
       <Row cols={[2, 1]} className="mb-8">
         <Panel title="Honest numbers" eyebrow={<Fresh f="historical" label={SNAPSHOT.short} />} bodyClass="p-0">
-          <table className="w-full text-[12px]">
+          {/* Phone: one stacked row per claim (claim, number, file, re-check), in place of the four-column table. */}
+          <ul className="divide-y divide-line-soft md:hidden">
+            {CLAIMS.map((c) => (
+              <li key={c.claim} className="px-3 py-2.5 text-[12.5px]">
+                <div className="flex items-start justify-between gap-3"><span className="font-medium">{c.claim}</span><span className="mt-1 flex shrink-0 items-center gap-1.5 text-[12px] text-dim" title={c.recheck ? 'Re-check before demo' : 'No re-check needed'}><span className={cx('inline-block h-2 w-2 rounded-full', c.recheck ? 'bg-warn' : 'border border-line2')} />{c.recheck ? 'Re-check' : 'No re-check'}</span></div>
+                <div className="num mt-0.5 text-[12px] text-mute">{c.number}</div>
+                <div className="mt-0.5 font-mono text-[12px] break-all text-dim">{c.file}</div>
+              </li>
+            ))}
+          </ul>
+          <table className="w-full text-[12px] max-md:hidden">
             <thead>
               <tr className="h-8 border-b border-line text-[11px] text-dim">
                 {['Claim', 'Number', 'File', ''].map((h, i) => <th key={i} className="px-3 text-left font-medium" title={i === 3 ? 'Re-check before demo' : undefined}>{h}</th>)}
@@ -152,7 +192,7 @@ export default function Handoff() {
           </table>
         </Panel>
         <Panel variant="rail" title="Never claim">
-          {NEVER_CLAIM.map((n) => <div key={n} title={n} className="flex gap-2 py-1.5 text-[12px] text-mute"><span className="shrink-0 text-warn" aria-hidden>✕</span><span className="truncate">{n.split(':')[0]}</span></div>)}
+          {NEVER_CLAIM.map((n) => <div key={n} title={n} className="flex gap-2 py-1.5 text-[12px] text-mute"><span className="shrink-0 text-warn" aria-hidden>✕</span><span className="truncate max-md:whitespace-normal">{n.split(':')[0]}</span></div>)}
         </Panel>
       </Row>
 
@@ -164,7 +204,7 @@ export default function Handoff() {
           <div key={s.name} className="flex flex-col rounded-md border border-line bg-panel p-4">
             <div className="mb-3 flex items-center justify-between"><span className="text-[13px] font-semibold">{s.name}</span><span className="num text-[10px] text-dim">{String(i + 1).padStart(2, '0')}</span></div>
             <div className="mb-3 flex min-h-[40px] items-center rounded-[4px] border border-line/60 bg-ink px-3 py-2">{s.demo}</div>
-            <div className="mt-auto flex items-center justify-between"><span className="text-[11px] text-dim">{s.where}</span><button onClick={() => s.go(store)} className="flex cursor-pointer items-center gap-1 text-[11.5px] text-mute hover:text-bone">Show me <ArrowRight size={11} /></button></div>
+            <div className="mt-auto flex items-center justify-between"><span className="text-[11px] text-dim max-md:text-[12px]">{s.where}</span><button onClick={() => s.go(store)} className="flex cursor-pointer items-center gap-1 text-[11.5px] text-mute hover:text-bone max-md:min-h-11 max-md:text-[13px]">Show me <ArrowRight size={11} /></button></div>
           </div>
         ))}
       </div>

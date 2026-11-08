@@ -93,9 +93,9 @@ export const TOURS: Record<TourId, Tour> = {
     tone: 'inf',
     beats: [
       { id: 'gr-invisible', phase: 'invisible', title: 'The market nobody can see', target: TICKER, duration: D + 3000, run: toOverview, prefer: ['below'], width: 660 },
-      { id: 'gr-analysis', phase: 'analysis', title: 'Four classes of statement', target: [{ sel: 'main span.font-serif', text: 'Observed', closest: '.grid' }], duration: D + 2000, run: toHandoff, prefer: ['below'], width: 860 },
+      { id: 'gr-analysis', phase: 'analysis', title: 'Four classes of statement', target: [{ sel: 'main span.font-serif', text: 'Observed', closest: '.grid' }, { sel: 'main [data-truth-cards]', phone: true }], duration: D + 2000, run: toHandoff, prefer: ['below'], width: 860 },
       { id: 'gr-factors', phase: 'modelling', title: 'Six factors, one score', target: [eyebrow('Top drivers of the inference'), { sel: 'main h2', nth: 0, up: 3 }], duration: D + 3000, run: toXrayFactors, prefer: ['left'], width: 660 },
-      { id: 'gr-reveal', phase: 'modelling', title: 'Raw to inferred', target: [{ sel: 'input[aria-label="Raw to inferred"]', up: 1 }], duration: D + 2000, run: toXrayReveal, prefer: ['right'] },
+      { id: 'gr-reveal', phase: 'modelling', title: 'Raw to inferred', target: [{ sel: 'input[aria-label="Raw to inferred"]', up: 1 }, { sel: 'input[aria-label="Observed to inferred"]', up: 1, phone: true }], duration: D + 2000, run: toXrayReveal, prefer: ['right'] },
       { id: 'gr-estimation', phase: 'estimation', title: 'Tested, and honest about it', target: [panel('Does compute data improve predictions?')], duration: D + 3000, run: toResearch, prefer: ['above', 'below'], width: 720 },
       { id: 'gr-anomaly', phase: 'decision', title: 'An anomaly, with its evidence', target: [{ sel: 'main .rounded-md.p-3', text: 'detected', nth: 0 }, { sel: 'main h2', nth: 0, up: 3 }], duration: D, run: toXrayAnomaly, prefer: ['left'] },
       { id: 'gr-scenario', phase: 'decision', title: 'A scenario changes only estimates', target: [eyebrow('Estimated quantity', 1), { sel: 'main h2', nth: 0, up: 3 }], duration: D, run: toXrayScenario, prefer: ['left'] },
@@ -112,7 +112,7 @@ export const TOURS: Record<TourId, Tour> = {
     beats: [
       { id: 'hrt-retrieval', phase: 'retrieval', title: 'What FLOPX retrieved tonight', target: QUOTES_HEAD, duration: D + 2000, run: toMarkets, prefer: ['below', 'above'], width: 780 },
       { id: 'hrt-sources', phase: 'retrieval', title: 'Every source, its licence, its last observation', target: [panel('Price distribution')], duration: D + 3000, run: toMarkets, prefer: ['above', 'right'], width: 720 },
-      { id: 'hrt-eval', phase: 'estimation', title: 'Edge in 0 of 24 is a result', target: [{ sel: 'main div.rounded-md', text: 'forecast tests', nth: 0 }], duration: D + 2000, run: (s) => { s.setInspector(null); s.setFund({ tab: 'evaluation' }); s.navigate('fund') }, prefer: ['below'], width: 860 },
+      { id: 'hrt-eval', phase: 'estimation', title: 'Edge in 0 of 24 is a result', target: [{ sel: 'main div.rounded-md', text: 'forecast tests', nth: 0 }, { sel: 'main h3', text: 'forecast tests', closest: 'section', phone: true }], duration: D + 2000, run: (s) => { s.setInspector(null); s.setFund({ tab: 'evaluation' }); s.navigate('fund') }, prefer: ['below'], width: 860 },
       { id: 'hrt-forecast', phase: 'estimation', title: 'The forecast refuses when history is thin', target: [{ sel: 'main .rounded-md.border.p-3', text: 'Timing gate' }, panel('Scheduling scenarios')], duration: D + 2000, run: toProcurement, prefer: ['left', 'above'] },
       { id: 'hrt-signal', phase: 'decision', title: 'Signal to proposal', target: [panel('Features driving this forecast')], duration: D, run: (s) => { s.setInspector(null); s.setFund({ tab: 'signals', signal: 'sig-ercot', horizon: '1M' }); s.navigate('fund') }, prefer: ['right', 'left'] },
       { id: 'hrt-send', phase: 'decision', title: 'A person presses Send', target: [{ sel: 'main button', text: 'Send to paper', nth: 0, closest: '.rounded-md' }, { sel: 'main .rounded-md.border.bg-panel', nth: 1 }], duration: D + 3000, run: (s) => { s.setInspector(null); s.setFund({ tab: 'decisions' }); s.navigate('fund') }, prefer: ['right', 'left'] },
@@ -128,14 +128,14 @@ export const TOURS: Record<TourId, Tour> = {
     beats: [
       { id: 'mv-invisible', phase: 'invisible', title: 'The market nobody can see', target: TICKER, duration: D + 3000, run: toOverview, prefer: ['below'], width: 660 },
       { id: 'mv-retrieval', phase: 'retrieval', title: 'What was retrieved', target: QUOTES_HEAD, duration: D + 2000, run: toMarkets, prefer: ['below', 'above'], width: 780 },
-      { id: 'mv-analysis', phase: 'analysis', title: 'Four classes of statement', target: [{ sel: 'main span.font-serif', text: 'Observed', closest: '.grid' }], duration: D + 2000, run: toHandoff, prefer: ['below'], width: 860 },
+      { id: 'mv-analysis', phase: 'analysis', title: 'Four classes of statement', target: [{ sel: 'main span.font-serif', text: 'Observed', closest: '.grid' }, { sel: 'main [data-truth-cards]', phone: true }], duration: D + 2000, run: toHandoff, prefer: ['below'], width: 860 },
       { id: 'mv-factors', phase: 'modelling', title: 'Six factors, one score', target: [eyebrow('Top drivers of the inference'), { sel: 'main h2', nth: 0, up: 3 }], duration: D + 3000, run: toXrayFactors, prefer: ['left'], width: 660 },
-      { id: 'mv-reveal', phase: 'modelling', title: 'Raw to inferred', target: [{ sel: 'input[aria-label="Raw to inferred"]', up: 1 }], duration: D + 2000, run: toXrayReveal, prefer: ['right'] },
+      { id: 'mv-reveal', phase: 'modelling', title: 'Raw to inferred', target: [{ sel: 'input[aria-label="Raw to inferred"]', up: 1 }, { sel: 'input[aria-label="Observed to inferred"]', up: 1, phone: true }], duration: D + 2000, run: toXrayReveal, prefer: ['right'] },
       { id: 'mv-estimation', phase: 'estimation', title: 'Tested against a baseline', target: [panel('Does compute data improve predictions?')], duration: D + 3000, run: toResearch, prefer: ['above', 'below'], width: 720 },
       { id: 'mv-forecast', phase: 'estimation', title: 'What FLOPX refuses to say', target: [{ sel: 'main .rounded-md.border.p-3', text: 'Timing gate' }, panel('Scheduling scenarios')], duration: D + 2000, run: toProcurement, prefer: ['left', 'above'] },
       // The agent beat's answer takes the backend 6 to 12 s, so its two requests start here, one beat early.
       { id: 'mv-loop', phase: 'decision', title: 'The loop closes on the brief', target: [panel('What changed')], duration: D + 2000, run: (s) => { toOverview(s); void prefetchAsk(AGENT_QUESTION) }, prefer: ['left'], width: 560 },
-      { id: 'mv-agent', phase: 'decision', title: 'The agent answers from engine tools', target: [{ sel: 'main h3', text: 'Texas', closest: 'section' }, panel('Engine tools')], duration: D + 4000, run: (s) => { s.setInspector(null); void prefetchAsk(AGENT_QUESTION); s.navigate('agents', { q: AGENT_QUESTION }) }, prefer: ['left'], await: { ready: () => agentAnswerSettled(), capMs: AGENT_WAIT_CAP_MS } },
+      { id: 'mv-agent', phase: 'decision', title: 'The agent answers from engine tools', target: [{ sel: 'main h3', text: 'Texas', closest: 'section' }, panel('Engine tools'), { sel: 'main article', nth: 0, phone: true }, { sel: 'main form', phone: true }], duration: D + 4000, run: (s) => { s.setInspector(null); void prefetchAsk(AGENT_QUESTION); s.navigate('agents', { q: AGENT_QUESTION }) }, prefer: ['left'], await: { ready: () => agentAnswerSettled(), capMs: AGENT_WAIT_CAP_MS } },
       { id: 'mv-review', phase: 'review', title: 'What is real today', target: null, duration: D + 6000, run: toOverview, width: 940 },
     ],
   },

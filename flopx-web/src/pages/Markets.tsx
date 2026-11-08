@@ -56,7 +56,7 @@ export default function Markets() {
   const terms = PROVIDER_TYPES.map((t) => ({ t, o: offers.find((o) => providerById(o.provider)?.type === t) })).filter((x) => x.o)
 
   return (
-    <div>
+    <div className="max-md:[&_[data-fresh]]:whitespace-normal">
       <PageHeader
         eyebrow={<span title={`Provider APIs and marketplaces · as of ${AS_OF}`}>Provider APIs and marketplaces</span>}
         title="GPU rental markets"
@@ -98,7 +98,7 @@ export default function Markets() {
             {byRegion.map(({ r, med, prices, known }) => {
               const prem = ((med - globalMed) / globalMed) * 100
               return (
-                <button key={r.id} onClick={() => known && inspect({ kind: 'region', id: r.id, label: r.name })} title={r.name} className="grid w-full cursor-pointer grid-cols-[96px_1fr_56px_48px] items-center gap-2 text-left hover:bg-hover">
+                <button key={r.id} onClick={() => known && inspect({ kind: 'region', id: r.id, label: r.name })} title={r.name} className="grid w-full cursor-pointer grid-cols-[96px_1fr_56px_48px] items-center gap-2 text-left hover:bg-hover max-md:min-h-11 max-md:grid-cols-[96px_1fr_58px_64px] max-md:[&_.num]:text-[12px] max-md:[&>span:first-child]:text-[12.5px]">
                   <span className="truncate text-[11.5px] text-mute">{r.name.split(' (')[0]}{r.quality === 'stale' && <span className="ml-1 text-warn">*</span>}</span>
                   <span className="relative h-3">
                     <span className="absolute inset-y-0 left-1/2 w-px bg-line2" />
@@ -179,10 +179,10 @@ export default function Markets() {
         title="Offers"
         eyebrow={<span className="flex items-center gap-1.5" title="Click a row to inspect the provider">Observed quotes<Fn n={2} note={NOTES[1]} />{offersFresh && <Fresh quiet f={offersFresh} label={offers.some((o) => o.freshness !== offersFresh) ? `${freshLabel(offersFresh)} unless a row says otherwise` : undefined} />}</span>}
         right={
-          <div className="flex flex-wrap items-center gap-2">
-            <select value={contract} onChange={(e) => setContract(e.target.value as typeof contract)} className="h-7 rounded-[4px] border border-line2 bg-ink px-2 text-[11.5px]"><option value="all">All contracts</option>{['On-demand', 'Spot', '1-mo reserved', '1-yr reserved'].map((c) => <option key={c}>{c}</option>)}</select>
-            <select value={provider} onChange={(e) => setProvider(e.target.value)} className="h-7 rounded-[4px] border border-line2 bg-ink px-2 text-[11.5px]"><option value="all">All providers</option>{PROVIDERS.filter((p) => OFFERS.some((o) => o.provider === p.id)).map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}</select>
-            <select value={region} onChange={(e) => setRegion(e.target.value)} className="h-7 rounded-[4px] border border-line2 bg-ink px-2 text-[11.5px]"><option value="all">All regions</option>{[...new Map(OFFERS.map((o) => [o.region, o])).values()].map((o) => ({ id: o.region, name: offerRegionName(o) })).sort((a, b) => a.name.localeCompare(b.name)).map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}</select>
+          <div className="flex flex-wrap items-center gap-2 max-md:w-full">
+            <select value={contract} onChange={(e) => setContract(e.target.value as typeof contract)} className="h-7 rounded-[4px] border border-line2 bg-ink px-2 text-[11.5px] max-md:h-11 max-md:min-w-0 max-md:flex-1 max-md:basis-[40%] max-md:text-[16px]"><option value="all">All contracts</option>{['On-demand', 'Spot', '1-mo reserved', '1-yr reserved'].map((c) => <option key={c}>{c}</option>)}</select>
+            <select value={provider} onChange={(e) => setProvider(e.target.value)} className="h-7 rounded-[4px] border border-line2 bg-ink px-2 text-[11.5px] max-md:h-11 max-md:min-w-0 max-md:flex-1 max-md:basis-[40%] max-md:text-[16px]"><option value="all">All providers</option>{PROVIDERS.filter((p) => OFFERS.some((o) => o.provider === p.id)).map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}</select>
+            <select value={region} onChange={(e) => setRegion(e.target.value)} className="h-7 rounded-[4px] border border-line2 bg-ink px-2 text-[11.5px] max-md:h-11 max-md:min-w-0 max-md:flex-1 max-md:basis-[40%] max-md:text-[16px]"><option value="all">All regions</option>{[...new Map(OFFERS.map((o) => [o.region, o])).values()].map((o) => ({ id: o.region, name: offerRegionName(o) })).sort((a, b) => a.name.localeCompare(b.name)).map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}</select>
             <Seg size="sm" value={ic} onChange={setIc} options={[{ id: 'all', label: 'Any fabric' }, { id: 'ib', label: 'InfiniBand' }]} />
           </div>
         }
@@ -191,10 +191,10 @@ export default function Markets() {
         {offers.length === 0 ? <Empty className="m-4" title="No offers match these filters" body="Try another region or contract type. FLOPX shows only offers it has actually observed." /> : (
           <div className="max-h-[480px] overflow-auto">
             {terms.length > 0 && <div className="border-b border-line-soft px-3 py-1.5 text-[11px] text-dim">SLA · egress by provider type: {terms.map(({ t, o }, k) => <span key={t}>{k > 0 && '; '}{t} <span className="num text-mute">{o!.sla} · {o!.egress}</span></span>)}. Observed time is {offersFresh ? freshLabel(offersFresh).toLowerCase() : 'live'} unless marked.</div>}
-            <table className="w-full text-[12px]">
-              <thead className="sticky top-0 bg-panel">
+            <table className="w-full text-[12px] max-md:text-[12.5px]">
+              <thead className="sticky top-0 bg-panel max-md:z-[2]">
                 <tr className="h-8 border-b border-line text-[11px] whitespace-nowrap text-dim">
-                  {['Provider', 'Region', 'Contract', 'Fabric', 'Node (GPUs)', 'Availability', 'Observed', '$/GPU-hr'].map((h, i) => <th key={h} title={h === 'Observed' ? 'Status as the eyebrow unless marked' : undefined} className={cx('px-3 font-medium', i === 7 || i === 4 ? 'text-right' : 'text-left')}>{h}</th>)}
+                  {['Provider', 'Region', 'Contract', 'Fabric', 'Node (GPUs)', 'Availability', 'Observed', '$/GPU-hr'].map((h, i) => <th key={h} title={h === 'Observed' ? 'Status as the eyebrow unless marked' : undefined} className={cx('px-3 font-medium', i === 7 || i === 4 ? 'text-right' : 'text-left', i === 0 && 'max-md:sticky max-md:left-0 max-md:z-[1] max-md:bg-panel')}>{h}</th>)}
                 </tr>
               </thead>
               <tbody>
@@ -202,8 +202,8 @@ export default function Markets() {
                   const p = providerById(o.provider)!
                   const kind = o.note ?? p.type
                   return (
-                    <tr key={o.id} onClick={() => inspect({ kind: 'provider', id: p.id, label: p.name })} title={o.detail} className="h-9 cursor-pointer border-b border-line-soft hover:bg-hover">
-                      <td className="px-3 py-1.5 whitespace-nowrap">{p.name}{!p.name.toLowerCase().includes(kind.toLowerCase()) && <> <span className="text-[10.5px] text-dim">{kind}</span></>}</td>
+                    <tr key={o.id} onClick={() => inspect({ kind: 'provider', id: p.id, label: p.name })} title={o.detail} className="h-9 cursor-pointer border-b border-line-soft hover:bg-hover max-md:h-11">
+                      <td className="px-3 py-1.5 whitespace-nowrap max-md:sticky max-md:left-0 max-md:z-[1] max-md:max-w-[132px] max-md:truncate max-md:bg-panel max-md:shadow-[1px_0_0_var(--color-line-soft)]">{p.name}{!p.name.toLowerCase().includes(kind.toLowerCase()) && <> <span className="text-[10.5px] text-dim">{kind}</span></>}</td>
                       <td className="px-3 py-1.5 whitespace-nowrap text-mute">{offerRegionName(o).split(' (')[0]}</td>
                       <td className="px-3 py-1.5 whitespace-nowrap">{o.contract}</td>
                       <td className="px-3 py-1.5 whitespace-nowrap text-mute">{o.interconnect}</td>
@@ -220,7 +220,7 @@ export default function Markets() {
         )}
       </Panel>
       <Notes items={NOTES} />
-      <div className="mt-3 flex justify-end"><Btn size="sm" variant="ghost" onClick={() => navigate('procurement', { gpu })}>Plan a procurement with these offers <ArrowRight size={12} /></Btn></div>
+      <div className="mt-3 flex justify-end"><Btn size="sm" variant="ghost" className="max-md:min-h-11" onClick={() => navigate('procurement', { gpu })}>Plan a procurement with these offers <ArrowRight size={12} /></Btn></div>
     </div>
   )
 }
@@ -309,9 +309,9 @@ function WorkloadBox() {
   const opts = OFFERS.filter((o) => o.gpu === parsed.gpu && (!parsed.ib || o.interconnect === 'InfiniBand 3.2T') && o.available !== 'Sold out' && o.contract !== '1-yr reserved').sort((a, b) => a.price - b.price).slice(0, 3)
   return (
     <Panel title="Describe a workload" eyebrow={<><TruthTag truth="fct" compact /> Rental recommendation</>} right={<span className="text-[11px] text-dim">Not an equity trade</span>}>
-      <textarea value={text} onChange={(e) => { setText(e.target.value); setRun(false) }} rows={3} className="w-full resize-none rounded-[4px] border border-line2 bg-ink p-2.5 text-[12px] leading-snug outline-none focus:border-mute" />
+      <textarea value={text} onChange={(e) => { setText(e.target.value); setRun(false) }} rows={3} className="w-full resize-none rounded-[4px] border border-line2 bg-ink p-2.5 text-[12px] leading-snug outline-none focus:border-mute max-md:text-[16px]" />
       <div className="mt-1.5 text-[11px] text-dim">Parsed: {parsed.n} × {GPUS.find((g) => g.id === parsed.gpu)!.name} · {parsed.weeks} wk · {parsed.ib ? 'InfiniBand required' : 'any fabric'}</div>
-      <Btn size="sm" variant="primary" className="mt-2" onClick={() => setRun(true)}>Compare options</Btn>
+      <Btn size="sm" variant="primary" className="mt-2 max-md:min-h-11 max-md:px-4" onClick={() => setRun(true)}>Compare options</Btn>
       {run && (
         <div className="fade-in mt-3 space-y-1.5">
           {opts.length === 0 && <div className="text-[12px] text-mute">No observed offers meet these constraints.</div>}

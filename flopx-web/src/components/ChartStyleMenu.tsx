@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
+import { useIsPhone } from '@/lib/usePhone'
+import { cx, SHEET_MENU, SheetBackdrop, SheetHandle } from './ui'
 import { DEFAULT_CHART_STYLE, useChartStyleControls, type ChartStyle } from '@/lib/chartStyle'
 
 type Choice<K extends keyof ChartStyle> = { key: K; label: string; options: { value: ChartStyle[K]; label: string }[] }
@@ -19,6 +21,8 @@ export function ChartStyleMenu() {
   const { style, set, reset } = useChartStyleControls()
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
+  const phone = useIsPhone()
+  const sheetRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (!open) return
     const close = (e: MouseEvent) => { if (!ref.current?.contains(e.target as Node)) setOpen(false) }
@@ -34,16 +38,18 @@ export function ChartStyleMenu() {
       <button
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        className={'flex h-7 cursor-pointer items-center gap-1.5 rounded-ctl border px-2.5 text-[11.5px] font-medium transition-colors duration-[120ms] hover:bg-hover hover:text-bone ' + (open ? 'border-line2 bg-raise text-bone' : 'border-line text-mute')}
+        className={'flex h-7 cursor-pointer items-center gap-1.5 rounded-ctl border px-2.5 text-[11.5px] font-medium transition-colors duration-[120ms] hover:bg-hover hover:text-bone max-md:h-11 max-md:px-3 ' + (open ? 'border-line2 bg-raise text-bone' : 'border-line text-mute')}
       >
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.3"><path d="M1 10.5h10M2.5 8l2.5-3 2 2 3-4.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
         Charts{changed > 0 && <span className="num text-[10.5px] text-bone" aria-label={`${changed} changed`}>· {changed}</span>}
       </button>
+      {open && phone && <SheetBackdrop onClose={() => setOpen(false)} z="z-[96]" />}
       {open && (
-        <div role="dialog" aria-label="Chart style" className="absolute top-[calc(100%+6px)] right-0 z-[60] w-[280px] rounded-menu border border-line2 bg-panel p-3 shadow-[0_12px_32px_rgba(0,0,0,0.3)]">
+        <div ref={sheetRef} role="dialog" aria-label="Chart style" className={cx('absolute top-[calc(100%+6px)] right-0 z-[60] w-[280px] rounded-menu border border-line2 bg-panel p-3 shadow-[0_12px_32px_rgba(0,0,0,0.3)]', SHEET_MENU, phone && 'm-sheet')}>
+          {phone && <SheetHandle sheet={sheetRef} onClose={() => setOpen(false)} />}
           <div className="mb-2.5 flex items-center justify-between">
             <span className="text-[11.5px] font-medium text-dim">Chart style</span>
-            <button onClick={reset} disabled={!changed} className="cursor-pointer text-[11px] text-mute hover:text-bone disabled:cursor-default disabled:opacity-40">Reset</button>
+            <button onClick={reset} disabled={!changed} className="cursor-pointer text-[11px] text-mute hover:text-bone disabled:cursor-default disabled:opacity-40 max-md:min-h-11 max-md:px-2">Reset</button>
           </div>
           <div className="space-y-2">
             {CHOICES.map((c) => (
@@ -58,7 +64,7 @@ export function ChartStyleMenu() {
                         role="radio"
                         aria-checked={on}
                         onClick={() => set({ [c.key]: o.value } as Partial<ChartStyle>)}
-                        className={'flex-1 cursor-pointer rounded-[2px] py-0.5 text-[11px] transition-colors duration-[120ms] ' + (on ? 'bg-raise text-bone' : 'text-mute hover:text-bone')}
+                        className={'flex-1 cursor-pointer rounded-[2px] py-0.5 text-[11px] transition-colors duration-[120ms] max-md:min-h-10 ' + (on ? 'bg-raise text-bone' : 'text-mute hover:text-bone')}
                       >
                         {o.label}
                       </button>

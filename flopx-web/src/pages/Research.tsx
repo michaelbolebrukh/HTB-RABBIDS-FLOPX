@@ -37,7 +37,7 @@ export default function Research() {
       <PageHeader title="Forecast evaluation" sub="Derived indicators, tested honestly." about="Explore the Compute Pressure Index against observed prices and returns, then inspect forecasts, errors, failures and low-information periods. Every relationship shown here is an estimated association." />
 
       <Row cols={[1.5, 1]} className="mb-5">
-        <Panel title="Compute Pressure Index" eyebrow={<><TruthGlyph truth="inf" size={7} />Inferred · with forecast band<Fn n={1} note={NOTES[0]} /> <Fresh quiet f="illustrative" label={seriesScaled ? SCALED_SHORT_LABEL : undefined} /></>} right={<select value={idx} onChange={(e) => setIdx(e.target.value)} className="h-7 rounded-[4px] border border-line2 bg-ink px-2 text-[11.5px]"><option value="global">Global (MW-weighted)</option>{REGIONS.filter((r) => r.quality !== 'none').map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}</select>}>
+        <Panel title="Compute Pressure Index" eyebrow={<><TruthGlyph truth="inf" size={7} />Inferred · with forecast band<Fn n={1} note={NOTES[0]} /> <Fresh quiet f="illustrative" label={seriesScaled ? SCALED_SHORT_LABEL : undefined} /></>} right={<select value={idx} onChange={(e) => setIdx(e.target.value)} className="h-7 rounded-[4px] border border-line2 bg-ink px-2 text-[11.5px] max-md:h-11 max-md:max-w-full max-md:text-[16px]"><option value="global">Global (MW-weighted)</option>{REGIONS.filter((r) => r.quality !== 'none').map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}</select>}>
           <TimeChart labels={MONTHS} height={230} nowIdx={NOW_IDX} legend shade={LOW_INFO.map(([a, c, l]) => [a, c, l])} series={[
             { id: 'cpi', label: 'CPI (inferred)', values: series.map((v, i) => (i <= NOW_IDX ? v : null)), color: 'var(--color-inf)', width: 2, band: { lo: series.map((v, i) => (i <= NOW_IDX ? v - unc : null)), hi: series.map((v, i) => (i <= NOW_IDX ? v + unc : null)), hatched: true } },
             { id: 'fc', label: 'Forecast', values: series.map((v, i) => (i >= NOW_IDX ? v : null)), color: 'var(--color-fct)', style: 'dashed', band: b },
@@ -61,7 +61,7 @@ export default function Research() {
         </Panel>
       </Row>
 
-      <div className="mb-3 flex items-center justify-between"><h2 className="text-[16px] font-semibold tracking-tight">Forecast tests</h2><Seg value={hz} onChange={setHz} options={[{ id: '1W', label: '1W' }, { id: '1M', label: '1M' }, { id: '3M', label: '3M' }]} /></div>
+      <div className="mb-3 flex items-center justify-between max-md:flex-wrap max-md:gap-2"><h2 className="text-[16px] font-semibold tracking-tight">Forecast tests</h2><Seg value={hz} onChange={setHz} options={[{ id: '1W', label: '1W' }, { id: '1M', label: '1M' }, { id: '3M', label: '3M' }]} /></div>
       <div className="space-y-5">
         <ModelComparison horizon={hz} />
         <IcSharpe horizon={hz} />
@@ -123,14 +123,14 @@ function HorizonChart({ rows }: { rows: HorizonRow[] }) {
           { id: 'fc', label: 'Forecast · 80% range', values: win(GLOBAL_CPI).map((v, i) => (i >= HIST ? v : null)), color: 'var(--color-g3)', style: 'dashed', width: 2,
             band: { lo: win(globalBand.lo).map((v, i) => (i >= HIST ? v : null)), hi: win(globalBand.hi).map((v, i) => (i >= HIST ? v : null)) } },
         ]} />
-      <div className="mt-3 grid grid-cols-2 gap-x-6 gap-y-2 border-t border-line-soft pt-3 text-[12px] lg:grid-cols-4">
+      <div className="mt-3 grid grid-cols-2 gap-x-6 gap-y-2 border-t border-line-soft pt-3 text-[12px] lg:grid-cols-4 max-md:grid-cols-1">
         {rows.map((r) => (
           <div key={r.h} className="min-w-0">
             <div className="flex items-baseline gap-2"><span className="num text-bone">+{r.h}M</span><span className="text-[11px] text-dim">{r.month}</span><span className="num ml-auto text-[13px]" style={{ color: 'var(--color-g3)' }}>{r.mean.toFixed(1)}</span></div>
             <div className="mt-0.5 flex items-center gap-1.5 text-[11px]">
               <span className={cx('size-1.5 shrink-0 rounded-full', dot[r.check.tone])} />
               <span className={cx('truncate', r.check.tone === 'none' ? 'text-dim' : 'text-mute')}>{r.check.text}</span>
-              {r.check.note && <span className="text-[10.5px] text-warn">{r.check.note}</span>}
+              {r.check.note && <span className="text-[10.5px] text-warn max-md:text-[12px]">{r.check.note}</span>}
               <span className="num ml-auto shrink-0 text-dim">{r.lo.toFixed(1)}–{r.hi.toFixed(1)}</span>
             </div>
           </div>
@@ -205,7 +205,7 @@ function LagChart({ lags }: { lags: { l: number; r: number; ci: number }[] }) {
           )
         })}
       </svg>
-      <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-[10.5px] text-mute">
+      <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-[10.5px] text-mute max-md:text-[12px]">
         <span className="flex items-center gap-1.5"><span className="inline-block size-2.5 bg-cat1" />Interval excludes zero</span>
         <span className="flex items-center gap-1.5"><span className="inline-block size-2.5 border border-mute/60" style={{ backgroundImage: 'repeating-linear-gradient(135deg, color-mix(in oklab, var(--color-mute) 45%, transparent) 0 1.5px, transparent 1.5px 4px)' }} />Interval includes zero</span>
         <span className="text-dim">Shade = strength of r</span>

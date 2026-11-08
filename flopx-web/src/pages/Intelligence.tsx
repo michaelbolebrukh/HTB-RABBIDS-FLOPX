@@ -94,9 +94,9 @@ export function snapshotAge(iso: string, now: Date = new Date()): string {
 function LayerHeading({ n, title, sub }: { n: number; title: string; sub: ReactNode }) {
   return (
     <div className="mb-3 flex flex-wrap items-baseline gap-x-3 gap-y-1 border-b border-line pb-2">
-      <span className="text-[11px] font-medium text-dim">Layer {n}</span>
+      <span className="text-[11px] font-medium text-dim max-md:text-[12px]">Layer {n}</span>
       <h2 className="text-[16px] leading-tight font-semibold text-bone">{title}</h2>
-      <span className="text-[11.5px] text-dim">{sub}</span>
+      <span className="text-[11.5px] text-dim max-md:text-[12px]">{sub}</span>
     </div>
   )
 }

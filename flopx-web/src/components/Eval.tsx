@@ -59,12 +59,12 @@ export function ModelComparison({ horizon }: { horizon: HorizonId }) {
   const maxHit = 0.7
   const hzLabel = live && meta.horizonDays ? `${horizon} = ${meta.horizonDays[horizon]} trading days` : `${horizon} horizon`
   return (
-    <Panel title="Does compute data improve predictions?" eyebrow={<>Baseline vs + compute vs + news events {loaded ? <EvalFresh backend /> : <Fresh quiet f="unavailable" label="Not loaded · awaiting the FLOPX evaluation" />}</>} right={<span className="text-[11px] text-dim" title={live ? `Backend harness, ${basisCaption()}` : 'The FLOPX evaluation has not answered yet; no figure is shown until it does'}>{hzLabel} · {loaded ? meta.scope : NOT_LOADED}</span>}>
-      <div className="grid h-8 grid-cols-[1.6fr_repeat(5,minmax(0,1fr))_auto] items-center gap-x-3 border-b border-line text-[11px] font-medium text-dim">
+    <Panel bodyClass="max-md:overflow-x-auto" title="Does compute data improve predictions?" eyebrow={<>Baseline vs + compute vs + news events {loaded ? <EvalFresh backend /> : <Fresh quiet f="unavailable" label="Not loaded · awaiting the FLOPX evaluation" />}</>} right={<span className="text-[11px] text-dim" title={live ? `Backend harness, ${basisCaption()}` : 'The FLOPX evaluation has not answered yet; no figure is shown until it does'}>{hzLabel} · {loaded ? meta.scope : NOT_LOADED}</span>}>
+      <div className="grid h-8 grid-cols-[1.6fr_repeat(5,minmax(0,1fr))_auto] items-center gap-x-3 border-b border-line text-[11px] font-medium text-dim max-md:min-w-[600px] max-md:[&>:first-child]:sticky max-md:[&>:first-child]:left-0 max-md:[&>:first-child]:z-[1] max-md:[&>:first-child]:bg-panel">
         <span>Model</span><span className="text-right">MAE {loaded ? meta.maeUnit : ''}</span><span>Hit rate</span><span className="text-right">IC</span><span className="text-right">Sharpe net</span><span className="text-right">n · CI</span><span>Status</span>
       </div>
       {rows.map((r, i) => (
-        <div key={r.model} className={cx('grid grid-cols-[1.6fr_repeat(5,minmax(0,1fr))_auto] items-center gap-x-3 border-b border-line-soft py-1.5', (!loaded || r.status === 'insufficient') && 'opacity-70')}>
+        <div key={r.model} className={cx('grid grid-cols-[1.6fr_repeat(5,minmax(0,1fr))_auto] items-center gap-x-3 border-b border-line-soft py-1.5 max-md:min-w-[600px] max-md:[&>:first-child]:sticky max-md:[&>:first-child]:left-0 max-md:[&>:first-child]:z-[1] max-md:[&>:first-child]:bg-panel', (!loaded || r.status === 'insufficient') && 'opacity-70')}>
           <span className="text-[12px]"><span className="num mr-2 text-[10.5px] text-dim">{String.fromCharCode(65 + i)}</span>{loaded ? r.model : ['Trailing-return baseline', '+ Compute-market data', '+ News event intensity'][i] ?? r.model}</span>
           <span className="num text-right text-[12px]">{loaded ? r.mae?.toFixed(3) ?? '—' : '—'}</span>
           <span className="flex items-center gap-2">
@@ -127,7 +127,7 @@ export function BacktestCosts() {
       ]
   return (
     <Panel title="Backtested strategy behaviour" eyebrow={<><span className="rounded-[2px] border border-dashed border-line2 px-1 text-[10.5px]">Hypothetical</span> {live ? b.period : backtestSpanLong()} <EvalFresh backend={!!live} /></>}>
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 gap-3 max-md:grid-cols-2">
         {tiles.map(([k, v]) => <div key={k}><div className="text-[11px] text-dim font-medium">{k}</div><div className="num text-[15px]">{v}</div></div>)}
       </div>
       <div className="mt-3 text-[11px] leading-relaxed text-dim">{live

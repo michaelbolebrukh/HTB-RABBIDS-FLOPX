@@ -7,7 +7,8 @@ import { useStore, type EntityRef, type Order, type PageId, type Store } from '@
 import { TourStage } from '@/tour/Stage'
 import { ALL_ENTITIES } from './Inspector'
 import { NAV } from './Shell'
-import { Btn, cx, Fresh, Seg, TruthGlyph, TruthTag } from './ui'
+import { useIsPhone } from '@/lib/usePhone'
+import { Btn, cx, Fresh, Seg, SHEET_CLOSE, SHEET_FULL, SheetBackdrop, SheetHandle, TruthGlyph, TruthTag } from './ui'
 
 // ---------------- Command palette ----------------
 export function Palette() {
@@ -15,6 +16,8 @@ export function Palette() {
   const [q, setQ] = useState('')
   const [sel, setSel] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
+  const phone = useIsPhone()
+  const sheetRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (palette) { setQ(''); setSel(0); setTimeout(() => inputRef.current?.focus(), 10) }
   }, [palette])
@@ -34,9 +37,10 @@ export function Palette() {
     setPalette(false)
   }
   return (
-    <div className="fixed inset-0 z-[90] flex items-start justify-center bg-black/60 pt-[12vh] backdrop-blur-[2px]" onClick={() => setPalette(false)}>
-      <div className="fade-in w-[620px] overflow-hidden rounded-lg border border-line2 bg-panel shadow-2xl" onClick={(e) => e.stopPropagation()}>
-        <div className="flex items-center gap-2 border-b border-line px-4">
+    <div className="fixed inset-0 z-[90] flex items-start justify-center bg-black/60 pt-[12vh] backdrop-blur-[2px] max-md:z-[95] max-md:pt-0" onClick={() => setPalette(false)}>
+      <div ref={sheetRef} className={cx('fade-in w-[620px] overflow-hidden rounded-lg border border-line2 bg-panel shadow-2xl', SHEET_FULL, 'max-md:flex max-md:flex-col', phone && 'm-sheet')} onClick={(e) => e.stopPropagation()}>
+        {phone && <SheetHandle sheet={sheetRef} onClose={() => setPalette(false)} />}
+        <div className="flex items-center gap-2 border-b border-line px-4 max-md:shrink-0">
           <Search size={15} className="text-dim" />
           <input
             ref={inputRef}
@@ -49,13 +53,14 @@ export function Palette() {
               if (e.key === 'Escape') setPalette(false)
             }}
             placeholder="Search regions, GPUs, providers, projects, energy markets, tickers, themes…"
-            className="h-12 flex-1 bg-transparent text-[14px] text-bone outline-none placeholder:text-dim"
+            className="h-12 flex-1 bg-transparent text-[14px] text-bone outline-none placeholder:text-dim max-md:min-w-0 max-md:text-[16px]"
           />
+          {phone && <button type="button" onClick={() => setPalette(false)} className={cx('cursor-pointer text-dim hover:text-bone', SHEET_CLOSE)} aria-label="Close search"><X size={16} /></button>}
         </div>
-        <div className="max-h-[420px] overflow-y-auto p-1.5">
+        <div className="max-h-[420px] overflow-y-auto p-1.5 max-md:max-h-none max-md:min-h-0 max-md:flex-1 max-md:overscroll-contain">
           {results.length === 0 && <div className="p-6 text-center text-[12px] text-mute">No matches. FLOPX tracks 17 regions, 6 GPU categories, 16 securities and 12 projects.</div>}
           {results.map((r, i) => (
-            <button key={i} onMouseEnter={() => setSel(i)} onClick={() => choose(i)} className={cx('flex w-full cursor-pointer items-center gap-3 rounded-[4px] px-3 py-2 text-left', sel === i ? 'bg-raise' : '')}>
+            <button key={i} onMouseEnter={() => setSel(i)} onClick={() => choose(i)} className={cx('flex w-full cursor-pointer items-center gap-3 rounded-[4px] px-3 py-2 text-left max-md:min-h-11', sel === i ? 'bg-raise' : '')}>
               <span className="w-20 shrink-0 text-[11px] text-dim font-medium">{r.type === 'page' ? 'Screen' : r.e.kind}</span>
               <span className="flex-1 truncate text-[13px] text-bone">{r.type === 'page' ? r.p.label : r.e.label}</span>
               {sel === i && <CornerDownLeft size={12} className="text-dim" />}
@@ -101,6 +106,8 @@ export function Assistant() {
   const [input, setInput] = useState('')
   const endRef = useRef<HTMLDivElement>(null)
   const lastNonce = useRef(0)
+  const phone = useIsPhone()
+  const sheetRef = useRef<HTMLElement>(null)
   const send = (q: string) => {
     if (!q.trim()) return
     const ctx = contextLabel(store)
@@ -120,11 +127,15 @@ export function Assistant() {
   }, [assistant])
   useEffect(() => endRef.current?.scrollIntoView({ behavior: 'smooth' }), [thread])
   if (!assistant.open) return null
+  const closeAssistant = () => setAssistant((a) => ({ ...a, open: false }))
   return (
-    <aside className="slide-in flex w-[400px] shrink-0 flex-col border-l border-line bg-panel">
-      <header className="flex items-center justify-between border-b border-line px-4 py-3">
+    <>
+    {phone && <SheetBackdrop onClose={closeAssistant} />}
+    <aside ref={sheetRef} className={cx('slide-in flex w-[400px] shrink-0 flex-col border-l border-line bg-panel', SHEET_FULL, phone && 'm-sheet')}>
+      {phone && <SheetHandle sheet={sheetRef} onClose={closeAssistant} />}
+      <header className="flex items-center justify-between border-b border-line px-4 py-3 max-md:pt-1">
         <div className="flex items-center gap-2 text-[13px] font-semibold"><Bot size={15} className="text-fct" /> Research Assistant</div>
-        <button onClick={() => setAssistant((a) => ({ ...a, open: false }))} className="cursor-pointer text-dim hover:text-bone" aria-label="Close assistant"><X size={15} /></button>
+        <button onClick={() => setAssistant((a) => ({ ...a, open: false }))} className={cx('cursor-pointer text-dim hover:text-bone', SHEET_CLOSE)} aria-label="Close assistant"><X size={15} /></button>
       </header>
       <div className="border-b border-line px-4 py-2 font-mono text-[10px] text-dim">Context · <span className="text-mute">{contextLabel(store) || '—'}</span></div>
       <div className="flex-1 space-y-5 overflow-y-auto p-4">
@@ -133,7 +144,7 @@ export function Assistant() {
             <p className="mb-3 text-[12.5px] leading-relaxed text-mute">I answer from FLOPX’s observed data, inferred states and forecasts, and I always separate <span className="text-bone">retrieved facts</span> from my <span className="text-fct">generated interpretation</span>. I can point you to screens and proposed actions, but I don’t place trades.</p>
             <div className="space-y-1.5">
               {SUGGESTED.map((s) => (
-                <button key={s} onClick={() => send(s)} className="flex w-full cursor-pointer items-center justify-between rounded-[4px] border border-line px-3 py-2 text-left text-[12px] text-bone hover:border-line2 hover:bg-hover">{s}<ArrowRight size={12} className="text-dim" /></button>
+                <button key={s} onClick={() => send(s)} className="flex w-full cursor-pointer items-center justify-between rounded-[4px] border border-line px-3 py-2 text-left text-[12px] text-bone hover:border-line2 hover:bg-hover max-md:min-h-11">{s}<ArrowRight size={12} className="text-dim" /></button>
               ))}
             </div>
           </div>
@@ -179,11 +190,12 @@ export function Assistant() {
       </div>
       <form onSubmit={(e) => { e.preventDefault(); send(input) }} className="border-t border-line p-3">
         <div className="flex items-center gap-2 rounded-[5px] border border-line2 bg-ink px-3 focus-within:border-fct/50">
-          <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ask about this investigation…" className="h-9 flex-1 bg-transparent text-[12.5px] outline-none placeholder:text-dim" />
-          <button type="submit" className="cursor-pointer text-fct disabled:text-dim" disabled={!input.trim()} aria-label="Send"><Send size={14} /></button>
+          <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ask about this investigation…" className="h-9 flex-1 bg-transparent text-[12.5px] outline-none placeholder:text-dim max-md:h-11 max-md:min-w-0 max-md:text-[16px]" />
+          <button type="submit" className="cursor-pointer text-fct disabled:text-dim max-md:-mr-3 max-md:flex max-md:size-11 max-md:items-center max-md:justify-center" disabled={!input.trim()} aria-label="Send"><Send size={14} /></button>
         </div>
       </form>
     </aside>
+    </>
   )
 }
 
@@ -203,6 +215,8 @@ export function Ticket() {
   const [qty, setQty] = useState(100)
   const [type, setType] = useState<'Market' | 'Limit'>('Market')
   const [limit, setLimit] = useState(0)
+  const phone = useIsPhone()
+  const sheetRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (ticket) {
       setTicker(ticket.ticker)
@@ -225,19 +239,20 @@ export function Ticket() {
   ]
   const tickers = ['NVDA', 'AMD', 'TSM', 'MSFT', 'AMZN', 'GOOGL', 'ORCL', 'CRWV', 'NBIS', 'IREN', 'APLD', 'EQIX', 'DLR', 'VST', 'CEG', 'NRG']
   return (
-    <div className="fixed inset-0 z-[85] flex items-center justify-center bg-black/60 backdrop-blur-[2px]" onClick={() => setTicket(null)}>
-      <div className="fade-in w-[440px] rounded-lg border border-dec/30 bg-panel shadow-2xl" onClick={(e) => e.stopPropagation()}>
+    <div className="fixed inset-0 z-[85] flex items-center justify-center bg-black/60 backdrop-blur-[2px] max-md:z-[95] max-md:items-end" onClick={() => setTicket(null)}>
+      <div ref={sheetRef} className={cx('fade-in w-[440px] rounded-lg border border-dec/30 bg-panel shadow-2xl', SHEET_FULL, 'max-md:overflow-y-auto max-md:overscroll-contain', phone && 'm-sheet')} onClick={(e) => e.stopPropagation()}>
+        {phone && <SheetHandle sheet={sheetRef} onClose={() => setTicket(null)} />}
         <header className="flex items-center justify-between border-b border-line px-5 py-3">
           <div>
             <div className="flex items-center gap-2"><TruthGlyph truth="dec" /><span className="text-[14px] font-semibold">Paper order ticket</span></div>
             <div className="mt-0.5 flex gap-1.5"><Fresh f="simulated" label="Simulated execution" /><Fresh f="illustrative" /></div>
           </div>
-          <button onClick={() => setTicket(null)} className="cursor-pointer text-dim hover:text-bone" aria-label="Close ticket"><X size={15} /></button>
+          <button onClick={() => setTicket(null)} className={cx('cursor-pointer text-dim hover:text-bone', SHEET_CLOSE)} aria-label="Close ticket"><X size={15} /></button>
         </header>
         <div className="space-y-4 px-5 py-4">
           <div className="grid grid-cols-2 gap-3">
             <label className="block"><span className="eyebrow">Instrument</span>
-              <select value={ticker} onChange={(e) => { setTicker(e.target.value); setLimit(+lastPx(e.target.value).toFixed(2)) }} className="mt-1 h-9 w-full rounded-[4px] border border-line2 bg-ink px-2 font-mono text-[13px] outline-none">
+              <select value={ticker} onChange={(e) => { setTicker(e.target.value); setLimit(+lastPx(e.target.value).toFixed(2)) }} className="mt-1 h-9 w-full rounded-[4px] border border-line2 bg-ink px-2 font-mono text-[13px] outline-none max-md:h-11 max-md:text-[16px]">
                 {tickers.map((t) => <option key={t} value={t}>{t} · {secByTicker(t)!.name}</option>)}
               </select>
             </label>
@@ -248,13 +263,13 @@ export function Ticket() {
             <Seg className="mt-1 w-full" value={side} onChange={setSide} options={(['Buy', 'Sell', 'Short', 'Cover'] as const).map((s) => ({ id: s, label: s }))} />
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <label className="block"><span className="eyebrow">Quantity (sh)</span><input type="number" min={1} value={qty} onChange={(e) => setQty(Math.max(1, +e.target.value))} className="num mt-1 h-9 w-full rounded-[4px] border border-line2 bg-ink px-2 text-[13px] outline-none focus:border-dec/50" /></label>
+            <label className="block"><span className="eyebrow">Quantity (sh)</span><input type="number" min={1} value={qty} onChange={(e) => setQty(Math.max(1, +e.target.value))} className="num mt-1 h-9 w-full rounded-[4px] border border-line2 bg-ink px-2 text-[13px] outline-none focus:border-dec/50 max-md:h-11 max-md:text-[16px]" /></label>
             <div>
               <span className="eyebrow">Type</span>
               <Seg className="mt-1" value={type} onChange={setType} options={[{ id: 'Market', label: 'Market' }, { id: 'Limit', label: 'Limit' }]} />
             </div>
           </div>
-          {type === 'Limit' && <label className="block"><span className="eyebrow">Limit price</span><input type="number" step="0.01" value={limit} onChange={(e) => setLimit(+e.target.value)} className="num mt-1 h-9 w-full rounded-[4px] border border-line2 bg-ink px-2 text-[13px] outline-none" /></label>}
+          {type === 'Limit' && <label className="block"><span className="eyebrow">Limit price</span><input type="number" step="0.01" value={limit} onChange={(e) => setLimit(+e.target.value)} className="num mt-1 h-9 w-full rounded-[4px] border border-line2 bg-ink px-2 text-[13px] outline-none max-md:h-11 max-md:text-[16px]" /></label>}
           {pos && (
             <div className="flex gap-1.5">
               {[0.25, 0.5, 1].map((f) => <Btn key={f} size="sm" variant="subtle" onClick={() => { setSide(pos.qty > 0 ? 'Sell' : 'Cover'); setQty(Math.max(1, Math.round(Math.abs(pos.qty) * f))) }}>{f === 1 ? 'Close all' : `Reduce ${f * 100}%`}</Btn>)}

@@ -36,7 +36,22 @@ export default function Securities() {
   return (
     <div className="grid grid-cols-1 gap-5 xl:grid-cols-[280px_1fr]">
       {/* The quiet note is short because the column is 280 px: "unless marked" is the row's own chip. */}
-      <Foldable id="Instruments" label={<><Landmark size={12} />Equities, funds & derivatives <Fresh quiet f="illustrative" label={anyObserved ? 'Illustrative unless marked' : undefined} /></>}>
+      {/* Phone: the instrument list collapses into one picker above the chart. Same instruments, grouped as the
+          list's category chips group them, each with its last price, 1W change and, where it differs, its close status. */}
+      <label className="block md:hidden">
+        <span className="mb-1 flex items-center gap-2 text-[12px] font-medium text-dim"><Landmark size={12} />Equities, funds & derivatives <Fresh quiet f="illustrative" label={anyObserved ? 'Illustrative unless marked' : undefined} /></span>
+        <select aria-label="Instrument" value={sel} onChange={(e) => navigate('securities', { t: e.target.value })} className="h-11 w-full rounded-md border border-line2 bg-panel px-3 font-mono text-[16px] text-bone">
+          {GROUPS.filter((g) => g !== 'All' && g !== 'Baskets').map((g) => (
+            <optgroup key={g} label={g}>
+              {SECURITIES.filter((x) => x.group === g).map((x) => { const c = chg(x.px); const bd = badges[x.ticker] ?? closeBadgeOf(W2_LIVE.companies[x.ticker]); return <option key={x.ticker} value={x.ticker}>{`${x.ticker} · ${x.name} · ${last(x.px).toFixed(2)} ${c >= 0 ? '+' : '−'}${Math.abs(c).toFixed(1)}%${bd.f !== 'illustrative' ? ` · ${bd.label ?? freshLabel(bd.f)}` : ''}`}</option> })}
+            </optgroup>
+          ))}
+          <optgroup label="Baskets">
+            {BASKETS.map((b) => { const c = chg(basketSeries(b)); return <option key={b.id} value={b.id}>{`${b.name} · ${c >= 0 ? '+' : '−'}${Math.abs(c).toFixed(1)}%`}</option> })}
+          </optgroup>
+        </select>
+      </label>
+      <Foldable id="Instruments" className="max-md:hidden" label={<><Landmark size={12} />Equities, funds & derivatives <Fresh quiet f="illustrative" label={anyObserved ? 'Illustrative unless marked' : undefined} /></>}>
         <div className="mb-2 flex flex-wrap gap-1" role="radiogroup" aria-label="Category">
           {GROUPS.map((g) => {
             const c = g === 'All' ? 'var(--color-bone)' : GROUP_COLOR[g]
@@ -118,7 +133,7 @@ function SecurityView({ t }: { t: string }) {
         eyebrow={<>{s.group} · {s.exchange}</>}
         title={<>{s.name} <span className="font-mono text-[16px] font-normal text-mute">{s.ticker}</span></>}
         sub={<span className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1"><span className="num text-[24px]">${last(s.px).toFixed(2)}</span><Delta v={chg(s.px)} className="text-[14px]" /><span className="text-[11px] text-dim">1W</span>{observed ? <span title={`${observed.source ?? 'FLOPX'} close ${fmtDay(observed.t)}`}><Fresh f={observed.fresh.freshness} label={`${freshLabel(observed.fresh.freshness)} · close ${fmtDay(observed.t)}`} /></span> : <Fresh f="illustrative" />}{pos && <span className="text-[11.5px] text-dec">Paper {pos.qty > 0 ? 'long' : 'short'} <span className="num">{Math.abs(pos.qty).toLocaleString()}</span></span>}</span>}
-        right={<span className="flex items-center gap-2"><ResetLayout /><Btn variant="decision" onClick={() => setTicket({ ticker: t })}>Paper trade</Btn></span>}
+        right={<span className="flex items-center gap-2"><ResetLayout /><Btn variant="decision" className="max-md:h-11" onClick={() => setTicket({ ticker: t })}>Paper trade</Btn></span>}
       />
 
       <Panel title="Price history" eyebrow={observed ? `Weekly · ◆ linked events · closes observed for the last ${lc!.observedWeeks} weeks, OHLC illustrative` : 'Weekly · ◆ linked events · OHLC illustrative'}
@@ -184,7 +199,7 @@ function SecurityView({ t }: { t: string }) {
               {l.text}
             </div>
           ))}
-          {sigs.length > 0 && <div className="mt-3"><div className="eyebrow mb-1">Strategy signals</div>{sigs.map((x) => <div key={x.id} className="flex items-center justify-between py-0.5"><EntityLink r={{ kind: 'signal', id: x.id, label: x.name }} className="text-[12px]" /><Validation s={x.horizons['1M'].status} /></div>)}</div>}
+          {sigs.length > 0 && <div className="mt-3"><div className="eyebrow mb-1">Strategy signals</div>{sigs.map((x) => <div key={x.id} className="flex items-center justify-between py-0.5"><EntityLink r={{ kind: 'signal', id: x.id, label: x.name }} className="text-[12px] max-md:inline-flex max-md:min-h-11 max-md:items-center" /><Validation s={x.horizons['1M'].status} /></div>)}</div>}
         </Panel>
         <Panel title="News & prediction markets" eyebrow="Linked to this instrument">
           {news.length + pms.length === 0 && <div className="text-[12px] text-mute">No linked events in the last 90 days.</div>}
@@ -193,12 +208,12 @@ function SecurityView({ t }: { t: string }) {
         </Panel>
       </div>
 
-      <Panel title="Comparable companies" eyebrow={<>{s.group} <Fresh quiet f="illustrative" label={peersSec ? 'Illustrative except rev. growth (SEC)' : undefined} /></>} bodyClass="p-0">
-        <table className="w-full text-[12px]">
-          <thead><tr className="border-b border-line text-[11px] text-dim font-medium">{['Ticker', 'Price', '1W', 'Mkt cap', 'P/E', 'EV/S', 'Rev g.', 'Beta', 'IV30'].map((h, i) => <th key={h} className={cx('px-4 py-2 font-normal', i ? 'text-right' : 'text-left')}>{h}</th>)}</tr></thead>
+      <Panel title="Comparable companies" eyebrow={<>{s.group} <Fresh quiet f="illustrative" label={peersSec ? 'Illustrative except rev. growth (SEC)' : undefined} /></>} bodyClass="p-0 max-md:overflow-x-auto max-md:p-0">
+        <table className="w-full text-[12px] max-md:min-w-[620px]">
+          <thead><tr className="border-b border-line text-[11px] text-dim font-medium">{['Ticker', 'Price', '1W', 'Mkt cap', 'P/E', 'EV/S', 'Rev g.', 'Beta', 'IV30'].map((h, i) => <th key={h} className={cx('px-4 py-2 font-normal', i ? 'text-right' : 'text-left max-md:sticky max-md:left-0 max-md:z-[1] max-md:bg-panel')}>{h}</th>)}</tr></thead>
           <tbody>{peers.map((p) => (
             <tr key={p.ticker} onClick={() => navigate('securities', { t: p.ticker })} className={cx('cursor-pointer border-b border-line/60 hover:bg-hover', p.ticker === t && 'bg-raise')}>
-              <td className="px-4 py-2 font-mono">{p.ticker}</td><td className="num px-4 py-2 text-right">{lastPx(p.ticker).toFixed(2)}</td><td className="px-4 py-2 text-right"><Delta v={chg(p.px)} /></td>
+              <td className="px-4 py-2 font-mono max-md:sticky max-md:left-0 max-md:z-[1] max-md:bg-panel max-md:py-3">{p.ticker}</td><td className="num px-4 py-2 text-right">{lastPx(p.ticker).toFixed(2)}</td><td className="px-4 py-2 text-right"><Delta v={chg(p.px)} /></td>
               <td className="num px-4 py-2 text-right">${(p.mcap / 1e9).toFixed(0)}B</td><td className="num px-4 py-2 text-right">{p.pe ?? 'n/m'}</td><td className="num px-4 py-2 text-right">{p.evSales}×</td><td className="num px-4 py-2 text-right">{p.revGrowth}%</td><td className="num px-4 py-2 text-right">{p.beta}</td><td className="num px-4 py-2 text-right">{p.iv30 ?? '—'}</td>
             </tr>
           ))}</tbody>
@@ -225,9 +240,9 @@ function BasketView({ id }: { id: string }) {
         <TimeChart labels={WEEKS} height={220} yFmt={(v) => v.toFixed(0)} series={[{ id: 'b', label: b.name, values: sr, color: 'var(--color-obs)', area: true }, ...b.members.map((m, i) => ({ id: m.t, label: m.t, values: secByTicker(m.t)!.px.map((p, k, a) => (p / a[0]) * 100), color: ['var(--color-dim)', 'var(--color-dim)', 'var(--color-line2)'][i % 3], width: 1 }))]} legend />
       </Panel>
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
-        <Panel title="Members" bodyClass="p-0">
+        <Panel title="Members" bodyClass="p-0 max-md:p-0">
           {b.members.map((m) => { const s = secByTicker(m.t)!; return (
-            <button key={m.t} onClick={() => navigate('securities', { t: m.t })} className="grid w-full cursor-pointer grid-cols-[60px_1fr_60px_60px] items-center gap-3 border-b border-line/60 px-4 py-2 text-left hover:bg-hover">
+            <button key={m.t} onClick={() => navigate('securities', { t: m.t })} className="grid w-full cursor-pointer grid-cols-[60px_1fr_60px_60px] items-center gap-3 border-b border-line/60 px-4 py-2 text-left hover:bg-hover max-md:min-h-11 max-md:grid-cols-[52px_1fr_44px_56px] max-md:gap-2">
               <span className="font-mono">{m.t}</span><span className="text-[12px] text-mute">{s.name}</span><span className="num text-right text-[12px]">{(m.w * 100).toFixed(0)}%</span><Delta v={chg(s.px)} className="text-right text-[11px]" />
             </button>
           ) })}

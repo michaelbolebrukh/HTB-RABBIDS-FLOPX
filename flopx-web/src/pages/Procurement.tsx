@@ -45,11 +45,11 @@ function PlanBars({ rows, median, title }: { rows: ScenarioRow[]; median: number
         </>
       ) : <div className="text-[11.5px] text-dim">No feasible plan for this job</div>}
 
-      <div className="mt-5 grid grid-cols-[9rem_minmax(0,1fr)_5.5rem] gap-x-4">
+      <div className="mt-5 grid grid-cols-[9rem_minmax(0,1fr)_5.5rem] gap-x-4 max-md:grid-cols-[7.5rem_minmax(0,1fr)_4.75rem] max-md:gap-x-2.5">
         <div />
         <div className="relative h-4">
           {median != null && (
-            <div className="absolute bottom-0 -translate-x-1/2 whitespace-nowrap text-[10px] text-dim" style={{ left: x(median) }}>
+            <div className="absolute bottom-0 -translate-x-1/2 whitespace-nowrap text-[10px] text-dim max-md:text-[12px]" style={{ left: x(median) }}>
               median <span className="num">{fmtCost(median).replace(/\.\d\d$/, '')}</span>
             </div>
           )}
@@ -72,8 +72,8 @@ function PlanBars({ rows, median, title }: { rows: ScenarioRow[]; median: number
               <div className="border-t border-line-soft py-2.5 text-right leading-tight">
                 <div className={cx('num text-[12.5px]', p.feasible ? 'text-bone' : 'text-mute line-through decoration-dim')}>{fmtCost(p.cost)}</div>
                 {p.feasible
-                  ? median != null && <div className={cx('num text-[10.5px]', p.recommended ? 'text-up' : 'text-dim')}>{d < 0 ? '−' : '+'}{Math.abs(d).toFixed(1)}%</div>
-                  : <div className="text-[10.5px] text-down">not allowed</div>}
+                  ? median != null && <div className={cx('num text-[10.5px] max-md:text-[12px]', p.recommended ? 'text-up' : 'text-dim')}>{d < 0 ? '−' : '+'}{Math.abs(d).toFixed(1)}%</div>
+                  : <div className="text-[10.5px] text-down max-md:text-[12px]">not allowed</div>}
               </div>
             </Fragment>
           )
@@ -150,6 +150,26 @@ export default function Procurement() {
 
   const top = options.slice(0, 7)
   const sel = top.some((x) => x.id === picked) ? picked : top[0]?.id
+  /** An option's expanded detail: the desktop table's second row and the phone card's open body share it. */
+  const detail = (x: RankedOption, st: 'requested' | 'held' | undefined) => (
+    <>
+    <div className="flex items-start justify-between gap-4 max-md:flex-col max-md:gap-2">
+      <div>Observed {x.observed} · {x.interconnect} · SLA {x.sla} · est. range <span className="text-bone">${(x.lo / 1000).toFixed(0)}–{(x.hi / 1000).toFixed(0)}k</span>{over(x.total) && <span className="text-down"> · over budget</span>}</div>
+      <div className="shrink-0 max-md:w-full">
+        {st === 'requested' ? (
+          <span className="text-dec">Quote requested</span>
+        ) : st === 'held' ? (
+          <span className="text-up"><CircleCheck size={11} className="mr-1 inline" />48h hold (simulated)</span>
+        ) : (
+          <Btn size="sm" variant="primary" className="max-md:h-11 max-md:w-full max-md:text-[13px]" disabled={x.available === 'Sold out'} onClick={() => { setRequests((r) => ({ ...r, [x.id]: 'requested' })); toast(`Quote request sent to ${x.providerName} (simulated)`, 'info') }}>{x.available === 'Sold out' ? 'Sold out' : 'Request quote'}</Btn>
+        )}
+      </div>
+    </div>
+    {x.risks.length > 0 && <ul className="mt-1 space-y-0.5 text-dim">{x.risks.map((r) => <li key={r}>– {r}</li>)}</ul>}
+    {st === 'requested' && <div className="mt-1.5 text-dec">Not reserved · awaiting provider · <button className="cursor-pointer text-mute underline max-md:inline-flex max-md:min-h-11 max-md:items-center" onClick={() => { setRequests((r) => ({ ...r, [x.id]: 'held' })); toast(`${x.providerName}: capacity hold confirmed (simulated, 48h)`, 'ok') }}>Simulate provider reply</button></div>}
+    {st === 'held' && <div className="mt-1.5 text-up">Not purchased</div>}
+    </>
+  )
 
   return (
     <div>
@@ -160,9 +180,9 @@ export default function Procurement() {
             <div className="grid grid-cols-3 gap-1.5" role="radiogroup" aria-label="GPU">
               {GPUS.map((g) => (
                 <button key={g.id} role="radio" aria-checked={gpu === g.id} onClick={() => setGpu(g.id)}
-                  className={cx('cursor-pointer rounded-[4px] border px-2 py-1.5 text-left transition-colors', gpu === g.id ? 'border-act bg-act/10' : 'border-line hover:border-line2 hover:bg-hover')}>
+                  className={cx('cursor-pointer rounded-[4px] border px-2 py-1.5 text-left transition-colors max-md:min-h-12 max-md:py-2', gpu === g.id ? 'border-act bg-act/10' : 'border-line hover:border-line2 hover:bg-hover')}>
                   <div className={cx('text-[12.5px] font-medium', gpu === g.id ? 'text-act' : 'text-mute')}>{g.name.replace(' SXM', '').replace(' 80GB', '')}</div>
-                  <div className="num text-[10px] text-dim">{g.memory.split(' ').slice(0, 2).join(' ')}</div>
+                  <div className="num text-[10px] text-dim max-md:text-[12px]">{g.memory.split(' ').slice(0, 2).join(' ')}</div>
                 </button>
               ))}
             </div>
@@ -175,7 +195,7 @@ export default function Procurement() {
           <Section title="Constraints">
             <div>
               <div className="mb-1.5 text-[12px] text-mute">Location</div>
-              <Seg className="flex w-full [&>button]:flex-auto [&>button]:whitespace-nowrap" size="sm" value={area} onChange={setArea} options={Object.keys(AREAS).map((a) => ({ id: a, label: a === 'North America' ? 'N. Am.' : a, title: a }))} />
+              <Seg className="flex w-full [&>button]:flex-auto [&>button]:whitespace-nowrap max-md:h-11 max-md:[&>button]:text-[13px]" size="sm" value={area} onChange={setArea} options={Object.keys(AREAS).map((a) => ({ id: a, label: a === 'North America' ? 'N. Am.' : a, title: a }))} />
             </div>
             <Switch label="Require InfiniBand" hint="Needed for multi-node training" checked={ib} onChange={setIb} />
             <Range label="Min. provider reliability" value={minRel} display={`${minRel}/100`} min={60} max={97} onChange={setMinRel} />
@@ -188,11 +208,39 @@ export default function Procurement() {
         </Panel>
 
         <div className="space-y-5">
-          <Panel title="Ranked options" truth="obs" eyebrow={<span title={eyebrow}>{`${Math.min(7, options.length)} of ${options.length} offers`}{optionsFresh && <Fresh quiet className="ml-2" f={optionsFresh} label={planLive && planned.plan!.tier === 'sample' ? 'Illustrative · sample tier' : undefined} />}</span>} bodyClass="p-0">
+          <Panel title="Ranked options" truth="obs" eyebrow={<span title={eyebrow}>{`${Math.min(7, options.length)} of ${options.length} offers`}{optionsFresh && <Fresh quiet className="ml-2" f={optionsFresh} label={planLive && planned.plan!.tier === 'sample' ? 'Illustrative · sample tier' : undefined} />}</span>} bodyClass="p-0 max-md:p-0">
             {options.length === 0 ? (
               <Empty className="m-4" tone="warn" title="No observed offers match" body="Relax the location, fabric or reliability constraints. FLOPX will not invent capacity that hasn't been quoted." />
             ) : (
-              <div className="overflow-x-auto">
+              <>
+              {/* Phone: the ranked options as cards; tap one to open the same detail the table's expanded row shows. */}
+              <div className="divide-y divide-line-soft md:hidden">
+                {top.map((x, i) => {
+                  const st = requests[x.id]
+                  const open = sel === x.id
+                  return (
+                    <div key={x.id} className={cx(open && 'bg-warn/[0.07] shadow-[inset_2px_0_0_var(--color-warn)]')}>
+                      <button type="button" onClick={() => setPicked(x.id)} aria-expanded={open} className="block w-full cursor-pointer px-4 py-3 text-left">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-2 text-[13.5px]"><span className="num text-[12px] text-dim">{i + 1}</span><span className="inline-block size-[8px] shrink-0 rounded-[1.5px]" style={{ background: providerHue(x.providerId) }} /><span className="font-medium text-bone">{x.providerName}</span></div>
+                            <div className="mt-0.5 text-[12px] text-mute">{x.regionName}{x.freshness !== optionsFresh && <Fresh quiet f={x.freshness} className="ml-1.5" />}</div>
+                          </div>
+                          <div className="shrink-0 text-right"><div className="text-[11px] text-dim">Total ($k)</div><div className={cx('num text-[17px]', over(x.total) ? 'text-down' : 'text-bone')}>{(x.total / 1000).toFixed(0)}</div></div>
+                        </div>
+                        <div className="mt-2 grid grid-cols-4 gap-2 text-[12px]">
+                          <div className="col-span-2 min-w-0"><div className="text-[11px] text-dim">Contract</div><div className="truncate text-mute">{x.contract}</div></div>
+                          <div><div className="text-[11px] text-dim">$/GPU-hr</div><div className="num text-bone">{x.price.toFixed(2)}</div></div>
+                          <div><div className="text-[11px] text-dim">Reliability</div><div className="[&>span]:text-left"><Reliability v={x.reliability} /></div></div>
+                          <div className="col-span-4"><span className="mr-2 text-[11px] text-dim">Avail. risk</span><RiskDot risk={x.availRisk} /></div>
+                        </div>
+                      </button>
+                      {open && <div className="px-4 pb-3 text-[12px] text-mute tabular-nums">{detail(x, st)}</div>}
+                    </div>
+                  )
+                })}
+              </div>
+              <div className="overflow-x-auto max-md:hidden">
                 <table className="w-full text-[12px]">
                   <thead>
                     <tr className="h-8 border-b border-line text-[11px] whitespace-nowrap text-dim">
@@ -224,21 +272,7 @@ export default function Procurement() {
                             <tr className="border-b border-line-soft bg-warn/[0.07] shadow-[inset_2px_0_0_var(--color-warn)]">
                               <td />
                               <td colSpan={6} className="px-3 pt-0.5 pb-3 text-[11.5px] text-mute tabular-nums">
-                                <div className="flex items-start justify-between gap-4">
-                                  <div>Observed {x.observed} · {x.interconnect} · SLA {x.sla} · est. range <span className="text-bone">${(x.lo / 1000).toFixed(0)}–{(x.hi / 1000).toFixed(0)}k</span>{over(x.total) && <span className="text-down"> · over budget</span>}</div>
-                                  <div className="shrink-0">
-                                    {st === 'requested' ? (
-                                      <span className="text-dec">Quote requested</span>
-                                    ) : st === 'held' ? (
-                                      <span className="text-up"><CircleCheck size={11} className="mr-1 inline" />48h hold (simulated)</span>
-                                    ) : (
-                                      <Btn size="sm" variant="primary" disabled={x.available === 'Sold out'} onClick={() => { setRequests((r) => ({ ...r, [x.id]: 'requested' })); toast(`Quote request sent to ${x.providerName} (simulated)`, 'info') }}>{x.available === 'Sold out' ? 'Sold out' : 'Request quote'}</Btn>
-                                    )}
-                                  </div>
-                                </div>
-                                {x.risks.length > 0 && <ul className="mt-1 space-y-0.5 text-dim">{x.risks.map((r) => <li key={r}>– {r}</li>)}</ul>}
-                                {st === 'requested' && <div className="mt-1.5 text-dec">Not reserved · awaiting provider · <button className="cursor-pointer text-mute underline" onClick={() => { setRequests((r) => ({ ...r, [x.id]: 'held' })); toast(`${x.providerName}: capacity hold confirmed (simulated, 48h)`, 'ok') }}>Simulate provider reply</button></div>}
-                                {st === 'held' && <div className="mt-1.5 text-up">Not purchased</div>}
+                                {detail(x, st)}
                               </td>
                             </tr>
                           )}
@@ -248,6 +282,7 @@ export default function Procurement() {
                   </tbody>
                 </table>
               </div>
+              </>
             )}
           </Panel>
 
@@ -271,7 +306,7 @@ export default function Procurement() {
                 ) : (
                   <>
                     <Distribution p10={sig.horizons['1M'].p10} mean={sig.horizons['1M'].mean} p90={sig.horizons['1M'].p90} height={160} />
-                    <div className="font-mono text-[10px] text-dim">{fcReason}. Design example shown, not a FLOPX forecast.</div>
+                    <div className="font-mono text-[10px] text-dim max-md:text-[12px]">{fcReason}. Design example shown, not a FLOPX forecast.</div>
                   </>
                 )}
               </Panel>
@@ -305,17 +340,17 @@ function Range({ label, value, display, min, max, step = 1, onChange }: { label:
         <span className="text-[12px] text-mute">{label}</span>
         <span className="num text-[14px] text-bone">{num}{unit && <span className="ml-1 font-sans text-[11px] font-normal text-dim">{unit}</span>}</span>
       </div>
-      <input type="range" className="range" min={min} max={max} step={step} value={value} onChange={(e) => onChange(+e.target.value)} style={{ '--pct': `${pct}%` } as React.CSSProperties} />
+      <input type="range" className="range max-md:h-11" min={min} max={max} step={step} value={value} onChange={(e) => onChange(+e.target.value)} style={{ '--pct': `${pct}%` } as React.CSSProperties} />
     </label>
   )
 }
 
 function Switch({ label, hint, checked, onChange }: { label: string; hint?: string; checked: boolean; onChange: (v: boolean) => void }) {
   return (
-    <button type="button" role="switch" aria-checked={checked} onClick={() => onChange(!checked)} className="flex w-full cursor-pointer items-center justify-between gap-3 text-left">
+    <button type="button" role="switch" aria-checked={checked} onClick={() => onChange(!checked)} className="flex w-full cursor-pointer items-center justify-between gap-3 text-left max-md:min-h-11">
       <span>
         <span className="block text-[12px] text-mute">{label}</span>
-        {hint && <span className="block text-[10.5px] text-dim">{hint}</span>}
+        {hint && <span className="block text-[10.5px] text-dim max-md:text-[12px]">{hint}</span>}
       </span>
       <span className={cx('relative h-[18px] w-[32px] shrink-0 rounded-full border transition-colors', checked ? 'border-act bg-act' : 'border-line2 bg-ink')}>
         <span className={cx('absolute top-[2px] h-3 w-3 rounded-full transition-all', checked ? 'left-[15px] bg-ink' : 'left-[2px] bg-dim')} />
@@ -327,9 +362,9 @@ function Switch({ label, hint, checked, onChange }: { label: string; hint?: stri
 function Stat({ label, value, sub, tone }: { label: string; value: string; sub?: string; tone?: 'up' | 'down' }) {
   return (
     <div className="border-r border-line px-3 py-2.5 last:border-r-0">
-      <dt className="text-[10px] text-dim">{label}</dt>
+      <dt className="text-[10px] text-dim max-md:text-[12px]">{label}</dt>
       <dd className={cx('num text-[14px]', tone === 'up' ? 'text-up' : tone === 'down' ? 'text-down' : 'text-bone')}>{value}</dd>
-      {sub && <dd className="text-[9.5px] text-dim">{sub}</dd>}
+      {sub && <dd className="text-[9.5px] text-dim max-md:text-[12px]">{sub}</dd>}
     </div>
   )
 }

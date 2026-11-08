@@ -61,14 +61,14 @@ export default function Fund() {
         title={<>Systematic compute fund <span className="text-mute">· CPX-1</span></>}
         sub={<span className="flex flex-wrap items-center gap-1.5">
           {/* The page's own statuses are quiet notes (WF8 #3); the account read, when it differs from them, keeps a chip. */}
-          <Fresh quiet f="simulated" label={`Paper since ${paperStartLabel()}`} />
+          <Fresh quiet f="simulated" label={`Paper since ${paperStartLabel()}`} className="max-md:whitespace-normal max-md:text-[12px]" />
           <span className="rounded-[2px] border border-dashed border-line2 px-1.5 py-[1px] text-[11px] font-medium text-mute">Backtest {backtestSpanLabel()} · hypothetical</span>
           {/* Signed in with the account read, the bare note would sit beside the account badge and read as one claim (WF7 #3): name what stays illustrative instead. */}
-          <Fresh quiet f="illustrative" label={book ? 'Illustrative · backtest, equity curve & benchmarks' : undefined} />
+          <Fresh quiet f="illustrative" label={book ? 'Illustrative · backtest, equity curve & benchmarks' : undefined} className="max-md:whitespace-normal max-md:text-[12px]" />
           {live && <Fresh f={live.fresh.freshness} label={live.fresh.label} />}
-          {mock && <Fresh quiet f="illustrative" label={mockDeskLabel} />}
+          {mock && <Fresh quiet f="illustrative" label={mockDeskLabel} className="max-md:whitespace-normal max-md:text-[12px]" />}
           {acct.status === 'failed' && <Fresh f="unavailable" label="Account read failed" />}
-          <span className="text-[11px] text-dim">· prices {Object.values(W2_LIVE.companies).some((c) => c.observedWeeks > 0) ? 'partly observed' : 'illustrative'} · {AS_OF}</span>
+          <span className="text-[11px] text-dim max-md:text-[12px]">· prices {Object.values(W2_LIVE.companies).some((c) => c.observedWeeks > 0) ? 'partly observed' : 'illustrative'} · {AS_OF}</span>
         </span>}
         right={<><MockToggle on={showMock} onChange={setShowMock} /><ResetLayout /></>}
       />
@@ -89,7 +89,7 @@ export default function Fund() {
         </div>
       </Panel>
 
-      {mock && <MockNote className="mb-1.5" />}
+      {mock && <MockNote className="mb-1.5 max-md:whitespace-normal max-md:text-[12px]" />}
       <Panel variant="strip" id="Key figures" title="Paper performance" className="mb-5">
         <KPI lead label="Paper NAV" value={`$${(nav / 1e6).toFixed(3)}M`} sub={book ? <span>P&L <Delta v={(unreal + realised) / 1000} d={1} suffix="k" /></span> : <Delta v={((nav - NAV0) / NAV0) * 100} d={2} />} truth="dec" />
         <KPI label="1W P&L" value={book ? <span className="text-mute">—</span> : <Delta v={day / 1000} d={1} suffix="k" />} sub={mock ? 'not in the mock book' : live ? 'not in the account read' : <span>{((day / nav) * 100).toFixed(2)}%</span>} />
@@ -102,7 +102,18 @@ export default function Fund() {
         <KPI label="Max DD" value={book ? fmtDD(-Math.abs(book.account.maxDrawdownPct)) : `${fmtDD(maxDrawdown(DRAWDOWN, 0, PAPER_START_WK))}`} sub={book ? `paper (${mock ? 'mock' : 'account'}) · backtest ${fmtDD(maxDrawdown(DRAWDOWN, 0, PAPER_START_WK))}` : `backtest · paper ${fmtDD(maxDrawdown(DRAWDOWN, PAPER_START_WK))}`} />
       </Panel>
 
-      <Tabs className="mb-5" value={fund.tab} onChange={(t) => setFund({ tab: t })} tabs={[{ id: 'portfolio', label: 'Portfolio' }, { id: 'signals', label: 'Signals', count: SIGNALS.length }, { id: 'decisions', label: 'Decisions', count: openProps }, { id: 'evaluation', label: 'Evaluation' }]} />
+      <Tabs className="mb-5 max-md:hidden" value={fund.tab} onChange={(t) => setFund({ tab: t })} tabs={[{ id: 'portfolio', label: 'Portfolio' }, { id: 'signals', label: 'Signals', count: SIGNALS.length }, { id: 'decisions', label: 'Decisions', count: openProps }, { id: 'evaluation', label: 'Evaluation' }]} />
+      {/* Phone: the same four tabs as a horizontally scrollable segmented control with 44 px targets. */}
+      <div className="mb-4 overflow-x-auto [scrollbar-width:none] md:hidden">
+        <div className="inline-flex min-w-full gap-1 rounded-md border border-line bg-ink p-1" role="tablist" aria-label="Fund sections">
+          {([['portfolio', 'Portfolio', null], ['signals', 'Signals', SIGNALS.length], ['decisions', 'Decisions', openProps], ['evaluation', 'Evaluation', null]] as const).map(([id, label, count]) => (
+            <button key={id} type="button" role="tab" aria-selected={fund.tab === id} onClick={() => setFund({ tab: id })}
+              className={cx('flex h-11 shrink-0 grow cursor-pointer items-center justify-center gap-1.5 rounded-[4px] border px-3.5 text-[13px] font-medium whitespace-nowrap', fund.tab === id ? 'border-line2 bg-hover text-bone' : 'border-transparent text-dim')}>
+              {label}{count != null && <span className="num text-[11px] text-dim">{count}</span>}
+            </button>
+          ))}
+        </div>
+      </div>
       {fund.tab === 'portfolio' && <PortfolioTab />}
       {fund.tab === 'signals' && <SignalsTab />}
       {fund.tab === 'decisions' && <DecisionsTab />}
@@ -173,7 +184,7 @@ function PortfolioTab() {
         <DecisionRecordPanel rec={rec ?? null} onClose={() => setFund({ record: null })} />
       </Row>
 
-      <Panel title="Positions" eyebrow={<span title="Paper holdings, model- and user-owned. Own column: ◆ = CPX-1, U = User" className="inline-flex items-center gap-1.5">Paper holdings · Own: <TruthGlyph truth="dec" size={7} /> CPX-1 · U user {book ? <Fresh quiet f={book.fresh.freshness} label={`${book.email} · ${book.fresh.label}`} /> : <Fresh quiet f="illustrative" />}</span>} right={!book && positions.length > 0 && (confirmLiq ? <div className="flex items-center gap-2"><span className="text-[11.5px] text-down">Sell/cover all {positions.length} positions?</span><Btn size="sm" variant="danger" onClick={() => { liquidateAll(); setConfirmLiq(false) }}>Confirm liquidate</Btn><Btn size="sm" variant="ghost" onClick={() => setConfirmLiq(false)}>Cancel</Btn></div> : <Btn size="sm" variant="danger" onClick={() => setConfirmLiq(true)}>Liquidate all</Btn>)} bodyClass="p-0">
+      <Panel title="Positions" eyebrow={<span title="Paper holdings, model- and user-owned. Own column: ◆ = CPX-1, U = User" className="inline-flex items-center gap-1.5">Paper holdings · Own: <TruthGlyph truth="dec" size={7} /> CPX-1 · U user {book ? <Fresh quiet f={book.fresh.freshness} label={`${book.email} · ${book.fresh.label}`} /> : <Fresh quiet f="illustrative" />}</span>} right={!book && positions.length > 0 && (confirmLiq ? <div className="flex items-center gap-2 max-md:flex-wrap max-md:justify-end"><span className="text-[11.5px] text-down">Sell/cover all {positions.length} positions?</span><Btn size="sm" variant="danger" className="max-md:h-11" onClick={() => { liquidateAll(); setConfirmLiq(false) }}>Confirm liquidate</Btn><Btn size="sm" variant="ghost" className="max-md:h-11" onClick={() => setConfirmLiq(false)}>Cancel</Btn></div> : <Btn size="sm" variant="danger" className="max-md:h-11" onClick={() => setConfirmLiq(true)}>Liquidate all</Btn>)} bodyClass="p-0 max-md:p-0">
         {holdingsEmpty ? (
           <Empty className="m-4" title="Portfolio empty" body={book ? 'This account holds no paper positions.' : 'All paper positions are closed. CPX-1 will propose new targets at the next rebalance, or you can open a position manually.'} action={book ? undefined : <Btn size="sm" variant="decision" onClick={() => setTicket({ ticker: 'VST' })}>New paper order</Btn>} />
         ) : (
@@ -188,7 +199,7 @@ function PortfolioTab() {
         <Panel title="Exposure by compute region" eyebrow={<>Via documented company ties <Fresh quiet f="illustrative" /></>}>
           {regionExp.length === 0 ? <div className="text-[12px] text-mute">No regional exposure.</div> : (
             <div className="space-y-1">
-              <HBars signed rows={regionExp.map((c) => ({ label: <button className="cursor-pointer hover:text-bone" onClick={() => { setXray({ region: c.id, tab: 'exposure' }); navigate('xray') }}>{c.label}</button>, value: c.value }))} fmt={(v) => `${v.toFixed(1)}%`} />
+              <HBars signed rows={regionExp.map((c) => ({ label: <button className="cursor-pointer hover:text-bone max-md:relative max-md:before:absolute max-md:before:inset-x-0 max-md:before:-inset-y-[13px] max-md:before:content-['']" onClick={() => { setXray({ region: c.id, tab: 'exposure' }); navigate('xray') }}>{c.label}</button>, value: c.value }))} fmt={(v) => `${v.toFixed(1)}%`} />
             </div>
           )}
           {(() => {
@@ -198,7 +209,7 @@ function PortfolioTab() {
               <div className="mt-3 border-l-2 border-inf py-1 pl-2.5 text-[11.5px]">
                 <div className="mb-0.5 flex items-center gap-1.5 text-[11px] text-inf font-medium"><TruthGlyph truth="inf" size={6} />{card ? 'Open compute anomaly' : 'Linked compute anomaly'} {card && <Fresh f="experimental" label="FLOPX anomaly scan" />}</div>
                 {card ? <>{card.title}: {card.sub} CPX-1 has no proposal linked to it; the proposals below are design examples. </> : PRESSURE_MODEL.anomaliesLive ? <>No open anomaly in the FLOPX regions; the proposals below are design examples. </> : <>Texas pressure +14 pts → CPX-1 proposes VST +1.5 pp (design example). </>}
-                <button className="cursor-pointer text-inf underline-offset-2 hover:underline" onClick={() => { setXray({ region: card?.region ?? 'us-tx', tab: 'brief' }); navigate('xray') }}>See anomaly</button> · <button className="cursor-pointer text-dec underline-offset-2 hover:underline" onClick={() => setFund({ tab: 'decisions' })}>Review proposal</button>
+                <button className="cursor-pointer text-inf underline-offset-2 hover:underline max-md:relative max-md:before:absolute max-md:before:inset-x-0 max-md:before:-inset-y-[13px] max-md:before:content-['']" onClick={() => { setXray({ region: card?.region ?? 'us-tx', tab: 'brief' }); navigate('xray') }}>See anomaly</button> · <button className="cursor-pointer text-dec underline-offset-2 hover:underline max-md:relative max-md:before:absolute max-md:before:inset-x-0 max-md:before:-inset-y-[13px] max-md:before:content-['']" onClick={() => setFund({ tab: 'decisions' })}>Review proposal</button>
               </div>
             )
           })()}
@@ -223,11 +234,11 @@ function PortfolioTab() {
               { d: fmtDM(weekdaysAgo(1)), t: 'VST', from: 8.3, to: 9.3, why: 'TX pressure anomaly (first leg)', state: 'Filled' },
               { d: fmtDM(weekdaysAgo(6)), t: 'AMD', from: 2.0, to: 0, why: 'No edge found — signal retired', state: 'Filled' },
             ].map((c, i) => (
-              <div key={i} className="grid grid-cols-[48px_48px_1fr_auto] items-center gap-3 py-2 text-[12px]">
-                <span className="num text-[10.5px] text-dim">{c.d}</span>
+              <div key={i} className="grid grid-cols-[48px_48px_1fr_auto] items-center gap-3 py-2 text-[12px] max-md:grid-cols-[48px_1fr_auto] max-md:gap-x-2 max-md:gap-y-1">
+                <span className="num text-[10.5px] text-dim max-md:text-[12px]">{c.d}</span>
                 <span className="font-mono">{c.t}</span>
-                <span><span className="num">{c.from.toFixed(1)}% → {c.to.toFixed(1)}%</span> <span className="text-mute">· {c.why}</span></span>
-                <span className={cx('text-[11px]', c.state === 'Filled' ? 'text-up' : 'text-dec')}>{c.state}</span>
+                <span className="max-md:col-span-3"><span className="num">{c.from.toFixed(1)}% → {c.to.toFixed(1)}%</span> <span className="text-mute">· {c.why}</span></span>
+                <span className={cx('text-[11px] max-md:col-start-3 max-md:row-start-1 max-md:text-right', c.state === 'Filled' ? 'text-up' : 'text-dec')}>{c.state}</span>
               </div>
             ))}
         </Panel>
@@ -263,7 +274,9 @@ function LivePositionRows({ rows, nav, onInspect }: { rows: LivePosition[]; nav:
 export function PositionsTable({ live, liveNav, onReduce, onTicket, onInspect }: { live?: LivePosition[]; liveNav?: number; onReduce: (t: string, f: number) => void; onTicket: (t: string) => void; onInspect: (t: string) => void }) {
   const { positions, nav, orders } = useStore()
   return (
-    <div className="overflow-x-auto">
+    <>
+    <PositionCards live={live} liveNav={liveNav} onReduce={onReduce} onTicket={onTicket} onInspect={onInspect} />
+    <div className="overflow-x-auto max-md:hidden">
       <table className="w-full text-[12px]">
         <thead>
           <tr className="h-8 border-b border-line text-[11px] whitespace-nowrap text-dim">
@@ -305,6 +318,79 @@ export function PositionsTable({ live, liveNav, onReduce, onTicket, onInspect }:
         </tbody>
       </table>
     </div>
+    </>
+  )
+}
+
+/**
+ * Phone only (md:hidden): the positions table as stacked cards, one per holding, carrying every column the
+ * table shows. Ticker, side, size and P&L lead each card; the rest sits in a labelled grid beneath, and the
+ * row actions become 44 px targets. Desktop never renders this.
+ */
+function PositionCards({ live, liveNav, onReduce, onTicket, onInspect }: { live?: LivePosition[]; liveNav?: number; onReduce: (t: string, f: number) => void; onTicket: (t: string) => void; onInspect: (t: string) => void }) {
+  const { positions, nav, orders } = useStore()
+  const dash = <span className="text-dim">—</span>
+  const cell = (k: string, v: ReactNode) => <div key={k} className="min-w-0"><div className="text-[11px] text-dim">{k}</div><div className="num text-[13px]">{v}</div></div>
+  const head = (ticker: string, name: string, short: boolean, pnl: ReactNode) => (
+    <div className="flex items-start justify-between gap-3">
+      <button onClick={() => onInspect(ticker)} className="flex min-h-11 min-w-0 cursor-pointer flex-col items-start justify-center text-left">
+        <span className="flex items-center gap-2"><span className="font-mono text-[15px] text-bone">{ticker}</span><span className={cx('rounded-[2px] border px-1.5 text-[11px] font-medium', short ? 'border-down/40 text-down' : 'border-up/40 text-up')}>{short ? 'Short' : 'Long'}</span></span>
+        <span className="truncate text-[12px] text-dim">{name}</span>
+      </button>
+      <div className="shrink-0 text-right"><div className="text-[11px] text-dim">Unreal. P&L</div><div className="text-[15px]">{pnl}</div></div>
+    </div>
+  )
+  return (
+    <div className="divide-y divide-line-soft md:hidden">
+      {live && live.map((p) => {
+        const n = liveNav ?? nav
+        return (
+          <div key={p.ticker} className="space-y-2.5 px-4 py-3">
+            {head(p.ticker, secByTicker(p.ticker)?.name ?? mockNameOf(p.ticker), p.qty < 0, p.pnl != null ? <Delta v={p.pnl / 1000} d={1} suffix="k" /> : dash)}
+            <div className="grid grid-cols-3 gap-x-3 gap-y-2">
+              {cell('Qty', p.qty.toLocaleString())}
+              {cell('Mkt value ($)', p.mv != null ? <>{p.mv < 0 ? '−' : ''}{Math.abs(Math.round(p.mv)).toLocaleString()}</> : dash)}
+              {cell('Weight', p.mv != null && n ? `${((p.mv / n) * 100).toFixed(1)}%` : dash)}
+              {cell('Avg ($)', <span className="text-mute">{p.avg.toFixed(2)}</span>)}
+              {cell('Last ($)', p.last != null ? p.last.toFixed(2) : dash)}
+              {cell('Day', dash)}
+              {cell('Own', dash)}
+              {cell('Signal', dash)}
+            </div>
+            <div className="font-mono text-[11px] text-dim">{p.fresh.freshness === 'illustrative' ? 'mark: sample price' : `mark ${p.fresh.freshness}`}</div>
+          </div>
+        )
+      })}
+      {!live && positions.map((p) => {
+        const px = lastPx(p.ticker)
+        const mv = p.qty * px
+        const pnl = p.qty * (px - p.avg)
+        const sig = p.signal ? signalById(p.signal) : null
+        const pending = orders.some((o) => o.ticker === p.ticker && (o.status === 'Pending' || o.status === 'Queued'))
+        return (
+          <div key={p.ticker} className="space-y-2.5 px-4 py-3">
+            {head(p.ticker, secByTicker(p.ticker)!.name, p.qty < 0, <Delta v={pnl / 1000} d={1} suffix="k" />)}
+            <div className="grid grid-cols-3 gap-x-3 gap-y-2">
+              {cell('Qty', p.qty.toLocaleString())}
+              {cell('Mkt value ($)', <>{mv < 0 ? '−' : ''}{Math.abs(Math.round(mv)).toLocaleString()}</>)}
+              {cell('Weight', `${((mv / nav) * 100).toFixed(1)}%`)}
+              {cell('Avg ($)', <span className="text-mute">{p.avg.toFixed(2)}</span>)}
+              {cell('Last ($)', px.toFixed(2))}
+              {cell('Day', <Delta v={((px - prevPx(p.ticker)) / prevPx(p.ticker)) * 100} />)}
+              {cell('Own', <span title={p.strategy === 'User' ? 'Owner: User' : 'Owner: CPX-1 (model)'} className={p.strategy === 'User' ? 'text-bone' : 'text-dec'}>{p.strategy === 'User' ? 'U user' : '◆ CPX-1'}</span>)}
+              <div className="col-span-2 min-w-0"><div className="text-[11px] text-dim">Signal</div><div className="truncate text-[12.5px]">{sig ? <EntityLink r={{ kind: 'signal', id: sig.id, label: sig.name }} className="text-mute" /> : dash}</div></div>
+            </div>
+            {pending ? <div className="text-[12px] text-warn">order pending…</div> : (
+              <div className="grid grid-cols-3 gap-2">
+                <Btn variant="ghost" className="max-md:h-11 border border-line" title="Reduce by half" onClick={() => onReduce(p.ticker, 0.5)}>−50%</Btn>
+                <Btn variant="ghost" className="max-md:h-11 border border-line" title="Close position" aria-label={`Close ${p.ticker}`} onClick={() => onReduce(p.ticker, 1)}><X size={14} /> Close</Btn>
+                <Btn variant="ghost" className="max-md:h-11 border border-line" title="Open order ticket" aria-label={`Ticket ${p.ticker}`} onClick={() => onTicket(p.ticker)}><Send size={14} /> Ticket</Btn>
+              </div>
+            )}
+          </div>
+        )
+      })}
+    </div>
   )
 }
 
@@ -315,15 +401,15 @@ export function OrdersList({ orders }: { orders: ReturnType<typeof useStore>['or
   return (
     <>
       {orders.map((o) => (
-        <div key={o.id} className="grid grid-cols-[76px_1fr_auto] items-center gap-3 py-2">
-          <span className="num text-[10.5px] text-dim">{o.time}</span>
+        <div key={o.id} className="grid grid-cols-[76px_1fr_auto] items-center gap-3 py-2 max-md:grid-cols-[1fr_auto] max-md:gap-x-2 max-md:gap-y-1 max-md:py-2.5">
+          <span className="num text-[10.5px] text-dim max-md:col-span-2 max-md:text-[12px]">{o.time}</span>
           <div className="min-w-0">
             <div className="text-[12px]"><span className={cx('font-medium', o.side === 'Buy' || o.side === 'Cover' ? 'text-up' : 'text-down')}>{o.side}</span> <span className="num">{o.qty.toLocaleString()}</span> <span className="font-mono">{o.ticker}</span> <span className="text-dim">· {o.type}{o.limit ? ` @ ${o.limit}` : ''}</span>{o.fillPx && <span className="text-mute"> · filled ${o.fillPx.toFixed(2)}</span>}</div>
-            <div className="truncate text-[11px] text-dim"><span className={o.origin === 'Model' ? 'text-dec' : 'text-mute'}>{o.origin === 'Model' ? 'Model · CPX-1' : 'User'}</span>{o.note && ` · ${o.note}`}{o.reason && <span className={o.status === 'Rejected' ? 'text-down' : 'text-warn'}> · {o.reason}</span>}</div>
+            <div className="truncate text-[11px] text-dim max-md:whitespace-normal"><span className={o.origin === 'Model' ? 'text-dec' : 'text-mute'}>{o.origin === 'Model' ? 'Model · CPX-1' : 'User'}</span>{o.note && ` · ${o.note}`}{o.reason && <span className={o.status === 'Rejected' ? 'text-down' : 'text-warn'}> · {o.reason}</span>}</div>
           </div>
           <div className="flex items-center gap-2">
             <OrderStatus s={o.status} />
-            {(o.status === 'Pending' || o.status === 'Queued') && <button onClick={() => cancelOrder(o.id)} className="cursor-pointer text-dim hover:text-bone" aria-label="Cancel order"><X size={12} /></button>}
+            {(o.status === 'Pending' || o.status === 'Queued') && <button onClick={() => cancelOrder(o.id)} className="cursor-pointer text-dim hover:text-bone max-md:-my-2 max-md:flex max-md:size-11 max-md:items-center max-md:justify-center" aria-label="Cancel order"><X size={12} /></button>}
           </div>
         </div>
       ))}
@@ -381,7 +467,7 @@ function DecisionRecordPanel({ rec, onClose }: { rec: (typeof DECISIONS)[number]
 function RecordLink({ d }: { d: (typeof DECISIONS)[number] }) {
   const { setFund } = useStore()
   return (
-    <button onClick={() => setFund({ record: d.id })} className="flex w-full cursor-pointer items-center gap-3 py-2 text-left hover:bg-hover">
+    <button onClick={() => setFund({ record: d.id })} className="flex w-full cursor-pointer items-center gap-3 py-2 text-left hover:bg-hover max-md:min-h-11">
       <span className={cx('size-2.5 rotate-45 border border-dec', d.mode === 'paper' && 'bg-dec')} />
       <span className="flex-1 text-[12px]">{d.title}</span>
       <span className="num text-[10.5px] text-dim">{WEEKS[d.week]}</span>
@@ -459,7 +545,7 @@ function SignalsTab() {
         <Row cols={[1, 1]} at="lg">
           <Panel title="Features driving this forecast" eyebrow="Contribution to expected return · pp">
             <HBars signed rows={sig.features.map((x) => ({ label: <span className="flex items-center gap-1.5"><TruthGlyph truth={x.truth} size={7} />{x.name} <span className="text-dim">· {x.value}</span></span>, value: x.contribution, color: x.truth === 'inf' ? 'var(--color-inf)' : undefined, hatched: x.truth === 'inf' }))} fmt={(v) => `${v > 0 ? '+' : ''}${v.toFixed(1)}`} />
-            {sig.regions.length > 0 && <div className="mt-3 flex flex-wrap gap-1.5">{sig.regions.map((r) => <Btn key={r} size="sm" variant="subtle" onClick={() => { setXray({ region: r, tab: 'brief' }); navigate('xray') }}>{regionById(r)!.short} in X-Ray <ArrowRight size={11} /></Btn>)}</div>}
+            {sig.regions.length > 0 && <div className="mt-3 flex flex-wrap gap-1.5">{sig.regions.map((r) => <Btn key={r} size="sm" variant="subtle" className="max-md:h-11" onClick={() => { setXray({ region: r, tab: 'brief' }); navigate('xray') }}>{regionById(r)!.short} in X-Ray <ArrowRight size={11} /></Btn>)}</div>}
           </Panel>
           <Panel title="Financial & fundamental context" eyebrow={<>Latest filings <Fresh quiet f="illustrative" /></>}>
             {sig.fundamentals.length ? <div className="grid grid-cols-2 gap-3">{sig.fundamentals.map((x) => <div key={x.k}><div className="text-[11px] text-dim font-medium">{x.k}</div><div className="num text-[14px]">{x.v}</div></div>)}</div> : <div className="text-[12px] text-mute">Not applicable for this asset.</div>}
@@ -520,9 +606,9 @@ function DecisionsTab() {
           const change = p.targetW - p.currentW
           return (
             <div key={p.id} className={cx('rounded-md border border-line bg-panel', p.state === 'open' ? 'border-l-2 border-l-dec' : 'opacity-90')}>
-              <div className="flex items-start justify-between border-b border-line px-4 py-3">
+              <div className="flex items-start justify-between border-b border-line px-4 py-3 max-md:flex-col max-md:gap-1.5">
                 <div>
-                  <div className="mb-0.5 flex items-center gap-2"><TruthTag truth="dec" compact /><span className="text-[11px] text-dim">Proposal <span className="num">{p.id.toUpperCase()}</span> · CPX-1</span>{p.exploratory && <span className="rounded-[2px] border border-warn/40 px-1 text-[10.5px] text-warn">Exploratory · capped size</span>}</div>
+                  <div className="mb-0.5 flex items-center gap-2 max-md:flex-wrap max-md:gap-y-1"><TruthTag truth="dec" compact /><span className="text-[11px] text-dim">Proposal <span className="num">{p.id.toUpperCase()}</span> · CPX-1</span>{p.exploratory && <span className="rounded-[2px] border border-warn/40 px-1 text-[10.5px] text-warn">Exploratory · capped size</span>}</div>
                   <div className="text-[16px] font-semibold"><span className={p.side === 'Buy' || p.side === 'Cover' ? 'text-up' : 'text-down'}>{p.side}</span> <span className="num">{q.toLocaleString()}</span> <button onClick={() => inspect({ kind: 'security', id: p.ticker, label: p.ticker })} className="cursor-pointer font-mono hover:underline">{p.ticker}</button> <span className="text-[12px] font-normal text-mute">≈ ${Math.round(q * lastPx(p.ticker)).toLocaleString()}</span></div>
                 </div>
                 {p.state === 'open' ? <span className="text-[11px] font-medium text-dec">Awaiting decision</span> : p.state === 'rejected' ? <span className="text-[11px] text-dim">Rejected · override logged</span> : order && <OrderStatus s={order.status} />}
@@ -541,11 +627,11 @@ function DecisionsTab() {
                   {p.risks.map((r) => <div key={r} className="text-[11.5px] text-mute">· {r}</div>)}
                 </div>
                 {editing === p.id && (
-                  <div className="flex items-center gap-2 rounded-[4px] border border-line2 p-2">
+                  <div className="flex items-center gap-2 rounded-[4px] border border-line2 p-2 max-md:flex-wrap">
                     <span className="eyebrow">Modify qty</span>
-                    <input type="number" min={1} value={q} onChange={(e) => modifyProposal(p.id, Math.max(1, +e.target.value))} className="num h-7 w-28 rounded-[3px] border border-line2 bg-ink px-2 text-[12px] outline-none" />
+                    <input type="number" min={1} value={q} onChange={(e) => modifyProposal(p.id, Math.max(1, +e.target.value))} className="num h-7 w-28 rounded-[3px] border border-line2 bg-ink px-2 text-[12px] outline-none max-md:h-11 max-md:text-[16px]" />
                     <span className="text-[11px] text-dim">model: <span className="num">{p.qty.toLocaleString()}</span></span>
-                    <Btn size="sm" variant="ghost" onClick={() => setEditing(null)}>Done</Btn>
+                    <Btn size="sm" variant="ghost" className="max-md:h-11" onClick={() => setEditing(null)}>Done</Btn>
                   </div>
                 )}
                 {p.state === 'sent' && order && (
@@ -555,10 +641,10 @@ function DecisionsTab() {
                 )}
               </div>
               {p.state === 'open' && (
-                <div className="flex gap-2 border-t border-line px-4 py-3">
-                  <Btn variant="decision" size="sm" onClick={() => { actOnProposal(p.id, 'send'); setEditing(null) }}><Send size={12} /> Send to paper</Btn>
-                  <Btn size="sm" onClick={() => setEditing(editing === p.id ? null : p.id)}><Pencil size={12} /> Modify</Btn>
-                  <Btn size="sm" variant="danger" onClick={() => actOnProposal(p.id, 'reject')}>Reject</Btn>
+                <div className="flex gap-2 border-t border-line px-4 py-3 max-md:grid max-md:grid-cols-3">
+                  <Btn variant="decision" size="sm" className="max-md:h-11" onClick={() => { actOnProposal(p.id, 'send'); setEditing(null) }}><Send size={12} /> Send to paper</Btn>
+                  <Btn size="sm" className="max-md:h-11" onClick={() => setEditing(editing === p.id ? null : p.id)}><Pencil size={12} /> Modify</Btn>
+                  <Btn size="sm" variant="danger" className="max-md:h-11" onClick={() => actOnProposal(p.id, 'reject')}>Reject</Btn>
                 </div>
               )}
             </div>
@@ -566,15 +652,15 @@ function DecisionsTab() {
         })}
       </div>
       </Foldable>
-      <Panel title="Attribution · closed decisions" eyebrow={<>Realised P&L by originating signal <Fresh quiet f="illustrative" /></>}>
-        <div className="grid grid-cols-[1fr_80px_90px_100px_1fr] gap-3 border-b border-line pb-1.5 text-[11px] text-dim font-medium"><span>Decision</span><span>Origin</span><span className="text-right">P&L</span><span className="text-right">Signal share</span><span>Note</span></div>
+      <Panel title="Attribution · closed decisions" eyebrow={<>Realised P&L by originating signal <Fresh quiet f="illustrative" /></>} bodyClass="max-md:overflow-x-auto">
+        <div className="grid grid-cols-[1fr_80px_90px_100px_1fr] gap-3 border-b border-line pb-1.5 text-[11px] text-dim font-medium max-md:min-w-[620px]"><span className="max-md:sticky max-md:left-0 max-md:z-[1] max-md:bg-panel">Decision</span><span>Origin</span><span className="text-right">P&L</span><span className="text-right">Signal share</span><span>Note</span></div>
         {[
           { d: `Close AMD (${fmtDM(weekdaysAgo(6))})`, o: 'Model', pnl: 41250, share: '—', note: 'Signal retired: no edge found. P&L is market beta, not skill.' },
           { d: `Buy VST first leg (${fmtDM(weekdaysAgo(1))})`, o: 'Model', pnl: null, share: 'pending', note: `1M horizon resolves ${fmtDMY(daysAgo(-30, weekdaysAgo(1)))}` },
           { d: `MSFT (user, ${fmtDM(WEEK_DATES[PAPER_START_WK])})`, o: 'User', pnl: null, share: 'n/a', note: 'User-initiated; excluded from strategy attribution' },
         ].map((r) => (
-          <div key={r.d} className="grid grid-cols-[1fr_80px_90px_100px_1fr] items-center gap-3 border-b border-line-soft py-2 text-[12px]">
-            <span>{r.d}</span><span className={cx('text-[11.5px]', r.o === 'Model' ? 'text-dec' : 'text-mute')}>{r.o}</span>
+          <div key={r.d} className="grid grid-cols-[1fr_80px_90px_100px_1fr] items-center gap-3 border-b border-line-soft py-2 text-[12px] max-md:min-w-[620px]">
+            <span className="max-md:sticky max-md:left-0 max-md:z-[1] max-md:self-stretch max-md:bg-panel max-md:py-0.5">{r.d}</span><span className={cx('text-[11.5px]', r.o === 'Model' ? 'text-dec' : 'text-mute')}>{r.o}</span>
             <span className="text-right">{r.pnl != null ? <Delta v={r.pnl / 1000} d={1} suffix="k" /> : <span className="text-dim">open</span>}</span>
             <span className="num text-right text-mute">{r.share}</span><span className="text-[11.5px] text-mute">{r.note}</span>
           </div>

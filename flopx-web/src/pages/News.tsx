@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react'
-import { AlertTriangle, X } from 'lucide-react'
+import { AlertTriangle, SlidersHorizontal, X } from 'lucide-react'
 import { regionById, type Freshness } from '@/data/core'
 import { NEWS, NEWS_FEED_SUMMARY as LF, PRED, type NewsItem, type NewsType, type PredMarket } from '@/data/finance'
 import { projectById } from '@/data/infra'
@@ -28,6 +28,7 @@ export default function News() {
   const { route, navigate } = useStore()
   const [type, setType] = useState<(typeof TYPES)[number]>('All')
   const [region, setRegion] = useState('all')
+  const [filtersOpen, setFiltersOpen] = useState(false)
   const sel = route.params.id
   const open = (id: string) => navigate('news', { id })
   const close = () => navigate('news')
@@ -43,13 +44,7 @@ export default function News() {
   const allNews = [...keyNews, ...otherNews].sort(byAge)
   const freshOfList = (xs: { freshness?: Freshness }[]): Freshness | undefined => (xs.some((x) => x.freshness === 'illustrative') ? 'illustrative' : undefined)
   const news = NEWS.find((n) => n.id === sel)
-  const pm = PRED.find((p) => p.id === sel)
-
-  return (
-    <div>
-      <PageHeader eyebrow={<>GDELT headlines, filings and prediction-market venues · <span className="num">{SNAPSHOT.short}</span></>} title="Events & market odds" sub="Events, sources and market-implied odds in one feed."
-        about="Each item type is kept distinguishable. A market price is a crowd belief shaped by liquidity, not an objective probability." />
-      <Foldable label="Filters" className="mb-4">
+  const filterControls = (
         <div className="flex flex-wrap items-center gap-2">
           {TYPES.map((t) => {
             const on = type === t
@@ -57,15 +52,45 @@ export default function News() {
             const count = t === 'All' ? NEWS.length + PRED.length : t === 'Prediction market' ? PRED.length : NEWS.filter((n) => n.type === t).length
             return (
               <button key={t} onClick={() => setType(t)} aria-pressed={on}
-                className={cx('flex h-7 cursor-pointer items-center gap-1.5 rounded-ctl border px-2.5 text-[11.5px] transition-colors duration-[120ms]', on ? 'border-line2 bg-raise text-bone' : 'border-line text-mute hover:bg-hover hover:text-bone')}
+                className={cx('flex h-7 cursor-pointer items-center gap-1.5 rounded-ctl border px-2.5 text-[11.5px] transition-colors duration-[120ms] max-md:h-11 max-md:px-3 max-md:text-[13px]', on ? 'border-line2 bg-raise text-bone' : 'border-line text-mute hover:bg-hover hover:text-bone')}
                 style={on && c ? { borderColor: tint(c, 50), background: tint(c, 10) } : undefined}>
                 {c && <span className="size-1.5 rounded-full" style={{ background: c }} />}
-                {t}<span className="num text-[10px] text-dim">{count}</span>
+                {t}<span className="num text-[10px] text-dim max-md:text-[12px]">{count}</span>
               </button>
             )
           })}
-          <select value={region} onChange={(e) => setRegion(e.target.value)} className="ml-auto h-7 max-w-full rounded-[4px] border border-line2 bg-panel px-2 text-[11.5px]"><option value="all">All regions</option>{['us-tx', 'us-va', 'no-nordics', 'sg', 'ie-dub', 'de-fra'].map((r) => <option key={r} value={r}>{regionById(r)!.name}</option>)}</select>
+          <select value={region} onChange={(e) => setRegion(e.target.value)} className="ml-auto h-7 max-w-full rounded-[4px] border border-line2 bg-panel px-2 text-[11.5px] max-md:ml-0 max-md:h-11 max-md:w-full max-md:text-[16px]"><option value="all">All regions</option>{['us-tx', 'us-va', 'no-nordics', 'sg', 'ie-dub', 'de-fra'].map((r) => <option key={r} value={r}>{regionById(r)!.name}</option>)}</select>
         </div>
+  )
+  const activeFilters = (type === 'All' ? 0 : 1) + (region === 'all' ? 0 : 1)
+  const pm = PRED.find((p) => p.id === sel)
+
+  return (
+    <div>
+      <PageHeader eyebrow={<>GDELT headlines, filings and prediction-market venues · <span className="num">{SNAPSHOT.short}</span></>} title="Events & market odds" sub="Events, sources and market-implied odds in one feed."
+        about="Each item type is kept distinguishable. A market price is a crowd belief shaped by liquidity, not an objective probability." />
+      {/* Phone: the filters open in a bottom sheet from this button; the desktop row is unchanged. */}
+      <div className="mb-3 flex items-center gap-2 md:hidden">
+        <button type="button" onClick={() => setFiltersOpen(true)} aria-haspopup="dialog" className="flex min-h-11 cursor-pointer items-center gap-2 rounded-ctl border border-line2 px-3.5 text-[13px] text-bone">
+          <SlidersHorizontal size={15} />Filters{activeFilters > 0 && <span className="num text-[12px] text-act">{activeFilters}</span>}
+        </button>
+        <span className="min-w-0 truncate text-[12px] text-dim">{type === 'All' ? 'All types' : type} · {region === 'all' ? 'all regions' : regionById(region)!.name}</span>
+      </div>
+      {filtersOpen && (
+        <div className="fixed inset-0 z-[60] flex flex-col justify-end md:hidden" role="dialog" aria-modal="true" aria-label="Filters">
+          <div className="absolute inset-0 bg-ink/60" onClick={() => setFiltersOpen(false)} />
+          <div className="relative rounded-t-xl border border-b-0 border-line2 bg-panel px-4 pt-2 pb-[calc(env(safe-area-inset-bottom)+16px)] shadow-2xl">
+            <div className="mb-2 flex items-center justify-between">
+              <span className="text-[14px] font-semibold text-bone">Filters</span>
+              <button type="button" onClick={() => setFiltersOpen(false)} aria-label="Close filters" className="grid size-11 cursor-pointer place-items-center text-mute"><X size={16} /></button>
+            </div>
+            {filterControls}
+            <button type="button" onClick={() => setFiltersOpen(false)} className="mt-4 flex min-h-11 w-full cursor-pointer items-center justify-center rounded-ctl bg-bone text-[14px] font-medium text-ink">Show {items.length} {items.length === 1 ? 'item' : 'items'}</button>
+          </div>
+        </div>
+      )}
+      <Foldable label="Filters" className="mb-4 max-md:hidden">
+        {filterControls}
       </Foldable>
 
       <Foldable label="Timeline" className="mb-6">
@@ -164,15 +189,15 @@ function Timeline({ items, sel, onPick }: { items: NewsItem[]; sel?: string; onP
   const lanes = LANES.filter((t) => items.some((n) => n.type === t))
   const laneH = 30
   return (
-    <div className="rounded-md border border-line bg-panel px-4 pt-3 pb-2">
-      <div className="mb-2 flex items-center justify-between text-[11px] text-dim">
+    <div className="rounded-md border border-line bg-panel px-4 pt-3 pb-2 max-md:px-3">
+      <div className="mb-2 flex items-center justify-between text-[11px] text-dim max-md:flex-wrap max-md:gap-y-1 max-md:text-[12px]">
         <span className="font-medium text-mute">Last 60 days <span className="num ml-1.5 text-dim">{items.length} events</span></span>
         <span className="flex items-center gap-3">
           <span className="flex items-center gap-1"><span className="size-2 rounded-full bg-mute" />filled = verified</span>
           <span className="flex items-center gap-1"><span className="size-2 rounded-full border border-mute" />hollow = single source</span>
         </span>
       </div>
-      <div className="grid grid-cols-[104px_minmax(0,1fr)]">
+      <div className="grid grid-cols-[104px_minmax(0,1fr)] max-md:grid-cols-[92px_minmax(0,1fr)]">
         <div>
           {lanes.map((t) => (
             <div key={t} className="flex items-center gap-1.5 text-[11px] text-mute" style={{ height: laneH }}><span className="size-1.5 rounded-full" style={{ background: TYPE_COLOR[t] }} />{t}</div>
@@ -186,7 +211,7 @@ function Timeline({ items, sel, onPick }: { items: NewsItem[]; sel?: string; onP
           {[0, 15, 30, 45, 60].map((d) => (
             <div key={d} className="absolute top-0" style={{ left: x(d), height: lanes.length * laneH + 16 }}>
               <div className={cx('w-px', d === 0 ? 'bg-fct/60' : 'bg-line/70')} style={{ height: lanes.length * laneH }} />
-              <span className={cx('num absolute bottom-0 -translate-x-1/2 text-[9.5px] whitespace-nowrap', d === 0 ? 'text-fct' : 'text-dim')} style={d === 0 ? { transform: 'translateX(-100%)' } : d === 60 ? { transform: 'none' } : undefined}>{d === 0 ? 'today' : `${d}d`}</span>
+              <span className={cx('num absolute bottom-0 -translate-x-1/2 text-[9.5px] whitespace-nowrap max-md:text-[12px]', d === 0 ? 'text-fct' : 'text-dim')} style={d === 0 ? { transform: 'translateX(-100%)' } : d === 60 ? { transform: 'none' } : undefined}>{d === 0 ? 'today' : `${d}d`}</span>
             </div>
           ))}
           {items.filter((n) => lanes.includes(n.type)).map((n) => {
@@ -199,10 +224,10 @@ function Timeline({ items, sel, onPick }: { items: NewsItem[]; sel?: string; onP
             return (
               <div key={n.id} className="absolute" style={{ left: x(d), top }}>
                 {n.impact === 'high' && (
-                  <span className={cx('pointer-events-none absolute top-1/2 max-w-[220px] -translate-y-1/2 truncate text-[10.5px] whitespace-nowrap text-mute', labelLeft ? 'right-3 text-right' : 'left-3')}>{n.title}</span>
+                  <span className={cx('pointer-events-none absolute top-1/2 max-w-[220px] -translate-y-1/2 truncate text-[10.5px] whitespace-nowrap text-mute max-md:max-w-[110px] max-md:text-[12px]', labelLeft ? 'right-3 text-right' : 'left-3')}>{n.title}</span>
                 )}
                 <button title={`${n.ago} ago · ${n.title}`} aria-label={n.title} onClick={() => onPick(n.id)}
-                  className="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full hover:brightness-125"
+                  className="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full hover:brightness-125 max-md:before:absolute max-md:before:-inset-[21px] max-md:before:content-['']"
                   style={{ width: size, height: size, background: weak(n) ? 'var(--color-panel)' : c, border: `1.5px solid ${c}`,
                     boxShadow: on ? `0 0 0 2px var(--color-panel), 0 0 0 3px ${c}` : undefined }} />
               </div>
@@ -281,8 +306,8 @@ function Drawer({ onClose, children }: { onClose: () => void; children: ReactNod
     <div className="fixed inset-0 z-50 flex justify-end" role="dialog" aria-modal="true">
       <div className="absolute inset-0 bg-ink/60 backdrop-blur-[1px]" onClick={onClose} />
       <aside className="slide-in relative flex h-full w-full max-w-[600px] flex-col border-l border-line2 bg-panel shadow-2xl">
-        <button onClick={onClose} aria-label="Close" className="absolute top-3 right-3 z-10 flex size-7 cursor-pointer items-center justify-center rounded-[4px] text-mute hover:bg-hover hover:text-bone"><X size={15} /></button>
-        <div className="flex-1 overflow-y-auto p-5 pr-12">{children}</div>
+        <button onClick={onClose} aria-label="Close" className="absolute top-3 right-3 z-10 flex size-7 cursor-pointer items-center justify-center rounded-[4px] text-mute hover:bg-hover hover:text-bone max-md:top-1 max-md:right-1 max-md:size-11"><X size={15} /></button>
+        <div className="flex-1 overflow-y-auto p-5 pr-12 max-md:px-4 max-md:pt-4 max-md:pb-[calc(env(safe-area-inset-bottom)+16px)]">{children}</div>
       </aside>
     </div>
   )
@@ -299,7 +324,7 @@ function NewsDetail({ n }: { n: NewsItem }) {
         <span className="text-[11px] text-dim">Impact: {n.impact}</span>
       </div>
       <p className="mb-5 text-[13.5px] leading-relaxed text-bone/90">{n.summary}</p>
-      <div className="grid grid-cols-3 gap-3 text-[12px]">
+      <div className="grid grid-cols-3 gap-3 text-[12px] max-md:grid-cols-1">
         <div><div className="eyebrow mb-1">Regions</div>{n.regions.map((r) => <div key={r}><EntityLink r={{ kind: 'region', id: r, label: regionById(r)!.name }} /></div>)}</div>
         <div><div className="eyebrow mb-1">Assets</div>{n.tickers.map((t) => <div key={t}><EntityLink r={{ kind: 'security', id: t, label: t }} className="font-mono" /></div>)}</div>
         <div><div className="eyebrow mb-1">Projects</div>{n.projects?.map((p) => <div key={p}><EntityLink r={{ kind: 'project', id: p, label: projectById(p)!.name }} /></div>) ?? <span className="text-dim">—</span>}</div>
@@ -322,7 +347,7 @@ function MarketDetail({ p }: { p: PredMarket }) {
         {p.chg7 != null && <div className={cx('num pb-1 text-[12px]', p.chg7 > 0 ? 'text-up' : p.chg7 < 0 ? 'text-down' : 'text-mute')}>{p.chg7 > 0 ? '+' : ''}{p.chg7} pts 7d</div>}
       </div>
       <TimeChart labels={Array.from({ length: 30 }, (_, i) => `${i - 29}d`)} height={170} yFmt={(v) => `${Math.round(v * 100)}%`} series={[{ id: 'p', label: 'Price (YES)', values: p.probHist, color: 'var(--color-fct)', area: true }]} />
-      <div className="mt-3 grid grid-cols-4 gap-3">
+      <div className="mt-3 grid grid-cols-4 gap-3 max-md:grid-cols-2">
         {[[p.freshness === 'illustrative' ? 'Volume' : 'Volume 24h', p.volume != null ? `$${(p.volume / 1000).toFixed(p.volume < 10000 ? 1 : 0)}k` : 'not loaded'], ['Depth', `$${(p.liquidity / 1000).toFixed(1)}k`], ['Spread', p.spread != null ? `${(p.spread * 100).toFixed(0)} pts` : 'not loaded'], ['Closes', p.closes]].map(([k, v]) => <div key={k}><div className="text-[11px] font-medium text-dim">{k}</div><div className="num text-[13px]">{v}</div></div>)}
       </div>
       {p.caution && <div className="mt-3 flex gap-2 rounded-[4px] border border-warn/35 bg-warn/[0.04] p-2.5 text-[12px] text-warn"><AlertTriangle size={14} className="mt-0.5 shrink-0" />{p.caution}</div>}

@@ -38,7 +38,7 @@ export function EdgeToggle({ edge, open, label, onClick, rail }: { edge: 'top' |
 }
 
 /** Unframed 14px chevron in a 24px hit target: dim at rest, bone on hover, a neutral outline on keyboard focus. */
-const chevron = 'flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-[3px] text-dim transition-[color,opacity] duration-[120ms] hover:text-bone focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-mute'
+const chevron = 'flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-[3px] text-dim transition-[color,opacity] duration-[120ms] hover:text-bone focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-mute max-md:relative max-md:after:absolute max-md:after:-inset-2.5'
 
 /** Header fold toggle (panels, Foldable): points up to fold, down to unfold. */
 export function FoldButton({ open, label, onClick }: { open: boolean; label: string; onClick: () => void }) {
@@ -142,7 +142,7 @@ function FoldRail({ label, side, vertical, onOpen }: { label: string; side: 'lef
   return (
     <button type="button" onClick={onOpen} aria-expanded={false} aria-label={`Show ${label.toLowerCase()}`} title={`Show ${label.toLowerCase()}`}
       style={vertical ? { width: RAIL } : undefined}
-      className={cx('group flex min-w-0 cursor-pointer items-center gap-2 overflow-hidden rounded-[2px] border border-line bg-panel text-mute transition-colors duration-[120ms] hover:bg-hover hover:text-bone focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mute', vertical ? 'min-h-[160px] flex-col self-stretch py-2' : 'h-10 px-3')}>
+      className={cx('group flex min-w-0 cursor-pointer items-center gap-2 overflow-hidden rounded-[2px] border border-line bg-panel text-mute transition-colors duration-[120ms] hover:bg-hover hover:text-bone focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mute', vertical ? 'min-h-[160px] flex-col self-stretch py-2' : 'h-10 px-3 max-md:h-11')}>
       <span className="flex size-6 shrink-0 items-center justify-center text-dim group-hover:text-bone"><Icon size={14} strokeWidth={2} /></span>
       <span className={cx('truncate text-[12px] font-medium', vertical && '[writing-mode:vertical-rl]')}>{label}</span>
     </button>
@@ -166,7 +166,7 @@ export function Foldable({ label, id, className, children }: { label: ReactNode;
   const open = !keys.includes(panelKey(route.page, pid))
   return (
     <div className={cx('min-w-0', className)}>
-      <div className="mb-1 flex min-h-7 items-center justify-between gap-3">
+      <div className="mb-1 flex min-h-7 items-center justify-between gap-3 max-md:min-h-11">
         <div className="flex min-w-0 items-center gap-2 text-[11.5px] leading-4 font-medium text-dim">{label}</div>
         <FoldButton open={open} label={pid.toLowerCase()} onClick={() => collapse.toggle(route.page, pid)} />
       </div>

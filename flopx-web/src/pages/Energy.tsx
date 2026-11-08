@@ -4,6 +4,7 @@ import { AS_OF, MONTHS, NOW_IDX, regionById } from '@/data/core'
 import { ENERGY, PROJECTS, type Stage } from '@/data/infra'
 import { secByTicker } from '@/data/finance'
 import { METER_H, METER_W, PowerMeter, StagePip, WorldMap } from '@/components/WorldMap'
+import { useIsPhone } from '@/lib/usePhone'
 import { POWER_HOT, STAGE_ORDER } from '@/lib/powerMap'
 import { SCALED_HISTORY_LABEL, TimeChart } from '@/components/charts'
 import { Foldable, Row } from '@/components/collapse'
@@ -23,7 +24,7 @@ const parseWhen = (s: string): number | null => {
   if (y) return (+y[1] - 2024) * 12 + 6
   return null
 }
-const buildCols = 'grid grid-cols-[minmax(0,1.6fr)_118px_minmax(100px,0.8fr)_80px_minmax(0,1.8fr)] gap-4'
+const buildCols = 'grid grid-cols-[minmax(0,1.6fr)_118px_minmax(100px,0.8fr)_80px_minmax(0,1.8fr)] gap-4 max-md:min-w-[720px] max-md:grid-cols-[150px_96px_120px_72px_minmax(0,1fr)] max-md:gap-3'
 /** Build stage is encoded once, by the timeline bar: one hue (cat3) that fades and loosens as the project gets less certain. */
 const STAGE_BAR: Record<Stage, string> = {
   operational: 'bg-cat3',
@@ -49,9 +50,10 @@ export default function Energy() {
   const feedFresh = dominantFresh(ENERGY.map((e) => e.freshness))
   const maxPrice = Math.max(...ENERGY.map((e) => e.priceNow))
   // Months from Jan 2024 to the real current month (the month axis is anchored on the backend's time).
+  const phone = useIsPhone()
   const nowPct = (Math.min(60, Math.max(0, ym(axisAnchor()) - 2024 * 12)) / 60) * 100
   return (
-    <div>
+    <div className="max-md:[&_[data-fresh]]:whitespace-normal">
       <PageHeader eyebrow={<span title={`Grid operators, permits and developer filings · as of ${AS_OF}`}>Grid operators · permits · filings</span>} title="Power & infrastructure" sub="Power prices, grid constraints and data-centre build-out."
         about="How electricity prices, grid constraints and data-centre construction connect to compute economics and company exposure." />
 
@@ -84,26 +86,26 @@ export default function Energy() {
         </div>
       </Foldable>
 
-      <Panel className="mb-5" id="Selected market" title={m.name} eyebrow={m.operator} right={<span className="flex items-center gap-3"><Fresh quiet f={m.freshness} />{histNote(m) && <Fresh quiet f="illustrative" label={histNote(m)!} />}<button onClick={() => inspect({ kind: 'energy', id: m.id, label: m.name })} className="cursor-pointer text-[11px] text-mute hover:text-bone">Inspect →</button></span>}>
+      <Panel className="mb-5" id="Selected market" title={m.name} eyebrow={m.operator} right={<span className="flex items-center gap-3"><Fresh quiet f={m.freshness} />{histNote(m) && <Fresh quiet f="illustrative" label={histNote(m)!} />}<button onClick={() => inspect({ kind: 'energy', id: m.id, label: m.name })} className="cursor-pointer text-[11px] text-mute hover:text-bone max-md:-my-3 max-md:min-h-11 max-md:text-[12px]">Inspect →</button></span>}>
         <TimeChart labels={MONTHS.slice(0, NOW_IDX + 1)} height={150} yFmt={(v) => `${cur(m)}${v.toFixed(0)}`} series={[{ id: 'p', label: `${m.name} ${cur(m)}/MWh`, values: m.price, color: 'var(--color-warn)', area: true }]} />
         <div className="mt-3 rounded-md bg-ink p-3 text-[12px]"><span className="eyebrow mr-2">Constraint</span>{m.constraint}</div>
         <div className="mt-4 space-y-3 text-[12px]">
-          <div><div className="eyebrow mb-1">→ Compute regions</div>{m.regions.map((r) => <button key={r} onClick={() => { setXray({ region: r, layers: ['pressure', 'power', 'pipeline'] }); navigate('xray') }} className="mr-2 cursor-pointer rounded-[3px] border border-line2 px-2 py-0.5 hover:bg-hover">{regionById(r)!.name} · CPI <span className="text-inf">{regionById(r)!.pressure[NOW_IDX].toFixed(0)}</span></button>)}</div>
-          <div><div className="eyebrow mb-1">→ Projects on this grid</div>{linkedProjects.length ? linkedProjects.map((p) => <div key={p.id}><EntityLink r={{ kind: 'project', id: p.id, label: p.name }} /> <span className="text-[11px] text-dim">{p.stage} · <span className="num">{p.reportedMW} MW</span></span></div>) : <span className="text-mute">None tracked</span>}</div>
-          <div><div className="eyebrow mb-1">→ Companies (documented)</div>{linkedTickers.length ? linkedTickers.map((t) => <EntityLink key={t} r={{ kind: 'security', id: t, label: t }} className="mr-2 font-mono" />) : <span className="text-mute">None documented</span>}</div>
+          <div><div className="eyebrow mb-1">→ Compute regions</div>{m.regions.map((r) => <button key={r} onClick={() => { setXray({ region: r, layers: ['pressure', 'power', 'pipeline'] }); navigate('xray') }} className="mr-2 cursor-pointer rounded-[3px] border border-line2 px-2 py-0.5 hover:bg-hover max-md:mb-2 max-md:min-h-11 max-md:px-3 max-md:text-left">{regionById(r)!.name} · CPI <span className="text-inf">{regionById(r)!.pressure[NOW_IDX].toFixed(0)}</span></button>)}</div>
+          <div><div className="eyebrow mb-1">→ Projects on this grid</div>{linkedProjects.length ? linkedProjects.map((p) => <div key={p.id} className="max-md:flex max-md:min-h-11 max-md:flex-wrap max-md:items-center max-md:gap-x-1.5"><EntityLink r={{ kind: 'project', id: p.id, label: p.name }} className="max-md:inline-flex max-md:min-h-11 max-md:items-center" /> <span className="text-[11px] text-dim">{p.stage} · <span className="num">{p.reportedMW} MW</span></span></div>) : <span className="text-mute">None tracked</span>}</div>
+          <div><div className="eyebrow mb-1">→ Companies (documented)</div>{linkedTickers.length ? linkedTickers.map((t) => <EntityLink key={t} r={{ kind: 'security', id: t, label: t }} className="mr-2 font-mono max-md:inline-flex max-md:min-h-11 max-md:items-center" />) : <span className="text-mute">None documented</span>}</div>
         </div>
       </Panel>
 
       <Row cols={[1, 1]} at="xl" className="mb-5">
         <Panel title="Power & pipeline map" eyebrow="Observed layers only" bodyClass="p-0">
-          <div className="h-[360px]"><WorldMap callouts={false} layers={['power', 'pipeline']} facilities="summary" reveal={0} onRegion={(id) => inspect({ kind: 'region', id, label: regionById(id)!.name })} onProject={(id) => inspect({ kind: 'project', id, label: PROJECTS.find((p) => p.id === id)!.name })} minHeight={360} /></div>
+          <div className="h-[360px] max-md:h-[300px]"><WorldMap callouts={false} layers={['power', 'pipeline']} facilities="summary" reveal={0} onRegion={(id) => inspect({ kind: 'region', id, label: regionById(id)!.name })} onProject={(id) => inspect({ kind: 'project', id, label: PROJECTS.find((p) => p.id === id)!.name })} minHeight={phone ? 300 : 360} /></div>
           <MapKey />
         </Panel>
         <Panel title="Three geographies, kept separate" eyebrow="Facility location · grid zone · marketplace region">
-          <div className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] gap-2 border-b border-line pb-1.5 text-[11px] text-dim font-medium"><span>Facility</span><span>Location</span><span>Grid zone</span><span>Sold as</span></div>
+          <div className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] gap-2 border-b border-line pb-1.5 text-[11px] text-dim font-medium max-md:grid-cols-2 max-md:gap-y-0.5 max-md:text-[12px]"><span>Facility</span><span>Location</span><span>Grid zone</span><span>Sold as</span></div>
           {PROJECTS.slice(0, 8).map((p) => (
-            <div key={p.id} className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] gap-2 border-b border-line-soft py-1.5 text-[11.5px]">
-              <EntityLink r={{ kind: 'project', id: p.id, label: p.name }} className="truncate" />
+            <div key={p.id} className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] gap-2 border-b border-line-soft py-1.5 text-[11.5px] max-md:grid-cols-2 max-md:gap-y-0.5 max-md:py-2 max-md:text-[12.5px] max-md:[&>span]:text-[12px]">
+              <EntityLink r={{ kind: 'project', id: p.id, label: p.name }} className="truncate max-md:-my-3 max-md:block max-md:min-h-11 max-md:py-3 max-md:text-left" />
               <span className="num text-[10.5px] text-mute">{p.lat.toFixed(1)}, {p.lon.toFixed(1)}</span>
               <span className="font-mono text-[10.5px]">{p.gridZone}</span>
               <span className="font-mono text-[10.5px] text-mute">{p.marketplaceRegion}</span>
@@ -117,13 +119,13 @@ export default function Energy() {
         title={<Seg value={view} onChange={setView} options={[{ id: 'markets', label: 'Energy markets' }, { id: 'build', label: 'Data-centre build status' }]} />}
         eyebrow={view === 'markets' ? <span title="Day-ahead, 30-day average, USD unless marked €" className="inline-flex items-center gap-1.5"><TruthGlyph truth="obs" size={7} />Day-ahead · USD{feedFresh && <Fresh quiet f={feedFresh} label={ENERGY.some((e) => e.freshness !== feedFresh) ? `Feed ${feedFresh} unless a row says otherwise` : `Feed ${feedFresh}`} />}</span> : <span title="Reported MW is observed; usable MW by Mar 27 is a FLOPX estimate. Developers marked (illustr.) are illustrative."><TruthTag truth="obs" compact /> reported · <TruthTag truth="inf" compact /> usable</span>}
         right={view === 'build' ? <Seg size="sm" value={stage} onChange={setStage} options={[{ id: 'all', label: 'All' }, { id: 'operational', label: 'Operational' }, { id: 'construction', label: 'Construction' }, { id: 'proposed', label: 'Proposed' }, { id: 'announced', label: 'Announced' }]} /> : undefined}>
-        <div className="grid">
-        <div className={cx('[grid-area:1/1]', view !== 'markets' && 'invisible')} aria-hidden={view !== 'markets'}>
+        <div className="grid max-md:grid-cols-[minmax(0,1fr)]">
+        <div className={cx('[grid-area:1/1] max-md:min-w-0', view !== 'markets' && 'invisible')} aria-hidden={view !== 'markets'}>
           <div className="h-full overflow-x-auto"><table className="h-full w-full text-[12px]">
             <thead>
               <tr className="h-8 border-b border-line text-[10.5px] tracking-wide text-dim uppercase">
                 {[['Market', 'Feed icon: delayed or historical'], ['24 mo', 'Day-ahead price, last 24 months'], ['$/MWh', `Bar scaled to the dearest market; red above $${POWER_HOT}`], ['30d', '30-day change'], ['Scarcity', 'Scarcity hours, last 30 days'], ['Reserve', 'Reserve margin'], ['Queue', 'Large-load interconnection queue']].map(([h, t], i) => (
-                  <th key={h} title={t} className={cx('px-3 font-normal', i === 3 || i >= 5 ? 'text-right' : 'text-left', i >= 5 && 'hidden lg:table-cell')}>{h}</th>
+                  <th key={h} title={t} className={cx('px-3 font-normal max-md:text-[12px] max-md:whitespace-nowrap', i === 3 || i >= 5 ? 'text-right' : 'text-left', i >= 5 && 'hidden lg:table-cell max-md:table-cell', i === 0 && 'max-md:sticky max-md:left-0 max-md:z-[1] max-md:bg-panel')}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -132,8 +134,8 @@ export default function Energy() {
                 const hot = e.currency !== 'EUR' && e.priceNow > POWER_HOT
                 const heat = Math.min(1, (e.scarcityHours ?? 0) / 40)
                 return (
-                  <tr key={e.id} onClick={() => setMarket(e.id)} className={cx('h-9 cursor-pointer border-b border-line-soft last:border-0', market === e.id && view === 'markets' ? 'bg-act/[0.06] shadow-[inset_2px_0_0_var(--color-act)]' : 'hover:bg-hover')}>
-                    <td className="px-3 py-1.5"><span className="flex items-center gap-2 whitespace-nowrap"><span className="font-medium">{e.name}</span>{e.freshness !== feedFresh && <span title={`Feed: ${e.freshness}`}><Fresh f={e.freshness} label="" className="border-0 px-0" /></span>}</span></td>
+                  <tr key={e.id} onClick={() => setMarket(e.id)} className={cx('h-9 cursor-pointer border-b border-line-soft last:border-0 max-md:h-11', market === e.id && view === 'markets' ? 'bg-act/[0.06] shadow-[inset_2px_0_0_var(--color-act)]' : 'hover:bg-hover')}>
+                    <td className="px-3 py-1.5 max-md:sticky max-md:left-0 max-md:z-[1] max-md:bg-panel max-md:shadow-[1px_0_0_var(--color-line-soft)]"><span className="flex items-center gap-2 whitespace-nowrap"><span className="font-medium">{e.name}</span>{e.freshness !== feedFresh && <span title={`Feed: ${e.freshness}`}><Fresh f={e.freshness} label="" className="border-0 px-0" /></span>}</span></td>
                     <td className="px-3 py-1.5"><Spark values={e.price} width={88} height={18} color={hot ? 'var(--color-down)' : 'var(--color-warn)'} /></td>
                     <td className="px-3 py-1.5">
                       <span className="flex items-center gap-2.5">
@@ -146,15 +148,15 @@ export default function Energy() {
                       <span className={cx('num inline-grid h-5 min-w-8 place-items-center rounded-[3px] px-1.5 text-[11px]', heat > 0.4 ? 'text-bone' : heat > 0 ? 'text-mute' : 'text-dim')}
                         style={{ background: heat > 0 ? `color-mix(in srgb, var(--color-down) ${Math.round(8 + heat * 50)}%, transparent)` : undefined }} title={e.scarcityHours != null ? `${e.scarcityHours} scarcity hours` : 'Scarcity hours not loaded'}>{e.scarcityHours ?? '—'}</span>
                     </td>
-                    <td className="num hidden px-3 py-1.5 text-right text-mute lg:table-cell">{e.reserveMargin != null ? `${e.reserveMargin}%` : <span className="text-dim">—</span>}</td>
-                    <td className="num hidden px-3 py-1.5 text-right whitespace-nowrap text-mute lg:table-cell">{e.queueGW != null ? <>{e.queueGW}<span className="text-dim"> GW</span></> : <span className="text-dim">—</span>}</td>
+                    <td className="num hidden px-3 py-1.5 text-right text-mute lg:table-cell max-md:table-cell">{e.reserveMargin != null ? `${e.reserveMargin}%` : <span className="text-dim">—</span>}</td>
+                    <td className="num hidden px-3 py-1.5 text-right whitespace-nowrap text-mute lg:table-cell max-md:table-cell">{e.queueGW != null ? <>{e.queueGW}<span className="text-dim"> GW</span></> : <span className="text-dim">—</span>}</td>
                   </tr>
                 )
               })}
             </tbody>
           </table></div>
         </div>
-        <div className={cx('[grid-area:1/1] flex flex-col', view !== 'build' && 'invisible')} aria-hidden={view !== 'build'}>
+        <div className={cx('[grid-area:1/1] flex flex-col max-md:min-w-0 max-md:overflow-x-auto', view !== 'build' && 'invisible')} aria-hidden={view !== 'build'}>
         <div className={cx(buildCols, 'border-b border-line px-4 py-2 text-[11px] text-dim')}>
           <span>Project</span><span>Stage</span><span title="Energized share of reported MW">Energized / reported MW</span><span className="flex items-center justify-end gap-1.5" title="Usable MW by Mar 2027 (FLOPX estimate)"><TruthGlyph truth="inf" size={7} />Usable MW</span>
           <span className="relative h-4">
@@ -169,7 +171,7 @@ export default function Energy() {
           const [lo, hi] = p.effectiveRange
           return (
             <div key={p.id} onClick={() => inspect({ kind: 'project', id: p.id, label: p.name })} className={cx(buildCols, 'cursor-pointer items-center border-b border-line-soft px-4 py-2 hover:bg-hover')}>
-              <span className="min-w-0"><span className="block truncate text-[12px] text-bone">{p.name}</span><span className="block truncate text-[10.5px] text-dim">{regionById(p.region)!.short} · <span title={p.developer}>{p.developer.replace(' (illustr.)', '')}</span>{p.developerTicker && secByTicker(p.developerTicker) ? <span className="num text-mute"> · {p.developerTicker}</span> : ''}</span></span>
+              <span className="min-w-0 max-md:sticky max-md:left-0 max-md:z-[1] max-md:-my-2 max-md:-ml-4 max-md:bg-panel max-md:py-2 max-md:pl-4"><span className="block truncate text-[12px] text-bone">{p.name}</span><span className="block truncate text-[10.5px] text-dim">{regionById(p.region)!.short} · <span title={p.developer}>{p.developer.replace(' (illustr.)', '')}</span>{p.developerTicker && secByTicker(p.developerTicker) ? <span className="num text-mute"> · {p.developerTicker}</span> : ''}</span></span>
               <span className={cx('text-[11.5px] capitalize', p.stage === 'operational' ? 'text-bone' : p.stage === 'construction' ? 'text-mute' : 'text-dim')}>{p.stage}</span>
               <span className="flex items-center gap-2" title={`${p.energizedMW} of ${p.reportedMW} MW energized`}>
                 <span className="h-1.5 flex-1 rounded-[1px] bg-line"><span className="block h-full rounded-[1px] bg-cat3" style={{ width: `${share * 100}%` }} /></span>

@@ -29,6 +29,8 @@ export interface TargetSpec {
   nth?: number
   up?: number
   closest?: string
+  /** Tried only below 768 px (the phone layout), so desktop target resolution is unchanged. */
+  phone?: boolean
 }
 
 /** A beat's static description. Behaviour (what it does to the app, what its card shows) lives in tours.ts and cards.tsx. */
