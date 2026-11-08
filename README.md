@@ -121,4 +121,4 @@ LICENSES.md           every third-party data source and its licence line
 
 ## Team
 
-FLOPX is Team RABBIDS' hackathon entry, built by Michael Bolebrukh, Erdem Gunseli, Emre and the rest of the team.
+FLOPX is Team RABBIDS' hackathon entry, built by Michael Bolebrukh, Arsenii and Emre.
