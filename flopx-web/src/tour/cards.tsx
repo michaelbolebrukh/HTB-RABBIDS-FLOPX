@@ -283,7 +283,7 @@ function Verdicts({ k, lead }: { k: string; lead: ReactNode }) {
           ) : <div className="mt-1.5 text-mute">evaluation not loaded</div>}
         </div>
         <div className="rounded-[4px] border border-warn/30 bg-warn/[0.04] p-2.5">
-          <div className="text-warn" style={V_FIG}>Edge in <span className="num">{ft.edges}</span> of <span className="num">{ft.tests}</span> pre-registered fund tests</div>
+          <div className="text-warn" style={V_FIG}>Edge in <span className="num">{ft.edges}</span> of <span className="num">{ft.tests}</span> forecast tests (8 tickers x 3 models)</div>
           <div className="mt-2 grid grid-cols-12 gap-1">{Array.from({ length: ft.tests }, (_, i) => <span key={i} className={cx('h-2.5 rounded-[2px] border border-warn/50 transition-opacity', i < shownTests ? 'opacity-100' : 'opacity-0', i < ft.edges && 'bg-warn')} />)}</div>
           <div className="mt-1.5 text-mute">{ft.tickers} tickers · {ft.exploratory} half-size paper orders kept exploratory</div>
           <div className="mt-1 text-dim">"no edge found" is published, not hidden</div>
@@ -606,7 +606,7 @@ export function CardBody({ beatId, store }: { beatId: string; store: Store }) {
     case 'mv-estimation':
       return <Verdicts k={k} lead={<>Every forecast is scored against a baseline; the verdicts below are the harness's own outputs tonight.</>} />
     case 'hrt-eval':
-      return <Verdicts k={k} lead={<>"Edge in 0 of 24" is the tests' result, and the fund publishes it; each ticker is scored against a baseline.</>} />
+      return <Verdicts k={k} lead={<>"Edge in 0 of 24 forecast tests" (8 tickers x 3 models) is the evaluation's result, not 24 strategies, and the fund publishes it; each ticker is scored against a baseline.</>} />
     case 'hrt-forecast':
     case 'mv-forecast':
       return <ForecastCard k={k} />

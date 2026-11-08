@@ -65,6 +65,23 @@ export interface PressureCellWire {
   provenance: Provenance
   history: HistoryPointWire[]
   historyBasis?: string
+  /** N-XRAY: the cell's rental economics; absent on a backend older than the field. */
+  rental?: RentalWire | null
+}
+export interface RentalWire {
+  basis: 'regional-asks' | 'global-fallback' | 'none'
+  medianUsdPerGpuHour: number | null
+  premiumPct: number | null
+  premiumLabel: string
+  askCount: number
+  globalMedianUsdPerGpuHour: number | null
+  globalAskCount: number
+  weeklyMedianUsdPerGpuHour: number | null
+  weeklyWeekEnding: string | null
+  source: string
+  note: string
+  evidence: Provenance[]
+  observedAt: string | null
 }
 export interface PressureW1Response {
   asOf: string
@@ -121,6 +138,13 @@ export interface SupplyResponse {
   regions: SupplyRegionWire[]
   freshness: FreshnessBlock
 }
+export interface ExposurePositionWire {
+  quantity: number
+  side: 'long' | 'short'
+  avgCostUsd: number
+  marketValueUsd: number | null
+  weight: number | null
+}
 export interface LinkedCompanyWire {
   ticker: string
   basis: string[]
@@ -129,6 +153,12 @@ export interface LinkedCompanyWire {
   sensitivityBasis: string
   facilityIds: string[]
   provenance: Provenance
+  /** N-XRAY: the tie in words (optional on the wire so older fixtures still type-check). */
+  role?: string
+  tieKind?: 'documented' | 'authored'
+  tieBasis?: string
+  tieNote?: string | null
+  position?: ExposurePositionWire | null
 }
 export interface AnomalyWire {
   id: string
@@ -232,11 +262,24 @@ export function adaptPressureCell(cell: PressureCellWire): PressureLive | null {
   const contrib = total > 0 ? withC.map((f) => ({ factor: factorLabel(f.factor), value: +(Math.abs(f.contribution!) / total).toFixed(3) })).sort((a, b) => b.value - a.value) : []
   const pp = cell.factors.find((f) => f.factor === 'price-premium')
   let rental: RegionLive['rental'] = null
-  if (pp && pp.raw != null && Number.isFinite(pp.raw)) {
-    // The cell's comparable-ask median is stated in the factor note ("cell median comparable ask 2.4698 vs ...").
+  const sourceLabel = (src: string) => (src === 'vast-ai' ? 'Vast.ai asks (market reading, not an index)' : src)
+  const rw = cell.rental
+  if (rw && rw.basis === 'regional-asks') {
+    // N-XRAY: the backend states the cell's median and premium; the same numbers as the price-premium factor.
+    rental = { median: rw.medianUsdPerGpuHour, premiumPct: rw.premiumPct, premiumLabel: rw.premiumLabel, fallback: false, freshness: freshOfEvidence(rw.evidence), source: sourceLabel(rw.source), observedAt: rw.observedAt }
+  } else if (rw && rw.basis === 'global-fallback') {
+    // No regional asks: the model's global median (and GetDeploying's archived week) stand in, labelled; no premium.
+    rental = {
+      median: rw.medianUsdPerGpuHour, premiumPct: null, premiumLabel: rw.premiumLabel, fallback: true, fallbackNote: rw.note,
+      weekly: rw.weeklyMedianUsdPerGpuHour != null && rw.weeklyWeekEnding ? { median: rw.weeklyMedianUsdPerGpuHour, weekEnding: rw.weeklyWeekEnding } : undefined,
+      freshness: freshOfEvidence(rw.evidence), source: sourceLabel(rw.source), observedAt: rw.observedAt,
+    }
+  } else if (!rw && pp && pp.raw != null && Number.isFinite(pp.raw)) {
+    // A backend older than `rental`: the cell's comparable-ask median is stated in the factor note ("cell median comparable ask 2.4698 vs ...").
     const m = pp.note?.match(/cell median comparable ask ([0-9.]+)/)
     const src = pp.evidence[0]?.source ?? 'FLOPX offers'
-    rental = { median: m ? +m[1] : null, premiumPct: +(pp.raw * 100).toFixed(1), freshness: freshOfEvidence(pp.evidence), source: src === 'vast-ai' ? 'Vast.ai asks (market reading, not an index)' : src, observedAt: pp.observedAt }
+    const premiumPct = +(pp.raw * 100).toFixed(1)
+    rental = { median: m ? +m[1] : null, premiumPct, premiumLabel: `${premiumPct >= 0 ? '+' : ''}${premiumPct.toFixed(1)}%`, fallback: false, freshness: freshOfEvidence(pp.evidence), source: sourceLabel(src), observedAt: pp.observedAt }
   }
   const hist = [...cell.history].filter((h) => h.score != null).sort((a, b) => Date.parse(a.t) - Date.parse(b.t))
   const history = hist.map((h) => ({ t: h.t, value: h.score as number }))
@@ -432,11 +475,15 @@ export function adaptAnomalies(resp: AnomaliesResponse, nameOf: (designId: strin
 }
 
 /** /flopx/exposure?region= -> the exposure tab's documented ties and estimated sensitivities. */
-export function adaptExposure(resp: ExposureResponse, known: (t: string) => boolean = knownTicker): { documented: Region['documented']; sensitivities: Region['sensitivities']; freshness: Freshness } {
+export function adaptExposure(resp: ExposureResponse, known: (t: string) => boolean = knownTicker): { documented: Region['documented']; authored: NonNullable<Region['authored']>; positions: Map<string, ExposurePositionWire>; sensitivities: Region['sensitivities']; freshness: Freshness } {
   const tags = resp.exposures.map((e) => freshOf(e.provenance).freshness)
+  const all = resp.exposures
   resp = { ...resp, exposures: resp.exposures.filter((e) => known(e.ticker)) }
   return {
-    documented: resp.exposures.filter((e) => e.documented).map((e) => ({ t: e.ticker, tie: e.basis.join(', '), source: e.provenance.source })),
+    documented: all.filter((e) => e.documented).map((e) => ({ t: e.ticker, tie: e.tieBasis || e.basis.join(', '), source: e.provenance.source })),
+    // N-XRAY: ties the backend rests on a profile or an authored sample facility, listed whether or not the price feed knows the ticker.
+    authored: all.filter((e) => !e.documented).map((e) => ({ t: e.ticker, tie: e.tieBasis || e.basis.join(', '), note: e.tieNote ?? 'authored tie from company profile, not a filing', role: e.role ?? '', source: e.provenance.source })),
+    positions: new Map(all.filter((e) => e.position).map((e) => [e.ticker, e.position as ExposurePositionWire])),
     // The backend's sensitivity is an authored estimate per profile role, not a regression: no R² exists.
     sensitivities: [...resp.exposures].sort((a, b) => b.sensitivity - a.sensitivity).map((e) => ({ t: e.ticker, beta: e.sensitivity, r2: NaN })),
     freshness: tags.includes('illustrative') ? 'illustrative' : tags.includes('historical') ? 'historical' : tags.length ? 'live' : 'unavailable',
@@ -523,7 +570,9 @@ export function composeRegion(d: Region, parts: W1Parts, now?: Date): Region {
     next.quality = p.uncertainty.label === 'indicative' ? 'good' : 'experimental'
     next.contrib = p.contrib
     next.h100 = p.rental?.median ?? 0
-    next.premium = p.rental ? Math.round(p.rental.premiumPct) : 0
+    // A fallback median has no regional premium: `premium` stays 0 for the map and the inspector, and the
+    // Brief tab reads `live.rental.premiumLabel` ("n/a (no regional asks)") instead.
+    next.premium = p.rental?.premiumPct != null ? Math.round(p.rental.premiumPct) : 0
     next.h100Chg = NaN // the backend has no 30-day H100 change per region yet (price-momentum: fewer than 30 days of history)
     next.queueGW = 0 // not in FLOPX
     next.extraEvidence = factorEvidence(id, p)
@@ -540,6 +589,7 @@ export function composeRegion(d: Region, parts: W1Parts, now?: Date): Region {
   if (p || parts.anomalies) next.anomaly = parts.anomalies?.byRegion.get(id)
   if (x) {
     next.documented = x.documented
+    next.authored = x.authored
     next.sensitivities = x.sensitivities
   }
   next.live = {

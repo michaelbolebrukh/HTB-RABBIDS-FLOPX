@@ -31,20 +31,17 @@ export function scenarioImpact(r: Region, s: Scenario) {
   return { slipMW, eff, d6, d12, premiumAfter }
 }
 
-/** `ramp` 'p' is the text/mark ramp; 'g' is the lighter ramp for translucent map glows. */
+/**
+ * One colour step per pressure word (Slack → Acute = tokens 1..4), switching at the same thresholds as `pressureWord`
+ * (the backend's PRESSURE_BANDS, not the retired design split), so two regions in different bands never blend into
+ * the same hue and the map colour never disagrees with the word beside it. `ramp` 'p' is for text and marks; 'g' for map glows.
+ */
 export function pressureColor(p: number | null, ramp: 'p' | 'g' = 'p') {
   if (p == null) return 'var(--color-line)'
-  // Low → high pressure, interpolated between the active blend's --color-p0..p4 tokens.
-  const stops = [30, 50, 65, 80, 92]
-  const at = (k: number) => `var(--color-${ramp}${k})`
-  if (p <= stops[0]) return at(0)
-  for (let k = 0; k < stops.length - 1; k++) {
-    if (p <= stops[k + 1]) {
-      const t = (p - stops[k]) / (stops[k + 1] - stops[k])
-      return `color-mix(in oklab, ${at(k)} ${Math.round((1 - t) * 100)}%, ${at(k + 1)})`
-    }
-  }
-  return at(stops.length - 1)
+  const idx = PRESSURE_BANDS.findIndex((b) => p >= b.min)
+  const band = idx < 0 ? PRESSURE_BANDS.length - 1 : idx
+  const step = Math.max(1, Math.min(4, PRESSURE_BANDS.length - band))
+  return `var(--color-${ramp}${step})`
 }
 
 /**

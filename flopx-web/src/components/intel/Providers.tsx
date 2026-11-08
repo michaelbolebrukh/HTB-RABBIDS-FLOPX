@@ -1,13 +1,13 @@
 // Layer 2 panels (providers): the same open weights served by many hosts at many prices.
 import { useMemo, useState, type ReactNode } from 'react'
-import { Panel, Seg, TruthTag, cx } from '@/components/ui'
-import { useWidth } from '@/components/charts'
+import { Fn, Panel, Seg, TruthTag, cx } from '@/components/ui'
+import { niceTicks, useWidth } from '@/components/charts'
 import { useChartStyle } from '@/lib/chartStyle'
 import {
   FEATURES, bits, bitsLabel, blended, decompose, leaderboard, median, pctEffect, route, spreadFor, spreads, standardLive,
   type EndpointRow, type Spread,
 } from '@/lib/tokenmarket'
-import { FIT, MODEL, SNAP, times, usd } from '@/components/intel/shared'
+import { FIT, MODEL, NOTES, SNAP, times, usd } from '@/components/intel/shared'
 
 const SPREADS = spreads(SNAP.endpoints)
 const FIT_ROW = new Map(FIT.rows.map((r) => [r.e, r]))
@@ -25,8 +25,8 @@ export const money = (v: number) => (v >= 1000 ? `$${Math.round(v).toLocaleStrin
 const vsFair = (e: EndpointRow) => { const r = FIT_ROW.get(e); return r ? (blended(e) / r.fair - 1) * 100 : null }
 const samePrec = (s: Spread) => (s.samePrecision ? `${times(s.samePrecision.spread)} ${s.samePrecision.bits} bit` : '—')
 
-const INPUT = 'h-7 rounded-[4px] border border-line2 bg-ink px-2 font-mono text-[11px] text-bone outline-none focus:border-mute'
-const TH = 'px-2 py-1.5 text-left font-mono text-[9.5px] font-normal tracking-wider text-dim uppercase whitespace-nowrap'
+const INPUT = 'h-7 rounded-[4px] border border-line2 bg-ink px-2 text-[11.5px] tabular-nums text-bone outline-none focus:border-mute'
+const TH = 'h-8 px-2 text-left text-[11px] font-medium text-dim whitespace-nowrap'
 const TD = 'px-2 py-1.5 whitespace-nowrap'
 
 function Foot({ children }: { children: ReactNode }) {
@@ -50,11 +50,11 @@ export function SpreadLadder({ onRoute }: { onRoute: (modelId: string) => void }
   return (
     <Panel
       title="Spread ladder"
-      eyebrow="Same open weights across providers · blended $/M · log scale"
+      eyebrow="Blended $/M · log scale"
       right={<Seg size="sm" value={view} onChange={setView} options={[{ id: 'top', label: 'Top 12' }, { id: 'all', label: `All ${SPREADS.length} models` }]} />}
     >
       <div className={cx(grid, 'border-b border-line pb-1')}>
-        <span className={TH.replace('px-2 ', '')}>Model</span>
+        <span className={TH.replace('h-8 px-2 ', '')}>Model</span>
         <div ref={ref} className="relative h-4">
           <svg width={tw} height={16} className="absolute inset-0 overflow-visible">
             {LADDER_TICKS.map((t) => (
@@ -62,8 +62,8 @@ export function SpreadLadder({ onRoute }: { onRoute: (modelId: string) => void }
             ))}
           </svg>
         </div>
-        <span className={cx(TH.replace('px-2 ', ''), 'text-right')}>Spread</span>
-        <span className={cx(TH.replace('px-2 ', ''), 'text-right')}>Same prec.</span>
+        <span className={cx(TH.replace('h-8 px-2 ', ''), 'text-right')}>Spread</span>
+        <span className={cx(TH.replace('h-8 px-2 ', ''), 'text-right')}>Same prec.</span>
       </div>
       <div className={cx(view === 'all' && 'max-h-[560px] overflow-y-auto')}>
         {rows.map((s) => {
@@ -75,7 +75,7 @@ export function SpreadLadder({ onRoute }: { onRoute: (modelId: string) => void }
               key={s.model}
               onClick={() => onRoute(s.model)}
               title={`Route ${name(s.model)}`}
-              className={cx(grid, 'w-full cursor-pointer border-b border-line/50 py-[3px] text-left hover:bg-hover')}
+              className={cx(grid, 'w-full cursor-pointer border-b border-line-soft py-[3px] text-left hover:bg-hover')}
             >
               <span className="flex min-w-0 items-baseline gap-1 text-[11.5px] text-bone"><span className="truncate">{name(s.model)}</span><span className="num shrink-0 text-[9.5px] text-dim">{s.hosts}</span></span>
               <svg width={tw} height={18} className="block overflow-visible">
@@ -99,7 +99,7 @@ export function SpreadLadder({ onRoute }: { onRoute: (modelId: string) => void }
         <LegendSvg><rect x={3} y={3} width={6} height={6} transform="rotate(45 6 6)" fill="none" stroke="var(--color-dec)" /></LegendSvg><span className="-ml-3">priority / flex</span>
         <LegendSvg><path d="M3.5 3.5l5 5M8.5 3.5l-5 5" stroke="var(--color-dim)" strokeWidth={1.2} /></LegendSvg><span className="-ml-3">not up</span>
       </div>
-      <Foot>Spread = dearest ÷ cheapest standard-tier endpoint that is up. Same precision = the spread inside the largest labelled precision group with 3+ endpoints, so quantization cannot explain it. Deepest markets (most endpoints) first.</Foot>
+      <Foot>Spread = dearest ÷ cheapest standard-tier endpoint that is up. Same prec. = spread inside the largest labelled precision group with 3+ endpoints, so quantization is held fixed<Fn n={3} note={NOTES[2]} />. Most endpoints first.</Foot>
     </Panel>
   )
 }
@@ -136,9 +136,9 @@ export function TokenProcurement({ model, onModel }: { model: string; onModel: (
     [model, promptM, completionM, minUptime, standardOnly, tools],
   )
   const best = r.best
-  const label = 'mb-1 block font-mono text-[9.5px] tracking-wider text-dim uppercase'
+  const label = 'mb-1 block text-[11px] font-medium text-dim'
   return (
-    <Panel title="Token procurement" eyebrow={<><TruthTag truth="dec" compact /> Cheapest endpoint that meets the job · list price × volume</>}>
+    <Panel title="Token procurement" eyebrow={<><TruthTag truth="dec" compact /> Cheapest endpoint for the job<Fn n={7} note={NOTES[6]} /></>}>
       <div className="grid grid-cols-2 gap-x-3 gap-y-2.5 sm:grid-cols-[minmax(0,2fr)_1fr_1fr_1fr]">
         <label className="col-span-2 sm:col-span-1">
           <span className={label}>Model</span>
@@ -165,8 +165,8 @@ export function TokenProcurement({ model, onModel }: { model: string; onModel: (
         </label>
       </div>
       <div className="mt-2.5 flex flex-wrap gap-x-5 gap-y-1 text-[11.5px] text-mute">
-        <label className="flex cursor-pointer items-center gap-1.5"><input type="checkbox" className="accent-[var(--color-dec)]" checked={standardOnly} onChange={(e) => setStandardOnly(e.target.checked)} />Standard tier only</label>
-        <label className="flex cursor-pointer items-center gap-1.5"><input type="checkbox" className="accent-[var(--color-dec)]" checked={tools} onChange={(e) => setTools(e.target.checked)} />Needs tool calling</label>
+        <label className="flex cursor-pointer items-center gap-1.5"><input type="checkbox" className="accent-[var(--color-bone)]" checked={standardOnly} onChange={(e) => setStandardOnly(e.target.checked)} />Standard tier only</label>
+        <label className="flex cursor-pointer items-center gap-1.5"><input type="checkbox" className="accent-[var(--color-bone)]" checked={tools} onChange={(e) => setTools(e.target.checked)} />Needs tool calling</label>
       </div>
 
       {best ? (
@@ -185,7 +185,7 @@ export function TokenProcurement({ model, onModel }: { model: string; onModel: (
           <table className="mt-3 w-full text-[11.5px]">
             <tbody>
               {r.plans.slice(0, 5).map((p, i) => (
-                <tr key={i} className="border-b border-line/50 last:border-0">
+                <tr key={i} className="border-b border-line-soft last:border-0">
                   <td className="num w-6 py-1 text-dim">{i + 1}</td>
                   <td className="py-1 text-bone"><span className="truncate">{p.e.provider}</span><span className="text-dim"> · {bitsLabel(bits(p.e.quant))}</span></td>
                   <td className="num py-1 text-right text-bone">{money(p.cost)}</td>
@@ -200,7 +200,6 @@ export function TokenProcurement({ model, onModel }: { model: string; onModel: (
           No endpoint of {name(model)} meets these needs ({r.listed} listed). Loosen the uptime floor, allow other tiers or drop tool calling.
         </div>
       )}
-      <Foot>Routing only: providers post list prices, so the lever is where you buy, not when. Costs are list price × volume; FLOPX has bought nothing. Cache discounts are ignored and uptime is the last day only.</Foot>
     </Panel>
   )
 }
@@ -208,7 +207,7 @@ export function TokenProcurement({ model, onModel }: { model: string; onModel: (
 function Figure({ label, value, sub, tone = 'text-bone' }: { label: string; value: ReactNode; sub: ReactNode; tone?: string }) {
   return (
     <div className="min-w-0">
-      <div className="font-mono text-[9.5px] tracking-wider text-dim uppercase">{label}</div>
+      <div className="text-[11px] font-medium text-dim">{label}</div>
       <div className={cx('num truncate text-[19px] leading-tight', tone)}>{value}</div>
       <div className="num truncate text-[10.5px] text-mute">{sub}</div>
     </div>
@@ -235,12 +234,12 @@ export function HostTable({ onRoute }: { onRoute: (modelId: string) => void }) {
               <th className={TH}>Cheapest</th>
               <th className={cx(TH, 'text-right')}>Median</th>
               <th className={TH}>Dearest</th>
-              <th className={cx(TH, 'text-right')}>Spread</th>
+              <th className={cx(TH, 'text-right')}>Spread / same prec.</th>
             </tr>
           </thead>
           <tbody>
             {rows.map((s) => (
-              <tr key={s.model} onClick={() => onRoute(s.model)} className="cursor-pointer border-b border-line/50 hover:bg-hover">
+              <tr key={s.model} onClick={() => onRoute(s.model)} className="cursor-pointer border-b border-line-soft hover:bg-hover">
                 <td className={cx(TD, 'max-w-[13rem] truncate text-bone')}>{name(s.model)}</td>
                 <td className={cx(TD, 'num text-right text-mute')}>{s.hosts}</td>
                 <td className={TD}><span className="num text-up">{usd(blended(s.cheapest))}</span> <span className="text-mute">{s.cheapest.provider}</span></td>
@@ -252,7 +251,7 @@ export function HostTable({ onRoute }: { onRoute: (modelId: string) => void }) {
           </tbody>
         </table>
       </div>
-      <Foot>Spread / same-precision spread. Median spread across {SPREADS.length} models: {times(median(SPREADS.map((s) => s.spread)))}.</Foot>
+      <Foot>Median spread across {SPREADS.length} models: {times(median(SPREADS.map((s) => s.spread)))}.</Foot>
     </Panel>
   )
 }
@@ -264,7 +263,7 @@ const GROUP_LABEL: Record<string, string> = { precision: 'Precision', tier: 'Tie
 export function WhyCheaper({ model }: { model: string }) {
   const s = spreadFor(model, SNAP.endpoints)
   const d = s ? decompose(FIT, s.cheapest, s.dearest) : null
-  const eyebrow = <><TruthTag truth="inf" compact /> {name(model)}: cheapest vs dearest host, same weights</>
+  const eyebrow = <><TruthTag truth="inf" compact /> Cheapest vs dearest host</>
   if (!s || !d) {
     return (
       <Panel title="Why it is cheaper" eyebrow={eyebrow}>
@@ -286,14 +285,12 @@ export function WhyCheaper({ model }: { model: string }) {
         <HostCard e={A} tone="text-up" />
         <HostCard e={B} tone="text-down" />
       </div>
-      <Waterfall terms={terms} unexplained={d.unexplained} gap={d.gap} />
-      <div className="mt-1 num text-[10.5px] text-dim">
-        Σ terms {signed(sum, 1)} vs observed {signed(d.gap, 1)} · {Math.abs(sum - d.gap) < 0.05 ? 'exact' : `off by ${Math.abs(sum - d.gap).toFixed(2)}`}
-      </div>
+      <Waterfall terms={terms} unexplained={d.unexplained} gap={d.gap}
+        check={`Σ terms ${signed(sum, 1)} vs observed ${signed(d.gap, 1)} · ${Math.abs(sum - d.gap) < 0.05 ? 'exact' : `off by ${Math.abs(sum - d.gap).toFixed(2)}`}`} />
       <p className="mt-2.5 text-[12px] leading-relaxed text-mute">
         <b className="text-bone">{A.provider}</b> lists {gap.toFixed(0)} log points ({times(blended(B) / blended(A))}) below <b className="text-bone">{B.provider}</b> for the same weights.
         {' '}Attributes explain {explained.toFixed(0)}{terms.length ? ` (${terms.map(([g, v]) => `${g} ${(-v).toFixed(0)}`).join(', ')})` : ''};
-        {' '}{unexplained.toFixed(0)} ({gap ? Math.round((unexplained / gap) * 100) : 0}% of the gap) is unexplained by anything this snapshot can see, including speed, which is not observed.
+        {' '}{unexplained.toFixed(0)} ({gap ? Math.round((unexplained / gap) * 100) : 0}% of the gap) is unexplained by anything this snapshot can see, including speed.<Fn n={4} note={NOTES[3]} />
         {unlabeled.length > 0 && <> {unlabeled.map((e) => e.provider).join(' and ')} publish{unlabeled.length === 1 ? 'es' : ''} no precision label, so the precision term is the fitted average for an unlabelled endpoint, not a measured difference.</>}
       </p>
     </Panel>
@@ -304,7 +301,7 @@ function HostCard({ e, tone }: { e: EndpointRow; tone: string }) {
   const vf = vsFair(e)
   const fair = FIT_ROW.get(e)?.fair
   const row = (k: string, v: ReactNode) => (
-    <div className="flex justify-between gap-2 border-t border-line/50 py-1"><span className="text-dim">{k}</span><span className="num truncate text-right text-bone">{v}</span></div>
+    <div className="flex justify-between gap-2 border-t border-line-soft py-1"><span className="text-dim">{k}</span><span className="num truncate text-right text-bone">{v}</span></div>
   )
   return (
     <div className="min-w-0 rounded-md border border-line bg-raise/40 p-2.5 text-[11px]">
@@ -319,43 +316,64 @@ function HostCard({ e, tone }: { e: EndpointRow; tone: string }) {
   )
 }
 
-/** Waterfall in log points: each attribute term steps from the running total; the gap bar runs from zero. */
-function Waterfall({ terms, unexplained, gap }: { terms: [string, number][]; unexplained: number; gap: number }) {
-  const steps: { label: string; v: number; from: number; kind: 'attr' | 'resid' | 'total' }[] = []
+const WF_COLOR = { attr: 'var(--color-fct)', resid: 'var(--color-inf)', total: 'var(--color-bone)' } as const
+
+/** Waterfall in log points: each attribute term steps from the running total, the unexplained residual closes the
+ *  gap, and the observed gap runs from zero. Dashed connectors join each step's end to the next step's start. */
+function Waterfall({ terms, unexplained, gap, check }: { terms: [string, number][]; unexplained: number; gap: number; check: string }) {
+  const steps: { label: string; v: number; from: number; kind: keyof typeof WF_COLOR }[] = []
   let run = 0
   for (const [g, v] of terms) { steps.push({ label: GROUP_LABEL[g] ?? g, v, from: run, kind: 'attr' }); run += v }
-  steps.push({ label: 'Mispricing (unexplained)', v: unexplained, from: run, kind: 'resid' })
+  steps.push({ label: 'Unexplained', v: unexplained, from: run, kind: 'resid' })
   steps.push({ label: 'Observed gap', v: gap, from: 0, kind: 'total' })
   const ends = steps.flatMap((s) => [s.from, s.from + s.v])
-  const lo = Math.min(0, ...ends), hi = Math.max(0, ...ends)
-  const span = hi - lo || 1
-  const pos = (v: number) => ((v - lo) / span) * 100
+  const ticks = niceTicks(Math.min(0, ...ends), Math.max(0, ...ends), 4)
+  const lo = Math.min(ticks[0], ...ends), hi = Math.max(ticks[ticks.length - 1], ...ends)
+  const pos = (v: number) => ((v - lo) / (hi - lo || 1)) * 100
+  const cols = 'grid grid-cols-[minmax(0,8.5rem)_minmax(0,1fr)_4.5rem] items-center gap-x-3'
+  const rowH = 26
+  // Whole-percent shares that add to 100. The residual rounds as the prose does; the last attribute absorbs the rounding.
+  const residPct = Math.round((unexplained / (gap || 1)) * 100)
+  const attrPct = steps.filter((s) => s.kind === 'attr').map((s) => Math.round((s.v / (gap || 1)) * 100))
+  if (attrPct.length) attrPct[attrPct.length - 1] += 100 - residPct - attrPct.reduce((x, y) => x + y, 0)
+  const share = (i: number, kind: string) => (kind === 'attr' ? attrPct[i] : kind === 'resid' ? residPct : null)
   return (
-    <div className="mt-3.5">
-      <div className="mb-1 flex justify-between font-mono text-[9.5px] tracking-wider text-dim uppercase">
-        <span>Log points, cheapest minus dearest</span>
+    <div className="mt-4" title={check}>
+      <div className={cx(cols, 'mb-1 text-[10.5px] text-dim')}>
+        <span>Log points</span>
+        <div className="relative h-3.5">
+          {ticks.map((t) => <span key={t} className="num absolute -translate-x-1/2" style={{ left: `${pos(t)}%` }}>{t === 0 ? '0' : t}</span>)}
+        </div>
+        <span className="text-right">share</span>
       </div>
-      {steps.map((s) => {
+      {steps.map((s, i) => {
         const a = pos(Math.min(s.from, s.from + s.v)), b = pos(Math.max(s.from, s.from + s.v))
+        const next = steps[i + 1]
+        const total = s.kind === 'total'
+        const c = WF_COLOR[s.kind]
         return (
-          <div key={s.label} className={cx('grid grid-cols-[minmax(0,9.5rem)_minmax(0,1fr)_3rem] items-center gap-x-2 py-[3px] text-[11px]', s.kind === 'total' && 'mt-1 border-t border-line pt-1.5')}>
-            <span className={cx('truncate', s.kind === 'total' ? 'text-bone' : 'text-mute')}>{s.label}</span>
-            <div className="relative h-3.5">
+          <div key={s.label} className={cx(cols, total && 'mt-1.5 border-t border-line pt-1.5')} style={{ height: total ? rowH + 8 : rowH }}>
+            <span className={cx('flex min-w-0 items-center gap-2 text-[11.5px]', total ? 'font-medium text-bone' : 'text-mute')}>
+              <span className="size-2 shrink-0 rounded-[2px]" style={{ background: c, opacity: total ? 0.85 : 1 }} />
+              <span className="truncate">{s.label}</span>
+            </span>
+            <div className="relative h-full">
+              {ticks.map((t) => <div key={t} className="absolute inset-y-0 border-l border-dashed border-line" style={{ left: `${pos(t)}%` }} />)}
               <div className="absolute inset-y-0 w-px bg-line2" style={{ left: `${pos(0)}%` }} />
-              <div
-                className={cx('absolute inset-y-0.5', s.kind === 'attr' && 'bg-fct/70', s.kind === 'resid' && 'hatch-inf border border-inf', s.kind === 'total' && 'bg-bone/80')}
-                style={{ left: `${a}%`, width: `max(1px, ${b - a}%)` }}
-              />
+              <div className="absolute top-1/2 h-3 -translate-y-1/2 rounded-[2px]"
+                style={{ left: `${a}%`, width: `max(2px, ${b - a}%)`, background: total ? c : `color-mix(in srgb, ${c} ${s.kind === 'resid' ? 45 : 70}%, transparent)`, opacity: total ? 0.85 : 1,
+                  boxShadow: s.kind === 'resid' ? `inset 0 0 0 1px ${c}` : undefined }} />
+              {next && next.kind !== 'total' && (
+                <div className="absolute top-1/2 border-l border-dashed border-mute/60" style={{ left: `${pos(s.from + s.v)}%`, height: rowH }} />
+              )}
             </div>
-            <span className={cx('num text-right', s.kind === 'total' ? 'text-bone' : 'text-mute')}>{signed(s.v, 0)}</span>
+            <span className="flex items-baseline justify-end gap-1.5 text-right">
+              <span className={cx('num text-[11.5px]', total ? 'text-bone' : 'text-mute')}>{signed(s.v, 0)}</span>
+              <span className="num w-8 text-[10.5px] text-dim">{total ? '' : `${share(i, s.kind)}%`}</span>
+            </span>
           </div>
         )
       })}
-      <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[10.5px] text-mute">
-        <span className="flex items-center gap-1.5"><span className="inline-block size-2.5 bg-fct/70" />attribute (explained)</span>
-        <span className="flex items-center gap-1.5"><span className="hatch-inf inline-block size-2.5 border border-inf" />unexplained</span>
-        <span className="flex items-center gap-1.5"><span className="inline-block size-2.5 bg-bone/80" />observed total</span>
-      </div>
     </div>
   )
 }
@@ -367,7 +385,7 @@ export function HedonicFit() {
   return (
     <Panel
       title="Hedonic fit"
-      eyebrow={<><TruthTag truth="inf" compact /> Ridge on log blended $/M with model fixed effects</>}
+      eyebrow={<><TruthTag truth="inf" compact /> Ridge on log $/M, model fixed effects</>}
       right={<span className="num text-[11px] text-mute">R² {FIT.r2.toFixed(3)} · {FIT.n} endpoints up</span>}
     >
       <div className="grid grid-cols-3 gap-3">
@@ -376,7 +394,7 @@ export function HedonicFit() {
         <Figure label="Within same weights" value={`${within}%`} sub="spread explained" tone="text-inf" />
       </div>
       <p className="mt-3 text-[12px] leading-relaxed text-mute">
-        Each endpoint is compared only with the identical weights ({FIT.models} model fixed effects). Inside a model, the listed attributes explain {within}% of the price spread; the rest is the residual, which also holds whatever the snapshot cannot see, such as speed.
+        Each endpoint is compared only with the identical weights ({FIT.models} model fixed effects). Inside a model, the listed attributes explain {within}% of the price spread; the rest is residual, including unobserved speed.<Fn n={4} note={NOTES[3]} />
       </p>
       <div className="mt-3 overflow-x-auto">
         <table className="w-full text-[11.5px]">
@@ -384,14 +402,14 @@ export function HedonicFit() {
             <tr className="border-b border-line">
               <th className={TH}>Attribute</th>
               <th className={cx(TH, 'text-right')}>Coef (log)</th>
-              <th className={cx(TH, 'text-right')}>≈ listed price</th>
+              <th className={cx(TH, 'text-right')}>≈ listed price<Fn n={5} note={NOTES[4]} /></th>
             </tr>
           </thead>
           <tbody>
             {FEATURES.map((f, j) => {
               const c = FIT.coef[j], p = pctEffect(c)
               return (
-                <tr key={f.key} className="border-b border-line/50 last:border-0">
+                <tr key={f.key} className="border-b border-line-soft last:border-0">
                   <td className={cx(TD, 'whitespace-normal text-bone')}>{f.label}</td>
                   <td className={cx(TD, 'num text-right text-mute')}>{signed(c, 3)}</td>
                   <td className={cx(TD, 'num text-right', Math.abs(p) < 0.5 ? 'text-dim' : p < 0 ? 'text-up' : 'text-down')}>{signedPct(p, Math.abs(p) < 10 ? 1 : 0)}</td>
@@ -401,7 +419,6 @@ export function HedonicFit() {
           </tbody>
         </table>
       </div>
-      <Foot>ridge on log(blended $/M) ~ model + precision + tier + context cap + uptime gap + tools + structured + caching + time-of-day pricing. Partial correlations in one snapshot, not causal effects.</Foot>
     </Panel>
   )
 }
@@ -439,13 +456,13 @@ export function ProviderLeaderboard() {
           )
         })}
       </div>
-      <div className="mt-1 grid grid-cols-[minmax(0,9rem)_minmax(0,1fr)_3rem] gap-x-2 font-mono text-[9.5px] text-dim">
+      <div className="mt-1 grid grid-cols-[minmax(0,9rem)_minmax(0,1fr)_3rem] gap-x-2 text-[10.5px] text-dim">
         <span />
         <div className="flex justify-between"><span>below fair</span><span>fair</span><span>above fair</span></div>
         <span />
       </div>
       <Foot>
-        {view === '5' && rows.length < all.length ? `Cheapest 9 and dearest 9 of ${all.length} hosts` : `${all.length} hosts`} · {below} below fair · {all.length - below} at or above. (n) = endpoints; a host with one or two is an anecdote. Fast-hardware hosts carry a positive residual that is partly paid-for speed, which this snapshot does not observe.
+        {view === '5' && rows.length < all.length ? `Cheapest 9 and dearest 9 of ${all.length} hosts` : `${all.length} hosts`} · {below} below fair · {all.length - below} at or above. (n) = endpoints; a host with one or two is an anecdote.<Fn n={4} note={NOTES[3]} />
       </Foot>
     </Panel>
   )
@@ -455,11 +472,26 @@ export function ProviderLeaderboard() {
 
 export function EndpointTable({ model }: { model: string }) {
   const eps = useMemo(() => SNAP.endpoints.filter((e) => e.model === model).sort((a, b) => blended(a) - blended(b)), [model])
+  const [all, setAll] = useState(false)
+  const LIMIT = 15
+  const shownEps = all ? eps : eps.slice(0, LIMIT)
   const s = spreadFor(model, SNAP.endpoints)
-  const cols = ['Provider', 'Endpoint', 'Precision', 'Tier', 'Context', 'Uptime 1d', 'Tools', 'Prompt /M', 'Compl. /M', 'Blended /M', 'Fair /M', 'vs fair', 'Status']
+  // Tools, context and status are near-constant per model: state the common value once, show only exceptions.
+  const mode = <T,>(xs: T[]) => { const c = new Map<T, number>(); for (const x of xs) c.set(x, (c.get(x) ?? 0) + 1); return [...c].sort((a, b) => b[1] - a[1])[0]?.[0] }
+  const commonTools = mode(eps.map((e) => e.tools)), commonCtx = mode(eps.map((e) => e.context)), commonUp = mode(eps.map((e) => e.up))
+  const hasExtra = (e: EndpointRow) => e.discount > 0 || e.timeOfDay
+  const allTools = eps.every((e) => e.tools === commonTools), allCtx = eps.every((e) => e.context === commonCtx)
+  const allStatus = eps.every((e) => e.up === commonUp && !hasExtra(e))
+  const common = [
+    commonTools === undefined ? null : `tools ${commonTools ? '✓' : '—'}`,
+    commonCtx === undefined ? null : `context ${ctxLabel(commonCtx)}`,
+    commonUp === undefined ? null : commonUp ? 'status up' : 'status not up',
+  ].filter(Boolean).join(' · ')
+  const cols = ['Provider', 'Endpoint', 'Precision', 'Tier', ...(allCtx ? [] : ['Context']), 'Uptime 1d', ...(allTools ? [] : ['Tools']), 'Prompt /M', 'Compl. /M', 'Blended /M', 'Fair /M', 'vs fair', ...(allStatus ? [] : ['Status'])]
   const right = new Set(['Context', 'Uptime 1d', 'Prompt /M', 'Compl. /M', 'Blended /M', 'Fair /M', 'vs fair'])
   return (
     <Panel
+      id="Endpoints"
       title={`Endpoints · ${name(model)}`}
       eyebrow={<>Every listed host · price <TruthTag truth="obs" compact /> · fair and vs fair <TruthTag truth="inf" compact /></>}
     >
@@ -473,41 +505,49 @@ export function EndpointTable({ model }: { model: string }) {
             <span>spread <b className="num font-normal text-bone">{times(s.spread)}</b>{s.samePrecision && <> · <b className="num font-normal text-bone">{times(s.samePrecision.spread)}</b> at {s.samePrecision.bits} bit</>}</span>
           </>
         ) : <span>fewer than two standard-tier endpoints up, no spread</span>}
+        {common && <span className="text-dim">Unless a cell shows otherwise: {common}</span>}
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-[11.5px]">
           <thead>
-            <tr className="border-b border-line">{cols.map((c) => <th key={c} className={cx(TH, right.has(c) && 'text-right')}>{c}</th>)}</tr>
+            <tr className="border-b border-line">{cols.map((c) => <th key={c} className={cx(TH, right.has(c) && 'text-right')} title={c === 'Fair /M' ? "The hedonic model's price for this endpoint's attributes" : undefined}>{c}{c === 'Precision' && <Fn n={3} note={NOTES[2]} />}</th>)}</tr>
           </thead>
           <tbody>
-            {eps.map((e, i) => {
+            {shownEps.map((e, i) => {
               const fr = FIT_ROW.get(e), vf = vsFair(e)
               const counted = standardLive(e)
               return (
-                <tr key={i} className={cx('border-b border-line/50 last:border-0', !e.up && 'text-dim')}>
+                <tr key={i} className={cx('border-b border-line-soft last:border-0', !e.up && 'text-dim')}>
                   <td className={cx(TD, e.up ? 'text-bone' : 'text-dim')}>{e.provider}</td>
                   <td className={cx(TD, 'font-mono text-[10.5px] text-mute')}>{e.tag}</td>
                   <td className={cx(TD, 'text-mute')}>{bitsLabel(bits(e.quant))}</td>
                   <td className={cx(TD, e.tier === 'standard' ? 'text-mute' : 'text-dec')}>{e.tier}</td>
-                  <td className={cx(TD, 'num text-right text-mute')}>{ctxLabel(e.context)}</td>
+                  {!allCtx && <td className={cx(TD, 'num text-right text-mute')}>{e.context === commonCtx ? '' : ctxLabel(e.context)}</td>}
                   <td className={cx(TD, 'num text-right', e.uptime != null && e.uptime < 95 ? 'text-warn' : 'text-mute')}>{e.uptime == null ? '—' : `${e.uptime.toFixed(1)}%`}</td>
-                  <td className={cx(TD, 'text-mute')}>{e.tools ? '✓' : '—'}</td>
+                  {!allTools && <td className={cx(TD, 'text-mute')}>{e.tools === commonTools ? '' : e.tools ? '✓' : '—'}</td>}
                   <td className={cx(TD, 'num text-right text-mute')}>{usd(e.prompt)}</td>
                   <td className={cx(TD, 'num text-right text-mute')}>{usd(e.completion)}</td>
                   <td className={cx(TD, 'num text-right', !e.up ? 'text-dim' : counted && s && e === s.cheapest ? 'text-up' : counted && s && e === s.dearest ? 'text-down' : 'text-bone')}>{usd(blended(e))}</td>
                   <td className={cx(TD, 'num text-right text-mute')}>{fr ? usd(fr.fair) : '—'}</td>
                   <td className={cx(TD, 'num text-right', vf == null ? 'text-dim' : vf < 0 ? 'text-up' : 'text-down')}>{vf == null ? '—' : signedPct(vf)}</td>
-                  <td className={cx(TD, e.up ? 'text-up' : 'text-dim')}>
-                    {e.up ? 'up' : 'not up'}
-                    <span className="text-dim">{e.discount > 0 && ` · disc ${+(e.discount * 100).toFixed(1)}%`}{e.timeOfDay && ' · time-of-day'}</span>
-                  </td>
+                  {!allStatus && (
+                    <td className={cx(TD, e.up ? 'text-up' : 'text-dim')}>
+                      {e.up !== commonUp && (e.up ? 'up' : 'not up')}
+                      <span className="text-dim">{e.discount > 0 && `${e.up !== commonUp ? ' · ' : ''}disc ${+(e.discount * 100).toFixed(1)}%`}{e.timeOfDay && `${e.up !== commonUp || e.discount > 0 ? ' · ' : ''}time-of-day`}</span>
+                    </td>
+                  )}
                 </tr>
               )
             })}
           </tbody>
         </table>
       </div>
-      <Foot>Cheapest first. Endpoints that are not up are excluded from the fit, the spreads and routing. Fair /M is the hedonic model's price for this endpoint's attributes.</Foot>
+      {eps.length > LIMIT && (
+        <button type="button" onClick={() => setAll((v) => !v)} className="mt-2 w-full cursor-pointer rounded-[4px] border border-line py-1.5 text-[11.5px] text-mute transition-colors hover:bg-hover hover:text-bone">
+          {all ? `Show cheapest ${LIMIT}` : `Show all ${eps.length} endpoints`}
+        </button>
+      )}
+      <Foot>Cheapest first. Endpoints that are not up are excluded from the fit, the spreads and routing.</Foot>
     </Panel>
   )
 }

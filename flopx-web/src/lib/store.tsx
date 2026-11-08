@@ -139,8 +139,8 @@ function useStoreValue() {
     const q = new URLSearchParams(params).toString()
     const h = `#/${page}${q ? `?${q}` : ''}`
     if (window.location.hash !== h) window.history.pushState(null, '', h)
-    setRoute({ page, params })
     document.getElementById('main-scroll')?.scrollTo({ top: 0 })
+    setRoute({ page, params })
   }, [])
 
   const toast = useCallback((text: string, tone: Toast['tone'] = 'info') => {
@@ -285,4 +285,8 @@ export function useStore() {
   const v = useContext(Ctx)
   if (!v) throw new Error('StoreProvider missing')
   return v
+}
+/** The store when a provider is mounted, else null: for shared chrome (Panel) that must also render in isolation, e.g. static tests. */
+export function useStoreOptional() {
+  return useContext(Ctx)
 }

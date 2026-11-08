@@ -187,7 +187,7 @@ export const CLAIMS: Claim[] = [
   { claim: 'Timing', number: 'Gate closed: 0 h out-of-sample history (needs 24), +1.8% skill (needs +5%)', file: 'forecast', recheck: true },
   { claim: 'Hidden capacity', number: '39% of 50.4 GW energized; ERCOT pressure 65 (51 to 76)', file: 'xray', recheck: false },
   { claim: 'Prediction markets', number: '48% less error than the base rate a week out; 10% a month out, not different from zero', file: 'pm', recheck: false },
-  { claim: 'Fund', number: 'Edge in 0 of 24 pre-registered tests', file: 'fund', recheck: false },
+  { claim: 'Fund', number: 'Edge in 0 of 24 forecast tests (8 tickers x 3 models)', file: 'fund', recheck: false },
   { claim: 'Scale', number: '68,480 rows ingested in the last build', file: 'meta', recheck: true },
 ]
 

@@ -2,7 +2,7 @@
 // 00:39 UTC (trimmed: evidence lists cut to two entries, only the H100 and RTX 4090 pressure cells).
 import { describe, expect, it } from 'vitest'
 import { ANOMALY_CARDS, GLOBAL_CPI, NOW_IDX, PRESSURE_MODEL, REGIONS, regionById, regionEvidence } from '@/data/core'
-import { adaptAnomalies, adaptExposure, adaptMapRegions, adaptPressure, adaptSupply, applyW1, composeRegion, globalFromPressure, regionsModule, type AnomaliesResponse, type ExposureResponse, type MapRegionsW1Response, type PressureW1Response, type SupplyResponse } from './adapt-w1'
+import { adaptAnomalies, adaptExposure, adaptMapRegions, adaptPressure, adaptPressureCell, adaptSupply, applyW1, composeRegion, globalFromPressure, regionsModule, type AnomaliesResponse, type ExposureResponse, type MapRegionsW1Response, type PressureW1Response, type SupplyResponse } from './adapt-w1'
 import { makeGetter } from './boot'
 import pressureJson from './__fixtures__/w1/pressure.json'
 import mapJson from './__fixtures__/w1/map-regions.json'
@@ -219,5 +219,44 @@ describe('applyW1 and the module', () => {
     applyW1({})
     expect(tx.live).toBeUndefined()
     expect(tx.power).toBe(58.4)
+  })
+})
+
+// N-XRAY: the Financial exposure and Rental economics answers for every region.
+describe('N-XRAY exposure ties and rental fallback', () => {
+  const rentalWire = (over: Partial<NonNullable<PressureW1Response['cells'][number]['rental']>>) => ({
+    basis: 'global-fallback' as const, medianUsdPerGpuHour: 3.18, premiumPct: null, premiumLabel: 'n/a (no regional asks)', askCount: 0,
+    globalMedianUsdPerGpuHour: 3.18, globalAskCount: 2, weeklyMedianUsdPerGpuHour: 2.98, weeklyWeekEnding: '2026-11-02T00:00:00Z',
+    source: 'flopx-sample-v1, getdeploying weekly median (CC BY 4.0, archived)', note: 'fallback: no live asks for h100-sxm-80gb in US Central (Dallas hub); shown instead: ...',
+    evidence: PRESSURE.cells[0].factors[0].evidence, observedAt: '2026-11-06T21:00:00Z', ...over,
+  })
+  it('lists authored ties with their role and "not a filing" note, and keeps documented empty on the sample tier', () => {
+    const wire: ExposureResponse = { ...EXPOSURE, exposures: EXPOSURE.exposures.map((e, i) => ({ ...e, role: 'gpu-cloud', tieKind: 'authored', tieBasis: `profile role gpu-cloud reaches every region (${i})`, tieNote: 'authored tie from company profile, not a filing', position: i === 0 ? { quantity: 10, side: 'long', avgCostUsd: 100, marketValueUsd: 1200, weight: 0.01 } : null })) }
+    const x = adaptExposure(wire, () => false)
+    expect(x.documented).toEqual([])
+    expect(x.authored).toHaveLength(EXPOSURE.exposures.length)
+    expect(x.authored[0]).toMatchObject({ t: EXPOSURE.exposures[0].ticker, role: 'gpu-cloud', note: 'authored tie from company profile, not a filing', tie: 'profile role gpu-cloud reaches every region (0)' })
+    expect(x.positions.get(EXPOSURE.exposures[0].ticker)).toMatchObject({ side: 'long', quantity: 10 })
+    expect(x.sensitivities).toEqual([]) // the known-ticker filter still governs the modelled list
+    const docd = adaptExposure({ ...wire, exposures: [{ ...wire.exposures[0], documented: true, tieKind: 'documented', tieBasis: 'SEC filing names the region: 10-K', tieNote: null }] })
+    expect(docd.documented).toEqual([{ t: wire.exposures[0].ticker, tie: 'SEC filing names the region: 10-K', source: wire.exposures[0].provenance.source }])
+    expect(docd.authored).toEqual([])
+  })
+  it('maps the global fallback to a labelled median with no premium, regional asks to the stated premium, and none to null', () => {
+    const base = PRESSURE.cells.find((c) => c.score != null)!
+    const fb = adaptPressureCell({ ...base, rental: rentalWire({}) })!
+    expect(fb.rental).toMatchObject({ median: 3.18, premiumPct: null, premiumLabel: 'n/a (no regional asks)', fallback: true, weekly: { median: 2.98, weekEnding: '2026-11-02T00:00:00Z' } })
+    expect(fb.rental!.fallbackNote).toMatch(/^fallback: no live asks/)
+    const reg = adaptPressureCell({ ...base, rental: rentalWire({ basis: 'regional-asks', medianUsdPerGpuHour: 2.77, premiumPct: -16.9, premiumLabel: '-16.9%', askCount: 2, source: 'flopx-sample-v1' }) })!
+    expect(reg.rental).toMatchObject({ median: 2.77, premiumPct: -16.9, premiumLabel: '-16.9%', fallback: false })
+    expect(adaptPressureCell({ ...base, rental: rentalWire({ basis: 'none', medianUsdPerGpuHour: null, globalMedianUsdPerGpuHour: null, weeklyMedianUsdPerGpuHour: null, weeklyWeekEnding: null, evidence: [] }) })!.rental).toBeNull()
+  })
+  it('composes the fallback median into h100 with premium 0 and no NaN anywhere', () => {
+    const base = PRESSURE.cells.find((c) => c.regionId === 'us-tx' && c.gpuModelId === 'h100-sxm-80gb')!
+    const parts = { pressure: adaptPressure({ ...PRESSURE, cells: PRESSURE.cells.map((c) => (c === base ? { ...c, rental: rentalWire({}) } : c)) }) }
+    const r = composeRegion({ ...regionById('us-tx')!, pressure: [...regionById('us-tx')!.pressure] }, parts, NOW)
+    expect(r.h100).toBe(3.18)
+    expect(r.premium).toBe(0)
+    expect(r.live!.rental).toMatchObject({ fallback: true, premiumPct: null })
   })
 })

@@ -16,8 +16,6 @@ import Procurement from '@/pages/Procurement'
 import Handoff from '@/pages/Handoff'
 import Intelligence from '@/pages/Intelligence'
 import Agents from '@/pages/Agents'
-import { BlendSwitcher } from '@/components/BlendSwitcher'
-import { ChartStyleMenu } from '@/components/ChartStyleMenu'
 import { ChartStyleProvider } from '@/lib/chartStyle'
 
 const PAGES: Record<PageId, () => ReactNode> = {
@@ -50,7 +48,7 @@ function Frame() {
     return () => window.removeEventListener('keydown', fn)
   }, [setPalette, setInspector, inspector])
   const Page = PAGES[route.page] ?? Overview
-  const full = route.page === 'xray'
+  const full = route.page === 'xray' || route.page === 'agents'
   return (
     <div className="flex h-full overflow-hidden bg-ink text-bone">
       <Sidebar />
@@ -76,10 +74,6 @@ function Frame() {
       <Ticket />
       <DemoGuide />
       <Toasts />
-      <div className={assistant.open ? 'hidden' : 'fixed right-4 bottom-4 z-[60] flex items-center gap-2'}>
-        <ChartStyleMenu />
-        <BlendSwitcher />
-      </div>
     </div>
   )
 }

@@ -5,6 +5,9 @@ import { daysAgo, fmtDM, fmtDMY, weekdaysAgo } from '@/lib/designDates'
 import { backtestSpanLabel, BASKETS, PAPER_START_WK, paperStartLabel, secByTicker, WEEK_DATES, WEEKS } from '@/data/finance'
 import { W2_LIVE } from '@/live/adapt-w2'
 import { ACCOUNT_LIVE, type LivePosition } from '@/live/account'
+import { MockNote, MockToggle, useMockBook } from '@/components/MockToggle'
+import { mockDeskLabel, mockNameOf } from '@/data/mockDesk'
+import { StrategiesPanel } from '@/components/Strategies'
 import { BENCH, DECISIONS, DRAWDOWN, EQUITY, EQUITY_OHLC, lastPx, NAV0, prevPx, SIGNALS, signalById, signalSupport, VOLUME, type HorizonId } from '@/data/fund'
 import { Distribution, HBars, TimeChart } from '@/components/charts'
 import { StockChart } from '@/components/StockChart'
@@ -13,8 +16,9 @@ import { IndicatorChips, IndicatorMenu } from '@/components/IndicatorMenu'
 import type { IndicatorId } from '@/lib/indicators'
 import type { ChartType } from '@/lib/chartTypes'
 import { BacktestCosts, Failures, ForecastVsActual, ModelComparison, ValidationMatrix } from '@/components/Eval'
-import { AIBlock, Btn, cx, Delta, DirectionTag, Empty, EntityLink, Fresh, Meter, Panel, ResetLayout, Seg, Tabs, TruthGlyph, TruthTag, Validation } from '@/components/ui'
+import { AIBlock, Btn, cx, Delta, DirectionTag, Empty, EntityLink, Fresh, Meter, PageHeader, Panel, ResetLayout, Seg, StripCell, Tabs, TruthGlyph, TruthTag, Validation } from '@/components/ui'
 import { useStore } from '@/lib/store'
+import { Foldable, Row } from '@/components/collapse'
 import { FUND_TESTS as FT, SNAPSHOT } from '@/data/handoff'
 
 const HZ_WEEKS: Record<HorizonId, number> = { '1W': 1, '1M': 4, '3M': 13 }
@@ -34,14 +38,16 @@ export default function Fund() {
   // and the benchmark comparison are priced off the design's closes, so a live account shows them
   // as not available rather than mixing the two.
   const acct = ACCOUNT_LIVE.state
-  const live = acct.status === 'live' ? acct : null
-  const nav = live ? live.account.nav : s.nav
-  const cash = live ? live.account.cash : s.cash
-  const unreal = live ? live.account.unrealised : positions.reduce((a, p) => a + p.qty * (lastPx(p.ticker) - p.avg), 0)
-  const realised = live ? live.account.realised : positions.reduce((a, p) => a + p.realised, 0) + 41_250
+  // The mock book (src/data/mockDesk.ts) stands in through the same path when the paper account is
+  // empty or nobody is signed in; every panel it feeds carries mockDeskLabel as a quiet note.
+  const { live, mock, book, showMock, setShowMock } = useMockBook(acct)
+  const nav = book ? book.account.nav : s.nav
+  const cash = book ? book.account.cash : s.cash
+  const unreal = book ? book.account.unrealised : positions.reduce((a, p) => a + p.qty * (lastPx(p.ticker) - p.avg), 0)
+  const realised = book ? book.account.realised : positions.reduce((a, p) => a + p.realised, 0) + 41_250
   const day = positions.reduce((a, p) => a + p.qty * (lastPx(p.ticker) - prevPx(p.ticker)), 0)
-  const gross = live ? live.account.positions.reduce((a, p) => a + Math.abs(p.mv ?? 0), 0) : positions.reduce((a, p) => a + Math.abs(p.qty * lastPx(p.ticker)), 0)
-  const netExp = live ? live.account.positions.reduce((a, p) => a + (p.mv ?? 0), 0) : positions.reduce((a, p) => a + p.qty * lastPx(p.ticker), 0)
+  const gross = book ? book.account.positions.reduce((a, p) => a + Math.abs(p.mv ?? 0), 0) : positions.reduce((a, p) => a + Math.abs(p.qty * lastPx(p.ticker)), 0)
+  const netExp = book ? book.account.positions.reduce((a, p) => a + (p.mv ?? 0), 0) : positions.reduce((a, p) => a + p.qty * lastPx(p.ticker), 0)
   const sox = BENCH[0].values
   const spx = BENCH[1].values
   const soxRet = ((sox[sox.length - 1] - sox[PAPER_START_WK]) / sox[PAPER_START_WK]) * 100
@@ -50,53 +56,51 @@ export default function Fund() {
 
   return (
     <div>
-      <div className="mb-4 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <div className="eyebrow mb-1.5 flex items-center gap-2"><ChartLine size={12} className="text-dec" />Flagship · HRT · Best use of data for predictions & decision making</div>
-          <h1 className="font-serif text-[34px] leading-none">Systematic Compute Fund <span className="text-mute">· CPX-1</span></h1>
-          <div className="mt-2 flex flex-wrap items-center gap-1.5">
-            {/* The page's own statuses are quiet notes (WF8 #3); the account read, when it differs from them, keeps a chip. */}
-            <Fresh quiet f="simulated" label={`Paper since ${paperStartLabel()}`} />
-            <span className="rounded-[3px] border border-dashed border-line2 px-1.5 py-[1px] text-[11px] text-mute font-medium">Backtest {backtestSpanLabel()} · hypothetical</span>
-            {/* Signed in with the account read, the bare note would sit beside the account badge and read as one claim (WF7 #3): name what stays illustrative instead. */}
-            <Fresh quiet f="illustrative" label={live ? 'Illustrative · backtest, equity curve & benchmarks' : undefined} />
-            {live && <Fresh f={live.fresh.freshness} label={live.fresh.label} />}
-            {acct.status === 'failed' && <Fresh f="unavailable" label="Account read failed" />}
-            <span className="font-mono text-[10px] text-dim">· prices {Object.values(W2_LIVE.companies).some((c) => c.observedWeeks > 0) ? 'partly observed' : 'illustrative'} · {AS_OF}</span>
-          </div>
-        </div>
-        <ResetLayout />
-      </div>
+      <PageHeader
+        eyebrow={<span className="inline-flex items-center gap-2"><ChartLine size={12} className="text-dec" />Flagship · HRT · Best use of data for predictions & decision making</span>}
+        title={<>Systematic compute fund <span className="text-mute">· CPX-1</span></>}
+        sub={<span className="flex flex-wrap items-center gap-1.5">
+          {/* The page's own statuses are quiet notes (WF8 #3); the account read, when it differs from them, keeps a chip. */}
+          <Fresh quiet f="simulated" label={`Paper since ${paperStartLabel()}`} />
+          <span className="rounded-[2px] border border-dashed border-line2 px-1.5 py-[1px] text-[11px] font-medium text-mute">Backtest {backtestSpanLabel()} · hypothetical</span>
+          {/* Signed in with the account read, the bare note would sit beside the account badge and read as one claim (WF7 #3): name what stays illustrative instead. */}
+          <Fresh quiet f="illustrative" label={book ? 'Illustrative · backtest, equity curve & benchmarks' : undefined} />
+          {live && <Fresh f={live.fresh.freshness} label={live.fresh.label} />}
+          {mock && <Fresh quiet f="illustrative" label={mockDeskLabel} />}
+          {acct.status === 'failed' && <Fresh f="unavailable" label="Account read failed" />}
+          <span className="text-[11px] text-dim">· prices {Object.values(W2_LIVE.companies).some((c) => c.observedWeeks > 0) ? 'partly observed' : 'illustrative'} · {AS_OF}</span>
+        </span>}
+        right={<><MockToggle on={showMock} onChange={setShowMock} /><ResetLayout /></>}
+      />
       {acct.status === 'failed' && (
         <div className="mb-5 rounded-md border border-warn/35 bg-warn/[0.04] px-4 py-3 text-[12.5px] text-warn">
-          The paper account for <span className="font-mono">{acct.email}</span> could not be read: {acct.error}. The account figures below are the design's illustrative account, not this account's.
+          The paper account for <span className="font-mono">{acct.email}</span> could not be read: {acct.error}. {mock ? 'The account figures below are the mock book, not this account\'s.' : "The account figures below are the design's illustrative account, not this account's."}
         </div>
       )}
 
-      <div className="mb-5 rounded-md border border-warn/35 bg-warn/[0.04] px-4 py-3">
-        <div className="flex flex-wrap items-center gap-3">
-          <span className="text-[13px] font-semibold text-warn">Edge in <span className="num">{FT.edges}</span> of <span className="num">{FT.tests}</span> pre-registered tests · no edge found</span>
-          <Fresh f="historical" label={SNAPSHOT.short} />
-        </div>
-        <div className="mt-2 flex flex-wrap items-center gap-3" title={`Across ${FT.tickers} tickers. Prices: ${FT.prices}.`}>
+      <Panel variant="callout" tone="warn" id="Pre-registered tests" className="mb-5"
+        title={<span className="text-warn">Edge in <span className="num">{FT.edges}</span> of <span className="num">{FT.tests}</span> forecast tests (8 tickers x 3 models) · no edge found</span>}
+        right={<Fresh f="historical" label={SNAPSHOT.short} />}>
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2" title={`Across ${FT.tickers} tickers. Prices: ${FT.prices}.`}>
           <div className="grid grid-cols-12 gap-1" role="img" aria-label={`${FT.edges} of ${FT.tests} tests show an edge`}>
             {Array.from({ length: FT.tests }, (_, i) => <span key={i} className="h-3 w-3 rounded-[2px] border border-warn/50" title={`Test ${i + 1}: no edge found`} />)}
           </div>
-          <span className="rounded-full border border-line2 px-2 py-0.5 text-[11px] text-mute" title="Half-size paper orders kept as exploratory"><span className="num text-bone">{FT.exploratoryOrders}</span> exploratory half-size orders</span>
+          <span className="text-[11.5px] text-mute" title="Half-size paper orders kept as exploratory"><span className="num text-bone">{FT.exploratoryOrders}</span> exploratory half-size orders</span>
         </div>
-      </div>
+      </Panel>
 
-      <div className="mb-5 grid grid-cols-4 gap-px overflow-hidden rounded-md border border-line bg-line xl:grid-cols-8">
-        <KPI label="Paper NAV" value={`$${(nav / 1e6).toFixed(3)}M`} sub={live ? <span>P&L <Delta v={(unreal + realised) / 1000} d={1} suffix="k" /></span> : <Delta v={((nav - NAV0) / NAV0) * 100} d={2} />} truth="dec" />
-        <KPI label="1W P&L" value={live ? <span className="text-mute">—</span> : <Delta v={day / 1000} d={1} suffix="k" />} sub={live ? 'not in the account read' : <span>{((day / nav) * 100).toFixed(2)}%</span>} />
+      {mock && <MockNote className="mb-1.5" />}
+      <Panel variant="strip" id="Key figures" title="Paper performance" className="mb-5">
+        <KPI lead label="Paper NAV" value={`$${(nav / 1e6).toFixed(3)}M`} sub={book ? <span>P&L <Delta v={(unreal + realised) / 1000} d={1} suffix="k" /></span> : <Delta v={((nav - NAV0) / NAV0) * 100} d={2} />} truth="dec" />
+        <KPI label="1W P&L" value={book ? <span className="text-mute">—</span> : <Delta v={day / 1000} d={1} suffix="k" />} sub={mock ? 'not in the mock book' : live ? 'not in the account read' : <span>{((day / nav) * 100).toFixed(2)}%</span>} />
         <KPI label="Unrealised" value={<Delta v={unreal / 1000} d={1} suffix="k" />} sub="open positions" />
-        <KPI label="Realised" value={<Delta v={realised / 1000} d={1} suffix="k" />} sub={live ? 'since inception' : 'since paper start'} />
+        <KPI label="Realised" value={<Delta v={realised / 1000} d={1} suffix="k" />} sub={book ? 'since inception' : 'since paper start'} />
         <KPI label="Cash" value={`$${(cash / 1e6).toFixed(2)}M`} sub={`${nav ? ((cash / nav) * 100).toFixed(0) : '—'}% NAV`} />
         <KPI label="Gross / Net" value={nav ? `${((gross / nav) * 100).toFixed(0)}% / ${((netExp / nav) * 100).toFixed(0)}%` : '—'} sub="exposure" />
-        <KPI label="vs SOX · SPX" value={live ? <span className="text-mute">—</span> : <span className="text-[13px]"><Delta v={((nav - NAV0) / NAV0) * 100 - soxRet} d={1} suffix="pp" /> · <Delta v={((nav - NAV0) / NAV0) * 100 - spxRet} d={1} suffix="pp" /></span>} sub={live ? 'needs the fund summary read' : 'paper period · 10 wks'} />
+        <KPI label="vs SOX · SPX" value={book ? <span className="text-mute">—</span> : <span className="text-[13px]"><Delta v={((nav - NAV0) / NAV0) * 100 - soxRet} d={1} suffix="pp" /> · <Delta v={((nav - NAV0) / NAV0) * 100 - spxRet} d={1} suffix="pp" /></span>} sub={mock ? 'not in the mock book' : live ? 'needs the fund summary read' : 'paper period · 10 wks'} />
         {/* Signed in, the account's paper drawdown is the headline and the design's backtest the small print (WF7 #3). */}
-        <KPI label="Max DD" value={live ? fmtDD(-Math.abs(live.account.maxDrawdownPct)) : `${fmtDD(maxDrawdown(DRAWDOWN, 0, PAPER_START_WK))}`} sub={live ? `paper (account) · backtest ${fmtDD(maxDrawdown(DRAWDOWN, 0, PAPER_START_WK))}` : `backtest · paper ${fmtDD(maxDrawdown(DRAWDOWN, PAPER_START_WK))}`} />
-      </div>
+        <KPI label="Max DD" value={book ? fmtDD(-Math.abs(book.account.maxDrawdownPct)) : `${fmtDD(maxDrawdown(DRAWDOWN, 0, PAPER_START_WK))}`} sub={book ? `paper (${mock ? 'mock' : 'account'}) · backtest ${fmtDD(maxDrawdown(DRAWDOWN, 0, PAPER_START_WK))}` : `backtest · paper ${fmtDD(maxDrawdown(DRAWDOWN, PAPER_START_WK))}`} />
+      </Panel>
 
       <Tabs className="mb-5" value={fund.tab} onChange={(t) => setFund({ tab: t })} tabs={[{ id: 'portfolio', label: 'Portfolio' }, { id: 'signals', label: 'Signals', count: SIGNALS.length }, { id: 'decisions', label: 'Decisions', count: openProps }, { id: 'evaluation', label: 'Evaluation' }]} />
       {fund.tab === 'portfolio' && <PortfolioTab />}
@@ -107,13 +111,11 @@ export default function Fund() {
   )
 }
 
-function KPI({ label, value, sub, truth }: { label: string; value: ReactNode; sub?: ReactNode; truth?: 'dec' }) {
+function KPI({ label, value, sub, truth, lead }: { label: string; value: ReactNode; sub?: ReactNode; truth?: 'dec'; lead?: boolean }) {
   return (
-    <div className="bg-panel px-3.5 py-3">
-      <div className="flex items-center gap-1.5 text-[11px] text-dim font-medium">{truth && <TruthGlyph truth={truth} size={7} />}{label}</div>
-      <div className="num mt-1 text-[17px] text-bone">{value}</div>
-      {sub && <div className="num mt-0.5 text-[10.5px] text-mute">{sub}</div>}
-    </div>
+    <StripCell lead={lead} className="min-w-[112px]" label={<span className="flex items-center gap-1.5">{truth && <TruthGlyph truth={truth} size={7} />}{label}</span>} sub={sub}>
+      {value}
+    </StripCell>
   )
 }
 
@@ -124,16 +126,17 @@ function PortfolioTab() {
   const [chartType, setChartType] = useState<ChartType>('candles')
   const [indicators, setIndicators] = useState<IndicatorId[]>([])
   const acct = ACCOUNT_LIVE.state
-  const live = acct.status === 'live' ? acct : null
-  const nav = live ? live.account.nav : designNav
-  const orders = live ? live.orders : designOrders
-  const holdingsEmpty = live ? live.account.positions.length === 0 : positions.length === 0
+  const { live, mock, book } = useMockBook(acct)
+  const nav = book ? book.account.nav : designNav
+  const orders = book ? book.orders : designOrders
+  const holdingsEmpty = book ? book.account.positions.length === 0 : positions.length === 0
   const clusters = useMemo(() => {
+    if (mock) return mock.exposureByCluster
     const m: Record<string, number> = {}
-    if (live) live.account.positions.forEach((p) => { const g = secByTicker(p.ticker)?.group ?? 'Other'; m[g] = (m[g] ?? 0) + (p.mv ?? 0) })
+    if (book) book.account.positions.forEach((p) => { const g = secByTicker(p.ticker)?.group ?? 'Other'; m[g] = (m[g] ?? 0) + (p.mv ?? 0) })
     else positions.forEach((p) => { const g = secByTicker(p.ticker)!.group; m[g] = (m[g] ?? 0) + p.qty * lastPx(p.ticker) })
     return Object.entries(m).map(([k, v]) => ({ label: k, value: nav ? (v / nav) * 100 : 0 }))
-  }, [positions, nav, live, liveVersion]) // liveVersion: ACCOUNT_LIVE is mutated in place; the version is what changes
+  }, [positions, nav, live, mock, book, liveVersion]) // liveVersion: ACCOUNT_LIVE is mutated in place; the version is what changes
   const regionExp = useMemo(() => {
     const m: Record<string, number> = {}
     positions.forEach((p) => secByTicker(p.ticker)!.computeLinks.forEach((l) => { if (l.region) m[l.region] = (m[l.region] ?? 0) + p.qty * lastPx(p.ticker) }))
@@ -142,10 +145,10 @@ function PortfolioTab() {
 
   return (
     <div className="space-y-5">
-      <div className="grid grid-cols-1 gap-5 2xl:grid-cols-[1fr_380px]">
+      <Row cols={[1, '380px']} at="2xl">
         <Panel
           title="Equity curve"
-          eyebrow={<>Weekly · click <span className="text-dec">◆</span> to open the decision record <Fresh quiet f="illustrative" /></>}
+          eyebrow={<span title="Click a ◆ marker to open its decision record">Weekly · <span className="text-dec">◆</span> decisions <Fresh quiet f="illustrative" /></span>}
           right={<div className="flex items-center gap-2"><IndicatorMenu value={indicators} onChange={setIndicators} /><ChartTypeMenu value={chartType} onChange={setChartType} /></div>}
         >
           <IndicatorChips value={indicators} onChange={setIndicators} />
@@ -168,18 +171,18 @@ function PortfolioTab() {
           />
         </Panel>
         <DecisionRecordPanel rec={rec ?? null} onClose={() => setFund({ record: null })} />
-      </div>
+      </Row>
 
-      <Panel title="Positions" eyebrow={<><TruthGlyph truth="dec" size={7} />{live ? <>Paper holdings · {live.email} <Fresh quiet f={live.fresh.freshness} label={live.fresh.label} /></> : <>Paper holdings · model and user-owned <Fresh quiet f="illustrative" /></>}</>} right={!live && positions.length > 0 && (confirmLiq ? <div className="flex items-center gap-2"><span className="text-[11.5px] text-down">Sell/cover all {positions.length} positions?</span><Btn size="sm" variant="danger" onClick={() => { liquidateAll(); setConfirmLiq(false) }}>Confirm liquidate</Btn><Btn size="sm" variant="ghost" onClick={() => setConfirmLiq(false)}>Cancel</Btn></div> : <Btn size="sm" variant="danger" onClick={() => setConfirmLiq(true)}>Liquidate all</Btn>)} bodyClass="p-0">
+      <Panel title="Positions" eyebrow={<><TruthGlyph truth="dec" size={7} />{book ? <>Paper holdings · {book.email} <Fresh quiet f={book.fresh.freshness} label={book.fresh.label} /></> : <>Paper holdings · model and user-owned <Fresh quiet f="illustrative" /></>}</>} right={!book && positions.length > 0 && (confirmLiq ? <div className="flex items-center gap-2"><span className="text-[11.5px] text-down">Sell/cover all {positions.length} positions?</span><Btn size="sm" variant="danger" onClick={() => { liquidateAll(); setConfirmLiq(false) }}>Confirm liquidate</Btn><Btn size="sm" variant="ghost" onClick={() => setConfirmLiq(false)}>Cancel</Btn></div> : <Btn size="sm" variant="danger" onClick={() => setConfirmLiq(true)}>Liquidate all</Btn>)} bodyClass="p-0">
         {holdingsEmpty ? (
-          <Empty className="m-4" title="Portfolio empty" body={live ? 'This account holds no paper positions.' : 'All paper positions are closed. CPX-1 will propose new targets at the next rebalance, or you can open a position manually.'} action={live ? undefined : <Btn size="sm" variant="decision" onClick={() => setTicket({ ticker: 'VST' })}>New paper order</Btn>} />
+          <Empty className="m-4" title="Portfolio empty" body={book ? 'This account holds no paper positions.' : 'All paper positions are closed. CPX-1 will propose new targets at the next rebalance, or you can open a position manually.'} action={book ? undefined : <Btn size="sm" variant="decision" onClick={() => setTicket({ ticker: 'VST' })}>New paper order</Btn>} />
         ) : (
-          <PositionsTable live={live?.account.positions} liveNav={live?.account.nav} onReduce={reducePosition} onTicket={(t) => setTicket({ ticker: t })} onInspect={(t) => inspect({ kind: 'security', id: t, label: t })} />
+          <PositionsTable live={book?.account.positions} liveNav={book?.account.nav} onReduce={reducePosition} onTicket={(t) => setTicket({ ticker: t })} onInspect={(t) => inspect({ kind: 'security', id: t, label: t })} />
         )}
       </Panel>
 
-      <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
-        <Panel title="Exposure by cluster" eyebrow={<>% NAV · net {live ? <Fresh quiet f={live.fresh.freshness} label={live.fresh.label} /> : <Fresh quiet f="illustrative" />}</>}>
+      <Row cols={[1, 1, 1]}>
+        <Panel title="Exposure by cluster" eyebrow={<>% NAV · net {book ? <Fresh quiet f={book.fresh.freshness} label={book.fresh.label} /> : <Fresh quiet f="illustrative" />}</>}>
           <HBars signed rows={clusters.map((c) => ({ label: c.label, value: c.value }))} fmt={(v) => `${v.toFixed(1)}%`} />
         </Panel>
         <Panel title="Exposure by compute region" eyebrow={<>Via documented company ties <Fresh quiet f="illustrative" /></>}>
@@ -192,7 +195,7 @@ function PortfolioTab() {
             // The live anomaly scan (/flopx/anomalies) when it has landed; the design's Texas worked example, badged, until then.
             const card = PRESSURE_MODEL.anomaliesLive ? ANOMALY_CARDS[0] : null
             return (
-              <div className="mt-3 rounded-[4px] border border-inf/25 bg-inf/[0.04] p-2.5 text-[11.5px]">
+              <div className="mt-3 border-l-2 border-inf py-1 pl-2.5 text-[11.5px]">
                 <div className="mb-0.5 flex items-center gap-1.5 text-[11px] text-inf font-medium"><TruthGlyph truth="inf" size={6} />{card ? 'Open compute anomaly' : 'Linked compute anomaly'} {card && <Fresh f="experimental" label="FLOPX anomaly scan" />}</div>
                 {card ? <>{card.title}: {card.sub} CPX-1 has no proposal linked to it; the proposals below are design examples. </> : PRESSURE_MODEL.anomaliesLive ? <>No open anomaly in the FLOPX regions; the proposals below are design examples. </> : <>Texas pressure +14 pts → CPX-1 proposes VST +1.5 pp (design example). </>}
                 <button className="cursor-pointer text-inf underline-offset-2 hover:underline" onClick={() => { setXray({ region: card?.region ?? 'us-tx', tab: 'brief' }); navigate('xray') }}>See anomaly</button> · <button className="cursor-pointer text-dec underline-offset-2 hover:underline" onClick={() => setFund({ tab: 'decisions' })}>Review proposal</button>
@@ -200,18 +203,19 @@ function PortfolioTab() {
             )
           })()}
         </Panel>
-        <Panel title="Risk" eyebrow={<>Estimated · 60d window <Fresh quiet f="illustrative" /></>}>
+        <Panel title="Risk" eyebrow={<>Estimated · 60d window <Fresh quiet f="illustrative" label={mock ? mockDeskLabel : undefined} /></>}>
           <div className="grid grid-cols-2 gap-3">
             {[['Beta to SPX', '0.71'], ['Ann. vol (est.)', '11.4%'], ['1d VaR 95%', `$${Math.round(nav * 0.0118).toLocaleString()}`], ['Top-3 weight', '26.4%'], ['Risk budget used', '68%'], ['Liquidity (days)', '< 0.2']].map(([k, v]) => <div key={k}><div className="text-[11px] text-dim font-medium">{k}</div><div className="num text-[15px]">{v}</div></div>)}
           </div>
-          <div className="mt-3"><Meter value={0.68} color="var(--color-dec)" /><div className="mt-1 font-mono text-[10px] text-dim">Risk budget 4% ann. vol · 68% used</div></div>
+          <div className="mt-3"><Meter value={0.68} color="var(--color-mute)" /><div className="mt-1 text-[11px] text-dim">of 4% ann. vol budget</div></div>
         </Panel>
-      </div>
+      </Row>
 
-      <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
-        <Panel title="Recent orders" eyebrow={<>Paper · simulated execution {live ? (live.ordersError ? <Fresh f="unavailable" label={`Orders read failed: ${live.ordersError}`} /> : <Fresh quiet f={live.fresh.freshness} label={`FLOPX paper desk · ${live.email}`} />) : <Fresh quiet f="illustrative" label="Seed orders: design examples, re-dated" />}</>} bodyClass="p-0"><OrdersList orders={orders.slice(0, 8)} /></Panel>
-        <Panel title="Strategy target changes" eyebrow={<>CPX-1 · last 30 days <Fresh quiet f="illustrative" label="Design examples, re-dated" /></>}>
-          <div className="space-y-2">
+      <StrategiesPanel />
+
+      <Row cols={[1, 1]}>
+        <Panel variant="rail" title="Recent orders" eyebrow={<>Paper · simulated execution {book ? (book.ordersError ? <Fresh f="unavailable" label={`Orders read failed: ${book.ordersError}`} /> : <Fresh quiet f={book.fresh.freshness} label={mock ? book.fresh.label : `FLOPX paper desk · ${book.email}`} />) : <Fresh quiet f="illustrative" label="Seed orders: design examples, re-dated" />}</>} bodyClass="p-0"><OrdersList orders={orders.slice(0, 8)} /></Panel>
+        <Panel variant="rail" title="Strategy target changes" eyebrow={<>CPX-1 · last 30 days <Fresh quiet f="illustrative" label="Design examples, re-dated" /></>}>
             {[
               // The design's worked examples keep their distance from "now" in sessions (0, 0, 1 and 6 weekdays back); see src/lib/designDates.ts.
               { d: fmtDM(weekdaysAgo(0)), t: 'VST', from: 9.3, to: 10.8, why: 'TX pressure anomaly', state: 'Awaiting approval' },
@@ -219,16 +223,15 @@ function PortfolioTab() {
               { d: fmtDM(weekdaysAgo(1)), t: 'VST', from: 8.3, to: 9.3, why: 'TX pressure anomaly (first leg)', state: 'Filled' },
               { d: fmtDM(weekdaysAgo(6)), t: 'AMD', from: 2.0, to: 0, why: 'No edge found — signal retired', state: 'Filled' },
             ].map((c, i) => (
-              <div key={i} className="grid grid-cols-[48px_48px_1fr_auto] items-center gap-3 border-b border-line/60 pb-2 text-[12px] last:border-0">
-                <span className="font-mono text-[10.5px] text-dim">{c.d}</span>
+              <div key={i} className="grid grid-cols-[48px_48px_1fr_auto] items-center gap-3 py-2 text-[12px]">
+                <span className="num text-[10.5px] text-dim">{c.d}</span>
                 <span className="font-mono">{c.t}</span>
                 <span><span className="num">{c.from.toFixed(1)}% → {c.to.toFixed(1)}%</span> <span className="text-mute">· {c.why}</span></span>
-                <span className={cx('font-mono text-[10px]', c.state === 'Filled' ? 'text-up' : 'text-dec')}>{c.state}</span>
+                <span className={cx('text-[11px]', c.state === 'Filled' ? 'text-up' : 'text-dec')}>{c.state}</span>
               </div>
             ))}
-          </div>
         </Panel>
-      </div>
+      </Row>
     </div>
   )
 }
@@ -240,7 +243,7 @@ function LivePositionRows({ rows, nav, onInspect }: { rows: LivePosition[]; nav:
     <>
       {rows.map((p) => (
         <tr key={p.ticker} className="border-b border-line/60 hover:bg-hover/50">
-          <td className="px-4 py-2"><button onClick={() => onInspect(p.ticker)} className="cursor-pointer font-mono hover:underline">{p.ticker}</button> <span className="text-dim">{secByTicker(p.ticker)?.name ?? ''}</span>{p.qty < 0 && <span className="ml-1.5 rounded-[2px] border border-down/40 px-1 font-mono text-[9px] text-down">SHORT</span>}</td>
+          <td className="px-4 py-2"><button onClick={() => onInspect(p.ticker)} className="cursor-pointer font-mono hover:underline">{p.ticker}</button> <span className="text-dim">{secByTicker(p.ticker)?.name ?? mockNameOf(p.ticker)}</span>{p.qty < 0 && <span className="ml-1.5 rounded-[2px] border border-down/40 px-1 font-mono text-[9px] text-down">SHORT</span>}</td>
           <td className="px-4 py-2">{dash}</td>
           <td className="px-4 py-2">{dash}</td>
           <td className="num px-4 py-2 text-right">{p.qty.toLocaleString()}</td>
@@ -263,8 +266,8 @@ export function PositionsTable({ live, liveNav, onReduce, onTicket, onInspect }:
     <div className="overflow-x-auto">
       <table className="w-full text-[12px]">
         <thead>
-          <tr className="border-b border-line text-[11px] text-dim font-medium">
-            {['Instrument', 'Owner', 'Signal', 'Qty', 'Avg', 'Last', 'Mkt value', 'Weight', 'Unreal. P&L', 'Day', ''].map((h, i) => <th key={h + i} className={cx('px-4 py-2 font-normal', i >= 3 && i <= 9 ? 'text-right' : 'text-left')}>{h}</th>)}
+          <tr className="h-8 border-b border-line text-[11px] whitespace-nowrap text-dim">
+            {['Instrument', 'Own', 'Signal', 'Qty', 'Avg ($)', 'Last ($)', 'Mkt value ($)', 'Weight', 'Unreal. P&L', 'Day', ''].map((h, i) => <th key={h + i} className={cx('px-3 font-medium', i >= 3 && i <= 9 ? 'text-right' : 'text-left')}>{h}</th>)}
           </tr>
         </thead>
         <tbody>
@@ -276,23 +279,23 @@ export function PositionsTable({ live, liveNav, onReduce, onTicket, onInspect }:
             const sig = p.signal ? signalById(p.signal) : null
             const pending = orders.some((o) => o.ticker === p.ticker && (o.status === 'Pending' || o.status === 'Queued'))
             return (
-              <tr key={p.ticker} className="border-b border-line/60 hover:bg-hover/50">
-                <td className="px-4 py-2"><button onClick={() => onInspect(p.ticker)} className="cursor-pointer font-mono hover:underline">{p.ticker}</button> <span className="text-dim">{secByTicker(p.ticker)!.name}</span>{p.qty < 0 && <span className="ml-1.5 rounded-[2px] border border-down/40 px-1 font-mono text-[9px] text-down">SHORT</span>}</td>
-                <td className="px-4 py-2"><span className={cx('font-mono text-[10.5px]', p.strategy === 'User' ? 'text-bone' : 'text-dec')}>{p.strategy === 'User' ? 'User' : 'CPX-1'}</span></td>
-                <td className="px-4 py-2">{sig ? <EntityLink r={{ kind: 'signal', id: sig.id, label: sig.name }} className="text-[11.5px] text-mute" /> : <span className="text-dim">—</span>}</td>
-                <td className="num px-4 py-2 text-right">{p.qty.toLocaleString()}</td>
-                <td className="num px-4 py-2 text-right text-mute">{p.avg.toFixed(2)}</td>
-                <td className="num px-4 py-2 text-right">{px.toFixed(2)}</td>
-                <td className="num px-4 py-2 text-right">{mv < 0 ? '−' : ''}${Math.abs(Math.round(mv)).toLocaleString()}</td>
-                <td className="num px-4 py-2 text-right">{((mv / nav) * 100).toFixed(1)}%</td>
-                <td className="px-4 py-2 text-right"><Delta v={pnl / 1000} d={1} suffix="k" /></td>
-                <td className="px-4 py-2 text-right"><Delta v={((px - prevPx(p.ticker)) / prevPx(p.ticker)) * 100} /></td>
-                <td className="px-4 py-2 text-right whitespace-nowrap">
-                  {pending ? <span className="font-mono text-[10px] text-warn">order pending…</span> : (
+              <tr key={p.ticker} className="h-9 border-b border-line-soft hover:bg-hover/50">
+                <td className="px-3 py-1"><button onClick={() => onInspect(p.ticker)} className="cursor-pointer font-mono hover:underline">{p.ticker}</button> <span className="text-dim">{secByTicker(p.ticker)!.name}</span>{p.qty < 0 && <span className="ml-1.5 text-[11px] text-down">short</span>}</td>
+                <td className="px-3 py-1"><span title={p.strategy === 'User' ? 'Owner: User' : 'Owner: CPX-1 (model)'} className={cx('text-[11.5px]', p.strategy === 'User' ? 'text-bone' : 'text-dec')}>{p.strategy === 'User' ? 'U' : '◆'}</span></td>
+                <td className="px-3 py-1">{sig ? <EntityLink r={{ kind: 'signal', id: sig.id, label: sig.name }} className="text-[11.5px] text-mute" /> : <span className="text-dim">—</span>}</td>
+                <td className="num px-3 py-1 text-right">{p.qty.toLocaleString()}</td>
+                <td className="num px-3 py-1 text-right text-mute">{p.avg.toFixed(2)}</td>
+                <td className="num px-3 py-1 text-right">{px.toFixed(2)}</td>
+                <td className="num px-3 py-1 text-right">{mv < 0 ? '−' : ''}{Math.abs(Math.round(mv)).toLocaleString()}</td>
+                <td className="num px-3 py-1 text-right">{((mv / nav) * 100).toFixed(1)}%</td>
+                <td className="px-3 py-1 text-right"><Delta v={pnl / 1000} d={1} suffix="k" /></td>
+                <td className="px-3 py-1 text-right"><Delta v={((px - prevPx(p.ticker)) / prevPx(p.ticker)) * 100} /></td>
+                <td className="px-3 py-1 text-right whitespace-nowrap">
+                  {pending ? <span className="text-[11px] text-warn">order pending…</span> : (
                     <div className="flex justify-end gap-1">
-                      <Btn size="sm" variant="ghost" onClick={() => onReduce(p.ticker, 0.5)}>−50%</Btn>
-                      <Btn size="sm" variant="ghost" onClick={() => onReduce(p.ticker, 1)}>Close</Btn>
-                      <Btn size="sm" variant="ghost" onClick={() => onTicket(p.ticker)}>Ticket</Btn>
+                      <Btn size="sm" variant="ghost" title="Reduce by half" onClick={() => onReduce(p.ticker, 0.5)}>−50%</Btn>
+                      <Btn size="sm" variant="ghost" title="Close position" aria-label={`Close ${p.ticker}`} onClick={() => onReduce(p.ticker, 1)}><X size={12} /></Btn>
+                      <Btn size="sm" variant="ghost" title="Open order ticket" aria-label={`Ticket ${p.ticker}`} onClick={() => onTicket(p.ticker)}><Send size={12} /></Btn>
                     </div>
                   )}
                 </td>
@@ -307,15 +310,16 @@ export function PositionsTable({ live, liveNav, onReduce, onTicket, onInspect }:
 
 export function OrdersList({ orders }: { orders: ReturnType<typeof useStore>['orders'] }) {
   const { cancelOrder } = useStore()
-  if (!orders.length) return <div className="p-4 text-[12px] text-mute">No orders yet.</div>
+  if (!orders.length) return <div className="py-3 text-[12px] text-mute">No orders yet.</div>
+  // Rows only: callers put them in a rail panel, which rules its direct children.
   return (
-    <div>
+    <>
       {orders.map((o) => (
-        <div key={o.id} className="grid grid-cols-[76px_1fr_auto] items-center gap-3 border-b border-line/60 px-4 py-2 last:border-0">
-          <span className="font-mono text-[10px] text-dim">{o.time}</span>
+        <div key={o.id} className="grid grid-cols-[76px_1fr_auto] items-center gap-3 py-2">
+          <span className="num text-[10.5px] text-dim">{o.time}</span>
           <div className="min-w-0">
-            <div className="text-[12px]"><span className={cx('font-mono', o.side === 'Buy' || o.side === 'Cover' ? 'text-up' : 'text-down')}>{o.side}</span> <span className="num">{o.qty.toLocaleString()}</span> <span className="font-mono">{o.ticker}</span> <span className="text-dim">· {o.type}{o.limit ? ` @ ${o.limit}` : ''}</span>{o.fillPx && <span className="text-mute"> · filled ${o.fillPx.toFixed(2)}</span>}</div>
-            <div className="truncate font-mono text-[10px] text-dim"><span className={o.origin === 'Model' ? 'text-dec' : 'text-mute'}>{o.origin === 'Model' ? 'Model · CPX-1' : 'User'}</span>{o.note && ` · ${o.note}`}{o.reason && <span className={o.status === 'Rejected' ? 'text-down' : 'text-warn'}> · {o.reason}</span>}</div>
+            <div className="text-[12px]"><span className={cx('font-medium', o.side === 'Buy' || o.side === 'Cover' ? 'text-up' : 'text-down')}>{o.side}</span> <span className="num">{o.qty.toLocaleString()}</span> <span className="font-mono">{o.ticker}</span> <span className="text-dim">· {o.type}{o.limit ? ` @ ${o.limit}` : ''}</span>{o.fillPx && <span className="text-mute"> · filled ${o.fillPx.toFixed(2)}</span>}</div>
+            <div className="truncate text-[11px] text-dim"><span className={o.origin === 'Model' ? 'text-dec' : 'text-mute'}>{o.origin === 'Model' ? 'Model · CPX-1' : 'User'}</span>{o.note && ` · ${o.note}`}{o.reason && <span className={o.status === 'Rejected' ? 'text-down' : 'text-warn'}> · {o.reason}</span>}</div>
           </div>
           <div className="flex items-center gap-2">
             <OrderStatus s={o.status} />
@@ -323,14 +327,13 @@ export function OrdersList({ orders }: { orders: ReturnType<typeof useStore>['or
           </div>
         </div>
       ))}
-    </div>
+    </>
   )
 }
 
 export function OrderStatus({ s }: { s: string }) {
   return (
-    <span className={cx('inline-flex items-center gap-1 rounded-[3px] border px-1.5 py-[1px] text-[11px] font-medium', s === 'Filled' && 'border-up/35 text-up', s === 'Pending' && 'border-dec/40 text-dec', s === 'Queued' && 'border-warn/40 text-warn', s === 'Rejected' && 'border-down/40 text-down', s === 'Cancelled' && 'border-line2 text-dim')}>
-      {s === 'Pending' && <span className="pulse-dot size-1.5 rounded-full bg-dec" />}
+    <span className={cx('inline-flex items-center gap-1 text-[11px] font-medium whitespace-nowrap', (s === 'Queued' || s === 'Rejected') && 'rounded-[2px] border px-1.5 py-[1px]', s === 'Filled' && 'text-up', s === 'Pending' && 'text-dec', s === 'Queued' && 'border-warn/40 text-warn', s === 'Rejected' && 'border-down/40 text-down', s === 'Cancelled' && 'text-dim')}>
       {s === 'Queued' ? 'Queued · mkt closed' : s}
     </span>
   )
@@ -339,25 +342,17 @@ export function OrderStatus({ s }: { s: string }) {
 function DecisionRecordPanel({ rec, onClose }: { rec: (typeof DECISIONS)[number] | null; onClose: () => void }) {
   if (!rec) {
     return (
-      <Panel title="Decision records" eyebrow={<>What we knew · predicted · did · got <Fresh quiet f="illustrative" /></>}>
-        <div className="space-y-1.5">
-          {DECISIONS.map((d) => <RecordLink key={d.id} d={d} />)}
-        </div>
-        <div className="mt-3 text-[11px] text-dim">Every model decision stores a snapshot of its information set and its forecast at the time, so it can be audited after the fact.</div>
+      <Panel variant="rail" title="Decision records" eyebrow={<span title="Every model decision stores a snapshot of its information set and forecast at the time, so it can be audited later.">What we knew · predicted · did · got</span>}>
+        {DECISIONS.map((d) => <RecordLink key={d.id} d={d} />)}
       </Panel>
     )
   }
   const liveSig = SIGNALS.find((s) => s.asset === rec.prediction.asset)
   return (
-    <section className="fade-in rounded-md border border-dec/30 bg-panel">
-      <header className="flex items-start justify-between border-b border-line px-4 py-3">
-        <div>
-          <div className="eyebrow mb-0.5 flex items-center gap-2">{WEEKS[rec.week]} · {rec.mode === 'backtest' ? <span className="text-mute">backtest replay · hypothetical</span> : <span className="text-dec">paper</span>} <Fresh quiet f="illustrative" /></div>
-          <h3 className="text-[14px] font-semibold">{rec.title}</h3>
-        </div>
-        <button onClick={onClose} className="cursor-pointer text-dim hover:text-bone" aria-label="Close record"><X size={14} /></button>
-      </header>
-      <div className="space-y-4 p-4">
+    <Panel variant="callout" tone="dec" id="Decision records" className="fade-in" bodyClass="space-y-4"
+      title={rec.title}
+      eyebrow={<>{WEEKS[rec.week]} · {rec.mode === 'backtest' ? <span className="text-mute">backtest replay · hypothetical</span> : <span className="text-dec">paper</span>}</>}
+      right={<button onClick={onClose} className="cursor-pointer text-dim hover:text-bone" aria-label="Close record"><X size={14} /></button>}>
         <div>
           <div className="eyebrow mb-1.5">1 · Information at the time</div>
           {rec.information.map((i) => <div key={i.label} className="flex items-center justify-between text-[12px]"><span className="flex items-center gap-1.5 text-mute"><TruthGlyph truth={i.truth} size={7} />{i.label}</span><span className="num">{i.value}</span></div>)}
@@ -371,26 +366,25 @@ function DecisionRecordPanel({ rec, onClose }: { rec: (typeof DECISIONS)[number]
         <div>
           <div className="eyebrow mb-1.5 flex items-center gap-2">3 · Decision <TruthTag truth="dec" compact /></div>
           <div className="text-[12px]"><b>{rec.decision.action}</b> · {rec.decision.size}</div>
-          <div className="font-mono text-[10.5px] text-dim">by {rec.decision.by}</div>
+          <div className="text-[11px] text-dim">by {rec.decision.by}</div>
           <div className="mt-1 text-[12px] text-mute">{rec.decision.reasoning}</div>
         </div>
-        <div className={cx('rounded-[4px] border p-2.5', rec.outcome.inBand === false ? 'border-down/35 bg-down/[0.04]' : rec.outcome.inBand ? 'border-up/30 bg-up/[0.03]' : 'border-dashed border-line2')}>
+        <div className={cx('border-l-2 py-1 pl-3', rec.outcome.inBand === false ? 'border-down' : rec.outcome.inBand ? 'border-up' : 'border-dashed border-line2')}>
           <div className="eyebrow mb-1">4 · Outcome & attribution</div>
           {rec.outcome.realised != null && <div className="num text-[16px]"><Delta v={rec.outcome.realised} /> <span className="text-[11px] text-mute">{rec.outcome.inBand ? 'within band' : 'outside band'}</span></div>}
           <div className="text-[12px] text-bone/90">{rec.outcome.text}</div>
           <div className="mt-1 text-[11.5px] text-mute">{rec.outcome.attribution}</div>
         </div>
-      </div>
-    </section>
+    </Panel>
   )
 }
 function RecordLink({ d }: { d: (typeof DECISIONS)[number] }) {
   const { setFund } = useStore()
   return (
-    <button onClick={() => setFund({ record: d.id })} className="flex w-full cursor-pointer items-center gap-3 rounded-[4px] border border-line px-3 py-2 text-left hover:bg-hover">
+    <button onClick={() => setFund({ record: d.id })} className="flex w-full cursor-pointer items-center gap-3 py-2 text-left hover:bg-hover">
       <span className={cx('size-2.5 rotate-45 border border-dec', d.mode === 'paper' && 'bg-dec')} />
       <span className="flex-1 text-[12px]">{d.title}</span>
-      <span className="font-mono text-[10px] text-dim">{WEEKS[d.week]}</span>
+      <span className="num text-[10.5px] text-dim">{WEEKS[d.week]}</span>
     </button>
   )
 }
@@ -410,24 +404,24 @@ function SignalsTab() {
   const hi = hist ? [...hist.map((_, i) => (i === hist.length - 1 ? lastV : null)), ...Array.from({ length: H }, (_, k) => lastV * (1 + (f.p90 / 100) * Math.sqrt((k + 1) / H)))] : []
 
   return (
-    <div className="grid grid-cols-1 gap-5 xl:grid-cols-[300px_1fr]">
+    <Row cols={['300px', 1]} labels={['Signals', undefined]}>
       <div className="space-y-1.5">
         <div className="eyebrow mb-1 flex items-center gap-2 px-1">Signals · status at {fund.horizon} <Fresh quiet f="illustrative" /></div>
         {SIGNALS.map((x) => (
-          <button key={x.id} onClick={() => setFund({ signal: x.id })} className={cx('w-full cursor-pointer rounded-md border p-3 text-left transition-colors', x.id === sig.id ? 'border-line2 bg-raise' : 'border-line bg-panel hover:bg-hover')}>
+          <button key={x.id} onClick={() => setFund({ signal: x.id })} className={cx('w-full cursor-pointer rounded-md border p-3 text-left transition-colors', x.id === sig.id ? 'border-line2 bg-act/[0.06] shadow-[inset_2px_0_0_var(--color-act)]' : 'border-line bg-panel hover:bg-hover')}>
             <div className="flex items-start justify-between gap-2"><span className="text-[12.5px] font-medium">{x.name}</span><DirectionTag direction={x.direction} /></div>
-            <div className="mt-0.5 font-mono text-[10.5px] text-dim">{x.assetLabel}</div>
+            <div className="mt-0.5 text-[11px] text-dim">{x.assetLabel}</div>
             <div className="mt-2 flex items-center justify-between"><Validation s={x.horizons[fund.horizon].status} />{(x.basis === 'backend' || x.basis === 'pending') && x.horizons[fund.horizon].status === 'insufficient' ? <span className="font-mono text-[10.5px] text-dim" title={x.basisNote}>not issued</span> : <span className="num text-[11px] text-fct">{x.horizons[fund.horizon].mean > 0 ? '+' : ''}{x.horizons[fund.horizon].mean.toFixed(1)}%</span>}</div>
           </button>
         ))}
       </div>
 
       <div className="space-y-5">
-        <div className="rounded-md border border-line bg-panel p-5">
+        <Panel id="Signal detail" eyebrow="Signal detail" bodyClass="p-5">
           <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
             <div>
               <div className="eyebrow mb-1 flex items-center gap-2">{sig.cluster} · updated {sig.updated} <Fresh quiet f="illustrative" /></div>
-              <h2 className="font-serif text-[28px] leading-none">{sig.name}</h2>
+              <h2 className="text-[22px] leading-tight font-semibold tracking-tight">{sig.name}</h2>
               <div className="mt-1.5 text-[12.5px] text-mute">{sig.direction} <button onClick={() => sec ? inspect({ kind: 'security', id: sec.ticker, label: sec.ticker }) : basket && inspect({ kind: 'basket', id: basket.id, label: basket.name })} className="cursor-pointer text-bone underline decoration-dotted underline-offset-2">{sig.assetLabel}</button></div>
             </div>
             <div className="text-right">
@@ -452,17 +446,17 @@ function SignalsTab() {
               <div className="mb-1 flex items-center justify-between"><TruthTag truth="fct" /><Validation s={f.status} /></div>
               <Distribution p10={f.p10} mean={f.mean} p90={f.p90} label={`${fund.horizon} return distribution (excess vs sector)`} />
               <div className="mt-3 grid grid-cols-3 gap-2 border-t border-line pt-2.5">
-                <div><div className="text-[11px] text-dim font-medium">Hit rate</div><div className="num text-[14px]">{f.hit != null ? `${Math.round(f.hit * 100)}%` : '—'}</div><div className="font-mono text-[9px] text-dim">base {f.baselineHit != null ? `${Math.round(f.baselineHit * 100)}%` : '—'}</div></div>
+                <div><div className="text-[11px] text-dim font-medium">Hit rate</div><div className="num text-[14px]">{f.hit != null ? `${Math.round(f.hit * 100)}%` : '—'}</div><div className="text-[10.5px] text-dim">base {f.baselineHit != null ? `${Math.round(f.baselineHit * 100)}%` : '—'}</div></div>
                 <div><div className="text-[11px] text-dim font-medium">IC</div><div className="num text-[14px]">{f.ic?.toFixed(2) ?? '—'}</div></div>
-                <div><div className="text-[11px] text-dim font-medium">Windows</div><div className={cx('num text-[14px]', f.n < 12 && 'text-warn')}>{f.n}</div><div className="font-mono text-[9px] text-dim">independent</div></div>
+                <div><div className="text-[11px] text-dim font-medium">Windows</div><div className={cx('num text-[14px]', f.n < 12 && 'text-warn')}>{f.n}</div><div className="text-[10.5px] text-dim">independent</div></div>
               </div>
               {f.status === 'insufficient' && <div className="mt-2 rounded-[3px] border border-dashed border-line2 p-2 text-[11px] text-mute">{sig.basis === 'pending' ? 'Awaiting the FLOPX evaluation: no validation status has been issued for this signal yet. The distribution is the design\'s worked example.' : sig.basis === 'backend' ? `${sig.basisNote}: ${f.n} scored ${fund.horizon} forecasts, too few to judge.` : `Only ${f.n} non-overlapping ${fund.horizon} windows since data began.`} Shown for research, not used for sizing.</div>}
               {f.status === 'no-edge' && <div className="mt-2 rounded-[3px] border border-dashed border-line2 p-2 text-[11px] text-mute">No model edge found at this horizon: not better than baseline. CPX-1 takes no position based on it.</div>}
             </div>
           </div>
-        </div>
+        </Panel>
 
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+        <Row cols={[1, 1]} at="lg">
           <Panel title="Features driving this forecast" eyebrow="Contribution to expected return · pp">
             <HBars signed rows={sig.features.map((x) => ({ label: <span className="flex items-center gap-1.5"><TruthGlyph truth={x.truth} size={7} />{x.name} <span className="text-dim">· {x.value}</span></span>, value: x.contribution, color: x.truth === 'inf' ? 'var(--color-inf)' : undefined, hatched: x.truth === 'inf' }))} fmt={(v) => `${v > 0 ? '+' : ''}${v.toFixed(1)}`} />
             {sig.regions.length > 0 && <div className="mt-3 flex flex-wrap gap-1.5">{sig.regions.map((r) => <Btn key={r} size="sm" variant="subtle" onClick={() => { setXray({ region: r, tab: 'brief' }); navigate('xray') }}>{regionById(r)!.short} in X-Ray <ArrowRight size={11} /></Btn>)}</div>}
@@ -470,13 +464,14 @@ function SignalsTab() {
           <Panel title="Financial & fundamental context" eyebrow={<>Latest filings <Fresh quiet f="illustrative" /></>}>
             {sig.fundamentals.length ? <div className="grid grid-cols-2 gap-3">{sig.fundamentals.map((x) => <div key={x.k}><div className="text-[11px] text-dim font-medium">{x.k}</div><div className="num text-[14px]">{x.v}</div></div>)}</div> : <div className="text-[12px] text-mute">Not applicable for this asset.</div>}
             <div className="mt-4 space-y-2 border-t border-line pt-3">
-              <div className="text-[12px]"><span className="eyebrow mr-2">News</span>{sig.news.text} <span className="font-mono text-[10px] text-dim">{sig.news.sources.join(' · ')}</span></div>
+              <div className="text-[12px]"><span className="eyebrow mr-2">News</span>{sig.news.text} <span className="text-[11px] text-dim">{sig.news.sources.join(' · ')}</span></div>
               <div className="text-[12px]"><span className="eyebrow mr-2">Prediction mkt</span>{sig.pm}</div>
             </div>
           </Panel>
-        </div>
+        </Row>
 
         {sig.scenario.length > 0 && (
+          <Foldable label="Scenarios">
           <AIBlock>
             <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
               {sig.scenario.map((x) => (
@@ -487,20 +482,21 @@ function SignalsTab() {
                 </div>
               ))}
             </div>
-            <div className="mt-2 font-mono text-[9.5px] text-dim">Scenario weights are subjective AI-synthesised judgements, not calibrated probabilities.</div>
+            <div className="mt-2 text-[11px] text-dim">Scenario weights are subjective AI-synthesised judgements, not calibrated probabilities.</div>
           </AIBlock>
+          </Foldable>
         )}
 
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-          <Panel title="Supporting evidence" eyebrow={<span className="text-up">For</span>}>
-            {signalSupport(sig).length ? signalSupport(sig).map((x) => <div key={x} className="mb-1.5 flex gap-2 text-[12px]"><Check size={13} className="mt-0.5 shrink-0 text-up" />{x}</div>) : <div className="text-[12px] text-mute">None.</div>}
+        <Row cols={[1, 1]} at="lg">
+          <Panel variant="rail" title="Supporting evidence" eyebrow={<span className="text-up">For</span>}>
+            {signalSupport(sig).length ? signalSupport(sig).map((x) => <div key={x} className="flex gap-2 py-1.5 text-[12px]"><Check size={13} className="mt-0.5 shrink-0 text-up" />{x}</div>) : <div className="py-1.5 text-[12px] text-mute">None.</div>}
           </Panel>
-          <Panel title="Contradictory evidence" eyebrow={<span className="text-down">Against</span>}>
-            {sig.contra.length ? sig.contra.map((x) => <div key={x} className="mb-1.5 flex gap-2 text-[12px]"><X size={13} className="mt-0.5 shrink-0 text-down" />{x}</div>) : <div className="text-[12px] text-mute">None recorded.</div>}
+          <Panel variant="rail" title="Contradictory evidence" eyebrow={<span className="text-down">Against</span>}>
+            {sig.contra.length ? sig.contra.map((x) => <div key={x} className="flex gap-2 py-1.5 text-[12px]"><X size={13} className="mt-0.5 shrink-0 text-down" />{x}</div>) : <div className="py-1.5 text-[12px] text-mute">None recorded.</div>}
           </Panel>
-        </div>
+        </Row>
       </div>
-    </div>
+    </Row>
   )
 }
 
@@ -509,10 +505,13 @@ function DecisionsTab() {
   const [editing, setEditing] = useState<string | null>(null)
   return (
     <div className="space-y-5">
+      <Foldable label="Approval policy">
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-line bg-panel px-4 py-3">
         <div className="text-[12.5px] text-mute">CPX-1 proposes target changes and <b className="text-bone">you</b> approve them. Nothing executes without a decision. Every override is logged for later attribution. <Fresh quiet f="illustrative" /></div>
-        <div className="flex items-center gap-2 font-mono text-[10.5px]"><span className={cx('size-1.5 rounded-full', marketOpen ? 'bg-up' : 'bg-warn')} />{marketOpen ? 'Market open · paper fills ~1.5s' : 'Market closed · orders will queue'}</div>
+        <div className="flex items-center gap-2 text-[11.5px]"><span className={cx('size-1.5 rounded-full', marketOpen ? 'bg-up' : 'bg-warn')} />{marketOpen ? 'Market open · paper fills ~1.5s' : 'Market closed · orders will queue'}</div>
       </div>
+      </Foldable>
+      <Foldable label="Proposals">
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         {proposals.map((p) => {
           const sig = signalById(p.signal)!
@@ -520,18 +519,18 @@ function DecisionsTab() {
           const q = p.modifiedQty ?? p.qty
           const change = p.targetW - p.currentW
           return (
-            <div key={p.id} className={cx('rounded-md border bg-panel', p.state === 'open' ? 'border-dec/30' : 'border-line opacity-90')}>
+            <div key={p.id} className={cx('rounded-md border border-line bg-panel', p.state === 'open' ? 'border-l-2 border-l-dec' : 'opacity-90')}>
               <div className="flex items-start justify-between border-b border-line px-4 py-3">
                 <div>
-                  <div className="mb-0.5 flex items-center gap-2"><TruthTag truth="dec" compact /><span className="font-mono text-[10px] text-dim">Proposal {p.id.toUpperCase()} · CPX-1</span>{p.exploratory && <span className="rounded-[2px] border border-warn/40 px-1 font-mono text-[9px] text-warn">EXPLORATORY · CAPPED SIZE</span>}</div>
+                  <div className="mb-0.5 flex items-center gap-2"><TruthTag truth="dec" compact /><span className="text-[11px] text-dim">Proposal <span className="num">{p.id.toUpperCase()}</span> · CPX-1</span>{p.exploratory && <span className="rounded-[2px] border border-warn/40 px-1 text-[10.5px] text-warn">Exploratory · capped size</span>}</div>
                   <div className="text-[16px] font-semibold"><span className={p.side === 'Buy' || p.side === 'Cover' ? 'text-up' : 'text-down'}>{p.side}</span> <span className="num">{q.toLocaleString()}</span> <button onClick={() => inspect({ kind: 'security', id: p.ticker, label: p.ticker })} className="cursor-pointer font-mono hover:underline">{p.ticker}</button> <span className="text-[12px] font-normal text-mute">≈ ${Math.round(q * lastPx(p.ticker)).toLocaleString()}</span></div>
                 </div>
-                {p.state === 'open' ? <span className="font-mono text-[10px] text-dec">AWAITING DECISION</span> : p.state === 'rejected' ? <span className="font-mono text-[10px] text-dim">REJECTED · OVERRIDE LOGGED</span> : order && <OrderStatus s={order.status} />}
+                {p.state === 'open' ? <span className="text-[11px] font-medium text-dec">Awaiting decision</span> : p.state === 'rejected' ? <span className="text-[11px] text-dim">Rejected · override logged</span> : order && <OrderStatus s={order.status} />}
               </div>
               <div className="space-y-3 px-4 py-3">
                 <div className="grid grid-cols-4 gap-2 text-center">
                   <div className="rounded-[4px] border border-line p-2"><div className="text-[11px] text-dim font-medium">Current</div><div className="num text-[14px]">{p.currentW.toFixed(1)}%</div></div>
-                  <div className="rounded-[4px] border border-dec/30 p-2"><div className="text-[11px] text-dim font-medium">Target</div><div className="num text-[14px] text-dec">{p.targetW.toFixed(1)}%</div></div>
+                  <div className="rounded-[4px] border border-line p-2"><div className="text-[11px] text-dim font-medium">Target</div><div className="num text-[14px] text-dec">{p.targetW.toFixed(1)}%</div></div>
                   <div className="rounded-[4px] border border-line p-2"><div className="text-[11px] text-dim font-medium">Change</div><div className="num text-[14px]"><Delta v={change} d={1} suffix="pp" /></div></div>
                   <div className="rounded-[4px] border border-line p-2"><div className="text-[11px] text-dim font-medium">Risk budget</div><div className="num text-[14px]">{p.riskUse}%</div></div>
                 </div>
@@ -542,15 +541,15 @@ function DecisionsTab() {
                   {p.risks.map((r) => <div key={r} className="text-[11.5px] text-mute">· {r}</div>)}
                 </div>
                 {editing === p.id && (
-                  <div className="flex items-center gap-2 rounded-[4px] border border-dec/30 p-2">
+                  <div className="flex items-center gap-2 rounded-[4px] border border-line2 p-2">
                     <span className="eyebrow">Modify qty</span>
                     <input type="number" min={1} value={q} onChange={(e) => modifyProposal(p.id, Math.max(1, +e.target.value))} className="num h-7 w-28 rounded-[3px] border border-line2 bg-ink px-2 text-[12px] outline-none" />
-                    <span className="font-mono text-[10px] text-dim">model: {p.qty.toLocaleString()}</span>
+                    <span className="text-[11px] text-dim">model: <span className="num">{p.qty.toLocaleString()}</span></span>
                     <Btn size="sm" variant="ghost" onClick={() => setEditing(null)}>Done</Btn>
                   </div>
                 )}
                 {p.state === 'sent' && order && (
-                  <div className="rounded-[4px] border border-line bg-ink p-2.5 font-mono text-[10.5px] text-mute">
+                  <div className="rounded-[4px] bg-ink p-2.5 text-[11.5px] text-mute">
                     {order.id} · {order.status === 'Filled' ? `Filled ${order.qty.toLocaleString()} @ $${order.fillPx?.toFixed(2)} — attribution will be tracked to ${sig.name}` : order.status === 'Rejected' ? <span className="text-down">Rejected: {order.reason}</span> : order.status === 'Queued' ? <span className="text-warn">{order.reason}</span> : 'Routing to paper venue…'}
                   </div>
                 )}
@@ -566,6 +565,7 @@ function DecisionsTab() {
           )
         })}
       </div>
+      </Foldable>
       <Panel title="Attribution · closed decisions" eyebrow={<>Realised P&L attributed to the originating signal <Fresh quiet f="illustrative" /></>}>
         <div className="grid grid-cols-[1fr_80px_90px_100px_1fr] gap-3 border-b border-line pb-1.5 text-[11px] text-dim font-medium"><span>Decision</span><span>Origin</span><span className="text-right">P&L</span><span className="text-right">Signal share</span><span>Note</span></div>
         {[
@@ -573,8 +573,8 @@ function DecisionsTab() {
           { d: `Buy VST first leg (${fmtDM(weekdaysAgo(1))})`, o: 'Model', pnl: null, share: 'pending', note: `1M horizon resolves ${fmtDMY(daysAgo(-30, weekdaysAgo(1)))}` },
           { d: `MSFT (user, ${fmtDM(WEEK_DATES[PAPER_START_WK])})`, o: 'User', pnl: null, share: 'n/a', note: 'User-initiated; excluded from strategy attribution' },
         ].map((r) => (
-          <div key={r.d} className="grid grid-cols-[1fr_80px_90px_100px_1fr] items-center gap-3 border-b border-line/60 py-2 text-[12px]">
-            <span>{r.d}</span><span className={cx('font-mono text-[10.5px]', r.o === 'Model' ? 'text-dec' : 'text-mute')}>{r.o}</span>
+          <div key={r.d} className="grid grid-cols-[1fr_80px_90px_100px_1fr] items-center gap-3 border-b border-line-soft py-2 text-[12px]">
+            <span>{r.d}</span><span className={cx('text-[11.5px]', r.o === 'Model' ? 'text-dec' : 'text-mute')}>{r.o}</span>
             <span className="text-right">{r.pnl != null ? <Delta v={r.pnl / 1000} d={1} suffix="k" /> : <span className="text-dim">open</span>}</span>
             <span className="num text-right text-mute">{r.share}</span><span className="text-[11.5px] text-mute">{r.note}</span>
           </div>
@@ -588,19 +588,21 @@ function EvaluationTab() {
   const { fund, setFund } = useStore()
   return (
     <div className="space-y-5">
+      <Foldable label="Method">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="max-w-2xl text-[12.5px] text-mute">How we test whether compute data actually helps: walk-forward out-of-sample forecasts, competing baselines, ablations and costs. Validated results are kept distinct from exploratory ones.</p>
+        <p className="max-w-2xl text-[12.5px] text-mute">Walk-forward out-of-sample forecasts vs baselines, with ablations and costs. Validated and exploratory results are kept apart.</p>
         <Seg value={fund.horizon} onChange={(h) => setFund({ horizon: h })} options={[{ id: '1W', label: '1W' }, { id: '1M', label: '1M' }, { id: '3M', label: '3M' }]} />
       </div>
+      </Foldable>
       <ModelComparison horizon={fund.horizon} />
-      <div className="grid grid-cols-1 gap-5 xl:grid-cols-[1.4fr_1fr]">
+      <Row cols={[1.4, 1]}>
         <ForecastVsActual horizon={fund.horizon} />
         <BacktestCosts />
-      </div>
-      <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
+      </Row>
+      <Row cols={[1, 1]}>
         <ValidationMatrix />
         <Failures />
-      </div>
+      </Row>
     </div>
   )
 }

@@ -47,3 +47,24 @@ export function useCollapsed(): readonly string[] {
     () => state,
   )
 }
+
+/** Width in px of a panel folded sideways into a rail. */
+export const RAIL = 40
+
+/** Store id for a panel's sideways fold, kept apart from its up fold so the two toggle independently. */
+export const sideKey = (id: string) => `${id}:side`
+
+/**
+ * CSS grid-template-columns for a row of panels. A number is a flexible weight (fr), a string a fixed
+ * track ('380px'). Folded tracks shrink to a rail; the last track always stays open so the row never vanishes,
+ * and once every flexible track is folded the open fixed tracks stretch to fill the row.
+ */
+export function rowTemplate(tracks: readonly (number | string)[], folded: readonly boolean[]): string {
+  const all = tracks.length > 0 && tracks.every((_, i) => folded[i])
+  const shut = tracks.map((_, i) => folded[i] && !(all && i === tracks.length - 1))
+  // With every flexible track folded, open fixed tracks would leave blank space beside the rails; let them stretch.
+  const stretch = shut.some(Boolean) && !tracks.some((t, i) => typeof t === 'number' && !shut[i])
+  return tracks
+    .map((t, i) => (shut[i] ? `${RAIL}px` : typeof t === 'number' || stretch ? `minmax(0,${typeof t === 'number' ? t : 1}fr)` : t))
+    .join(' ')
+}

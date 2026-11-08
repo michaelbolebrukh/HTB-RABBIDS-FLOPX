@@ -142,6 +142,8 @@ export interface Region {
   announced27: number
   eff27: [number, number] // inferred effective MW online by Mar 2027
   documented: { t: string; tie: string; source: string }[]
+  /** Set by src/live/adapt-w1.ts: ties the backend rests on a company profile or an authored sample facility, never a filing. */
+  authored?: { t: string; tie: string; note: string; role: string; source: string }[]
   sensitivities: { t: string; beta: number; r2: number }[]
   contrib: { factor: string; value: number }[]
   anomaly?: Anomaly
@@ -178,7 +180,18 @@ export interface RegionLive {
     factors: { factor: string; note: string; contribution: number | null; weight: number; freshness: Freshness }[]
   } | null
   /** H100 comparable-ask median and premium from the cell's price-premium factor, when the cell has asks. */
-  rental: { median: number | null; premiumPct: number; freshness: Freshness; source: string; observedAt: string | null } | null
+  rental: {
+    median: number | null
+    /** Null when the cell has no regional asks: the median is then the labelled global fallback and no premium can be read. */
+    premiumPct: number | null
+    premiumLabel: string
+    fallback: boolean
+    fallbackNote?: string
+    weekly?: { median: number; weekEnding: string }
+    freshness: Freshness
+    source: string
+    observedAt: string | null
+  } | null
   /** Region's latest energy indicator (may be non-USD; then `power` above is left illustrative). */
   power: { value: number; unit: string; freshness: Freshness; source: string; observedAt: string | null } | null
   /** Effective supply (effective-supply-v1) over the backend's facility records. */
@@ -399,7 +412,7 @@ function liveRegionEvidence(r: Region, L: RegionLive): Evidence[] {
   const w = (f: string) => L.pressure?.factors.find((x) => x.factor === f)?.weight ?? 0
   const rows: Evidence[] = [
     L.rental && L.rental.median != null
-      ? { id: `${r.id}-q`, label: 'Median comparable H100 SXM ask', value: `$${L.rental.median.toFixed(2)}/GPU-hr`, truth: 'obs', source: L.rental.source, time: L.rental.observedAt ? fmtAsOf(L.rental.observedAt) : at, freshness: L.rental.freshness, weight: w('price-premium'), direction: L.rental.premiumPct > 1 ? 'up' : L.rental.premiumPct < -1 ? 'down' : 'flat', note: `${L.rental.premiumPct >= 0 ? '+' : ''}${L.rental.premiumPct.toFixed(1)}% vs global median; asks, not transactions` }
+      ? { id: `${r.id}-q`, label: L.rental.fallback ? 'Global median comparable H100 SXM ask (fallback)' : 'Median comparable H100 SXM ask', value: `$${L.rental.median.toFixed(2)}/GPU-hr`, truth: 'obs', source: L.rental.source, time: L.rental.observedAt ? fmtAsOf(L.rental.observedAt) : at, freshness: L.rental.freshness, weight: w('price-premium'), direction: L.rental.premiumPct == null ? 'flat' : L.rental.premiumPct > 1 ? 'up' : L.rental.premiumPct < -1 ? 'down' : 'flat', note: L.rental.premiumPct == null ? (L.rental.fallbackNote ?? `premium ${L.rental.premiumLabel}`) : `${L.rental.premiumPct >= 0 ? '+' : ''}${L.rental.premiumPct.toFixed(1)}% vs global median; asks, not transactions` }
       : { id: `${r.id}-q`, label: 'Median comparable H100 SXM ask', value: 'No asks in this cell', truth: 'obs', source: 'FLOPX offers', time: at, freshness: 'unavailable', weight: w('price-premium'), direction: 'flat' },
     L.power
       ? { id: `${r.id}-p`, label: 'Day-ahead power price (latest slot)', value: `${L.power.value.toFixed(2)} ${L.power.unit}`, truth: 'obs', source: L.power.source, time: L.power.observedAt ? fmtAsOf(L.power.observedAt) : at, freshness: L.power.freshness, weight: w('power-stress'), direction: 'flat' }

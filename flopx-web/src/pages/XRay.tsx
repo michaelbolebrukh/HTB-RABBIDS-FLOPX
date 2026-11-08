@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
-import { ArrowRight, Bot, ChevronDown, ChevronUp, GitCompareArrows, Pause, Play, RotateCcw, ScanLine, X } from 'lucide-react'
+import { ArrowRight, ChevronDown, ChevronUp, GitCompareArrows, MessageSquareText, Pause, Play, RotateCcw, ScanLine, X } from 'lucide-react'
 import { ANOMALY_CARDS, AS_OF, fmtPct, GPUS, horizonLabel, MONTHS, NOW_IDX, PRESSURE_MODEL, REGIONS, regionById, regionEvidence, type Region } from '@/data/core'
 import { PROJECTS, projectById } from '@/data/infra'
 import { lastPx } from '@/data/fund'
@@ -15,14 +15,14 @@ import { derived, SNAPSHOT, XRAY_CAPACITY as XC } from '@/data/handoff'
 const LAYERS: { id: XLayer; label: string; truth: 'obs' | 'inf' | 'dec'; desc: string }[] = [
   { id: 'pressure', label: 'Compute pressure', truth: 'inf', desc: 'Inferred scarcity with uncertainty rings' },
   { id: 'rental', label: 'Rental economics', truth: 'obs', desc: 'Median H100 quote · premium vs global' },
-  { id: 'power', label: 'Power constraints', truth: 'obs', desc: 'Day-ahead $/MWh · grid stress' },
+  { id: 'power', label: 'Power constraints', truth: 'obs', desc: 'Meter in each label: day-ahead $/MWh, red above $90' },
   { id: 'pipeline', label: 'Infrastructure pipeline', truth: 'obs', desc: 'Facilities by reported stage' },
   { id: 'effective', label: 'Effective capacity', truth: 'inf', desc: 'Announced (dotted) vs usable (hatched)' },
   { id: 'exposure', label: 'Financial exposure', truth: 'dec', desc: 'Documented company ties' },
 ]
 
 /** Every panel around the map collapses with a chevron on its edge and comes back the same way; panels stay mounted, so their state survives. */
-type Pane = 'header' | 'brief' | 'rail' | 'time' | 'side'
+type Pane = 'header' | 'brief' | 'capacity' | 'rail' | 'time' | 'side'
 
 export default function XRay() {
   const s = useStore()
@@ -35,13 +35,13 @@ export default function XRay() {
   return (
     <div className="flex h-full flex-col">
       {/* header */}
-      <div className={cx('relative z-30 flex shrink-0 items-center justify-between gap-4 border-b border-line px-5 transition-[padding] duration-300 ease-out motion-reduce:transition-none', open('header') ? 'py-3' : 'py-1.5')}>
+      <div className={cx('relative z-[34] flex shrink-0 items-center justify-between gap-4 border-b border-line px-5 transition-[padding] duration-300 ease-out motion-reduce:transition-none', open('header') ? 'py-3' : 'py-1.5')}>
         <EdgeToggle edge="bottom" open={open('header')} label="header" onClick={() => toggle('header')} />
         <div className="flex min-w-0 items-center gap-3">
           <ScanLine size={open('header') ? 18 : 14} className="shrink-0 text-inf" />
           <div className="min-w-0">
-            <h1 className={cx('truncate font-serif leading-none transition-[font-size] duration-300 ease-out motion-reduce:transition-none', open('header') ? 'text-[24px]' : 'text-[15px]')}>Compute Economy X-Ray</h1>
-            <Drawer open={open('header')}><div className="pt-1 font-mono text-[10px] text-dim">Inferred hidden state of global compute · model {PRESSURE_MODEL.method ?? 'v0.7 (illustrative)'} · as of {AS_OF}</div></Drawer>
+            <h1 className={cx('truncate leading-none font-semibold tracking-tight transition-[font-size] duration-300 ease-out motion-reduce:transition-none', open('header') ? 'text-[24px]' : 'text-[15px]')}>Compute Economy X-Ray</h1>
+            <Drawer open={open('header')}><div className="pt-1 text-[11px] text-dim" title={`Inferred hidden state of global compute · model ${PRESSURE_MODEL.method ?? 'v0.7 (illustrative)'} · as of ${AS_OF}`}>Inferred hidden state of global compute · model {PRESSURE_MODEL.method ?? 'v0.7 (illustrative)'}</div></Drawer>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -50,7 +50,14 @@ export default function XRay() {
           <Btn size="sm" variant="ghost" onClick={() => { setCollapsed([]); setXray({ layers: ['pressure', 'pipeline'], reveal: 100, t: NOW_IDX, region: null, project: null, scenario: null, compareOpen: false, tab: 'brief' }) }}><RotateCcw size={12} /> Reset</Btn>
         </div>
       </div>
-      <Drawer open={open('brief')}><JudgeBrief /></Drawer>
+      <div className="relative z-[32] shrink-0">
+        <Drawer open={open('brief')}><JudgeBrief /></Drawer>
+        <div className="absolute bottom-0 left-[30%] h-0 w-6"><EdgeToggle edge="bottom" open={open('brief')} label="brief" onClick={() => toggle('brief')} /></div>
+      </div>
+      <div className="relative z-30 shrink-0">
+        <Drawer open={open('capacity')}><CapacityStrip /></Drawer>
+        <div className="absolute right-12 bottom-0 h-0 w-6"><EdgeToggle edge="bottom" open={open('capacity')} label="capacity strip" onClick={() => toggle('capacity')} /></div>
+      </div>
 
       <div className="flex min-h-0 flex-1">
         <SideDrawer side="left" width={232} label="Controls" open={open('rail')} onToggle={() => toggle('rail')}><LeftRail /></SideDrawer>
@@ -87,7 +94,7 @@ export default function XRay() {
 /** Slides a side column shut to zero width and back. Content stays mounted at full width and is clipped; the edge chevron stays visible. */
 function SideDrawer({ side, width, label, open, onToggle, children }: { side: 'left' | 'right'; width: number; label: string; open: boolean; onToggle: () => void; children: ReactNode }) {
   return (
-    <div className="relative z-20 shrink-0">
+    <div data-demo={`xray-${side}`} className="relative z-20 shrink-0">
       <div className={cx('h-full overflow-hidden transition-[width] duration-300 ease-out motion-reduce:transition-none', side === 'left' ? 'border-r border-line' : 'border-l border-line', !open && 'border-transparent')} style={{ width: open ? width : 0 }}>
         <div inert={!open} className={cx('flex h-full transition-opacity duration-200', side === 'right' && 'float-right', open ? 'opacity-100' : 'opacity-0')} style={{ width }}>{children}</div>
       </div>
@@ -128,38 +135,47 @@ function JudgeBrief() {
           <div className="mt-0.5 text-[11.5px] leading-snug text-mute">{c.body}</div>
         </div>
       ))}
-      <div className="col-span-3 flex flex-wrap items-center gap-x-6 gap-y-1 border-t border-line px-5 py-2">
-        <span className="flex items-center gap-2"><TruthTag truth="obs" compact /><span className="eyebrow">Hidden capacity</span><Fresh quiet f="historical" label={SNAPSHOT.short} /></span>
-        <span className="flex min-w-[220px] flex-1 items-center gap-2" title={`${XC.trackedGW} GW frontier AI data-centre capacity across ${XC.sites} sites. ${XC.source}`}>
-          <span className="num text-[11px] text-bone">{XC.energizedGW} GW</span>
-          <span className="flex h-2 flex-1 overflow-hidden rounded-sm">
-            <span title={`Energized ${XC.energizedGW} GW`} style={{ width: `${derived.energizedShare * 100}%`, background: 'var(--color-cat1)' }} />
-            <span title={`Not yet energized ${(XC.trackedGW - XC.energizedGW).toFixed(1)} GW`} className="hatch-inf flex-1 border" style={{ borderColor: 'var(--color-dim)' }} />
-          </span>
-          <span className="num text-[11px] text-dim">{(XC.trackedGW - XC.energizedGW).toFixed(1)} GW</span>
-          <span className="text-[11px] text-dim"><span className="num text-bone">{Math.round(derived.energizedShare * 100)}%</span> of <span className="num">{XC.trackedGW} GW</span></span>
+    </div>
+  )
+}
+
+/** Hidden-capacity bar and regional CPI ranks, folded independently of the brief. */
+function CapacityStrip() {
+  const live = REGIONS.filter((r) => r.live?.pressure).sort((a, b) => b.live!.pressure!.score - a.live!.pressure!.score)
+  const supplyLive = REGIONS.filter((r) => r.live?.supply)
+  const ranks = rankRows(live, XC.ranks)
+  return (
+    <div className="flex flex-wrap items-center gap-x-6 gap-y-1 border-b border-line bg-panel/60 px-5 py-2">
+      <span className="flex items-center gap-2"><TruthTag truth="obs" compact /><span className="eyebrow">Hidden capacity</span><Fresh quiet f="historical" label={SNAPSHOT.short} /></span>
+      <span className="flex min-w-[220px] flex-1 items-center gap-2" title={`${XC.trackedGW} GW frontier AI data-centre capacity across ${XC.sites} sites. ${XC.source}`}>
+        <span className="num text-[11px] text-bone">{XC.energizedGW} GW</span>
+        <span className="flex h-2 flex-1 overflow-hidden rounded-sm">
+          <span title={`Energized ${XC.energizedGW} GW`} style={{ width: `${derived.energizedShare * 100}%`, background: 'var(--color-cat1)' }} />
+          <span title={`Not yet energized ${(XC.trackedGW - XC.energizedGW).toFixed(1)} GW`} className="hatch-inf flex-1 border" style={{ borderColor: 'var(--color-dim)' }} />
         </span>
-        {supplyLive.length > 0 && (
-          <span className="flex items-center gap-1.5 whitespace-nowrap text-[11px] text-dim" title={`FLOPX hubs now: ${Math.round(supplyLive.reduce((s, r) => s + r.live!.supply!.effectiveMw, 0)).toLocaleString()} MW effective (effective-supply-v1) of ${Math.round(supplyLive.reduce((s, r) => s + r.opMW + r.conMW, 0)).toLocaleString()} MW operating or under construction across ${supplyLive.length} hubs, ${supplyLive.reduce((s, r) => s + r.live!.supply!.facilities, 0)} sample facility records. The Epoch figure to the left is a different tracker and basis.`}>
-            FLOPX hubs <span className="num text-bone">{Math.round(supplyLive.reduce((s, r) => s + r.live!.supply!.effectiveMw, 0)).toLocaleString()}</span> of <span className="num">{Math.round(supplyLive.reduce((s, r) => s + r.opMW + r.conMW, 0)).toLocaleString()} MW</span> eff. <Fresh quiet f={supplyLive[0].live!.supply!.freshness} />
-          </span>
-        )}
-        {/* Region ranks: the live cpx-v1 scores (same cells as the table below) once /flopx/pressure has landed; the 7 Nov hand-off's Epoch-region figures, badged, until then. */}
-        <span className="flex items-center gap-3" title={ranks.live ? `Top FLOPX regions by ${PRESSURE_MODEL.method ?? 'cpx-v1'} H100 pressure, ${live.length} regions covered` : `7 Nov hand-off: Compute Pressure Index, ${XC.pillars} pillars across ${XC.regions} Epoch regions (not the FLOPX hubs in the table below)`}>
-          {!ranks.live && <Fresh quiet f="illustrative" label="7 Nov hand-off regions" />}
-          {ranks.rows.map((r) => (
-            <span key={r.region} className="flex items-center gap-1.5" title={`${r.region}: ${r.cpi}${r.lo != null && r.hi != null ? ` (${r.lo}–${r.hi})` : ''}${r.band ? ` · ${r.band}` : ''}`}>
-              <span className="text-[10.5px] text-dim">{r.region.split(' ')[0]}</span>
-              <svg width="64" height="12" aria-hidden>
-                <line x1="0" x2="64" y1="6" y2="6" stroke="var(--color-line)" />
-                {r.lo != null && r.hi != null && <><line x1={r.lo * 0.64} x2={r.hi * 0.64} y1="6" y2="6" stroke="var(--color-dim)" strokeWidth="1.5" /><line x1={r.lo * 0.64} x2={r.lo * 0.64} y1="3" y2="9" stroke="var(--color-dim)" /><line x1={r.hi * 0.64} x2={r.hi * 0.64} y1="3" y2="9" stroke="var(--color-dim)" /></>}
-                <circle cx={r.cpi * 0.64} cy="6" r="3" fill="var(--color-cat2)" />
-              </svg>
-              <span className="num text-[11px] text-bone">{r.cpi}</span>
-            </span>
-          ))}
+        <span className="num text-[11px] text-dim">{(XC.trackedGW - XC.energizedGW).toFixed(1)} GW</span>
+        <span className="text-[11px] text-dim"><span className="num text-bone">{Math.round(derived.energizedShare * 100)}%</span> of <span className="num">{XC.trackedGW} GW</span></span>
+      </span>
+      {supplyLive.length > 0 && (
+        <span className="flex items-center gap-1.5 whitespace-nowrap text-[11px] text-dim" title={`FLOPX hubs now: ${Math.round(supplyLive.reduce((s, r) => s + r.live!.supply!.effectiveMw, 0)).toLocaleString()} MW effective (effective-supply-v1) of ${Math.round(supplyLive.reduce((s, r) => s + r.opMW + r.conMW, 0)).toLocaleString()} MW operating or under construction across ${supplyLive.length} hubs, ${supplyLive.reduce((s, r) => s + r.live!.supply!.facilities, 0)} sample facility records. The Epoch figure to the left is a different tracker and basis.`}>
+          FLOPX hubs <span className="num text-bone">{Math.round(supplyLive.reduce((s, r) => s + r.live!.supply!.effectiveMw, 0)).toLocaleString()}</span> of <span className="num">{Math.round(supplyLive.reduce((s, r) => s + r.opMW + r.conMW, 0)).toLocaleString()} MW</span> eff. <Fresh quiet f={supplyLive[0].live!.supply!.freshness} />
         </span>
-      </div>
+      )}
+      {/* Region ranks: the live cpx-v1 scores (same cells as the table below) once /flopx/pressure has landed; the 7 Nov hand-off's Epoch-region figures, badged, until then. */}
+      <span className="flex items-center gap-3" title={ranks.live ? `Top FLOPX regions by ${PRESSURE_MODEL.method ?? 'cpx-v1'} H100 pressure, ${live.length} regions covered` : `7 Nov hand-off: Compute Pressure Index, ${XC.pillars} pillars across ${XC.regions} Epoch regions (not the FLOPX hubs in the table below)`}>
+        {!ranks.live && <Fresh quiet f="illustrative" label="7 Nov hand-off regions" />}
+        {ranks.rows.map((r) => (
+          <span key={r.region} className="flex items-center gap-1.5" title={`${r.region}: ${r.cpi}${r.lo != null && r.hi != null ? ` (${r.lo}–${r.hi})` : ''}${r.band ? ` · ${r.band}` : ''}`}>
+            <span className="text-[10.5px] text-dim">{r.region.split(' ')[0]}</span>
+            <svg width="64" height="12" aria-hidden>
+              <line x1="0" x2="64" y1="6" y2="6" stroke="var(--color-line)" />
+              {r.lo != null && r.hi != null && <><line x1={r.lo * 0.64} x2={r.hi * 0.64} y1="6" y2="6" stroke="var(--color-dim)" strokeWidth="1.5" /><line x1={r.lo * 0.64} x2={r.lo * 0.64} y1="3" y2="9" stroke="var(--color-dim)" /><line x1={r.hi * 0.64} x2={r.hi * 0.64} y1="3" y2="9" stroke="var(--color-dim)" /></>}
+              <circle cx={r.cpi * 0.64} cy="6" r="3" fill="var(--color-cat2)" />
+            </svg>
+            <span className="num text-[11px] text-bone">{r.cpi}</span>
+          </span>
+        ))}
+      </span>
     </div>
   )
 }
@@ -167,10 +183,10 @@ function JudgeBrief() {
 function LeftRail() {
   const { xray, setXray } = useStore()
   const animRef = useRef<number | null>(null)
-  const revealAnim = () => {
+  const revealAnim = (to: 0 | 100) => {
     if (animRef.current) cancelAnimationFrame(animRef.current)
-    const from = xray.reveal > 50 ? 100 : 0
-    const to = from === 100 ? 0 : 100
+    const from = xray.reveal
+    if (from === to) return
     if (to === 100 && !xray.layers.includes('pressure')) setXray((x) => ({ layers: [...x.layers, 'pressure'] }))
     const start = performance.now()
     const tick = (now: number) => {
@@ -185,13 +201,23 @@ function LeftRail() {
   return (
     <div className="flex w-[232px] shrink-0 flex-col overflow-y-auto border-r border-line bg-ink">
       <div className="border-b border-line p-4">
-        <div className="eyebrow mb-2">Reveal</div>
-        <button onClick={revealAnim} className="group relative mb-3 w-full cursor-pointer overflow-hidden rounded-[5px] border border-inf/40 bg-inf/[0.06] px-3 py-2.5 text-left hover:bg-inf/10">
-          <div className="flex items-center gap-2 text-[12.5px] font-semibold text-inf"><ScanLine size={14} />{xray.reveal > 50 ? 'Show raw observations' : 'Reveal hidden pressure'}</div>
-          <div className="mt-0.5 text-[10.5px] text-mute">{xray.reveal > 50 ? 'Fade inferred state; see what is directly observable' : 'Combine fragments into the inferred state'}</div>
-        </button>
-        <div className="flex items-center justify-between font-mono text-[9.5px] text-dim"><span className="flex items-center gap-1"><TruthGlyph truth="obs" size={6} />RAW</span><span className="flex items-center gap-1">INFERRED<TruthGlyph truth="inf" size={6} /></span></div>
-        <input type="range" min={0} max={100} value={xray.reveal} onChange={(e) => setXray({ reveal: +e.target.value, layers: xray.layers.includes('pressure') ? xray.layers : [...xray.layers, 'pressure'] })} className="mt-1 w-full accent-[var(--color-inf)]" aria-label="Raw to inferred" />
+        <div className="mb-2 flex items-baseline justify-between">
+          <span className="eyebrow">Reveal</span>
+          <span className="num text-[11px] text-mute">{xray.reveal}% inferred</span>
+        </div>
+        <div role="radiogroup" aria-label="Map shows" className="mb-3 grid grid-cols-2 rounded-[4px] border border-line p-0.5">
+          {([[0, 'obs', 'Observed'], [100, 'inf', 'Inferred']] as const).map(([to, truth, label]) => {
+            const on = to === 0 ? xray.reveal <= 50 : xray.reveal > 50
+            return (
+              <button key={label} role="radio" aria-checked={on} onClick={() => revealAnim(to)} title={to === 0 ? 'Fade inferred state; show only what is directly observable' : 'Combine fragments into the inferred state'}
+                className={cx('flex cursor-pointer items-center justify-center gap-1.5 rounded-[3px] py-1 text-[11.5px] transition-colors', on ? 'bg-raise text-bone' : 'text-dim hover:text-mute')}>
+                <TruthGlyph truth={truth} size={6} />{label}
+              </button>
+            )
+          })}
+        </div>
+        <input type="range" min={0} max={100} value={xray.reveal} onChange={(e) => setXray({ reveal: +e.target.value, layers: xray.layers.includes('pressure') ? xray.layers : [...xray.layers, 'pressure'] })} className="range" style={{ '--pct': `${xray.reveal}%`, '--range-color': 'var(--color-inf)' } as React.CSSProperties} aria-label="Observed to inferred" />
+        <div className="mt-0.5 flex justify-between text-[9.5px] text-dim"><span>Raw fragments</span><span>Full inference</span></div>
       </div>
       <div className="border-b border-line p-4">
         <div className="eyebrow mb-2">Perspectives · combine freely</div>
@@ -225,7 +251,7 @@ function LeftRail() {
       <div className="border-b border-line p-4">
         <div className="eyebrow mb-2">Legend</div>
         <div className="mb-1 h-2 rounded-full" style={{ background: `linear-gradient(90deg, ${[30, 45, 55, 65, 75, 85, 95].map((p) => pressureColor(p)).join(',')})` }} />
-        <div className="mb-3 flex justify-between font-mono text-[9px] text-dim">{PRESSURE_BAND_WORDS().map((w) => <span key={w}>{w}</span>)}</div>
+        <div className="mb-3 flex justify-between text-[10.5px] text-dim">{PRESSURE_BAND_WORDS().map((w) => <span key={w}>{w}</span>)}</div>
         <div className="space-y-1.5 text-[10.5px] text-mute">
           <LegendRow icon={<svg width="16" height="16"><circle cx="8" cy="8" r="6.5" fill="none" stroke="var(--color-inf)" strokeDasharray="1 2.5" /></svg>}>Uncertainty ring (wider = less sure)</LegendRow>
           <LegendRow icon={<svg width="16" height="16"><circle cx="8" cy="8" r="6.5" fill="none" stroke="var(--color-dec)" strokeDasharray="4 2" /></svg>}>What-if scenario applied</LegendRow>
@@ -238,12 +264,12 @@ function LeftRail() {
       </div>
       <div className="p-4">
         <div className="eyebrow mb-2">Coverage</div>
-        <div className="space-y-1 font-mono text-[10.5px]">
-          <div className="flex justify-between text-mute"><span>Full</span><span className="text-bone">{counts.good}</span></div>
-          <div className="flex justify-between text-mute"><span className="text-warn">Stale feed</span><span className="text-bone">{counts.stale}</span></div>
-          <div className="flex justify-between text-mute"><span>Sparse / experimental</span><span className="text-bone">{counts.sparse}</span></div>
-          <div className="flex justify-between text-mute"><span>Illustrative (no FLOPX data)</span><span className="text-bone">{counts.illustrative}</span></div>
-          <div className="flex justify-between text-mute"><span>No data</span><span className="text-bone">{counts.none}</span></div>
+        <div className="space-y-1 text-[11.5px]">
+          <div className="flex justify-between text-mute"><span>Full</span><span className="num text-bone">{counts.good}</span></div>
+          <div className="flex justify-between text-mute"><span className="text-warn">Stale feed</span><span className="num text-bone">{counts.stale}</span></div>
+          <div className="flex justify-between text-mute"><span>Sparse / experimental</span><span className="num text-bone">{counts.sparse}</span></div>
+          <div className="flex justify-between text-mute"><span>Illustrative (no FLOPX data)</span><span className="num text-bone">{counts.illustrative}</span></div>
+          <div className="flex justify-between text-mute"><span>No data</span><span className="num text-bone">{counts.none}</span></div>
         </div>
       </div>
     </div>
@@ -263,13 +289,13 @@ function MapOverlays({ status }: { status: boolean }) {
           <div className="text-[10.5px] text-dim">{future ? 'Model projection, not observed' : xray.t === NOW_IDX ? 'Observed and inferred' : 'As inferred at the time'}</div>
         </div>
         {xray.scenario && (
-          <div className="pointer-events-auto flex items-center gap-2 rounded-[4px] border border-dashed border-dec/50 bg-dec/10 px-2.5 py-1.5 font-mono text-[10.5px] text-dec backdrop-blur">
+          <div className="pointer-events-auto flex items-center gap-2 rounded-[4px] border border-dashed border-dec/50 bg-dec/10 px-2.5 py-1.5 text-[11px] text-dec backdrop-blur">
             WHAT-IF · {regionById(xray.scenario.region)!.short} grid upgrade +{xray.scenario.slipMonths}mo{xray.scenario.powerShock ? ` · power ${xray.scenario.powerShock > 0 ? '+' : ''}${xray.scenario.powerShock}%` : ''}
             <button onClick={() => setXray({ scenario: null })} className="cursor-pointer hover:text-white" aria-label="Clear scenario"><X size={11} /></button>
           </div>
         )}
       </div>
-      <div aria-hidden={!status} className={cx('pointer-events-none absolute right-3 bottom-3 flex items-center gap-3 rounded-[4px] border border-line bg-ink/80 px-2.5 py-1.5 font-mono text-[9.5px] text-dim backdrop-blur transition-opacity duration-300', !status && 'opacity-0')}>
+      <div aria-hidden={!status} className={cx('pointer-events-none absolute right-10 bottom-2 flex items-center gap-3 rounded-[4px] border border-line bg-ink/80 px-2.5 py-1.5 text-[10.5px] text-dim backdrop-blur transition-opacity duration-300', !status && 'opacity-0')}>
         <span className="flex items-center gap-1.5"><TruthGlyph truth="obs" size={7} />Observed {Math.round(25 + 0.75 * (100 - xray.reveal))}%</span>
         <span className="flex items-center gap-1.5"><TruthGlyph truth="inf" size={7} />Inferred {xray.layers.includes('pressure') ? xray.reveal : 0}%</span>
       </div>
@@ -312,7 +338,7 @@ function TimeScrubber() {
         <div className="absolute top-3.5 h-1 bg-mute/45" style={{ left: 0, width: `${pct(NOW_IDX)}%` }} />
         <div className="absolute top-3.5 h-1 bg-fct/25" style={{ left: `${pct(NOW_IDX)}%`, right: 0 }} />
         <div className="absolute top-2 h-4 w-px bg-bone/70" style={{ left: `${pct(NOW_IDX)}%` }} />
-        <span className="absolute -top-1 -translate-x-1/2 font-mono text-[8.5px] tracking-wider text-mute" style={{ left: `${pct(NOW_IDX)}%` }}>NOW</span>
+        <span className="absolute -top-1 -translate-x-1/2 text-[10px] font-medium text-mute" style={{ left: `${pct(NOW_IDX)}%` }}>Now</span>
         {MONTHS.map((m, i) => (i % 3 === 0 ? <span key={i} className="absolute top-6 -translate-x-1/2 font-mono text-[8.5px] whitespace-nowrap text-dim" style={{ left: `${pct(i)}%` }}>{m}</span> : null))}
         <input type="range" min={0} max={38} value={xray.t} onChange={(e) => setXray({ t: +e.target.value })} className="absolute inset-x-0 top-1.5 h-5 w-full cursor-pointer opacity-0" aria-label="Time" />
         <div className={cx('pointer-events-none absolute top-1.5 h-5 w-[3px] -translate-x-1/2 rounded-[1px]', xray.t > NOW_IDX ? 'bg-fct' : 'bg-bone')} style={{ left: `${pct(xray.t)}%` }} />
@@ -339,10 +365,10 @@ function RightPanel({ region }: { region: Region | null }) {
         <div className="flex items-start justify-between">
           <div>
             <button onClick={() => setXray({ region: null, project: null })} className="eyebrow mb-1 cursor-pointer hover:text-mute">← Global</button>
-            <h2 className="font-serif text-[26px] leading-none">{region.name}</h2>
-            <div className="mt-1.5 flex flex-wrap items-center gap-1.5 font-mono text-[10px] text-dim">{region.marketplace} · grid {region.grid.toUpperCase()}{region.quality !== 'good' && <Fresh f={region.quality === 'stale' ? 'stale' : region.quality === 'none' ? 'unavailable' : 'experimental'} label={`${region.quality} coverage`} />}{!region.live ? <Fresh quiet f="illustrative" label="Illustrative · no FLOPX data" /> : !region.live.pressure?.realSlots[xray.t] && <Fresh quiet f="illustrative" label={region.live.pressure?.scaled ? `${MONTHS[xray.t]} scaled to today's reading, illustrative` : `${MONTHS[xray.t]} illustrative`} />}</div>
+            <h2 className="text-[22px] leading-tight font-semibold tracking-tight">{region.name}</h2>
+            <div className="mt-1.5 flex flex-wrap items-center gap-1.5 text-[11px] text-dim">{region.marketplace} · grid {region.grid.toUpperCase()}{region.quality !== 'good' && <Fresh f={region.quality === 'stale' ? 'stale' : region.quality === 'none' ? 'unavailable' : 'experimental'} label={`${region.quality} coverage`} />}{!region.live ? <Fresh quiet f="illustrative" label="Illustrative · no FLOPX data" /> : !region.live.pressure?.realSlots[xray.t] && <Fresh quiet f="illustrative" label={region.live.pressure?.scaled ? `${MONTHS[xray.t]} scaled to today's reading, illustrative` : `${MONTHS[xray.t]} illustrative`} />}</div>
           </div>
-          <button onClick={() => ask(`Why is compute pressure ${pressureWord(p).toLowerCase()} in ${region.name}?`)} className="cursor-pointer rounded-[4px] border border-fct/30 p-1.5 text-fct hover:bg-fct/10" aria-label="Ask about region"><Bot size={14} /></button>
+          <button onClick={() => ask(`Why is compute pressure ${pressureWord(p).toLowerCase()} in ${region.name}?`)} className="cursor-pointer rounded-[4px] border border-line2 p-1.5 text-mute hover:bg-hover hover:text-bone" aria-label="Ask about region"><MessageSquareText size={14} /></button>
         </div>
         {p != null && (
           <div className="mt-3 flex items-end gap-4">
@@ -392,8 +418,7 @@ function GlobalPanel() {
     <div className="flex w-[420px] shrink-0 flex-col border-l border-line bg-panel">
       <div className="border-b border-line px-5 py-4">
         <div className="eyebrow mb-1 flex items-center gap-2">Global view · {MONTHS[xray.t]}{PRESSURE_MODEL.globalReal && <Fresh quiet f="illustrative" label={PRESSURE_MODEL.globalScaled ? SCALED_SHORT_LABEL : `History before ${MONTHS[NOW_IDX]} illustrative`} />}</div>
-        <h2 className="font-serif text-[24px] leading-tight">Where is compute scarce?</h2>
-        <p className="mt-1 text-[12px] text-mute">Select a region on the map or below to drill into observed evidence and inferred pressure.</p>
+        <h2 className="text-[22px] leading-tight font-semibold tracking-tight" title="Select a region on the map or below to drill into observed evidence and inferred pressure.">Where is compute scarce?</h2>
       </div>
       <div className="border-b border-line px-5 py-3">
         <div className="eyebrow mb-2 flex items-center gap-2"><span className="size-1.5 rounded-full bg-inf" />Anomalies detected{!PRESSURE_MODEL.anomaliesLive && <Fresh quiet f="illustrative" />}{PRESSURE_MODEL.anomaliesLive && ANOMALY_CARDS.length > cards.length && <span className="font-mono text-[9.5px] normal-case tracking-normal text-dim">showing {cards.length} of {ANOMALY_CARDS.length}, most severe first</span>}</div>
@@ -427,7 +452,7 @@ function GlobalPanel() {
             {d == null ? <span className="num text-right text-[11px] text-dim" title="Only the current month is a FLOPX reading so far">n/a</span> : <Delta v={d} d={0} suffix="" className="text-right text-[11px]" />}
           </button>
         ))}
-        <button onClick={() => setXray({ region: 'za-jnb' })} className="grid w-full cursor-pointer grid-cols-[1fr_auto] py-2 text-left text-[12px] text-dim hover:bg-hover"><span>Johannesburg</span><span className="font-mono text-[10px]">NO DATA</span></button>
+        <button onClick={() => setXray({ region: 'za-jnb' })} className="grid w-full cursor-pointer grid-cols-[1fr_auto] py-2 text-left text-[12px] text-dim hover:bg-hover"><span>Johannesburg</span><span className="text-[11px]">No data</span></button>
       </div>
     </div>
   )
@@ -441,11 +466,16 @@ function BriefTab({ r }: { r: Region }) {
       <div className="space-y-4">
         {r.note && <div className="rounded-md border border-line bg-ink p-3 text-[12.5px] text-bone/90">{r.note}</div>}
         <div className="grid grid-cols-2 gap-2">
-          <Stat label="H100 median" value={r.h100 ? `$${r.h100.toFixed(2)}` : '—'} truth="obs" sub={r.h100 ? (Number.isFinite(r.h100Chg) ? `${fmtPct(r.h100Chg)} 30d` : 'no 30d history yet') : 'no quotes'} />
-          <Stat label="Premium" value={fmtPct(r.premium, 0)} truth="obs" sub="vs global" />
+          <Stat label="H100 median" value={r.h100 ? `$${r.h100.toFixed(2)}` : '—'} truth="obs" sub={r.h100 ? (r.live?.rental?.fallback ? 'global median · fallback' : Number.isFinite(r.h100Chg) ? `${fmtPct(r.h100Chg)} 30d` : 'no 30d history yet') : 'no quotes'} />
+          <Stat label="Premium" value={r.live?.rental && r.live.rental.premiumPct == null ? r.live.rental.premiumLabel : fmtPct(r.premium, 0)} truth="obs" sub={r.live?.rental && r.live.rental.premiumPct == null ? 'no regional asks' : 'vs global'} />
           <Stat label="Operational" value={`${(r.opMW / 1000).toFixed(2)} GW`} truth="obs" sub="reported" />
           <Stat label={r.live?.supply ? 'Usable additions' : `Usable by ${horizonLabel(12)}`} value={`+${r.eff27[0]}–${r.eff27[1]}`} truth="inf" sub={r.live?.supply ? `MW of ${r.announced27} in pipeline (sample records)` : `MW vs ${r.announced27} announced`} />
         </div>
+        {r.live?.rental?.fallback && (
+          <div className="rounded-[4px] border border-dashed border-line p-2.5 text-[11.5px] leading-relaxed text-mute">
+            No live H100 asks in {r.short}: the median shown is the model's global median of advertised asks{r.live.rental.weekly ? <>, and GetDeploying's archived weekly median was ${r.live.rental.weekly.median.toFixed(2)} (week ending {r.live.rental.weekly.weekEnding.slice(0, 10)})</> : null}. No regional premium can be read. <Fresh quiet f={r.live.rental.freshness} />
+          </div>
+        )}
         <div>
           <div className="eyebrow mb-2">Top drivers of the inference</div>
           {r.contrib.map((c) => <div key={c.factor} className="mb-1.5"><div className="mb-0.5 flex justify-between text-[11.5px]"><span className="text-mute">{c.factor}</span><span className="num">{(c.value * 100).toFixed(0)}%</span></div><Meter value={c.value} hatched color="var(--color-inf)" /></div>)}
@@ -463,7 +493,7 @@ function BriefTab({ r }: { r: Region }) {
   return (
     <div className="space-y-4">
       <div className="rounded-md border border-inf/30 bg-inf/[0.05] p-3">
-        <div className="flex items-center justify-between"><span className="text-[13px] font-semibold text-inf">{a.title}</span><span className="font-mono text-[10px] text-dim">detected {a.detected}</span></div>
+        <div className="flex items-center justify-between"><span className="text-[13px] font-semibold text-inf">{a.title}</span><span className="text-[11px] text-dim">detected <span className="num">{a.detected}</span></span></div>
       </div>
       <Q n={1} q="What changed?" truth="obs">
         <p className="mb-2 text-[12px] leading-relaxed text-bone/90">{a.changed}</p>
@@ -481,7 +511,7 @@ function BriefTab({ r }: { r: Region }) {
         {a.conflicting && <div className="mt-3 rounded-[4px] border border-warn/30 bg-warn/[0.04] p-2.5 text-[11.5px]"><span className="mb-0.5 block text-[11px] text-warn font-medium">Conflicting evidence</span><span className="text-bone/85">{a.conflicting}</span></div>}
       </Q>
       <Q n={3} q="How confident are we?" truth="inf">
-        <div className="mb-2 flex items-center gap-3"><span className="num text-[20px]">{a.confidence.score.toFixed(2)}</span><div className="flex-1"><Meter value={a.confidence.score} color="var(--color-inf)" /></div><span className="font-mono text-[11px] text-inf">{a.confidence.level}</span></div>
+        <div className="mb-2 flex items-center gap-3"><span className="num text-[20px]">{a.confidence.score.toFixed(2)}</span><div className="flex-1"><Meter value={a.confidence.score} color="var(--color-inf)" /></div><span className="text-[11.5px] text-inf">{a.confidence.level}</span></div>
         <ul className="space-y-1">{a.confidence.notes.map((n) => <li key={n} className="text-[11.5px] text-mute">· {n}</li>)}</ul>
       </Q>
       <Q n={4} q="What does it affect?" truth="dec">
@@ -521,7 +551,7 @@ function EvidenceTab({ r }: { r: Region }) {
                 {e.conflict && <span className="text-[11px] text-warn font-medium">Conflicts</span>}
               </div>
               {e.note && <div className="mt-1 pl-[15px] text-[10.5px] text-dim">{e.note}</div>}
-              <div className="mt-1.5 flex items-center gap-2 pl-[15px]"><span className="font-mono text-[9px] text-dim">weight</span><Meter value={e.weight} max={0.4} className="h-1" color="var(--color-mute)" /></div>
+              <div className="mt-1.5 flex items-center gap-2 pl-[15px]"><span className="text-[10.5px] text-dim">weight</span><Meter value={e.weight} max={0.4} className="h-1" color="var(--color-mute)" /></div>
             </div>
           ))}
         </div>
@@ -550,7 +580,7 @@ function PipelineTab({ r }: { r: Region }) {
   return (
     <div className="space-y-4">
       <div className="rounded-md border border-line bg-ink p-3">
-        <div className="mb-2 flex justify-between font-mono text-[10px] text-dim"><span>{r.live?.supply ? `Capacity pipeline · FLOPX ${r.live.supply.method}` : `Capacity by ${horizonLabel(12)}`}</span><span className="flex items-center gap-1.5">{r.live?.supply ? <Fresh quiet f={r.live.supply.freshness} label="sample facility records" /> : <Fresh quiet f="illustrative" />}MW</span></div>
+        <div className="mb-2 flex justify-between text-[11px] text-dim"><span>{r.live?.supply ? `Capacity pipeline · FLOPX ${r.live.supply.method}` : `Capacity by ${horizonLabel(12)}`}</span><span className="flex items-center gap-1.5">{r.live?.supply ? <Fresh quiet f={r.live.supply.freshness} label="sample facility records" /> : <Fresh quiet f="illustrative" />}MW</span></div>
         <div className="space-y-2">
           <div><div className="mb-0.5 flex justify-between text-[11.5px]"><span className="flex items-center gap-1.5"><TruthGlyph truth="obs" size={7} />Announced additions</span><span className="num">{r.announced27.toLocaleString()}</span></div><div className="h-2 rounded-sm border border-dashed border-bone/50" /></div>
           <div><div className="mb-0.5 flex justify-between text-[11.5px]"><span className="flex items-center gap-1.5"><TruthGlyph truth="inf" size={7} />Estimated usable</span><span className="num">{r.eff27[0].toLocaleString()}–{r.eff27[1].toLocaleString()}</span></div>
@@ -562,15 +592,15 @@ function PipelineTab({ r }: { r: Region }) {
       <div className="space-y-1.5">
         {projects.length === 0 && <div className="text-[12px] text-mute">No tracked projects in this region.</div>}
         {projects.map((p) => (
-          <button key={p.id} onClick={() => setXray({ project: p.id })} className={cx('w-full cursor-pointer rounded-[4px] border p-2.5 text-left', xray.project === p.id ? 'border-fct/50 bg-fct/[0.04]' : 'border-line hover:bg-hover')}>
+          <button key={p.id} onClick={() => setXray({ project: p.id })} className={cx('w-full cursor-pointer rounded-[4px] border p-2.5 text-left', xray.project === p.id ? 'border-act/50 bg-act/[0.04]' : 'border-line hover:bg-hover')}>
             <div className="flex justify-between"><span className="text-[12.5px] font-medium">{p.name}</span><span className="text-[11px] text-mute font-medium capitalize">{p.stage}</span></div>
-            <div className="mt-0.5 flex justify-between font-mono text-[10.5px] text-dim"><span>{p.reportedMW} MW reported · {p.energizedMW} energised</span><span>P(on time) {Math.round(p.onTimeProb * 100)}%</span></div>
+            <div className="mt-0.5 flex justify-between text-[11px] text-dim"><span>{p.reportedMW} MW reported · {p.energizedMW} energised</span><span>P(on time) {Math.round(p.onTimeProb * 100)}%</span></div>
           </button>
         ))}
       </div>
       {sel && (
         <div className="fade-in rounded-md border border-line2 p-3.5">
-          <div className="mb-3 flex items-start justify-between"><div><div className="eyebrow">Selected project</div><div className="text-[14px] font-semibold">{sel.name}</div><div className="font-mono text-[10px] text-dim">{sel.developer} · expected {sel.expectedOnline}</div></div><Btn size="sm" variant="ghost" onClick={() => inspect({ kind: 'project', id: sel.id, label: sel.name })}>Inspect</Btn></div>
+          <div className="mb-3 flex items-start justify-between"><div><div className="eyebrow">Selected project</div><div className="text-[14px] font-semibold">{sel.name}</div><div className="text-[11px] text-dim">{sel.developer} · expected {sel.expectedOnline}</div></div><Btn size="sm" variant="ghost" onClick={() => inspect({ kind: 'project', id: sel.id, label: sel.name })}>Inspect</Btn></div>
           <Timeline p={sel} />
           <div className="mt-2 mb-3 space-y-1">
             <div className="eyebrow">Evidence</div>
@@ -591,14 +621,16 @@ function PipelineTab({ r }: { r: Region }) {
 
 function ExposureTab({ r }: { r: Region }) {
   const { positions, navigate, setFund, inspect, nav } = useStore()
-  const tickers = Array.from(new Set([...r.documented.map((d) => d.t), ...r.sensitivities.map((x) => x.t)])).filter((t) => lastPx(t))
-  const held = positions.filter((p) => tickers.includes(p.ticker))
+  const authored = r.authored ?? []
+  // Every company the region reaches, documented or authored; a ticker the price feed does not know still counts as tied.
+  const tickers = Array.from(new Set([...r.documented.map((d) => d.t), ...authored.map((d) => d.t), ...r.sensitivities.map((x) => x.t)]))
+  const held = positions.filter((p) => tickers.includes(p.ticker) && lastPx(p.ticker))
   const net = held.reduce((s, p) => s + p.qty * lastPx(p.ticker), 0)
   return (
     <div className="space-y-5">
       <div>
         <div className="eyebrow mb-2 flex items-center gap-2"><span className="inline-block h-px w-4 bg-bone" />Documented ties · observed facts</div>
-        {r.documented.length === 0 && <div className="text-[12px] text-mute">None documented.</div>}
+        {r.documented.length === 0 && <div className="text-[12px] text-mute">{r.live?.exposure ? `No filing or observed facility record ties a listed company to ${r.short} yet.` : 'None documented.'}</div>}
         {r.documented.map((d) => (
           <div key={d.t} className="mb-1.5 rounded-[4px] border border-line p-2.5">
             <div className="flex justify-between"><EntityLink r={{ kind: 'security', id: d.t, label: d.t }} className="font-mono text-[12px]" /><Source source={d.source} /></div>
@@ -606,6 +638,18 @@ function ExposureTab({ r }: { r: Region }) {
           </div>
         ))}
       </div>
+      {authored.length > 0 && (
+        <div>
+          <div className="eyebrow mb-2 flex items-center gap-2"><span className="inline-block w-4 border-t border-dashed border-mute" />Authored ties · company profiles, not filings</div>
+          {authored.map((d) => (
+            <div key={d.t} className="mb-1.5 rounded-[4px] border border-dashed border-line p-2.5">
+              <div className="flex items-center justify-between gap-2"><span className="flex items-center gap-2"><EntityLink r={{ kind: 'security', id: d.t, label: d.t }} className="font-mono text-[12px]" />{d.role && <span className="rounded-[3px] border border-line px-1 py-px text-[10px] text-dim">{d.role}</span>}</span><Fresh quiet f="illustrative" label={d.note} /></div>
+              <div className="mt-0.5 text-[11.5px] text-mute">{d.tie}</div>
+            </div>
+          ))}
+          <div className="text-[10.5px] text-dim">Authored tie from company profile, not a filing: a sample facility or a profile tag reaches this region. It is not a document.</div>
+        </div>
+      )}
       <div>
         <div className="eyebrow mb-2 flex items-center gap-2"><span className="inline-block w-4 border-t border-dashed border-inf" />Modelled sensitivities · estimated</div>
         {r.sensitivities.length === 0 && <div className="text-[12px] text-mute">No statistically meaningful sensitivity found.</div>}
@@ -619,7 +663,7 @@ function ExposureTab({ r }: { r: Region }) {
         <div className="text-[10.5px] text-dim">{r.live?.exposure ? 'Sensitivity = FLOPX authored estimate per company role (percent equity move per percent compute-demand move), from sample facility and profile records. It is not a measured beta.' : 'Sensitivity = historical co-movement of excess returns with regional pressure. It is an association, not proof that pressure causes the returns.'}{!r.live?.exposure && <> <Fresh quiet f="illustrative" /></>}</div>
       </div>
       <div className="rounded-md border border-dec/30 bg-dec/[0.04] p-3.5">
-        <div className="mb-2 flex items-center justify-between"><TruthTag truth="dec" /><span className="font-mono text-[10px] text-dim">CPX-1 paper portfolio</span></div>
+        <div className="mb-2 flex items-center justify-between"><TruthTag truth="dec" /><span className="text-[11px] text-dim">CPX-1 paper portfolio</span></div>
         {held.length === 0 ? <div className="text-[12px] text-mute">The fund has no exposure to companies tied to {r.short}.</div> : (
           <>
             <div className="num mb-2 text-[20px]">{net >= 0 ? '+' : '−'}${Math.abs(Math.round(net)).toLocaleString()} <span className="text-[11px] text-mute">net · {((net / nav) * 100).toFixed(1)}% NAV</span></div>
@@ -701,29 +745,29 @@ function ComparePanel() {
   const [a, b] = [regionById(xray.compare[0] ?? 'us-tx')!, regionById(xray.compare[1] ?? 'no-nordics')!]
   const opts = REGIONS.map((r) => ({ id: r.id, label: r.short }))
   return (
-    <div className="slide-in absolute inset-x-3 bottom-[76px] z-20 rounded-lg border border-fct/30 bg-ink/95 shadow-2xl backdrop-blur">
-      <div className="flex items-center justify-between border-b border-line px-4 py-2">
-        <div className="flex items-center gap-3">
-          <GitCompareArrows size={14} className="text-fct" />
+    <div className="slide-in @container absolute inset-x-3 bottom-[76px] z-20 max-h-[calc(100%-88px)] overflow-y-auto rounded-lg border border-line2 bg-ink/95 shadow-2xl backdrop-blur">
+      <div className="flex items-start justify-between gap-3 border-b border-line px-4 py-2">
+        <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-2">
+          <GitCompareArrows size={14} className="shrink-0 text-mute" />
           <Seg size="sm" value={mode} onChange={setMode} options={[{ id: 'region', label: 'Locations' }, { id: 'gpu', label: 'GPU categories' }]} />
           {mode === 'region' ? (
-            <div className="flex items-center gap-2 font-mono text-[11px]">
-              <span className="rounded-[2px] bg-fct px-1 text-[9px] font-bold text-ink">A</span>
+            <div className="flex min-w-0 flex-wrap items-center gap-2 text-[11.5px]">
+              <span className="rounded-[2px] bg-bone px-1 text-[10px] font-semibold text-ink">A</span>
               <select value={a.id} onChange={(e) => setXray({ compare: [e.target.value, b.id] })} className="rounded-[3px] border border-line2 bg-ink px-1 py-0.5">{opts.map((o) => <option key={o.id} value={o.id}>{regionById(o.id)!.name}</option>)}</select>
-              <span className="rounded-[2px] bg-fct px-1 text-[9px] font-bold text-ink">B</span>
+              <span className="rounded-[2px] bg-bone px-1 text-[10px] font-semibold text-ink">B</span>
               <select value={b.id} onChange={(e) => setXray({ compare: [a.id, e.target.value] })} className="rounded-[3px] border border-line2 bg-ink px-1 py-0.5">{opts.map((o) => <option key={o.id} value={o.id}>{regionById(o.id)!.name}</option>)}</select>
               <span className="text-dim">or click the map</span>
             </div>
           ) : (
-            <div className="flex items-center gap-2 font-mono text-[11px]">
+            <div className="flex items-center gap-2 text-[11.5px]">
               {[0, 1].map((k) => <select key={k} value={gpus[k]} onChange={(e) => setGpus((g) => g.map((x, i) => (i === k ? e.target.value : x)))} className="rounded-[3px] border border-line2 bg-ink px-1 py-0.5">{GPUS.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}</select>)}
             </div>
           )}
         </div>
-        <button onClick={() => setXray({ compareOpen: false })} className="cursor-pointer text-dim hover:text-bone" aria-label="Close compare"><X size={14} /></button>
+        <button onClick={() => setXray({ compareOpen: false })} className="mt-1 shrink-0 cursor-pointer text-dim hover:text-bone" aria-label="Close compare"><X size={14} /></button>
       </div>
       {mode === 'region' ? (
-        <div className="grid grid-cols-[1fr_340px] gap-4 p-4">
+        <div className="grid grid-cols-1 gap-4 p-4 @2xl:grid-cols-[minmax(0,1fr)_300px]">
           <TimeChart labels={MONTHS} height={150} nowIdx={NOW_IDX} legend yDomain={[20, 100]} series={[
             { id: 'a', label: `A · ${a.short}`, values: a.quality === 'none' ? [] : a.pressure.map((_, i) => pressureAt(a, i, xray.scenario)), color: 'var(--color-inf)', band: a.quality === 'none' ? undefined : { lo: a.pressure.map((_, i) => (i >= NOW_IDX ? pressureAt(a, i)! - uncAt(a, i) : null)), hi: a.pressure.map((_, i) => (i >= NOW_IDX ? pressureAt(a, i)! + uncAt(a, i) : null)), hatched: true } },
             { id: 'b', label: `B · ${b.short}`, values: b.quality === 'none' ? [] : b.pressure.map((_, i) => pressureAt(b, i, xray.scenario)), color: 'var(--color-fct)', style: 'dashed', band: b.quality === 'none' ? undefined : { lo: b.pressure.map((_, i) => (i >= NOW_IDX ? pressureAt(b, i)! - uncAt(b, i) : null)), hi: b.pressure.map((_, i) => (i >= NOW_IDX ? pressureAt(b, i)! + uncAt(b, i) : null)) } },
@@ -745,7 +789,7 @@ function ComparePanel() {
       ) : (
         <div className="p-4">
           <TimeChart labels={MONTHS.slice(0, NOW_IDX + 1)} height={150} legend yFmt={(v) => `$${v.toFixed(2)}`} series={gpus.map((g, k) => ({ id: g, label: gpuName(g), values: GPUS.find((x) => x.id === g)!.index.slice(0, NOW_IDX + 1), color: k === 0 ? 'var(--color-bone)' : 'var(--color-fct)', style: k === 1 ? 'dashed' as const : 'solid' as const }))} />
-          <div className="mt-2 font-mono text-[10.5px] text-dim">Observed median on-demand $/GPU-hr · gaps = not yet launched. Inferred GPU-category pressure: {gpus.map((g) => `${gpuName(g)} ${GPUS.find((x) => x.id === g)!.pressure}`).join(' · ')}</div>
+          <div className="mt-2 text-[11px] text-dim">Observed median on-demand $/GPU-hr · gaps = not yet launched. Inferred GPU-category pressure: {gpus.map((g) => `${gpuName(g)} ${GPUS.find((x) => x.id === g)!.pressure}`).join(' · ')}</div>
         </div>
       )}
     </div>

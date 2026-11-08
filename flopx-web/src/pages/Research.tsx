@@ -1,5 +1,4 @@
 import { useId, useMemo, useState } from 'react'
-import { FlaskConical } from 'lucide-react'
 import { scaleBand, scaleLinear } from 'd3-scale'
 import { line } from 'd3-shape'
 import { mean, sum } from 'd3-array'
@@ -8,10 +7,17 @@ import { band, GLOBAL_CPI, GPUS, MONTHS, NOW_IDX, PRESSURE_MODEL, REGIONS, regio
 import { LOW_INFO, type HorizonId } from '@/data/fund'
 import { SCALED_HISTORY_LABEL, SCALED_LABEL, SCALED_SHORT_LABEL, TimeChart, useWidth } from '@/components/charts'
 import { Failures, ForecastVsActual, ModelComparison, ValidationMatrix } from '@/components/Eval'
-import { cx, Fresh, PageHeader, Panel, Seg, TruthGlyph, TruthTag } from '@/components/ui'
+import { Row } from '@/components/collapse'
+import { cx, Fn, Fresh, Notes, PageHeader, Panel, Seg, TruthGlyph, TruthTag } from '@/components/ui'
 import { uncAt } from '@/lib/model'
+import { ResearchMetrics } from '@/components/ResearchMetrics'
 
-const z = (a: (number | null)[]) => { const v = a.filter((x): x is number => x != null && !Number.isNaN(x)); const m = v.reduce((s, x) => s + x, 0) / v.length; const sd = Math.sqrt(v.reduce((s, x) => s + (x - m) ** 2, 0) / v.length) || 1; return a.map((x) => (x == null || Number.isNaN(x) ? null : +((x - m) / sd).toFixed(3))) }
+const NOTES = [
+  'Hatched band = posterior uncertainty of the hidden state (not measurement error). Shaded = low-information periods.',
+  'Consistent with pressure anticipating price, but it does not establish causation; a common driver (demand) could explain both.',
+]
+
+const z =(a: (number | null)[]) => { const v = a.filter((x): x is number => x != null && !Number.isNaN(x)); const m = v.reduce((s, x) => s + x, 0) / v.length; const sd = Math.sqrt(v.reduce((s, x) => s + (x - m) ** 2, 0) / v.length) || 1; return a.map((x) => (x == null || Number.isNaN(x) ? null : +((x - m) / sd).toFixed(3))) }
 
 export default function Research() {
   const [idx, setIdx] = useState('global')
@@ -27,24 +33,23 @@ export default function Research() {
   const lags =[-3, -2, -1, 0, 1, 2, 3, 4, 6].map((l) => ({ l, r: +(l < 0 ? 0.08 + l * 0.02 : l === 0 ? 0.21 : l <= 2 ? 0.34 - (l - 1) * 0.05 : 0.22 - (l - 3) * 0.04).toFixed(2), ci: 0.14 }))
   return (
     <div>
-      <PageHeader eyebrow={<><FlaskConical size={12} /> Research & forecast evaluation</>} title="Derived indicators, tested honestly" sub="Explore the Compute Pressure Index and how it relates to observed prices and returns, then inspect forecasts, errors, failures and low-information periods. Every relationship shown here is an estimated association." />
+      <PageHeader title="Forecast evaluation" sub="Derived indicators, tested honestly." about="Explore the Compute Pressure Index against observed prices and returns, then inspect forecasts, errors, failures and low-information periods. Every relationship shown here is an estimated association." />
 
-      <div className="mb-5 grid grid-cols-1 gap-5 xl:grid-cols-[1.5fr_1fr]">
-        <Panel title="Compute Pressure Index" eyebrow={<><TruthGlyph truth="inf" size={7} />Inferred · with forecast band <Fresh quiet f="illustrative" label={seriesScaled ? SCALED_SHORT_LABEL : undefined} /></>} right={<select value={idx} onChange={(e) => setIdx(e.target.value)} className="h-7 rounded-[4px] border border-line2 bg-ink px-2 font-mono text-[11px]"><option value="global">Global (MW-weighted)</option>{REGIONS.filter((r) => r.quality !== 'none').map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}</select>}>
+      <Row cols={[1.5, 1]} className="mb-5">
+        <Panel title="Compute Pressure Index" eyebrow={<><TruthGlyph truth="inf" size={7} />Inferred · with forecast band<Fn n={1} note={NOTES[0]} /> <Fresh quiet f="illustrative" label={seriesScaled ? SCALED_SHORT_LABEL : undefined} /></>} right={<select value={idx} onChange={(e) => setIdx(e.target.value)} className="h-7 rounded-[4px] border border-line2 bg-ink px-2 text-[11.5px]"><option value="global">Global (MW-weighted)</option>{REGIONS.filter((r) => r.quality !== 'none').map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}</select>}>
           <TimeChart labels={MONTHS} height={230} nowIdx={NOW_IDX} legend shade={LOW_INFO.map(([a, c, l]) => [a, c, l])} series={[
             { id: 'cpi', label: 'CPI (inferred)', values: series.map((v, i) => (i <= NOW_IDX ? v : null)), color: 'var(--color-inf)', width: 2, band: { lo: series.map((v, i) => (i <= NOW_IDX ? v - unc : null)), hi: series.map((v, i) => (i <= NOW_IDX ? v + unc : null)), hatched: true } },
             { id: 'fc', label: 'Forecast', values: series.map((v, i) => (i >= NOW_IDX ? v : null)), color: 'var(--color-fct)', style: 'dashed', band: b },
           ]} />
-          <div className="mt-2 font-mono text-[10px] text-dim">Hatched band = posterior uncertainty of the hidden state (not measurement error). Shaded = low-information periods.</div>
         </Panel>
-        <Panel title="Does pressure lead prices?" eyebrow={<>Correlation of CPI with future H100 index change, by lag <Fresh quiet f="illustrative" /></>}>
+        <Panel title="Does pressure lead prices?" eyebrow="CPI vs later H100 change, by lag">
           <LagChart lags={lags} />
-          <div className="mt-2 text-[11px] leading-relaxed text-mute">Strongest at a 1-month lead (r ≈ 0.34 ± 0.14, n = 25). This is consistent with pressure anticipating price, but it does not establish causation, and a common driver (demand) could explain both.</div>
+          <div className="mt-2 text-[11px] leading-relaxed text-mute">Strongest at a 1-month lead (r ≈ 0.34 ± 0.14, n = 25).<Fn n={2} note={NOTES[1]} /></div>
         </Panel>
-      </div>
+      </Row>
 
-      <div className="mb-5 grid grid-cols-1 gap-5 xl:grid-cols-[1fr_1.5fr]">
-        <Panel title="Pressure vs next-month price change" eyebrow={<>Monthly · all covered regions <Fresh quiet f="illustrative" /></>}>
+      <Row cols={[1, 1.5]} className="mb-5">
+        <Panel title="Pressure vs next-month price change" eyebrow="Monthly · all covered regions">
           <Scatter />
         </Panel>
         <Panel title="Standardised: pressure vs H100 index" eyebrow={<>z-scores · same axis for shape comparison <Fresh quiet f="illustrative" label={PRESSURE_MODEL.globalScaled || h100Gpu.live?.scaled ? SCALED_HISTORY_LABEL : `History before ${MONTHS[NOW_IDX]} illustrative`} /></>}>
@@ -53,15 +58,15 @@ export default function Research() {
             { id: 'h', label: 'H100 index (z)', values: z(h100.slice(0, NOW_IDX + 1)), color: 'var(--color-obs)' },
           ]} />
         </Panel>
-      </div>
+      </Row>
 
-      <div className="mb-3 flex items-center justify-between"><h2 className="font-serif text-[24px]">Forecast evaluation</h2><Seg value={hz} onChange={setHz} options={[{ id: '1W', label: '1W' }, { id: '1M', label: '1M' }, { id: '3M', label: '3M' }]} /></div>
+      <div className="mb-3 flex items-center justify-between"><h2 className="text-[16px] font-semibold tracking-tight">Forecast tests</h2><Seg value={hz} onChange={setHz} options={[{ id: '1W', label: '1W' }, { id: '1M', label: '1M' }, { id: '3M', label: '3M' }]} /></div>
       <div className="space-y-5">
         <ModelComparison horizon={hz} />
-        <div className="grid grid-cols-1 gap-5 xl:grid-cols-[1.4fr_1fr]">
+        <ResearchMetrics />
+        <Row cols={[1.4, 1]}>
           <ForecastVsActual horizon={hz} />
-          <Panel title="Periods with little information" eyebrow={<>Where the system knew less <Fresh quiet f="illustrative" /></>}>
-            <div className="space-y-3">
+          <Panel variant="rail" title="Periods with little information" eyebrow="Where the system knew less">
               {[
                 { p: 'Jan–Jun 2024', what: 'Only 3 rental price sources; no marketplace sold-out data.', eff: 'CPI uncertainty ±9 (vs ±4 now). Backtest results less reliable.' },
                 { p: 'Jun 2025 (2 wks)', what: 'Scraper outage on 2 marketplaces.', eff: 'Forecasts withheld rather than issued on stale inputs.' },
@@ -69,31 +74,65 @@ export default function Research() {
                 { p: 'Ongoing · UAE, Mumbai, São Paulo', what: 'Sparse or experimental coverage.', eff: 'Shown with wide dashed rings; excluded from strategy signals.' },
                 { p: 'Ongoing · Johannesburg', what: 'No usable data.', eff: 'No estimate shown.' },
               ].map((x) => (
-                <div key={x.p} className="border-b border-line/60 pb-2.5 last:border-0">
-                  <div className="font-mono text-[10.5px] text-warn">{x.p}</div>
+                <div key={x.p} className="py-2">
+                  <div className="text-[11.5px] font-medium text-warn">{x.p}</div>
                   <div className="text-[12px]">{x.what}</div>
                   <div className="text-[11.5px] text-mute">{x.eff}</div>
                 </div>
               ))}
-            </div>
           </Panel>
-        </div>
-        <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
+        </Row>
+        <Row cols={[1, 1]}>
           <ValidationMatrix />
           <Failures />
-        </div>
+        </Row>
         <Panel title="CPI forecasts at each horizon" eyebrow={<><TruthTag truth="fct" compact /> Global · from {MONTHS[NOW_IDX]} <Fresh quiet f="illustrative" label={PRESSURE_MODEL.globalScaled ? SCALED_LABEL : undefined} /></>}>
-          <div className="grid grid-cols-4 gap-3">
-            {[1, 3, 6, 12].map((h) => (
-              <div key={h} className={cx('rounded-md border border-dashed p-3', h <= 1 ? 'border-fct/40' : 'border-line2')}>
-                <div className="font-mono text-[10px] text-dim">+{h}M · {MONTHS[NOW_IDX + h]}</div>
-                <div className="num text-[20px] text-fct">{GLOBAL_CPI[NOW_IDX + h].toFixed(1)}</div>
-                <div className="num text-[11px] text-mute">[{b.lo[NOW_IDX + h]?.toFixed(1)}, {b.hi[NOW_IDX + h]?.toFixed(1)}]</div>
-                <div className="mt-1 font-mono text-[9.5px] text-dim">{PRESSURE_MODEL.globalReal ? `Not validated: ${realCpiMonths} real month${realCpiMonths === 1 ? '' : 's'} of CPI, no scored forecast` : 'Not validated: FLOPX pressure not loaded, no scored forecast'}</div>
-              </div>
-            ))}
-          </div>
+          <HorizonChart rows={[1, 3, 6, 12].map((h) => ({
+            h, month: MONTHS[NOW_IDX + h], mean: GLOBAL_CPI[NOW_IDX + h], lo: globalBand.lo[NOW_IDX + h] ?? NaN, hi: globalBand.hi[NOW_IDX + h] ?? NaN,
+            // No scored forecast exists yet, so no MAE is shown as if measured: the honest state for every horizon.
+            check: { text: PRESSURE_MODEL.globalReal ? `Not validated: ${realCpiMonths} real month${realCpiMonths === 1 ? '' : 's'} of CPI, no scored forecast` : 'Not validated: FLOPX pressure not loaded, no scored forecast', tone: 'none' as const },
+          }))} />
         </Panel>
+      </div>
+      <Notes items={NOTES} />
+    </div>
+  )
+}
+
+/** Forecast per horizon as a ruled table; each 80% interval is drawn on one shared, round-numbered scale so the widening reads at a glance. */
+type HorizonRow = { h: number; month: string; mean: number; lo: number; hi: number; check: { text: string; note?: string; tone: 'ok' | 'weak' | 'none' } }
+/** Global CPI band (the panel is always global, whichever index the top chart shows). */
+const globalBand = band(GLOBAL_CPI, 2.4)
+const HIST = 6
+
+/** CPI forecast as a plain line chart: recent history, dashed g3 forecast with its 80% band, horizons marked; validation listed underneath. */
+function HorizonChart({ rows }: { rows: HorizonRow[] }) {
+  const from = NOW_IDX - HIST
+  const to = NOW_IDX + Math.max(...rows.map((r) => r.h))
+  const win = <T,>(xs: T[]) => xs.slice(from, to + 1)
+  const dot = { ok: 'bg-up', weak: 'bg-warn', none: 'border border-line2' }
+  return (
+    <div>
+      <TimeChart labels={win(MONTHS)} height={220} nowIdx={HIST} nowLabel="Today" forecastLabel="Forecast" legend niceY annotationStyle="point"
+        yFmt={(v) => v.toFixed(0)}
+        annotations={rows.map((r) => ({ i: HIST + r.h, id: `h${r.h}`, label: `+${r.h}M ${r.month}: ${r.mean.toFixed(1)} (80% ${r.lo.toFixed(1)}–${r.hi.toFixed(1)})`, color: 'var(--color-g3)' }))}
+        series={[
+          { id: 'hist', label: 'CPI (inferred)', values: win(GLOBAL_CPI).map((v, i) => (i <= HIST ? v : null)), color: 'var(--color-mute)', width: 1.8 },
+          { id: 'fc', label: 'Forecast · 80% range', values: win(GLOBAL_CPI).map((v, i) => (i >= HIST ? v : null)), color: 'var(--color-g3)', style: 'dashed', width: 2,
+            band: { lo: win(globalBand.lo).map((v, i) => (i >= HIST ? v : null)), hi: win(globalBand.hi).map((v, i) => (i >= HIST ? v : null)) } },
+        ]} />
+      <div className="mt-3 grid grid-cols-2 gap-x-6 gap-y-2 border-t border-line-soft pt-3 text-[12px] lg:grid-cols-4">
+        {rows.map((r) => (
+          <div key={r.h} className="min-w-0">
+            <div className="flex items-baseline gap-2"><span className="num text-bone">+{r.h}M</span><span className="text-[11px] text-dim">{r.month}</span><span className="num ml-auto text-[13px]" style={{ color: 'var(--color-g3)' }}>{r.mean.toFixed(1)}</span></div>
+            <div className="mt-0.5 flex items-center gap-1.5 text-[11px]">
+              <span className={cx('size-1.5 shrink-0 rounded-full', dot[r.check.tone])} />
+              <span className={cx('truncate', r.check.tone === 'none' ? 'text-dim' : 'text-mute')}>{r.check.text}</span>
+              {r.check.note && <span className="text-[10.5px] text-warn">{r.check.note}</span>}
+              <span className="num ml-auto shrink-0 text-dim">{r.lo.toFixed(1)}–{r.hi.toFixed(1)}</span>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   )

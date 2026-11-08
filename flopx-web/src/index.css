@@ -1,67 +1,81 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap');
 @import 'tailwindcss';
 
 @theme static {
-  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
-  --font-serif: 'Manrope', 'Inter', ui-sans-serif, sans-serif;
+  /* Geist for text and headings, Geist Mono for figures (.num) and font-mono labels, in both themes. */
+  --font-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, monospace;
+  --font-serif: var(--font-sans);
 
-  /* Default: Implement's original dark terminal. */
-  --color-ink: #08090a;
-  --color-panel: #0f1112;
-  --color-raise: #15181a;
-  --color-hover: #1b1f21;
-  --color-line: #20252a;
-  --color-line2: #2d3338;
+  /* Default: dark terminal. Panel and raise sit a few L* apart so surfaces, not borders, carry structure. */
+  --color-ink: #0c0e10;
+  --color-panel: #121619;
+  --color-raise: #1c2227;
+  --color-hover: #242c32;
+  --color-line: #252c32;
+  --color-line2: #3b454e;
+  --color-line-soft: #171b1e;
   --color-bone: #ebe7dd;
-  --color-mute: #9aa0a3;
-  --color-dim: #5f666b;
-  --color-accent: #f28c28;
+  --color-mute: #b0b7bd;
+  --color-dim: #8b959e;
+  /* Neutral: hue means a truth category or a direction, so the accent carries none. */
+  --color-accent: var(--color-mute);
+  /* Orange marks the current selection only (picked tile, open row, a switch that is on). Redder than
+     the inferred amber so the two never read as one; not a truth category. */
+  --color-act: #ff7a33;
+
+  /* Geometry: rounded-panel / rounded-ctl / rounded-badge / rounded-menu. */
+  --radius-panel: 2px;
+  --radius-ctl: 3px;
+  --radius-badge: 2px;
+  --radius-menu: 8px;
 
   /* Truth categories */
   --color-obs: #ebe7dd;
   --color-inf: #f5a524;
   --color-fct: #67d4f8;
-  --color-dec: #b69cff;
+  --color-dec: #6e98f2;
 
-  --color-up: #4fd18b;
-  --color-down: #ff6a55;
+  --color-up: #46c483;
+  --color-down: #f2604c;
   --color-warn: #f2cf4a;
 
   /* Categorical data hues (provider type), fixed order; validated for CVD + contrast on --color-panel. */
   --color-cat1: #3987e5;
+  /* Open-weight models (Intelligence pages); muted navy, quieter than forecast blue. */
+  --color-open: #6a7dab;
   --color-cat2: #d95926;
   --color-cat3: #199e70;
   --color-cat4: #c98500;
   --color-cat5: #d55181;
-  --color-cat6: #9085e9;
+  --color-cat6: #879020;
 
   --color-land: #0f1214;
   --color-ocean: #0d1012;
-  --color-ocean-edge: #08090a;
-  --color-halo: #08090a;
+  --color-ocean-edge: #0c0e10;
+  --color-halo: #0c0e10;
   --color-map-dot: #2d3338;
-  --halo-opacity: 0.85;
-  --color-label-bg: #08090a;
-  --label-bg-opacity: 0;
+  --halo-opacity: 0.6;
+  --color-label-bg: #0c0e10;
+  --label-bg-opacity: 0.88;
 
-  --color-p0: #3a4248;
-  --color-p1: #8a7040;
-  --color-p2: #f5a524;
-  --color-p3: #ff6e3a;
-  --color-p4: #ff4646;
+  /* Pressure steps Loose · Balanced · Tight · Severe (p1..p4); slate → ochre → orange → rose, rising in lightness. p0 = p1. */
+  --color-p0: #6d8794;
+  --color-p1: #6d8794;
+  --color-p2: #a88a2e;
+  --color-p3: #f2992e;
+  --color-p4: #ff4d6a;
 
   /* Map pressure glows: same ramp as text in dark mode. */
-  --color-g0: #3a4248;
-  --color-g1: #8a7040;
-  --color-g2: #f5a524;
-  --color-g3: #ff6e3a;
-  --color-g4: #ff4646;
+  --color-g0: #3d5a66;
+  --color-g1: #3d5a66;
+  --color-g2: #9c8236;
+  --color-g3: #f2992e;
+  --color-g4: #ff4d6a;
 }
 
 /* Light mode: flopx paper surfaces (5300 "Paper" blend), truth hues deepened for paper. */
 :root[data-blend='light'] {
-  --font-mono: 'Inter', ui-sans-serif, system-ui, sans-serif;
   color-scheme: light;
 
   --color-ink: #f6f1e8;
@@ -70,25 +84,28 @@
   --color-hover: #f3ede2;
   --color-line: #e6ded1;
   --color-line2: #cfc4b2;
+  --color-line-soft: #efe9df;
   --color-bone: #1e1b16;
   --color-mute: #4b463e;
   --color-dim: #6e675d;
+  --color-act: #c2510c;
 
   --color-obs: #1e1b16;
   --color-inf: #9a5800;
   --color-fct: #00718f;
-  --color-dec: #6a45d6;
+  --color-dec: #173f8a;
 
   --color-up: #17723a;
   --color-down: #b23a0b;
   --color-warn: #836000;
 
   --color-cat1: #2a78d6;
+  --color-open: #2b3e69;
   --color-cat2: #eb6834;
   --color-cat3: #199e70;
   --color-cat4: #a86f00;
   --color-cat5: #c2457a;
-  --color-cat6: #6250d6;
+  --color-cat6: #737a00;
 
   --color-land: #fdfbf7;
   --color-ocean: #efe8dc;
@@ -99,22 +116,22 @@
   --color-label-bg: #ffffff;
   --label-bg-opacity: 0.88;
 
-  --color-p0: #6b6256;
-  --color-p1: #805e12;
-  --color-p2: #9a5100;
+  --color-p0: #5b6f79;
+  --color-p1: #5b6f79;
+  --color-p2: #8f6a00;
   --color-p3: #b23a0b;
-  --color-p4: #a3191b;
+  --color-p4: #7d0d29;
 
   /* Map pressure glows: light, saturated hues; the deep text ramp turns muddy as a translucent wash on paper. */
-  --color-g0: #d8cfc0;
-  --color-g1: #f2c36b;
-  --color-g2: #f59e3d;
-  --color-g3: #ec6a3c;
-  --color-g4: #dc3b3b;
+  --color-g0: #9cb0ba;
+  --color-g1: #9cb0ba;
+  --color-g2: #d1a320;
+  --color-g3: #c2410c;
+  --color-g4: #86102c;
   --glow-core: 0.5;
   --glow-mid: 0.16;
 }
-:root { color-scheme: dark; --glow-core: 0.85; --glow-mid: 0.35; }
+:root { color-scheme: dark; --glow-core: 0.5; --glow-mid: 0.2; }
 
 @layer base {
   html,
@@ -126,24 +143,29 @@
     background: var(--color-ink);
     color: var(--color-bone);
     font-family: var(--font-sans);
-    font-feature-settings: 'cv11', 'tnum';
+    font-feature-settings: 'tnum';
     -webkit-font-smoothing: antialiased;
   }
   .font-serif {
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: -0.02em;
   }
   ::selection {
-    background: color-mix(in oklab, var(--color-fct) 35%, transparent);
+    background: color-mix(in oklab, var(--color-bone) 22%, transparent);
   }
   * {
     scrollbar-width: thin;
     scrollbar-color: var(--color-line2) transparent;
   }
+  /* One neutral focus ring everywhere: 2px outline at 2px offset, no hue, no glow. */
+  :focus-visible {
+    outline: 2px solid var(--color-mute);
+    outline-offset: 2px;
+  }
 }
 
 @layer utilities {
-  /* Slim slider: --pct (set inline) fills the track up to the thumb, in --range-color (cyan by default). */
+  /* Slim slider: --pct (set inline) fills the track up to the thumb, in --range-color (neutral bone by default). */
   .range {
     appearance: none;
     width: 100%;
@@ -154,12 +176,12 @@
   .range::-webkit-slider-runnable-track {
     height: 3px;
     border-radius: 2px;
-    background: linear-gradient(to right, var(--range-color, var(--color-fct)) var(--pct, 0%), var(--color-line2) var(--pct, 0%));
+    background: linear-gradient(to right, var(--range-color, var(--color-bone)) var(--pct, 0%), var(--color-line2) var(--pct, 0%));
   }
   .range::-moz-range-track {
     height: 3px;
     border-radius: 2px;
-    background: linear-gradient(to right, var(--range-color, var(--color-fct)) var(--pct, 0%), var(--color-line2) var(--pct, 0%));
+    background: linear-gradient(to right, var(--range-color, var(--color-bone)) var(--pct, 0%), var(--color-line2) var(--pct, 0%));
   }
   .range::-webkit-slider-thumb {
     appearance: none;
@@ -168,7 +190,7 @@
     margin-top: -4.5px;
     border-radius: 50%;
     background: var(--color-panel);
-    border: 2px solid var(--range-color, var(--color-fct));
+    border: 2px solid var(--range-color, var(--color-bone));
     transition: transform 0.12s;
   }
   .range::-moz-range-thumb {
@@ -176,16 +198,13 @@
     height: 9px;
     border-radius: 50%;
     background: var(--color-panel);
-    border: 2px solid var(--range-color, var(--color-fct));
+    border: 2px solid var(--range-color, var(--color-bone));
   }
-  .range:hover::-webkit-slider-thumb,
-  .range:focus-visible::-webkit-slider-thumb { transform: scale(1.2); }
-  .range:focus-visible { outline: none; }
-  .range:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 3px color-mix(in oklab, var(--range-color, var(--color-fct)) 25%, transparent); }
+  .range:hover::-webkit-slider-thumb { transform: scale(1.2); }
+  .range:focus-visible { outline: 2px solid var(--color-mute); outline-offset: 2px; }
   .num {
     font-family: var(--font-mono);
     font-variant-numeric: tabular-nums;
-    letter-spacing: -0.01em;
   }
   .eyebrow {
     font-size: 11px;
@@ -201,12 +220,6 @@
   .dash-border {
     border-style: dashed;
   }
-  .marquee {
-    animation: marquee 80s linear infinite;
-  }
-  .marquee:hover {
-    animation-play-state: paused;
-  }
   .pulse-dot {
     animation: pulse 2s ease-in-out infinite;
   }
@@ -216,12 +229,31 @@
   .slide-in {
     animation: slidein 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
+  /* Ticker: two copies of the row slide left by one copy's width, so the loop is seamless. Pauses on hover. */
+  .marquee {
+    animation: marquee 80s linear infinite;
+  }
+  .marquee:hover {
+    animation-play-state: paused;
+  }
 }
 
+/* Walkthrough spotlight: a ring that breathes outward, and the headline figure popping in. */
+.spot-pulse { animation: spotpulse 1.6s ease-out infinite; }
+.pop-in { animation: popin 0.35s cubic-bezier(0.2, 0.8, 0.2, 1.4) 0.2s both; }
+@keyframes spotpulse {
+  from { opacity: 0.7; transform: scale(1); }
+  to { opacity: 0; transform: scale(1.025); }
+}
+@keyframes popin {
+  from { opacity: 0; transform: translateY(6px) scale(0.85); }
+  to { opacity: 1; transform: none; }
+}
 @keyframes marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
 }
+
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.35; }
@@ -235,7 +267,7 @@
   to { opacity: 1; transform: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .marquee, .pulse-dot, .fade-in, .slide-in { animation: none; }
+  .marquee, .pulse-dot, .fade-in, .slide-in, .spot-pulse, .pop-in { animation: none; }
 }
 
 /* ---------------- Presenter tour (src/tour) ----------------
@@ -312,3 +344,11 @@ html[data-tour] #main-scroll > :last-child { padding-bottom: 96px; }
   .tour-bar { width: var(--w); }
   .tour-flow-arrow { transform: none; }
 }
+/* MapLibre controls in the app's tokens (its stylesheet is unlayered, so these are too). */
+.flopx-map.maplibregl-map { font: 10px/16px var(--font-sans, sans-serif); background: transparent; }
+.flopx-map .maplibregl-ctrl-attrib,
+.flopx-map .maplibregl-ctrl-attrib.maplibregl-compact { background: color-mix(in oklab, var(--color-panel) 88%, transparent); color: var(--color-dim); border: 1px solid var(--color-line2); border-radius: 3px; }
+.flopx-map .maplibregl-ctrl-attrib a { color: var(--color-mute); }
+.flopx-map .maplibregl-ctrl-attrib-button { filter: invert(var(--map-icon-invert, 0.6)); opacity: 0.7; }
+:root[data-blend='light'] .flopx-map .maplibregl-ctrl-attrib-button { filter: none; }
+.flopx-map .maplibregl-cooperative-gesture-screen { background: color-mix(in oklab, var(--color-ink) 70%, transparent); color: var(--color-bone); font-size: 13px; }

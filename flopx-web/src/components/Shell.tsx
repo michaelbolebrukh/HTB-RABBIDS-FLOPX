@@ -6,12 +6,19 @@ import { closeBadgeOf, W2_LIVE, type CloseBadge } from '@/live/adapt-w2'
 import { ENERGY } from '@/data/infra'
 import { chg, last, SECURITIES } from '@/data/finance'
 import { useStore, type PageId } from '@/lib/store'
+import { collapse, panelKey, useCollapsed } from '@/lib/layout'
 import { cx, Delta, Fresh, TruthGlyph } from './ui'
+import { EdgeToggle, useMinWidth } from './collapse'
+import { BlendSwitcher } from './BlendSwitcher'
+import { ChartStyleMenu } from './ChartStyleMenu'
+import { MapSchemeMenu } from './MapSchemeMenu'
+import { SNAPSHOT } from '@/data/handoff'
 import { start as startTour } from '@/tour/model'
 import { TOUR_IDS, TOURS } from '@/tour/tours'
 import { AuthControl } from './SignIn'
 
 export const NAV: { section: string; items: { id: PageId; label: string; icon: ReactNode; tag?: string }[] }[] = [
+  { section: 'Brief', items: [{ id: 'overview', label: 'Global Intelligence', icon: <LayoutDashboard size={15} /> }] },
   {
     section: 'Compute & Intelligence',
     items: [
@@ -21,7 +28,6 @@ export const NAV: { section: string; items: { id: PageId; label: string; icon: R
       { id: 'xray', label: 'Compute X-Ray', icon: <ScanLine size={15} />, tag: 'G-R' },
     ],
   },
-  { section: 'Brief', items: [{ id: 'overview', label: 'Global Intelligence', icon: <LayoutDashboard size={15} /> }] },
   { section: 'Agents', items: [{ id: 'agents', label: 'Agent Desk', icon: <Bot size={15} />, tag: 'MV' }] },
   {
     section: 'Coverage',
@@ -37,46 +43,62 @@ export const NAV: { section: string; items: { id: PageId; label: string; icon: R
   { section: 'System', items: [{ id: 'handoff', label: 'Truth System & States', icon: <BookOpen size={15} /> }] },
 ]
 
+function LogoMark() {
+  return (
+    <div className="grid grid-cols-2 gap-[2px]">
+      <span className="size-[7px] bg-obs" />
+      <span className="size-[7px] border border-inf hatch-inf" />
+      <span className="size-[7px] rounded-full border border-dashed border-fct" />
+      <span className="size-[7px] rotate-45 scale-75 bg-dec" />
+    </div>
+  )
+}
+
 export function Logo() {
   return (
     <div className="flex items-center gap-2.5">
-      <div className="grid grid-cols-2 gap-[2px]">
-        <span className="size-[7px] bg-obs" />
-        <span className="size-[7px] border border-inf hatch-inf" />
-        <span className="size-[7px] rounded-full border border-dashed border-fct" />
-        <span className="size-[7px] rotate-45 scale-75 bg-dec" />
-      </div>
-      <span className="font-mono text-[15px] font-semibold tracking-[0.2em] text-bone">FLOPX</span>
+      <LogoMark />
+      <span className="text-[15px] font-bold tracking-[-0.01em] text-bone">FLOPX</span>
     </div>
   )
 }
 
 export function Sidebar() {
   const { route, navigate, tour, setTour, marketOpen, marketOverridden, marketLabel, toggleMarket } = useStore()
+  // Folded, the sidebar keeps an icon rail so every page stays one click away. On phone widths it starts
+  // folded for the session, so the page keeps its width; the saved choice applies on wider screens.
+  const wide = useMinWidth('48rem')
+  const [phoneOpen, setPhoneOpen] = useState(false)
+  const saved = !useCollapsed().includes(panelKey('shell', 'sidebar'))
+  const open = wide ? saved : phoneOpen
+  const toggle = () => (wide ? collapse.toggle('shell', 'sidebar') : setPhoneOpen((o) => !o))
   return (
-    <aside data-chrome className="flex w-[216px] shrink-0 flex-col border-r border-line bg-ink text-bone">
-      <div className="flex h-12 items-center border-b border-line px-4">
-        <Logo />
+    <aside data-chrome className={cx('relative flex shrink-0 flex-col border-r border-line bg-ink text-bone transition-[width] duration-300 ease-out motion-reduce:transition-none', open ? 'w-[216px]' : 'w-[52px]')}>
+      <EdgeToggle edge="right" open={open} rail label="sidebar" onClick={toggle} />
+      <div className="flex h-12 items-center overflow-hidden border-b border-line px-4">
+        {open ? <Logo /> : <div className="-ml-0.5"><LogoMark /></div>}
       </div>
-      <nav className="flex-1 overflow-y-auto px-2 py-3">
+      <nav className="flex-1 overflow-x-hidden overflow-y-auto px-2 py-3">
         {NAV.map((s) => (
-          <div key={s.section} className="mb-4">
-            <div className="eyebrow px-2 pb-1.5">{s.section}</div>
+          <div key={s.section} className={open ? 'mb-4' : 'mb-2 border-b border-line pb-2 last:border-0'}>
+            {open && <div className="eyebrow px-2 pb-1.5 whitespace-nowrap">{s.section}</div>}
             {s.items.map((it) => (
               <button
                 key={it.id}
                 onClick={() => navigate(it.id)}
-                className={cx('group flex w-full cursor-pointer items-center gap-2.5 rounded-[4px] px-2 py-[7px] text-left text-[12.5px] transition-colors', route.page === it.id ? 'bg-raise text-bone' : 'text-mute hover:bg-panel hover:text-bone')}
+                title={open ? undefined : it.label}
+                aria-label={it.label}
+                className={cx('group flex w-full cursor-pointer items-center gap-2.5 rounded-ctl px-2 py-[7px] text-left text-[12.5px] whitespace-nowrap transition-colors', open ? '' : 'justify-center', route.page === it.id ? 'bg-raise text-bone' : 'text-mute hover:bg-panel hover:text-bone')}
               >
                 <span className={cx(route.page === it.id ? 'text-bone' : 'text-dim group-hover:text-mute')}>{it.icon}</span>
-                <span className="flex-1">{it.label}</span>
-                {it.tag && <span className="rounded-[2px] border border-line2 px-1 font-mono text-[8.5px] tracking-wider text-dim">{it.tag}</span>}
+                {open && <span className="flex-1">{it.label}</span>}
+                {open && it.tag && <span className="rounded-badge border border-line2 px-1 text-[9px] font-medium tracking-wide text-dim">{it.tag}</span>}
               </button>
             ))}
           </div>
         ))}
       </nav>
-      <div className="border-t border-line p-3">
+      <div inert={!open} className={cx('border-t border-line px-2 py-3', !open && 'hidden')}>
         <div className="eyebrow px-2 pb-1.5">Demo walkthroughs</div>
         {TOUR_IDS.map((id) => {
           const t = TOURS[id]
@@ -84,7 +106,7 @@ export function Sidebar() {
           return (
             <button key={id} onClick={() => setTour(on ? null : startTour(id))} title={`${t.audience}. ${t.thesis}`}
               aria-current={on ? 'true' : undefined}
-              className={cx('flex w-full cursor-pointer items-center gap-2.5 rounded-[4px] px-2 py-[6px] text-left text-[12.5px] transition-colors', on ? 'bg-raise text-bone' : 'text-mute hover:bg-panel hover:text-bone')}>
+              className={cx('flex w-full cursor-pointer items-center gap-2.5 rounded-ctl px-2 py-[6px] text-left text-[12.5px] transition-colors', on ? 'bg-raise text-bone' : 'text-mute hover:bg-panel hover:text-bone')}>
               <span aria-hidden className={cx('size-[7px] shrink-0 rounded-[1.5px] bg-current', t.tone === 'inf' ? 'text-inf' : t.tone === 'dec' ? 'text-dec' : 'text-fct')} />
               <span className="flex-1 truncate">{t.name}</span>
               <span className="text-[11px] text-dim tabular-nums">{on ? `${tour!.beat + 1}/${t.beats.length}` : `${t.beats.length} beats`}</span>
@@ -92,7 +114,7 @@ export function Sidebar() {
           )
         })}
         <button onClick={toggleMarket} title={`NYSE ${marketLabel}. Demo control: click to override the clock${marketOverridden ? ' (override on; click again to return to the clock)' : ''}`}
-          className="mt-2 flex w-full cursor-pointer items-center justify-between border-t border-line px-2 pt-2.5 text-[12px] text-mute hover:text-bone">
+          className="mt-3 flex w-full cursor-pointer items-center justify-between rounded-ctl px-2 py-1 text-[12px] text-mute hover:bg-panel hover:text-bone">
           <span>US equities{marketOverridden && <span className="ml-1 font-mono text-[9.5px] text-warn">override</span>}</span>
           <span className="flex items-center gap-1.5 text-[11.5px]">
             <span aria-hidden className={cx('size-1.5 rounded-full', marketOpen ? 'bg-up' : 'bg-dim')} />
@@ -114,8 +136,9 @@ function Clock() {
   const day = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'UTC' })
   const time = now.toLocaleTimeString('en-GB', { hour12: false, timeZone: 'UTC' })
   return (
-    <span className="flex items-baseline gap-1.5 text-[11px] whitespace-nowrap">
-      <span className="text-dim">{day}</span>
+    <span className="flex items-baseline gap-1.5 text-[11px] whitespace-nowrap" title="Current time, UTC. Data timestamps are on each panel and on the ticker.">
+      <span className="text-dim">Now</span>
+      <span className="text-mute">{day}</span>
       <span className="num text-bone">{time}</span>
       <span className="text-dim">UTC</span>
     </span>
@@ -126,10 +149,10 @@ export function Topbar() {
   const { setPalette, ask, trail, inspect, setTrail } = useStore()
   return (
     <header data-chrome className="flex h-12 shrink-0 items-center gap-3 border-b border-line bg-ink px-4 text-bone">
-      <button onClick={() => setPalette(true)} className="flex h-8 w-[340px] cursor-pointer items-center gap-2 rounded-[5px] border border-line bg-panel px-2.5 text-left text-[12px] text-dim hover:border-line2">
+      <button onClick={() => setPalette(true)} className="flex h-8 w-[340px] min-w-[180px] shrink cursor-pointer items-center gap-2 rounded-ctl border border-line bg-panel px-2.5 text-left text-[12px] text-dim transition-colors duration-[120ms] hover:border-line2">
         <Search size={13} />
         <span className="flex-1 truncate">Region, GPU, provider, project, ticker, theme…</span>
-        <span className="flex items-center gap-0.5 rounded-[3px] border border-line2 px-1 font-mono text-[9.5px]"><Command size={9} />K</span>
+        <span className="flex items-center gap-0.5 rounded-badge border border-line2 px-1 text-[10.5px]"><Command size={10} />K</span>
       </button>
       {trail.length > 0 && (
         <div className="flex min-w-0 flex-1 items-center gap-1 overflow-hidden">
@@ -137,17 +160,23 @@ export function Topbar() {
           {trail.map((t, i) => (
             <span key={`${t.kind}-${t.id}`} className="flex shrink-0 items-center gap-1">
               {i > 0 && <ChevronRight size={11} className="text-dim" />}
-              <button onClick={() => inspect(t)} className="max-w-[140px] cursor-pointer truncate rounded-[3px] border border-line px-1.5 py-0.5 font-mono text-[10.5px] text-mute hover:border-line2 hover:text-bone">{t.label}</button>
+              <button onClick={() => inspect(t)} className="max-w-[140px] cursor-pointer truncate rounded-ctl border border-line px-1.5 py-0.5 text-[11px] text-mute hover:border-line2 hover:text-bone">{t.label}</button>
             </span>
           ))}
           <button onClick={() => setTrail([])} title="Clear trail" className="ml-1 cursor-pointer text-dim hover:text-bone"><X size={12} /></button>
         </div>
       )}
       {trail.length === 0 && <div className="flex-1" />}
-      <span className="hidden text-[11px] whitespace-nowrap text-dim xl:inline" title="Numbers marked as a snapshot come from the FLOPX engine build; everything else is labelled illustrative. Trades are simulated.">Real data where marked · paper trading only</span>
+      <span className="hidden items-baseline gap-1.5 text-[11px] whitespace-nowrap xl:flex" title={`Numbers marked as a snapshot come from the ${SNAPSHOT.label}; everything else is labelled illustrative. Trades are simulated (paper trading only).`}>
+        <span className="text-dim">Engine snapshot</span>
+        <span className="text-mute">{SNAPSHOT.short.replace(/^Snapshot /, '')}</span>
+      </span>
       <span aria-hidden className="hidden h-4 w-px bg-line xl:block" />
       <Clock />
       <span aria-hidden className="h-4 w-px bg-line" />
+      <ChartStyleMenu />
+      <MapSchemeMenu />
+      <BlendSwitcher />
       <AuthControl />
       <Btn onClick={() => ask()} />
     </header>
@@ -156,7 +185,7 @@ export function Topbar() {
 
 function Btn({ onClick }: { onClick: () => void }) {
   return (
-    <button onClick={onClick} className="flex h-8 cursor-pointer items-center gap-1.5 rounded-[5px] bg-accent px-3 text-[12px] font-semibold text-ink transition-[filter] hover:brightness-110">
+    <button onClick={onClick} className="flex h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-ctl border border-line2 bg-raise px-3 text-[12px] font-medium text-bone transition-colors duration-[120ms] hover:bg-hover">
       <MessageSquareText size={13} /> Ask FLOPX
     </button>
   )
@@ -212,12 +241,12 @@ export function Ticker() {
   const row = (k: string) => (
     <div key={k} className="flex shrink-0 items-center">
       {items.map((it) => (
-        <button key={k + it.label} onClick={it.onClick} title={it.title} className="flex cursor-pointer items-center gap-2 border-r border-line px-4 font-mono text-[10.5px] hover:bg-panel">
+        <button key={k + it.label} onClick={it.onClick} title={it.title} className="flex h-7 shrink-0 cursor-pointer items-center gap-2 border-r border-line-soft px-3.5 text-[11px] whitespace-nowrap hover:bg-panel">
           <TruthGlyph truth={it.truth} size={6} />
-          <span className="text-dim">{it.label}</span>
-          <span className="text-bone">{it.value}</span>
-          {it.d == null || !Number.isFinite(it.d) ? <span className="num text-[10px] text-dim">n/a</span> : <Delta v={it.d} d={it.suffix ? 1 : 2} suffix={it.suffix ?? '%'} className="text-[10px]" />}
-          {it.note && <span className="text-[9px] text-dim">{it.note}</span>}
+          <span className="text-mute">{it.label}</span>
+          <span className="num text-bone">{it.value}</span>
+          {it.d == null || !Number.isFinite(it.d) ? <span className="num text-[10.5px] text-dim">n/a</span> : <Delta v={it.d} d={it.suffix ? 1 : 2} suffix={it.suffix ?? '%'} className="text-[10.5px]" />}
+          {it.note && <span className="text-[10px] text-dim">{it.note}</span>}
           {it.badge ? <Fresh f={it.badge.f} label={it.badge.label} quiet /> : it.fresh === 'illustrative' && <Fresh f="illustrative" label="Illus." quiet />}
         </button>
       ))}
@@ -225,11 +254,13 @@ export function Ticker() {
   )
   return (
     <div data-chrome className="relative flex h-7 shrink-0 items-center overflow-hidden border-b border-line bg-ink text-bone">
-      <div className="z-10 flex h-full shrink-0 items-center gap-1.5 border-r border-line bg-ink px-3 font-mono text-[9.5px] tracking-wider text-dim" title={gpu.status === 'failed' ? `FLOPX backend unreachable (${gpu.error ?? 'error'}); values are illustrative` : undefined}>
+      <div className="z-10 flex h-full shrink-0 items-center gap-1.5 border-r border-line bg-ink px-3 text-[11px] whitespace-nowrap text-dim" title={gpu.status === 'failed' ? `FLOPX backend unreachable (${gpu.error ?? 'error'}); values are illustrative` : undefined}>
         <span className={cx('size-1.5 rounded-full', gpu.status === 'live' ? 'bg-up' : gpu.status === 'failed' ? 'bg-down' : 'bg-warn')} />{' '}
-        {gpu.status === 'live' ? `FLOPX FEED · ${AS_OF.replace(' UTC', '')} UTC` : gpu.status === 'failed' ? 'FEED UNAVAILABLE · ILLUSTRATIVE' : `CONNECTING · ${AS_OF.split(' ').slice(0, 3).join(' ')}`}
+        {gpu.status === 'live' ? <><span>FLOPX feed</span><span className="text-mute">{AS_OF.replace(' UTC', '')} UTC</span></> : gpu.status === 'failed' ? <span>Feed unavailable <span className="text-mute">· illustrative</span></span> : <><span>Connecting</span><span className="text-mute">{AS_OF.split(' ').slice(0, 3).join(' ')}</span></>}
       </div>
-      <div className="marquee flex w-max">{row('a')}{row('b')}</div>
+      <div className="min-w-0 flex-1 overflow-hidden">
+        <div className="marquee flex w-max">{row('a')}{row('b')}</div>
+      </div>
     </div>
   )
 }
@@ -239,7 +270,7 @@ export function Toasts() {
   return (
     <div className="pointer-events-none fixed bottom-4 left-1/2 z-[80] flex -translate-x-1/2 flex-col items-center gap-2">
       {toasts.map((t) => (
-        <div key={t.id} className={cx('fade-in rounded-[5px] border bg-ink/95 px-3.5 py-2 font-mono text-[11.5px] shadow-2xl backdrop-blur', t.tone === 'ok' && 'border-up/40 text-up', t.tone === 'bad' && 'border-down/40 text-down', t.tone === 'warn' && 'border-warn/40 text-warn', t.tone === 'info' && 'border-line2 text-bone')}>
+        <div key={t.id} className={cx('fade-in rounded-ctl border bg-raise px-3.5 py-2 text-[12px] shadow-2xl', t.tone === 'ok' && 'border-up/40 text-up', t.tone === 'bad' && 'border-down/40 text-down', t.tone === 'warn' && 'border-warn/40 text-warn', t.tone === 'info' && 'border-line2 text-bone')}>
           {t.text}
         </div>
       ))}

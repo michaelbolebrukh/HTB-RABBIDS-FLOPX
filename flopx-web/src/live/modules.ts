@@ -8,6 +8,7 @@ import { financeModule, signalModule } from './adapt-w2'
 import { w3Modules } from './adapt-w3'
 import { procureModule } from './adapt-w5'
 import { accountModule } from './account'
+import { strategiesModule } from './strategies'
 
 export const LIVE_MODULES: LiveModule[] = [
   gpuModule,
@@ -17,4 +18,5 @@ export const LIVE_MODULES: LiveModule[] = [
   procureModule,
   signalModule,
   accountModule,
+  strategiesModule,
 ]

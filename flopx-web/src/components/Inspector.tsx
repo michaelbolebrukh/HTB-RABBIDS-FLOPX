@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { ArrowUpRight, Bot, X } from 'lucide-react'
+import { ArrowUpRight, MessageSquareText, X } from 'lucide-react'
 import { fmtPct, fmtReliability, GPUS, gpuById, horizonLabel, MONTHS, NOW_IDX, OFFERS, providerById, regionById, REGIONS, type EntityKind } from '@/data/core'
 import { offerRegionShort } from '@/live/gpu'
 import { energyById, PROJECTS, projectById } from '@/data/infra'
@@ -62,7 +62,7 @@ export function Inspector() {
         </div>
         <Spark values={r.pressure} width={392} height={44} color="var(--color-inf)" dashedFrom={NOW_IDX} className="mb-4" />
         <Chain steps={[
-          { label: 'Physical infrastructure', truth: 'obs', children: <>{projects.length ? projects.map((x) => <div key={x.id} className="flex justify-between"><EntityLink r={ref('project', x.id, x.name)} /><span className="font-mono text-[10.5px] text-mute">{x.stage} · {x.reportedMW} MW</span></div>) : <span className="text-mute">No tracked projects</span>}<div className="text-[11px] text-dim">{r.opMW.toLocaleString()} MW operational · {r.conMW.toLocaleString()} MW construction (reported)</div></> },
+          { label: 'Physical infrastructure', truth: 'obs', children: <>{projects.length ? projects.map((x) => <div key={x.id} className="flex justify-between"><EntityLink r={ref('project', x.id, x.name)} /><span className="text-[11px] text-mute">{x.stage} · <span className="num">{x.reportedMW} MW</span></span></div>) : <span className="text-mute">No tracked projects</span>}<div className="text-[11px] text-dim">{r.opMW.toLocaleString()} MW operational · {r.conMW.toLocaleString()} MW construction (reported)</div></> },
           { label: 'Compute economics', truth: 'obs', children: <><div className="flex justify-between"><span>H100 median on-demand</span><span className="num">${r.h100.toFixed(2)} <Delta v={r.h100Chg} /></span></div><div className="flex justify-between"><span>Premium vs global</span><span className="num">{fmtPct(r.premium, 0)}</span></div>{r.power > 0 && <div className="flex justify-between"><span>Power (<EntityLink r={ref('energy', r.grid, r.grid.toUpperCase())} />)</span><span className="num">${r.power}/MWh</span></div>}</> },
           { label: 'Affected companies', children: <>{r.documented.map((d) => <div key={d.t} className="flex items-start gap-2"><span className="mt-1.5 inline-block h-px w-3 bg-bone" title="Documented tie" /><div><EntityLink r={ref('security', d.t, d.t)} className="font-mono" /> <span className="text-mute">— {d.tie}</span><div><Source source={d.source} /></div></div></div>)}{r.sensitivities.map((s) => <div key={s.t} className="flex items-start gap-2"><span className="mt-1.5 inline-block h-px w-3 border-t border-dashed border-inf" title="Modelled sensitivity" /><div><EntityLink r={ref('security', s.t, s.t)} className="font-mono" /> <span className="text-mute">— modelled β {s.beta} (R² {s.r2}) · estimated association, not proven cause</span></div></div>)}{!r.documented.length && !r.sensitivities.length && <span className="text-mute">No documented or modelled exposure</span>}</> },
           { label: 'Forecasts & signals', truth: 'fct', children: sigs.length ? sigs.map((s) => <div key={s.id} className="flex items-center justify-between"><EntityLink r={ref('signal', s.id, s.name)} /><Validation s={s.horizons['1M'].status} /></div>) : <span className="text-mute">No strategy signals use this region</span> },
@@ -70,7 +70,7 @@ export function Inspector() {
         ]} />
       </>
     )
-    actions = <><Btn variant="primary" size="sm" onClick={() => { setXray({ region: r.id, tab: 'brief' }); navigate('xray'); setInspector(null) }}>Open in X-Ray <ArrowUpRight size={12} /></Btn><Btn size="sm" onClick={() => ask(`Why is compute pressure ${pressureWord(p).toLowerCase()} in ${r.name}?`)}><Bot size={12} /> Ask</Btn></>
+    actions = <><Btn variant="primary" size="sm" onClick={() => { setXray({ region: r.id, tab: 'brief' }); navigate('xray'); setInspector(null) }}>Open in X-Ray <ArrowUpRight size={12} /></Btn><Btn size="sm" onClick={() => ask(`Why is compute pressure ${pressureWord(p).toLowerCase()} in ${r.name}?`)}><MessageSquareText size={12} /> Ask</Btn></>
   } else if (kind === 'gpu') {
     const g = gpuById(id)!
     const offers = OFFERS.filter((o) => o.gpu === g.id).sort((a, b) => a.price - b.price)
@@ -178,7 +178,7 @@ export function Inspector() {
         </div>
       </>
     )
-    actions = <><Btn variant="primary" size="sm" onClick={() => { navigate('securities', { t: s.ticker }); setInspector(null) }}>Research</Btn>{s.group !== 'Index' && <Btn variant="decision" size="sm" onClick={() => setTicket({ ticker: s.ticker })}>Trade</Btn>}<Btn size="sm" onClick={() => ask(`What compute exposure does ${s.ticker} have?`)}><Bot size={12} /></Btn></>
+    actions = <><Btn variant="primary" size="sm" onClick={() => { navigate('securities', { t: s.ticker }); setInspector(null) }}>Research</Btn>{s.group !== 'Index' && <Btn variant="decision" size="sm" onClick={() => setTicket({ ticker: s.ticker })}>Trade</Btn>}<Btn size="sm" onClick={() => ask(`What compute exposure does ${s.ticker} have?`)}><MessageSquareText size={12} /> Ask</Btn></>
   } else if (kind === 'basket') {
     const b = BASKETS.find((x) => x.id === id)!
     const sr = basketSeries(b)
@@ -222,7 +222,7 @@ export function Inspector() {
     sub = n ? `${n.type} · ${n.source}` : pm?.venue
     body = n ? (
       <>
-        <div className="mb-2 flex gap-2"><span className="rounded-[3px] border border-line2 px-1.5 font-mono text-[9.5px] text-mute">{n.verification}</span><Source source={n.time} /></div>
+        <div className="mb-2 flex gap-2"><span className="text-[11px] text-mute">{n.verification}</span><Source source={n.time} /></div>
         <p className="mb-4 text-[12.5px] leading-relaxed">{n.summary}</p>
         <div className="text-[12px]">Regions: {n.regions.map((r) => <EntityLink key={r} r={ref('region', r, regionById(r)!.short)} className="mr-2" />)}</div>
         <div className="text-[12px]">Assets: {n.tickers.map((t) => <EntityLink key={t} r={ref('security', t, t)} className="mr-2 font-mono" />)}</div>
@@ -248,8 +248,8 @@ export function Inspector() {
       <header className="flex items-start justify-between gap-3 border-b border-line px-5 py-4">
         <div className="min-w-0">
           <div className="eyebrow mb-1">{KIND_LABEL[kind]}</div>
-          <h2 className="font-serif text-[24px] leading-tight text-bone">{title}</h2>
-          {sub && <div className="mt-1 font-mono text-[10.5px] text-dim">{sub}</div>}
+          <h2 className="text-[20px] leading-tight font-semibold tracking-tight text-bone">{title}</h2>
+          {sub && <div className="mt-1 text-[11px] text-dim">{sub}</div>}
         </div>
         <button onClick={() => setInspector(null)} className="cursor-pointer rounded p-1 text-dim hover:bg-hover hover:text-bone" aria-label="Close inspector"><X size={16} /></button>
       </header>
@@ -264,7 +264,7 @@ export function Stat({ label, value, sub, truth }: { label: string; value: React
     <div className={cx('rounded-md border p-2.5', truth === 'inf' ? 'border-inf/25' : truth === 'fct' ? 'border-fct/25 border-dashed' : truth === 'dec' ? 'border-dec/25' : 'border-line')}>
       <div className="flex items-center gap-1.5 text-[11px] text-dim font-medium">{truth && <TruthGlyph truth={truth} size={7} />}{label}</div>
       <div className="num mt-1 text-[15px] text-bone">{value}</div>
-      {sub && <div className="mt-0.5 font-mono text-[9.5px] text-dim">{sub}</div>}
+      {sub && <div className="mt-0.5 text-[11px] text-dim">{sub}</div>}
     </div>
   )
 }
@@ -279,7 +279,7 @@ export function Timeline({ p }: { p: (typeof PROJECTS)[number] }) {
             <span className={cx('mt-1 size-2.5 rounded-full border', m.status === 'done' && 'border-bone bg-bone', m.status === 'pending' && 'border-mute', m.status === 'slipped' && 'border-down bg-down/40', m.status === 'at-risk' && 'border-warn border-dashed')} />
             <div>
               <div className="text-[12px] text-bone">{m.label}</div>
-              {m.originally && <div className="font-mono text-[10px] text-down">slipped from {m.originally}</div>}
+              {m.originally && <div className="text-[11px] text-down">slipped from {m.originally}</div>}
               {m.source && <Source source={m.source} />}
             </div>
             <span className={cx('font-mono text-[10.5px]', m.status === 'slipped' ? 'text-down' : m.status === 'at-risk' ? 'text-warn' : 'text-mute')}>{m.date}</span>

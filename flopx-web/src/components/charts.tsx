@@ -186,7 +186,7 @@ export function TimeChart({
       {legend && (
         <div className="mb-2 flex flex-wrap gap-x-4 gap-y-1">
           {series.filter((s) => s.label).map((s) => (
-            <span key={s.id} className="flex items-center gap-1.5 font-mono text-[10px] text-mute">
+            <span key={s.id} className="flex items-center gap-1.5 text-[11px] text-mute">
               <svg width="16" height="6">{s.points ? <circle cx="8" cy="3" r="2.6" fill={s.color} /> : <line x1="0" y1="3" x2="16" y2="3" stroke={s.color} strokeWidth={s.width ?? 1.5} strokeDasharray={s.style === 'dashed' ? '4 3' : s.style === 'dotted' ? '1 2.5' : undefined} />}</svg>
               {s.label}
             </span>
@@ -334,14 +334,13 @@ export function Distribution({ p10, mean, p90, unit = '%', height = 110, color =
     const sd = x < mean ? sdL : sdR
     return { x, y: Math.exp(-0.5 * ((x - mean) / sd) ** 2) }
   })
-  const pad = { l: 8, r: 8, t: 16, b: 20 }
+  const pad = { l: 14, r: 14, t: 20, b: 22 }
   const sx = (x: number) => pad.l + ((x - lo) / (hi - lo)) * (w - pad.l - pad.r)
   const sy = (y: number) => height - pad.b - y * (height - pad.t - pad.b)
   const lineGen = d3line<{ x: number; y: number }>().x((p) => sx(p.x)).y((p) => sy(p.y)).curve(cs.curveFactory)
   const areaGen = d3area<{ x: number; y: number }>().x((p) => sx(p.x)).y0(sy(0)).y1((p) => sy(p.y)).curve(cs.curveFactory)
   const inner = pts.filter((p) => p.x >= p10 && p.x <= p90)
   const d = lineGen(pts) ?? ''
-  const dAll = areaGen(pts) ?? ''
   const dIn = inner.length ? areaGen(inner) ?? '' : ''
   const pctNeg = (() => {
     // probability mass below zero (approx)
@@ -350,22 +349,40 @@ export function Distribution({ p10, mean, p90, unit = '%', height = 110, color =
     return Math.round((below / tot) * 100)
   })()
   const f = (v: number) => `${v > 0 ? '+' : ''}${v.toFixed(1)}${unit}`
+  const fTick = (v: number) => (v === 0 ? '0' : `${v > 0 ? '+' : ''}${+v.toFixed(1)}${unit}`)
+  // Same axis treatment as TimeChart: round-number ticks, dashed grid, solid baseline.
+  const xt = niceTicks(lo, hi, Math.max(3, Math.round((w / 90) * cs.tickScale))).filter((v) => v >= lo && v <= hi)
+  const gridY = [0.33, 0.66, 1]
+  const gid = useMemo(() => `d${Math.random().toString(36).slice(2, 8)}`, [])
+  const tagW = f(mean).length * 6.4 + 10
   return (
     <div ref={ref} className="w-full">
+      <div className="mb-2 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-mute">
+        <span className="flex items-center gap-1.5"><svg width="16" height="6"><line x1="0" y1="3" x2="16" y2="3" stroke={color} strokeWidth={1.5} /></svg>{label ?? 'Forecast distribution'}</span>
+        <span className="flex items-center gap-1.5"><span className="h-2 w-3 rounded-[1px] border border-dashed" style={{ background: `color-mix(in srgb, ${color} 13%, transparent)`, borderColor: `color-mix(in srgb, ${color} 40%, transparent)` }} />p10–p90</span>
+      </div>
       <svg width={w} height={height}>
-        <path d={dAll} fill={color} fillOpacity={0.06} style={{ transition: cs.transition }} />
-        <path d={dIn} fill={color} fillOpacity={0.18} style={{ transition: cs.transition }} />
-        <path d={d} fill="none" stroke={color} strokeWidth={1.4 * cs.strokeScale} strokeDasharray="4 3" style={{ transition: cs.transition }} />
-        <line x1={sx(0)} x2={sx(0)} y1={pad.t - 4} y2={height - pad.b} stroke="var(--color-mute)" strokeOpacity={0.7} />
-        <text x={sx(0)} y={pad.t - 6} textAnchor="middle" className={`fill-mute ${cs.fontClass}`} fontSize={9}>0</text>
-        <line x1={sx(mean)} x2={sx(mean)} y1={sy(1)} y2={height - pad.b} stroke={color} strokeWidth={1.5} />
-        <text x={sx(mean)} y={sy(1) - 4} textAnchor="middle" className={cs.fontClass} fill={color} fontSize={10} fontWeight={600}>{f(mean)}</text>
-        <text x={sx(p10)} y={height - 6} textAnchor="middle" className={`fill-mute ${cs.fontClass}`} fontSize={9.5}>p10 {f(p10)}</text>
-        <text x={sx(p90)} y={height - 6} textAnchor="middle" className={`fill-mute ${cs.fontClass}`} fontSize={9.5}>p90 {f(p90)}</text>
+        <defs>
+          <linearGradient id={`${gid}-g`} x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stopColor={color} stopOpacity="0.22" />
+            <stop offset="100%" stopColor={color} stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        {cs.grid !== 'none' && gridY.map((g) => <line key={g} x1={pad.l} x2={w - pad.r} y1={sy(g)} y2={sy(g)} stroke="var(--color-line)" strokeDasharray="2 4" />)}
+        {cs.grid === 'xy' && xt.map((v) => <line key={`vx-${v}`} x1={sx(v)} x2={sx(v)} y1={pad.t} y2={sy(0)} stroke="var(--color-line)" strokeOpacity={0.5} />)}
+        <path d={areaGen(pts) ?? ''} fill={`url(#${gid}-g)`} style={{ transition: cs.transition }} />
+        <path d={dIn} fill={color} fillOpacity={0.13} stroke={color} strokeOpacity={0.25} strokeDasharray="2 3" style={{ transition: cs.transition }} />
+        <line x1={pad.l} x2={w - pad.r} y1={sy(0)} y2={sy(0)} stroke="var(--color-line)" />
+        <line x1={sx(0)} x2={sx(0)} y1={pad.t} y2={sy(0)} stroke="var(--color-mute)" strokeOpacity={0.5} />
+        <path d={d} fill="none" stroke={color} strokeWidth={1.6 * cs.strokeScale} strokeLinejoin="round" strokeLinecap="round" style={{ transition: cs.transition }} />
+        <line x1={sx(mean)} x2={sx(mean)} y1={pad.t - 6} y2={sy(0)} stroke="var(--color-bone)" strokeOpacity={0.6} />
+        <rect x={sx(mean) - tagW / 2} y={0} width={tagW} height={14} rx={2} fill="var(--color-bone)" />
+        <text x={sx(mean)} y={10} textAnchor="middle" className={`fill-ink ${cs.fontClass}`} fontSize={10} fontWeight={600}>{f(mean)}</text>
+        {xt.map((v) => <text key={v} x={sx(v)} y={height - 6} textAnchor="middle" className={`fill-dim ${cs.fontClass}`} fontSize={9.5}>{fTick(v)}</text>)}
       </svg>
-      <div className="mt-1 flex justify-between font-mono text-[10px] text-dim">
-        <span>{label ?? 'Forecast distribution'}</span>
-        <span>P(loss) ≈ {pctNeg}%</span>
+      <div className="mt-1.5 flex justify-between text-[11px] text-dim">
+        <span className="num">p10 {f(p10)} · p90 {f(p90)}</span>
+        <span>P(loss) <span className="num text-mute">≈ {pctNeg}%</span></span>
       </div>
     </div>
   )

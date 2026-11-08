@@ -1,11 +1,11 @@
 // Layer 1 panels (labs): what each lab lists, closed vs open, cheapest way into a tier, newest releases.
 import { useState, type ReactNode } from 'react'
 import { scaleLog } from 'd3-scale'
-import { Panel, Seg, TruthTag, cx } from '@/components/ui'
+import { Fn, Panel, Seg, TruthTag, cx } from '@/components/ui'
 import { beeswarm, useWidth } from '@/components/charts'
 import { useChartStyle } from '@/lib/chartStyle'
 import { TIERS, bits, bitsLabel, blended, closedVsOpen, labLadder, median, standardLive, tierModels, type EndpointRow, type Model } from '@/lib/tokenmarket'
-import { CLOSED, OPEN, SNAP, fmtDate, times, usd } from '@/components/intel/shared'
+import { CLOSED, NOTES, OPEN, SNAP, fmtDate, times, usd } from '@/components/intel/shared'
 
 const LADDER = labLadder(SNAP.models)
 const CVO = closedVsOpen(SNAP.models)
@@ -27,7 +27,14 @@ const pctBelow = (v: number, ref: number) => Math.round((1 - v / ref) * 100)
 
 // ── Price ladder ─────────────────────────────────────────────────────────────
 
-const LADDER_COLS = 'grid grid-cols-[minmax(72px,112px)_minmax(0,1fr)_88px_64px] items-center gap-x-3'
+const ROW_H = 28
+/** First and third quartiles, interpolated in log space to match the log axis. */
+function logQuartiles(prices: number[]): [number, number] {
+  const ls = prices.filter((p) => p > 0).map(Math.log).sort((a, b) => a - b)
+  const q = (f: number) => { const i = (ls.length - 1) * f, a = Math.floor(i), b = Math.ceil(i); return Math.exp(ls[a] + (ls[b] - ls[a]) * (i - a)) }
+  return [q(0.25), q(0.75)]
+}
+const LADDER_COLS = 'grid grid-cols-[minmax(72px,112px)_minmax(0,1fr)_48px_40px_64px] items-center gap-x-3'
 
 export function PriceLadder() {
   const [sort, setSort] = useState<'median' | 'models'>('median')
@@ -40,19 +47,20 @@ export function PriceLadder() {
   return (
     <Panel
       title="Price ladder by lab"
-      eyebrow="Every model a lab lists · blended $/M · log scale"
+      eyebrow="Blended $/M · log scale"
       right={<Seg size="sm" value={sort} onChange={setSort} options={[{ id: 'median', label: 'By median' }, { id: 'models', label: 'By models' }]} />}
     >
       <div className="overflow-x-auto">
         <div className="min-w-[420px]">
-          <div className={cx(LADDER_COLS, 'mb-1 font-mono text-[9.5px] tracking-wider text-dim uppercase')}>
+          <div className={cx(LADDER_COLS, 'mb-1 text-[11px] font-medium text-dim')}>
             <span>Lab</span>
             <div ref={ref}>
               <svg width={w} height={12} className="block overflow-visible">
                 {TICKS.map((t) => <text key={t} x={x(t)} y={9} textAnchor="middle" className={`fill-dim ${fontClass}`} fontSize={9}>{tickLabel(t)}</text>)}
               </svg>
             </div>
-            <span className="text-right whitespace-nowrap">Models · open</span>
+            <span className="text-right">Models</span>
+            <span className="text-right">Open</span>
             <span className="text-right">Median /M</span>
           </div>
           {rows.map((r) => {
@@ -62,75 +70,70 @@ export function PriceLadder() {
               <button
                 key={r.lab}
                 onClick={() => setSel(on ? null : r.lab)}
+                title={`${r.lab}: show cheapest and dearest model`}
                 aria-pressed={on}
-                className={cx(LADDER_COLS, 'h-[24px] w-full cursor-pointer rounded-[3px] text-left', on ? 'bg-raise' : 'hover:bg-raise/60')}
+                className={cx(LADDER_COLS, 'w-full cursor-pointer rounded-[3px] border-b border-line-soft text-left transition-colors last:border-0', on ? 'bg-raise' : 'hover:bg-hover')}
+                style={{ height: ROW_H }}
               >
                 <span className={cx('truncate pl-1 text-[11.5px]', on ? 'text-bone' : 'text-mute')}>{r.lab}</span>
-                <svg width={w} height={24} className="block overflow-visible">
-                  {TICKS.map((t) => <line key={t} x1={x(t)} x2={x(t)} y1={0} y2={24} stroke="var(--color-line)" strokeOpacity={0.6} />)}
-                  <line x1={x(r.min)} x2={x(r.max)} y1={12} y2={12} stroke="var(--color-line2)" />
-                  {r.models.map((m) => (
-                    <circle key={m.id} cx={x(blended(m))} cy={12} r={3} fill={m.open ? OPEN : CLOSED} fillOpacity={0.75}>
-                      <title>{`${m.name} · ${usd(blended(m))}/M${m.open ? ' · open weights' : ''}`}</title>
-                    </circle>
-                  ))}
-                  <circle cx={x(blended(lo))} cy={12} r={5.5} fill="none" stroke="var(--color-up)" strokeWidth={1.2} />
-                  <circle cx={x(blended(hi))} cy={12} r={5.5} fill="none" stroke="var(--color-down)" strokeWidth={1.2} />
-                  <line x1={x(r.median)} x2={x(r.median)} y1={4} y2={20} stroke="var(--color-bone)" strokeWidth={1.5} />
+                <svg width={w} height={ROW_H} className="block overflow-visible">
+                  {TICKS.map((t) => <line key={t} x1={x(t)} x2={x(t)} y1={0} y2={ROW_H} stroke="var(--color-line-soft)" />)}
+                  {(() => {
+                    const [q1, q3] = logQuartiles(r.models.map(blended))
+                    const cy = ROW_H / 2
+                    const share = r.models.length ? r.open / r.models.length : 0
+                    const ink = on ? 'var(--color-bone)' : 'var(--color-mute)'
+                    // Box tint: grey for an all-closed lab, toward the open-weights hue by open share.
+                    const tint = `color-mix(in srgb, ${OPEN} ${Math.round(share * 100)}%, var(--color-mute))`
+                    return (
+                      <g>
+                        <line x1={x(r.min)} x2={x(r.max)} y1={cy} y2={cy} stroke={ink} strokeOpacity={0.55} />
+                        {([[lo, 'cheapest', 'var(--color-up)'], [hi, 'dearest', 'var(--color-down)']] as const).map(([m, k, c]) => (
+                          <line key={k} x1={x(blended(m))} x2={x(blended(m))} y1={cy - 3.5} y2={cy + 3.5} stroke={c} strokeOpacity={0.75} strokeWidth={1.5}>
+                            <title>{`${k}: ${m.name} · ${usd(blended(m))}/M${m.open ? ' · open weights' : ''}`}</title>
+                          </line>
+                        ))}
+                        <rect x={x(q1)} y={cy - 4} width={Math.max(2, x(q3) - x(q1))} height={8} rx={1} fill={tint} fillOpacity={on ? 0.6 : 0.42}>
+                          <title>{`${r.lab}: middle 50% ${usd(q1)}–${usd(q3)}/M · ${Math.round(share * 100)}% open weights`}</title>
+                        </rect>
+                        <line x1={x(r.median)} x2={x(r.median)} y1={cy - 6} y2={cy + 6} stroke="var(--color-bone)" strokeWidth={1.5} />
+                      </g>
+                    )
+                  })()}
                 </svg>
-                <span className="num text-right text-[11px] text-mute">{r.models.length} · {r.open}</span>
+                <span className="num text-right text-[11px] text-mute">{r.models.length}</span>
+                <span className={cx('num text-right text-[11px]', !r.open && 'text-dim')} style={r.open ? { color: OPEN } : undefined}>{r.open || '–'}</span>
                 <span className="num text-right text-[11px] text-bone">{usd(r.median)}</span>
               </button>
             )
           })}
         </div>
       </div>
-      <div className="mt-2 min-h-[18px] text-[11.5px] text-mute">
-        {picked ? (() => {
+      {picked && <div className="mt-2 text-[11.5px] text-mute">
+        {(() => {
           const { lo, hi } = extremes(picked.models)
           return <><b className="font-medium text-bone">{picked.lab}</b>: cheapest {lo.name} at <span className="num text-bone">{usd(blended(lo))}</span>/M · dearest {hi.name} at <span className="num text-bone">{usd(blended(hi))}</span>/M · {times(blended(hi) / blended(lo))} apart</>
-        })() : <span className="text-dim">Click a lab to see its cheapest and dearest model.</span>}
-      </div>
+        })()}
+      </div>}
       <Legend items={[
-        { mark: <Dot color={CLOSED} />, label: 'closed model' },
-        { mark: <Dot color={OPEN} />, label: 'open weights' },
-        { mark: <Ring color="var(--color-up)" />, label: 'cheapest' },
-        { mark: <Ring color="var(--color-down)" />, label: 'dearest' },
+        { mark: <svg width="24" height="8" aria-hidden="true"><line x1="0.5" x2="23.5" y1="4" y2="4" stroke="var(--color-mute)" strokeOpacity={0.55} /><line x1="0.75" x2="0.75" y1="0.5" y2="7.5" stroke="var(--color-up)" strokeOpacity={0.75} strokeWidth={1.5} /><line x1="23.25" x2="23.25" y1="0.5" y2="7.5" stroke="var(--color-down)" strokeOpacity={0.75} strokeWidth={1.5} /></svg>, label: 'cheapest to dearest model' },
+        { mark: <span className="inline-block h-2 w-8 rounded-[1px] opacity-60" style={{ background: `linear-gradient(to right, var(--color-mute), ${OPEN})` }} />, label: 'middle 50%, tinted by open-weight share' },
         { mark: <span className="inline-block h-3 w-[1.5px] bg-bone" />, label: 'median' },
-        { mark: null, label: 'click a lab' },
       ]} />
-      <p className="mt-2 text-[11px] leading-relaxed text-dim">Labs with three or more text models. {SNAP.aliases} "latest" alias routes (such as ~anthropic/claude-opus-latest) are left out because they point at models already listed.</p>
+      <p className="mt-2 text-[11px] leading-relaxed text-dim">Labs with 3+ text models. {SNAP.aliases} "latest" alias routes (e.g. ~anthropic/claude-opus-latest) are left out as duplicates.</p>
     </Panel>
   )
 }
 
-function Dot({ color }: { color: string }) {
-  return <svg width={8} height={8} className="shrink-0"><circle cx={4} cy={4} r={3} fill={color} /></svg>
-}
-function Ring({ color }: { color: string }) {
-  return <svg width={12} height={12} className="shrink-0"><circle cx={6} cy={6} r={5} fill="none" stroke={color} strokeWidth={1.2} /></svg>
-}
 function Legend({ items }: { items: { mark: ReactNode; label: string }[] }) {
   return (
-    <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[10px] text-dim">
+    <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-dim">
       {items.map((it) => <span key={it.label} className="inline-flex items-center gap-1.5">{it.mark}{it.label}</span>)}
     </div>
   )
 }
 
 // ── Closed vs open ───────────────────────────────────────────────────────────
-
-const BAR_LABS = ['Anthropic', 'OpenAI', 'Google', 'xAI', 'Mistral', 'Meta', 'Qwen (Alibaba)', 'Moonshot AI', 'Z.ai', 'DeepSeek', 'NVIDIA']
-
-function labBars() {
-  return BAR_LABS.flatMap((lab) => {
-    const ms = SNAP.models.filter((m) => m.lab === lab)
-    if (!ms.length) return []
-    const open = ms.filter((m) => m.open).length
-    const color = open === 0 ? CLOSED : open === ms.length ? OPEN : 'var(--color-mute)'
-    return [{ lab, n: ms.length, median: median(ms.map(blended)), color }]
-  })
-}
 
 export function ClosedVsOpen() {
   const [ref, w] = useWidth<HTMLDivElement>()
@@ -143,10 +146,8 @@ export function ClosedVsOpen() {
     { label: 'Open', xs: CVO.open.filter((p) => p > 0), med: CVO.openMedian, color: OPEN },
   ]
   const oa = extremes(SNAP.models.filter((m) => m.lab === 'OpenAI'))
-  const bars = labBars()
-  const barMax = Math.max(...bars.map((b) => b.median))
   return (
-    <Panel title="Closed frontier vs open weights" eyebrow={`${CVO.closed.length} closed · ${CVO.open.length} open-weight models · log scale`}>
+    <Panel title="Closed frontier vs open weights" eyebrow={`${CVO.closed.length} closed · ${CVO.open.length} open · log $/M`}>
       <div ref={ref}>
         <svg width={w} height={h} className="block">
           {TICKS.map((t) => <line key={t} x1={x(t)} x2={x(t)} y1={top - 4} y2={axisY} stroke="var(--color-line)" strokeDasharray="2 4" />)}
@@ -170,19 +171,6 @@ export function ClosedVsOpen() {
       <p className="mt-2 text-[12px] leading-relaxed text-mute">
         At the median a closed model lists at <span className="num text-bone">{times(CVO.ratio)}</span> an open-weight one, but the ranges overlap: OpenAI itself spans <span className="num text-bone">{usd(blended(oa.lo))}</span> ({oa.lo.name}) to <span className="num text-bone">{usd(blended(oa.hi))}</span> ({oa.hi.name}) per million tokens.
       </p>
-      <div className="mt-4 mb-2 font-mono text-[9.5px] tracking-wider text-dim uppercase">Lab median, $/M</div>
-      <div className="space-y-1">
-        {bars.map((b) => (
-          <div key={b.lab} className="grid h-[20px] grid-cols-[minmax(0,140px)_minmax(0,1fr)_56px] items-center gap-3" title={`${b.lab}: ${b.n} models, median ${usd(b.median)}/M`}>
-            <span className="truncate text-[11.5px] text-mute">{b.lab} <span className="num text-dim">· {b.n}</span></span>
-            <div className="relative h-2 rounded-sm bg-line/60">
-              <div className="absolute inset-y-0 left-0 rounded-sm" style={{ width: `${(b.median / barMax) * 100}%`, background: b.color }} />
-            </div>
-            <span className="num text-right text-[11px] text-bone">{usd(b.median)}</span>
-          </div>
-        ))}
-      </div>
-      <p className="mt-2 text-[11px] text-dim">Bar colour: all closed (bone) · all open (cyan) · mixed (grey). Linear scale.</p>
     </Panel>
   )
 }
@@ -210,19 +198,19 @@ export function CheapestWay({ onRoute }: { onRoute: (modelId: string) => void })
   return (
     <Panel
       title="Cheapest way to buy"
-      eyebrow={<><TruthTag truth="dec" compact /> One tier, three ways in: a closed lab, an open model's default route, or the cheapest host for it</>}
+      eyebrow={<><TruthTag truth="dec" compact /> One tier, three ways in<Fn n={2} note={NOTES[1]} /></>}
       right={<Seg size="sm" value={tier} onChange={setTier} options={[{ id: 'large', label: 'Large' }, { id: 'small', label: 'Small and fast' }]} />}
     >
       <div className="overflow-x-auto">
         <table className="w-full min-w-[620px] text-[11.5px]">
           <thead>
-            <tr className="border-b border-line text-left font-mono text-[9.5px] tracking-wider text-dim uppercase">
-              <th className="py-1.5 pr-3 font-normal">Model</th>
-              <th className="py-1.5 pr-3 text-right font-normal">Lab list /M</th>
-              <th className="py-1.5 pr-3 font-normal">Cheapest host</th>
-              <th className="py-1.5 pr-3 text-right font-normal">Best /M</th>
-              <th className="py-1.5 pr-3 text-right font-normal">100M tokens</th>
-              <th className="py-1.5 text-right font-normal">vs cheapest</th>
+            <tr className="h-8 border-b border-line text-left text-[11px] text-dim">
+              <th className="pr-3 font-medium">Model</th>
+              <th className="pr-3 text-right font-medium">Lab list /M<Fn n={1} note={NOTES[0]} /></th>
+              <th className="pr-3 font-medium">Cheapest host · precision · of N</th>
+              <th className="pr-3 text-right font-medium">Best /M</th>
+              <th className="pr-3 text-right font-medium">100M tokens</th>
+              <th className="text-right font-medium">vs cheapest</th>
             </tr>
           </thead>
           <tbody>
@@ -231,12 +219,12 @@ export function CheapestWay({ onRoute }: { onRoute: (modelId: string) => void })
                 key={l.m.id}
                 onClick={l.m.open ? () => onRoute(l.m.id) : undefined}
                 title={l.m.open ? `Route ${l.m.name} below` : undefined}
-                className={cx('border-b border-line/60 last:border-0', l.m.open && 'cursor-pointer hover:bg-raise')}
+                className={cx('border-b border-line-soft last:border-0', l.m.open && 'cursor-pointer hover:bg-hover')}
               >
                 <td className="py-1.5 pr-3">
                   <div className="flex items-center gap-1.5">
                     <span className="text-bone">{l.m.name}</span>
-                    <span className={cx('rounded-[3px] border px-1 font-mono text-[9px] leading-[13px]', l.m.open ? 'border-fct/40 text-fct' : 'border-line2 text-dim')}>{l.m.open ? 'open' : 'closed'}</span>
+                    <span className="text-[10.5px] text-dim">{l.m.open ? 'open' : 'closed'}</span>
                   </div>
                   <div className="text-[10.5px] text-dim">{l.m.lab} · {fmtDate(l.m.created)}</div>
                 </td>
@@ -259,8 +247,7 @@ export function CheapestWay({ onRoute }: { onRoute: (modelId: string) => void })
           The cheapest line in this tier, <b className="font-medium text-bone">{lo.m.name}</b> at <span className="num text-bone">{usd(lo.best)}</span>/M, lists <span className="num text-up">{pctBelow(lo.best, med)}%</span> below the tier's median (<span className="num">{usd(med)}</span>/M over {lines.length} lines) and <span className="num text-up">{pctBelow(lo.best, hi.best)}%</span> below its dearest.
         </p>
       )}
-      <p className="mt-2 text-[11px] leading-relaxed text-dim">Tier = each lab's product line by name, latest release. FLOPX does not measure capability, so this compares list prices, not quality. 100M tokens at the 3:1 blend; output-heavy work costs more. Click an open model to route it below.</p>
-    </Panel>
+          </Panel>
   )
 }
 
@@ -273,27 +260,26 @@ export function NewestReleases() {
   return (
     <Panel
       title="Newest releases"
-      eyebrow="Latest models in the catalog · list price"
+      variant="rail"
+      eyebrow="List price, newest first"
       right={<Seg size="sm" value={n} onChange={setN} options={[{ id: '10', label: 'Show 10' }, { id: '25', label: 'Show 25' }]} />}
     >
-      <ul>
-        {NEWEST.slice(0, Number(n)).map((m) => {
+      {NEWEST.slice(0, Number(n)).map((m) => {
           const hs = m.open ? hostsFor(m.id) : []
           return (
-            <li key={m.id} className="grid grid-cols-[48px_minmax(0,1fr)_auto] items-baseline gap-x-3 border-b border-line/60 py-1.5 last:border-0">
+            <div key={m.id} className="grid grid-cols-[48px_minmax(0,1fr)_auto] items-baseline gap-x-3 py-1.5">
               <span className="num text-[10.5px] text-dim">{fmtDate(m.created)}</span>
               <div className="min-w-0">
                 <div className="truncate text-[12px] text-bone">{m.name}</div>
                 <div className="truncate text-[10.5px] text-dim">
-                  {m.lab} · <span className={m.open ? 'text-fct' : undefined}>{m.open ? 'open weights' : 'closed'}</span>
+                  {m.lab} · {m.open ? 'open weights' : 'closed'}
                   {hs.length > 0 && <> · {hs.length} {hs.length === 1 ? 'host' : 'hosts'} from <span className="num">{usd(blended(hs[0]))}</span></>}
                 </div>
               </div>
               <span className="num text-right text-[11.5px] text-bone">{usd(blended(m))}<span className="text-dim">/M</span></span>
-            </li>
+            </div>
           )
         })}
-      </ul>
     </Panel>
   )
 }

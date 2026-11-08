@@ -88,7 +88,7 @@ function handoffAnswer(q: string, t: string, ctx: string): Answer | null {
   }
   if (has(t, 'edge', 'backtest', 'pre-registered', 'fund test', 'alpha')) {
     return { ...base, tool: 'fund_tests', confidence: 'High',
-      facts: [f(`Edge found in ${FUND_TESTS.edges} of ${FUND_TESTS.tests} pre-registered tests on ${FUND_TESTS.tickers} tickers.`),
+      facts: [f(`Edge found in ${FUND_TESTS.edges} of ${FUND_TESTS.tests} forecast tests (8 tickers x 3 models); the fund itself runs the backend's strategy catalogue.`),
         f(`${FUND_TESTS.exploratoryOrders} exploratory orders only. Prices: ${FUND_TESTS.prices}.`)],
       interpretation: 'No signal has passed its test, so the fund shows no proven edge. Exploratory orders are labelled as such.',
       actions: [go('Open fund', 'fund')] }

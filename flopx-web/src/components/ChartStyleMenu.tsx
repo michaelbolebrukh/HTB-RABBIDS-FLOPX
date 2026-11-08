@@ -14,7 +14,7 @@ const CHOICES = [
   { key: 'motion', label: 'Animation', options: [{ value: false, label: 'Off' }, { value: true, label: 'On' }] },
 ] as Choice<keyof ChartStyle>[]
 
-/** Floating "Charts" button with a popover of global chart style options. */
+/** Top-bar "Charts" button with a popover of global chart style options. */
 export function ChartStyleMenu() {
   const { style, set, reset } = useChartStyleControls()
   const [open, setOpen] = useState(false)
@@ -34,13 +34,13 @@ export function ChartStyleMenu() {
       <button
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        className="flex cursor-pointer items-center gap-1.5 rounded-full border border-line2 bg-panel/95 px-3 py-[7px] text-[11.5px] font-medium text-mute shadow-[0_8px_24px_rgba(0,0,0,0.25)] backdrop-blur transition-colors hover:text-bone"
+        className={'flex h-7 cursor-pointer items-center gap-1.5 rounded-ctl border px-2.5 text-[11.5px] font-medium transition-colors duration-[120ms] hover:bg-hover hover:text-bone ' + (open ? 'border-line2 bg-raise text-bone' : 'border-line text-mute')}
       >
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.3"><path d="M1 10.5h10M2.5 8l2.5-3 2 2 3-4.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-        Charts{changed > 0 && <span className="rounded-full bg-inf px-1.5 text-[10px] leading-4 text-ink">{changed}</span>}
+        Charts{changed > 0 && <span className="num text-[10.5px] text-bone" aria-label={`${changed} changed`}>· {changed}</span>}
       </button>
       {open && (
-        <div role="dialog" aria-label="Chart style" className="absolute right-0 bottom-[calc(100%+8px)] w-[280px] rounded-[6px] border border-line2 bg-panel p-3 shadow-[0_12px_32px_rgba(0,0,0,0.3)]">
+        <div role="dialog" aria-label="Chart style" className="absolute top-[calc(100%+6px)] right-0 z-[60] w-[280px] rounded-menu border border-line2 bg-panel p-3 shadow-[0_12px_32px_rgba(0,0,0,0.3)]">
           <div className="mb-2.5 flex items-center justify-between">
             <span className="text-[11.5px] font-medium text-dim">Chart style</span>
             <button onClick={reset} disabled={!changed} className="cursor-pointer text-[11px] text-mute hover:text-bone disabled:cursor-default disabled:opacity-40">Reset</button>
@@ -49,7 +49,7 @@ export function ChartStyleMenu() {
             {CHOICES.map((c) => (
               <div key={c.key} className="grid grid-cols-[88px_1fr] items-center gap-2">
                 <span className="text-[11.5px] text-mute">{c.label}</span>
-                <div role="radiogroup" aria-label={c.label} className="flex rounded-[4px] border border-line p-0.5">
+                <div role="radiogroup" aria-label={c.label} className="flex rounded-ctl border border-line bg-ink p-[2px]">
                   {c.options.map((o) => {
                     const on = style[c.key] === o.value
                     return (
@@ -58,7 +58,7 @@ export function ChartStyleMenu() {
                         role="radio"
                         aria-checked={on}
                         onClick={() => set({ [c.key]: o.value } as Partial<ChartStyle>)}
-                        className={'flex-1 cursor-pointer rounded-[3px] py-0.5 text-[11px] transition-colors ' + (on ? 'bg-bone text-ink' : 'text-mute hover:bg-hover hover:text-bone')}
+                        className={'flex-1 cursor-pointer rounded-[2px] py-0.5 text-[11px] transition-colors duration-[120ms] ' + (on ? 'bg-raise text-bone' : 'text-mute hover:text-bone')}
                       >
                         {o.label}
                       </button>

@@ -13,7 +13,7 @@ function initialTheme(): ThemeId {
   return document.documentElement.dataset.blend === 'light' ? 'light' : 'dark'
 }
 
-/** Dark (Implement original) / Light (flopx paper) toggle. Persists to localStorage and ?theme=. */
+/** Dark / Light (flopx paper) segmented control in the top bar. Persists to localStorage and ?theme=. */
 export function BlendSwitcher() {
   const [theme, setTheme] = useState<ThemeId>(initialTheme)
   useEffect(() => {
@@ -31,7 +31,7 @@ export function BlendSwitcher() {
   }, [theme])
 
   return (
-    <div role="radiogroup" aria-label="Theme" className="flex items-center gap-1 rounded-full border border-line2 bg-panel/95 p-1 shadow-[0_8px_24px_rgba(0,0,0,0.25)] backdrop-blur">
+    <div role="radiogroup" aria-label="Theme" className="flex h-7 items-center rounded-ctl border border-line bg-ink p-[2px]">
       {THEMES.map((t) => (
         <button
           key={t.id}
@@ -39,8 +39,8 @@ export function BlendSwitcher() {
           aria-checked={t.id === theme}
           onClick={() => setTheme(t.id)}
           className={
-            'cursor-pointer rounded-full px-3 py-1 text-[11.5px] font-medium transition-colors ' +
-            (t.id === theme ? 'bg-bone text-ink' : 'text-mute hover:bg-hover hover:text-bone')
+            'h-full cursor-pointer rounded-[2px] px-2.5 text-[11.5px] font-medium transition-colors duration-[120ms] ' +
+            (t.id === theme ? 'bg-raise text-bone' : 'text-mute hover:text-bone')
           }
         >
           {t.label}

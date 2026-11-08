@@ -1,10 +1,10 @@
-import type { ButtonHTMLAttributes, ReactNode } from 'react'
-import { RotateCcw, Sparkles } from 'lucide-react'
+import { createContext, useContext, useState, type ButtonHTMLAttributes, type ReactNode } from 'react'
+import { Info, RotateCcw, Sparkles } from 'lucide-react'
 import type { Freshness, Truth } from '@/data/core'
 import type { HorizonId, ValidationStatus } from '@/data/fund'
-import { useStore, type EntityRef } from '@/lib/store'
+import { useStore, useStoreOptional, type EntityRef } from '@/lib/store'
 import { collapse, panelKey, useCollapsed } from '@/lib/layout'
-import { Drawer, FoldButton } from './collapse'
+import { Drawer, FoldButton, SideFoldButton, useRegisterInRow, useRowSlot } from './collapse'
 
 export function cx(...c: (string | false | null | undefined)[]) {
   return c.filter(Boolean).join(' ')
@@ -108,19 +108,21 @@ function StatusMark({ m, size = 11 }: { m: Mark; size?: number }) {
   )
 }
 
-const badge = 'inline-flex items-center gap-1.5 rounded-[3px] border border-line2 whitespace-nowrap font-medium'
+const badge = 'inline-flex items-center gap-1.5 whitespace-nowrap font-medium'
+/** Exceptions keep a 1px border and a light tint; routine states are glyph plus text only. */
+const exception = 'rounded-[2px] border px-1.5'
 
 // One word per provenance kind, everywhere: the `historical` kind (a stored, point-in-time record) reads
 // "Archived" on the chip, the quiet note, the ticker strip and the Markets eyebrow alike (WF8 #1).
 const FRESH: Record<Freshness, { label: string; cls: string; icon: ReactNode }> = {
-  live: { label: 'Live', cls: 'text-up', icon: <span className="pulse-dot inline-block size-1.5 rounded-full bg-up" /> },
+  live: { label: 'Live', cls: 'text-up', icon: <span className="inline-block size-1.5 rounded-full bg-up" /> },
   delayed: { label: 'Delayed', cls: 'text-mute', icon: <StatusMark m="ring" /> },
   historical: { label: 'Archived', cls: 'text-dim', icon: <StatusMark m="hollow" /> },
-  stale: { label: 'Stale', cls: 'text-warn', icon: <StatusMark m="diamond" /> },
-  unavailable: { label: 'Unavailable', cls: 'text-down', icon: <StatusMark m="bar" /> },
-  experimental: { label: 'Experimental', cls: 'text-inf', icon: <StatusMark m="hatch" /> },
-  simulated: { label: 'Simulated', cls: 'text-dec border-dashed', icon: <StatusMark m="dashed" /> },
-  illustrative: { label: 'Illustrative', cls: 'text-mute border-dashed', icon: <StatusMark m="half" /> },
+  stale: { label: 'Stale', cls: cx(exception, 'border-warn/40 bg-warn/[0.07] text-warn'), icon: <StatusMark m="diamond" /> },
+  unavailable: { label: 'Unavailable', cls: cx(exception, 'border-down/40 bg-down/[0.07] text-down'), icon: <StatusMark m="bar" /> },
+  experimental: { label: 'Experimental', cls: cx(exception, 'border-inf/40 bg-inf/[0.06] text-inf'), icon: <StatusMark m="hatch" /> },
+  simulated: { label: 'Simulated', cls: cx(exception, 'border-dashed border-dec/50 bg-dec/[0.06] text-dec'), icon: <StatusMark m="dashed" /> },
+  illustrative: { label: 'Illustrative', cls: cx(exception, 'border-dashed border-line2 bg-bone/[0.04] text-mute'), icon: <StatusMark m="half" /> },
 }
 /** The one word a data-status kind reads as, for prose that names a status without rendering the badge. */
 export const freshLabel = (f: Freshness): string => FRESH[f].label
@@ -138,7 +140,7 @@ export function Fresh({ f, className, label, quiet }: { f: Freshness; className?
     )
   }
   return (
-    <span data-fresh="chip" className={cx(badge, 'px-1.5 py-[1px] text-[9px] tracking-[0.1em]', x.cls, className)}>
+    <span data-fresh="chip" className={cx(badge, 'py-px text-[11px] leading-4', x.cls, className)}>
       {x.icon}
       {label ?? x.label}
     </span>
@@ -163,7 +165,7 @@ const VAL: Record<ValidationStatus, { label: string; short: string; tone: string
 export function Validation({ s, short, fill, className }: { s: ValidationStatus; short?: boolean; fill?: boolean; className?: string }) {
   const v = VAL[s]
   return (
-    <span title={`${v.label}. ${v.desc}`} className={cx(badge, 'h-6 px-2 text-[11px]', fill && 'flex w-full min-w-0', v.cls, className)}>
+    <span title={`${v.label}. ${v.desc}`} className={cx(badge, 'h-6 text-[11px]', fill && 'flex w-full min-w-0', v.cls, className)}>
       {v.icon}
       <span className="truncate">{short ? v.short : v.label}</span>
     </span>
@@ -173,17 +175,18 @@ export function Validation({ s, short, fill, className }: { s: ValidationStatus;
 const HORIZONS = ['1W', '1M', '3M'] as const
 
 /** One strip, one equal-width cell per forecast horizon, always 1W · 1M · 3M in that order, so strips line up
- *  row to row. The status variant sets the icon and colour; a missing horizon shows a dash. Full wording is in the tooltip. */
+ *  row to row. The status variant sets the icon and colour; a missing horizon shows a dash. Full wording is in the tooltip.
+ *  A cell too narrow for its label shows the icon alone rather than a clipped word. */
 export function HorizonStatus({ horizons, className }: { horizons: Partial<Record<HorizonId, { status: ValidationStatus }>>; className?: string }) {
   return (
-    <div role="list" aria-label="Validation by horizon" className={cx('grid w-full grid-cols-3 overflow-hidden rounded-[3px] border border-line2 text-[11px] whitespace-nowrap', className)}>
-      {HORIZONS.map((h, i) => {
+    <div role="list" aria-label="Validation by horizon" className={cx('grid w-full grid-cols-3 gap-x-3 text-[11px] leading-4 whitespace-nowrap', className)}>
+      {HORIZONS.map((h) => {
         const st = horizons[h]?.status
         const v = st ? VAL[st] : null
         return (
-          <span key={h} role="listitem" title={v ? `${h}: ${v.label}. ${v.desc}` : `${h}: not tested`} className={cx('flex min-w-0 items-center gap-1.5 px-2 py-[3px]', i > 0 && 'border-l border-line2')}>
-            <span className="w-5 shrink-0 font-mono text-[10px] text-dim">{h}</span>
-            {v ? <span className={cx('flex min-w-0 items-center gap-1.5', v.tone)}>{v.icon}<span className="truncate">{v.short}</span></span> : <span className="text-dim">—</span>}
+          <span key={h} role="listitem" title={v ? `${h}: ${v.label}. ${v.desc}` : `${h}: not tested`} className="@container flex min-w-0 items-center gap-1.5 py-[3px]">
+            <span className="w-5 shrink-0 text-dim">{h}</span>
+            {v ? <span className={cx('flex min-w-0 items-center gap-1.5', v.tone)}>{v.icon}<span className="@max-[6.5rem]:sr-only">{v.short}</span></span> : <span className="text-dim">—</span>}
           </span>
         )
       })}
@@ -202,38 +205,110 @@ export function DirectionTag({ direction, asset, className }: { direction: keyof
   )
 }
 
-/** Card with an optional header. A titled panel can be folded with the header chevron (as on Compute X-Ray);
- *  the fold is remembered per page. Pass `id` when the title is not plain text, or `collapsible={false}` to opt out. */
-export function Panel({ title, eyebrow, right, children, className, bodyClass, truth, id, collapsible = true }: { title?: ReactNode; eyebrow?: ReactNode; right?: ReactNode; children: ReactNode; className?: string; bodyClass?: string; truth?: Truth; id?: string; collapsible?: boolean }) {
-  const { route } = useStore()
+/** Surface role: canvas = bordered work surface (charts, maps, tables); rail = unbordered list split by rules;
+ *  strip = one KPI surface with vertical dividers (fill it with StripCell); callout = exception or decision with a coloured left rule. */
+export type PanelVariant = 'canvas' | 'rail' | 'strip' | 'callout'
+export type CalloutTone = 'warn' | 'bad' | 'dec' | 'inf'
+
+/** Rows inside a rail (or any list) split by soft rules. A rail body applies this to its direct children already. */
+export const RULED = 'divide-y divide-line-soft'
+
+const SURFACE: Record<PanelVariant, string> = {
+  canvas: 'rounded-[2px] border border-line bg-panel',
+  strip: 'rounded-[2px] border border-line bg-panel',
+  rail: '',
+  callout: 'rounded-r-[2px] border-l-2',
+}
+const CALLOUT: Record<CalloutTone, string> = {
+  warn: 'border-l-warn bg-warn/[0.06]',
+  bad: 'border-l-down bg-down/[0.06]',
+  dec: 'border-l-dec bg-dec/[0.06]',
+  inf: 'border-l-inf bg-inf/[0.06]',
+}
+const BODY: Record<PanelVariant, string> = {
+  canvas: 'p-4',
+  strip: 'flex flex-wrap divide-x divide-line-soft',
+  rail: cx('py-1', RULED),
+  callout: 'px-4 pb-3 pt-1',
+}
+
+/** When set, the nearest Panel shows this (a view switcher) in place of its title. Reset inside panel bodies. */
+const TitleSwap = createContext<ReactNode>(null)
+
+/**
+ * Several panels sharing one slot: the active one renders, and its title becomes a switcher between them
+ * (each keeps its own eyebrow). Use it to fold related views into one place instead of stacking more rows.
+ */
+export function PanelSwitch({ items, className }: { items: { label: string; node: ReactNode }[]; className?: string }) {
+  const [i, setI] = useState(0)
+  const seg = <Seg size="sm" value={String(i)} onChange={(v) => setI(+v)} options={items.map((it, k) => ({ id: String(k), label: it.label }))} />
+  return <TitleSwap.Provider value={seg}><div className={cx('min-w-0', className)}>{items[i]?.node}</div></TitleSwap.Provider>
+}
+
+/** Sets a tooltip with the element's full text, so a truncated eyebrow can still be read. */
+const fullTextTitle = (e: { currentTarget: HTMLElement }) => { e.currentTarget.title = e.currentTarget.textContent ?? '' }
+
+/**
+ * Surface with an optional one-line header: the title is the subject, the eyebrow follows it as quiet text that
+ * truncates (full text on hover). A titled panel folds with its header chevron and the fold is remembered per page;
+ * inside a Row it also folds sideways (that chevron shows on header hover or focus). Pass `id` when the title is not
+ * plain text, or `collapsible={false}` to opt out.
+ */
+export function Panel({ title, eyebrow, right, children, className, bodyClass, truth, id, collapsible = true, variant = 'canvas', tone = 'warn' }: { title?: ReactNode; eyebrow?: ReactNode; right?: ReactNode; children: ReactNode; className?: string; bodyClass?: string; truth?: Truth; id?: string; collapsible?: boolean; variant?: PanelVariant; tone?: CalloutTone }) {
+  // The page key comes from the store when one is mounted; rendered in isolation (static tests) a panel is simply open.
+  const page = useStoreOptional()?.route.page
   const folded = useCollapsed()
   const pid = id ?? (typeof title === 'string' ? title : undefined)
-  const canFold = collapsible && pid != null
-  const open = !canFold || !folded.includes(panelKey(route.page, pid))
-  const body = <div className={cx('p-4', bodyClass)}>{children}</div>
+  const canFold = collapsible && pid != null && page != null
+  const open = !canFold || !folded.includes(panelKey(page, pid))
+  const slot = useRowSlot()
+  useRegisterInRow(slot, collapsible ? pid : undefined)
+  const sideFold = collapsible && pid != null && slot?.active
+  const rail = variant === 'rail'
+  const ruled = variant !== 'callout'
+  const swap = useContext(TitleSwap)
+  const body = <TitleSwap.Provider value={null}><div className={cx(BODY[variant], bodyClass)}>{children}</div></TitleSwap.Provider>
   return (
-    <section className={cx('min-w-0 rounded-md border border-line bg-panel', className, !open && 'self-start')}>
+    <section className={cx('min-w-0', SURFACE[variant], variant === 'callout' && CALLOUT[tone], className, !open && 'self-start')}>
       {(title || eyebrow || right) && (
-        <header className={cx('flex items-start justify-between gap-3 px-4 py-2.5 transition-[border-color] duration-300', open ? 'border-b border-line' : 'border-b border-transparent')}>
-          <div className="min-w-0">
-            {eyebrow && <div className="eyebrow mb-0.5 flex items-center gap-2">{eyebrow}</div>}
-            {title && (
-              <h3 className="flex items-center gap-2 text-[13px] font-semibold tracking-tight text-bone">
-                {truth && <TruthGlyph truth={truth} />}
-                {title}
-              </h3>
-            )}
+        <header className={cx('group/ph flex min-h-10 items-center justify-between gap-3 py-1.5 max-md:flex-wrap', rail ? 'px-0' : 'px-4',
+          ruled && 'border-b transition-[border-color] duration-300', ruled && (open ? (rail ? 'border-line' : 'border-line-soft') : 'border-transparent'))}>
+          <div className="flex min-w-0 flex-1 items-baseline gap-2">
+            {title && (swap
+              ? <div className="flex shrink-0 items-center gap-2 self-center">{truth && <TruthGlyph truth={truth} />}{swap}</div>
+              : (
+                <h3 className="flex min-w-0 max-w-full shrink-0 items-center gap-2 text-[13px] leading-[18px] font-semibold tracking-tight text-bone">
+                  {truth && <TruthGlyph truth={truth} />}
+                  <span className="min-w-0 truncate">{title}</span>
+                </h3>
+              ))}
+            {eyebrow && <div onMouseEnter={fullTextTitle} className={cx('min-w-0 flex-1 truncate leading-4 [&>*]:mr-1.5 [&>*]:align-[-1px]', title ? 'text-[11.5px] text-dim' : 'text-[12px] font-medium text-mute')}>{eyebrow}</div>}
           </div>
           {(right || canFold) && (
-            <div className="flex shrink-0 items-center gap-2">
-              {open && right}
-              {canFold && <FoldButton open={open} label={pid.toLowerCase()} onClick={() => collapse.toggle(route.page, pid)} />}
+            <div className="flex shrink-0 items-center gap-1 max-md:ml-auto max-md:min-w-0 max-md:shrink max-md:flex-wrap max-md:justify-end">
+              {open && right && <div className="mr-1 flex min-w-0 items-center gap-2 max-md:flex-wrap">{right}</div>}
+              {sideFold && <SideFoldButton side={slot.side} label={pid.toLowerCase()} onClick={slot.fold} />}
+              {canFold && <FoldButton open={open} label={pid.toLowerCase()} onClick={() => collapse.toggle(page as string, pid)} />}
             </div>
           )}
         </header>
       )}
       {canFold ? <Drawer open={open}>{body}</Drawer> : body}
     </section>
+  )
+}
+
+/**
+ * One cell of a strip panel: an Inter label over a mono figure. Mark one cell `lead` per strip; it takes more width
+ * and a larger figure (28/32) while the rest stay at 18/24. `sub` is a quiet line under the figure (unit, change, source).
+ */
+export function StripCell({ label, sub, lead, className, children }: { label: ReactNode; sub?: ReactNode; lead?: boolean; className?: string; children: ReactNode }) {
+  return (
+    <div className={cx('min-w-[140px] px-4 py-3', lead ? 'flex-[1.6]' : 'flex-1', className)}>
+      <div className="truncate text-[11px] leading-4 text-dim">{label}</div>
+      <div className={cx('num mt-1 text-bone', lead ? 'text-[28px] leading-8' : 'text-[19px] leading-6')}>{children}</div>
+      {sub && <div className="mt-1 text-[11px] leading-4 text-mute">{sub}</div>}
+    </div>
   )
 }
 
@@ -255,10 +330,10 @@ export function Btn({ variant = 'outline', size = 'md', className, children, ...
     <button
       {...rest}
       className={cx(
-        'inline-flex items-center justify-center gap-1.5 rounded-[4px] font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline focus-visible:outline-1 focus-visible:outline-fct whitespace-nowrap cursor-pointer',
+        'inline-flex items-center justify-center gap-1.5 rounded-[3px] font-medium transition-colors duration-[120ms] disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mute whitespace-nowrap cursor-pointer',
         size === 'sm' ? 'h-7 px-2.5 text-[11.5px]' : 'h-8 px-3 text-[12.5px]',
-        variant === 'primary' && 'bg-bone text-ink hover:bg-white',
-        variant === 'outline' && 'border border-line2 text-bone hover:border-mute hover:bg-hover',
+        variant === 'primary' && 'bg-bone text-ink hover:bg-bone/90',
+        variant === 'outline' && 'border border-line2 text-bone hover:bg-hover',
         variant === 'ghost' && 'text-mute hover:bg-hover hover:text-bone',
         variant === 'subtle' && 'bg-raise text-bone hover:bg-hover',
         variant === 'danger' && 'border border-down/40 text-down hover:bg-down/10',
@@ -273,7 +348,7 @@ export function Btn({ variant = 'outline', size = 'md', className, children, ...
 
 export function Seg<T extends string>({ value, options, onChange, size = 'md', className }: { value: T; options: { id: T; label: ReactNode; title?: string }[]; onChange: (v: T) => void; size?: 'sm' | 'md'; className?: string }) {
   return (
-    <div className={cx('inline-flex rounded-[5px] border border-line bg-ink p-0.5', className)} role="tablist">
+    <div className={cx('inline-flex max-w-full items-stretch overflow-x-auto rounded-[3px] border border-line bg-ink p-[2px] [scrollbar-width:none]', size === 'sm' ? 'h-6' : 'h-7', className)} role="tablist">
       {options.map((o) => (
         <button
           key={o.id}
@@ -281,7 +356,7 @@ export function Seg<T extends string>({ value, options, onChange, size = 'md', c
           role="tab"
           aria-selected={value === o.id}
           onClick={() => onChange(o.id)}
-          className={cx('cursor-pointer rounded-[3px] font-mono tracking-wide transition-colors', size === 'sm' ? 'px-2 py-0.5 text-[10.5px]' : 'px-2.5 py-1 text-[11.5px]', value === o.id ? 'bg-raise text-bone shadow-[inset_0_0_0_1px_var(--color-line2)]' : 'text-dim hover:text-bone')}
+          className={cx('flex shrink-0 cursor-pointer items-center rounded-[2px] border font-medium whitespace-nowrap transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-mute', size === 'sm' ? 'px-2 text-[11px]' : 'px-2.5 text-[12px]', value === o.id ? 'border-line2 bg-hover text-bone' : 'border-transparent text-dim hover:text-mute')}
         >
           {o.label}
         </button>
@@ -292,7 +367,7 @@ export function Seg<T extends string>({ value, options, onChange, size = 'md', c
 
 export function Tabs<T extends string>({ value, tabs, onChange, className }: { value: T; tabs: { id: T; label: ReactNode; count?: number }[]; onChange: (v: T) => void; className?: string }) {
   return (
-    <div className={cx('flex gap-5 border-b border-line', className)} role="tablist">
+    <div className={cx('flex gap-5 border-b border-line max-md:flex-wrap max-md:gap-x-4 max-md:gap-y-1', className)} role="tablist">
       {tabs.map((t) => (
         <button key={t.id} role="tab" aria-selected={value === t.id} onClick={() => onChange(t.id)} className={cx('-mb-px cursor-pointer border-b-2 pb-2.5 pt-1 text-[13px] font-medium transition-colors', value === t.id ? 'border-bone text-bone' : 'border-transparent text-dim hover:text-mute')}>
           {t.label}
@@ -342,7 +417,7 @@ export function EntityLink({ r, children, className }: { r: EntityRef; children?
 
 export function Source({ source, time, className }: { source: string; time?: string; className?: string }) {
   return (
-    <span className={cx('font-mono text-[10px] text-dim', className)}>
+    <span className={cx('text-[11px] leading-4 text-dim', className)}>
       {source}
       {time && <> · {time}</>}
     </span>
@@ -351,7 +426,7 @@ export function Source({ source, time, className }: { source: string; time?: str
 
 export function Empty({ icon, title, body, action, tone = 'neutral', className }: { icon?: ReactNode; title: string; body?: ReactNode; action?: ReactNode; tone?: 'neutral' | 'warn' | 'bad'; className?: string }) {
   return (
-    <div className={cx('flex flex-col items-center justify-center gap-2 rounded-md border border-dashed px-6 py-8 text-center', tone === 'warn' ? 'border-warn/40' : tone === 'bad' ? 'border-down/40' : 'border-line2', className)}>
+    <div className={cx('flex flex-col items-center justify-center gap-2 rounded-[2px] border border-dashed px-6 py-8 text-center', tone === 'warn' ? 'border-warn/40' : tone === 'bad' ? 'border-down/40' : 'border-line2', className)}>
       {icon && <div className={cx(tone === 'warn' ? 'text-warn' : tone === 'bad' ? 'text-down' : 'text-dim')}>{icon}</div>}
       <div className="text-[13px] font-semibold text-bone">{title}</div>
       {body && <div className="max-w-sm text-[12px] leading-relaxed text-mute">{body}</div>}
@@ -361,13 +436,13 @@ export function Empty({ icon, title, body, action, tone = 'neutral', className }
 }
 
 export function Kbd({ children }: { children: ReactNode }) {
-  return <kbd className="rounded-[3px] border border-line2 bg-raise px-1 font-mono text-[10px] text-mute">{children}</kbd>
+  return <kbd className="rounded-[2px] border border-line2 bg-raise px-1 font-mono text-[10px] text-mute">{children}</kbd>
 }
 
 export function AIBlock({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <div className={cx('rounded-md border border-dashed border-fct/30 bg-fct/[0.03] p-3', className)}>
-      <div className="mb-1.5 flex items-center gap-1.5 text-[11px] text-fct font-medium">
+    <div className={cx('rounded-[2px] border border-dashed border-line2 p-3', className)}>
+      <div className="mb-1.5 flex items-center gap-1.5 text-[11px] text-mute font-medium">
         <Sparkles size={11} /> AI-generated interpretation · not a retrieved fact
       </div>
       <div className="text-[12.5px] leading-relaxed text-bone/90">{children}</div>
@@ -391,16 +466,48 @@ export function ResetLayout() {
   return <Btn size="sm" variant="ghost" onClick={() => collapse.resetPage(route.page)} title="Show every folded panel on this page"><RotateCcw size={12} /> Reset layout</Btn>
 }
 
-export function PageHeader({ eyebrow, title, sub, right }: { eyebrow: ReactNode; title: ReactNode; sub?: ReactNode; right?: ReactNode }) {
+/**
+ * `briefing` is the editorial headline (Global Intelligence only); `workspace` is the compact noun title for tool pages.
+ * Keep `sub` to one line; longer method notes go in `about`, which opens from an info toggle after the sub. It is a
+ * native <details>, so find-in-page still reaches the text.
+ */
+export function PageHeader({ eyebrow, title, sub, about, right, variant = 'workspace' }: { eyebrow?: ReactNode; title: ReactNode; sub?: ReactNode; about?: ReactNode; right?: ReactNode; variant?: 'briefing' | 'workspace' }) {
+  const briefing = variant === 'briefing'
   right = <><ResetLayout />{right}</>
   return (
-    <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
+    <div className={cx('flex flex-wrap items-end justify-between gap-4', briefing ? 'mb-6' : 'mb-4')}>
       <div className="min-w-0">
-        <div className="eyebrow mb-1.5 flex items-center gap-2">{eyebrow}</div>
-        <h1 className="font-serif text-[34px] leading-[1.05] tracking-tight text-bone">{title}</h1>
-        {sub && <p className="mt-2 max-w-3xl text-[13px] leading-relaxed text-mute">{sub}</p>}
+        {eyebrow && <div className="mb-1 flex items-center gap-2 text-[11px] leading-4 font-medium text-dim">{eyebrow}</div>}
+        {briefing
+          ? <h1 className="line-clamp-2 max-w-4xl font-serif text-[32px] leading-[38px] tracking-tight text-bone">{title}</h1>
+          : <h1 className="text-[24px] leading-[30px] font-semibold tracking-[-0.02em] text-bone">{title}</h1>}
+        {sub && !about && <p className={cx('max-w-[760px] text-[13px] leading-5 text-mute', briefing ? 'mt-2' : 'mt-1')}>{sub}</p>}
+        {about && (
+          <details className={cx('group max-w-[760px] text-[13px] leading-5 text-mute', briefing ? 'mt-2' : 'mt-1')}>
+            <summary className="inline cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+              {sub}
+              <span className="ml-1.5 inline-flex translate-y-[2px] items-center text-dim hover:text-bone group-open:text-bone" title="About this page" aria-label="About this page"><Info size={13} /></span>
+            </summary>
+            <div className="mt-1.5 border-l border-line2 pl-3 text-[12px] leading-5 text-dim">{about}</div>
+          </details>
+        )}
       </div>
-      <div className="flex flex-wrap items-center gap-2 empty:hidden">{right}</div>
+      <div className="flex min-w-0 max-w-full flex-wrap items-center gap-2 empty:hidden">{right}</div>
     </div>
+  )
+}
+
+/** Footnote marker: a small superscript number beside the value it qualifies; the note is its tooltip and is listed in `Notes`. */
+export function Fn({ n, note }: { n: number; note: string }) {
+  return <sup tabIndex={0} title={note} aria-label={`Note ${n}: ${note}`} className="ml-0.5 cursor-help text-[9px] font-medium text-dim outline-none hover:text-bone focus-visible:text-bone">{n}</sup>
+}
+
+/** The page's caveats, written once and numbered to match their `Fn` markers. */
+export function Notes({ items, className }: { items: string[]; className?: string }) {
+  if (!items.length) return null
+  return (
+    <ol className={cx('mt-6 space-y-0.5 border-t border-line-soft pt-3 text-[11px] leading-4 text-dim', className)}>
+      {items.map((t, i) => <li key={i} className="flex gap-2"><span className="w-3 shrink-0 text-right tabular-nums">{i + 1}</span><span>{t}</span></li>)}
+    </ol>
   )
 }
